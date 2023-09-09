@@ -57,7 +57,7 @@ private extension ShowcaseTopic.CodeExample {
     }
 }
 
-struct ShowcaseCodeExample_Previews: PreviewProvider {
+struct CodeExample_Previews: PreviewProvider {
     static var previews: some View {
         CodeExample(
             .init("Example", text: { """

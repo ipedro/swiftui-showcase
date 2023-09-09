@@ -1,11 +1,12 @@
 import SwiftUI
 
-struct TopicInfo: View {
+public struct TopicInfo: View, Identifiable {
     @State private var expandDescription = false
+    public var id: String { topic.id }
     var topic: ShowcaseTopic
     var level: Int = 1
     
-    var body: some View {
+    public var body: some View {
         if level > 0 {
             headline
         }

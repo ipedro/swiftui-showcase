@@ -41,7 +41,7 @@ extension ShowcaseTopic {
     )
 }
 
-struct Showcase_Previews: PreviewProvider {
+struct ShowcaseTopicAccordion_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
             Showcase(.accordion)

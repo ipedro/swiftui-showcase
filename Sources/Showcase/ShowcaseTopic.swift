@@ -12,11 +12,11 @@ public struct ShowcaseTopic: Identifiable {
     
     public var codeExamples: [CodeExample]
     
-    public var children: [ShowcaseTopic] = []
-    
     public var previewRatio: CGSize = .init(width: 3, height: 2)
     
     public var previews: AnyView?
+    
+    public var children: [ShowcaseTopic] = []
     
     public init<V: View>(
         name: String,
