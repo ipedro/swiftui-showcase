@@ -18,6 +18,7 @@ public struct Showcase: View {
         .init(
             topic: .init(topic: topic, level: level),
             level: level,
+            scrollView: scroll,
             navigation: topic.children.map { .init(id: $0.id, button: button($0, scroll)) },
             subtopics: topic.children.map { .init(topic: $0, level: level + 1) }
         )
@@ -46,6 +47,7 @@ public struct Showcase: View {
 public struct ShowcaseStyleConfiguration {
     public let topic: TopicInfo
     public let level: Int
+    public let scrollView: ScrollViewProxy
     public let navigation: [NavButton]
     public let subtopics: [TopicInfo]
     
