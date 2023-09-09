@@ -1,6 +1,6 @@
 import SwiftUI
 
-extension ShowcaseTopic {
+extension ShowcaseItem {
     static let accordion = Self(
         name: "Accordion",
         description: { """

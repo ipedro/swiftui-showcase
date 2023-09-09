@@ -1,17 +1,19 @@
 import SwiftUI
 
-struct Previews<V: View>: View {
-    var content: V
+public struct Previews: View {
+    var item: ShowcaseItem.Previews
     
-    init?(content: V?) {
-        guard let content = content else { return nil }
-        self.content = content
+    init?(_ item: ShowcaseItem.Previews?) {
+        guard let item = item else { return nil }
+        self.item = item
     }
     
-    var body: some View {
+    public var body: some View {
         GroupBox {
             TabView {
-                content
+                item
+                    .previews
+                    .aspectRatio(item.aspectRatio, contentMode: .fit)
             }
             .tabViewStyle(.page)
         } label: {
@@ -21,7 +23,7 @@ struct Previews<V: View>: View {
         .onAppear(perform: setupPageControl)
     }
     
-    func setupPageControl() {
+    private func setupPageControl() {
         UIPageControl.appearance().currentPageIndicatorTintColor = .label
         UIPageControl.appearance().pageIndicatorTintColor = .label.withAlphaComponent(0.3)
     }

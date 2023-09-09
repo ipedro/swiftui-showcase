@@ -16,9 +16,9 @@ public struct ShowcaseStyleSystem: ShowcaseStyle {
     public func makeBody(configuration: Configuration) -> some View {
         VStack(alignment: .leading) {
             
-            configuration.topic
+            configuration.label
             
-            if !configuration.subtopics.isEmpty {
+            if !configuration.sections.isEmpty {
                 
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
@@ -31,9 +31,9 @@ public struct ShowcaseStyleSystem: ShowcaseStyle {
             
                 Divider()
                 
-                ForEach(configuration.subtopics) { subtopic in
+                ForEach(configuration.sections) { section in
                     VStack(alignment: .leading) {
-                        subtopic
+                        section
                     }
                     .padding(.vertical)
                     

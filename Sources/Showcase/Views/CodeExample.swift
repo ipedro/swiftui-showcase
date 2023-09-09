@@ -1,16 +1,17 @@
 import SwiftUI
 @_implementationOnly import Splash
 
-struct CodeExample: View {
+public struct CodeExample: View, Identifiable {
+    public var id: String { code.id }
     @Environment(\.colorScheme) private var colorScheme
-    var code: ShowcaseTopic.CodeExample
+    var code: ShowcaseItem.CodeExample
     
-    init?(_ code: ShowcaseTopic.CodeExample?) {
+    init?(_ code: ShowcaseItem.CodeExample?) {
         guard let code = code else { return nil }
         self.code = code
     }
     
-    var body: some View {
+    public var body: some View {
         GroupBox(content: content, label: label)
             .padding(.vertical)
     }
@@ -40,7 +41,7 @@ struct CodeExample: View {
     }
 }
 
-private extension ShowcaseTopic.CodeExample {
+private extension ShowcaseItem.CodeExample {
     func attributedString(_ scheme: ColorScheme) -> AttributedString {
         let theme = theme(scheme)
         let format = AttributedStringOutputFormat(theme: theme)

@@ -1,7 +1,8 @@
 import SwiftUI
 import SafariServices
 
-struct TopicLink: View {
+public struct SectionLink: View, Identifiable {
+    public var id: String { url.absoluteString }
     var name: String
     var url: URL
     
@@ -11,7 +12,7 @@ struct TopicLink: View {
         self.url = url
     }
     
-    var body: some View {
+    public var body: some View {
         Button {
             let safariController = SFSafariViewController(url: url)
             safariController.preferredControlTintColor = .label

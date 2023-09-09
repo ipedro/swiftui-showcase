@@ -1,26 +1,26 @@
 import SwiftUI
 
 public struct Showcase: View {
-    public var topic: ShowcaseTopic
-    public var level: Int = .zero
+    var item: ShowcaseItem
+    var level: Int = .zero
     @Environment(\.showcaseStyle) private var style
     
-    private init(_ topic: ShowcaseTopic, level: Int) {
-        self.topic = topic
+    private init(_ topic: ShowcaseItem, level: Int) {
+        self.item = topic
         self.level = level
     }
     
-    public init(_ topic: ShowcaseTopic) {
-        self.topic = topic
+    public init(_ topic: ShowcaseItem) {
+        self.item = topic
     }
     
     func configuration(scroll: ScrollViewProxy) -> ShowcaseStyleConfiguration {
         .init(
-            topic: .init(topic: topic, level: level),
             level: level,
+            label: .init(item: item.section, level: level),
             scrollView: scroll,
-            navigation: topic.children.map { .init(id: $0.id, button: button($0, scroll)) },
-            subtopics: topic.children.map { .init(topic: $0, level: level + 1) }
+            navigation: item.children.map { .init(id: $0.id, button: button($0, scroll)) },
+            sections: item.children.map { .init(item: $0.section, level: level + 1) }
         )
     }
     
@@ -29,13 +29,13 @@ public struct Showcase: View {
             ScrollView {
                 style.makeBody(configuration: configuration(scroll: proxy))
             }
-            .navigationTitle(Text(topic.name))
+            .navigationTitle(Text(item.section.name))
         }
     }
     
 
-    fileprivate func button(_ topic: ShowcaseTopic, _ scrollView: ScrollViewProxy) -> Button<Text> {
-        Button(topic.name) {
+    fileprivate func button(_ topic: ShowcaseItem, _ scrollView: ScrollViewProxy) -> Button<Text> {
+        Button(topic.section.name) {
             withAnimation(.spring()) {
                 scrollView.scrollTo(topic.id, anchor: .top)
             }
@@ -45,11 +45,11 @@ public struct Showcase: View {
 }
 
 public struct ShowcaseStyleConfiguration {
-    public let topic: TopicInfo
     public let level: Int
+    public let label: ShowcaseSection
     public let scrollView: ScrollViewProxy
     public let navigation: [NavButton]
-    public let subtopics: [TopicInfo]
+    public let sections: [ShowcaseSection]
     
     public struct NavButton: View, Identifiable {
         public let id: String
