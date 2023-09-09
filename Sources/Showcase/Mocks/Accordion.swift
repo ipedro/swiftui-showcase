@@ -36,7 +36,7 @@ extension ShowcaseTopic {
         },
         previewRatio: .init(width: 1, height: 0.8),
         previews: {
-            Text("Accordion")
+            Text("Placeholder").opacity(0.3)
         }
     )
 }

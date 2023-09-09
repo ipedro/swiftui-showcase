@@ -20,13 +20,20 @@ public struct ShowcaseStyleSystem: ShowcaseStyle {
             
             if !configuration.subtopics.isEmpty {
                 
-                configuration.navigation
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack {
+                        ForEach(configuration.navigation) { button in
+                            button
+                        }
+                    }
+                }
+                .padding(.vertical)
             
                 Divider()
                 
-                ForEach(configuration.subtopics) { topic in
+                ForEach(configuration.subtopics) { subtopic in
                     VStack(alignment: .leading) {
-                        topic
+                        subtopic
                     }
                     .padding(.vertical)
                     

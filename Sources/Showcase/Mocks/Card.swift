@@ -56,7 +56,7 @@ NavigationalCard {
             
         },
         previews: {
-            Text("Navigational card")
+            Text("Placeholder").opacity(0.3)
         }
     )
 }
@@ -83,7 +83,7 @@ SelectableCard(isOn: $isOn) {
 """
         },
         previews: {
-            Text("Selectable card")
+            Text("Placeholder").opacity(0.3)
         }
     )
 }
@@ -113,13 +113,15 @@ StaticCard {
 """
         },
         previews: {
-            Text("Static card")
+            Text("Placeholder").opacity(0.3)
         }
     )
 }
 
 struct card_Previews: PreviewProvider {
     static var previews: some View {
-        Showcase(.card)
+        NavigationView {
+            Showcase(.card)
+        }
     }
 }

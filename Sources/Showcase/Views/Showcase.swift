@@ -18,7 +18,7 @@ public struct Showcase: View {
         .init(
             topic: .init(topic: topic, level: level),
             level: level,
-            navigation: .init(view: childrenSelection(scroll)),
+            navigation: topic.children.map { .init(id: $0.id, button: button($0, scroll)) },
             subtopics: topic.children.map { .init(topic: $0, level: level + 1) }
         )
     }
@@ -33,45 +33,33 @@ public struct Showcase: View {
     }
     
 
-    private func childrenSelection(_ scrollView: ScrollViewProxy) -> some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack {
-                ForEach(topic.children) { child in
-                    Button(child.name) {
-                        withAnimation(.spring()) {
-                            scrollView.scrollTo(child.id, anchor: .top)
-                        }
-                    }
-                }
+    fileprivate func button(_ topic: ShowcaseTopic, _ scrollView: ScrollViewProxy) -> Button<Text> {
+        Button(topic.name) {
+            withAnimation(.spring()) {
+                scrollView.scrollTo(topic.id, anchor: .top)
             }
         }
-        .padding(.vertical)
     }
+
 }
 
 public struct ShowcaseStyleConfiguration {
     public let topic: TopicInfo
     public let level: Int
-    public let navigation: Navigation?
+    public let navigation: [NavButton]
     public let subtopics: [TopicInfo]
     
-    public struct Navigation: View {
-        let view: AnyView
-        
-        init(view: any View) {
-            self.view = .init(view)
-        }
-        
-        public var body: some View {
-            view
-        }
+    public struct NavButton: View, Identifiable {
+        public let id: String
+        let button: Button<Text>
+        public var body: some View { button }
     }
 }
 
 struct Showcase_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            Showcase(.accordion)
+            Showcase(.card)
         }
     }
 }
