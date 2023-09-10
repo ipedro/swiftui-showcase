@@ -1,6 +1,6 @@
 import SwiftUI
 
-public struct Previews: View {
+public struct ShowcasePreviews: View {
     typealias Configuration = ShowcasePreviewsStyleConfiguration
     @Environment(\.previewsStyle) private var style
     let configuration: Configuration
@@ -43,6 +43,7 @@ public struct ShowcasePreviewsStyleStandard: ShowcasePreviewsStyle {
             .aspectRatio(configuration.aspectRatio, contentMode: .fit)
         } label: {
             Text("Previews")
+                .foregroundColor(.secondary)
         }
         .onAppear(perform: setupPageControl)
     }

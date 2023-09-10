@@ -6,27 +6,29 @@ public struct Showcase: View {
     var item: ShowcaseItem
     var level: Int
     
-    private init(_ topic: ShowcaseItem, level: Int) {
-        self.item = topic
+    private init(_ data: ShowcaseItem, level: Int) {
+        self.item = data
         self.level = level
     }
     
-    public init(_ topic: ShowcaseItem) {
-        self.item = topic
+    public init(_ data: ShowcaseItem) {
+        self.item = data
         self.level = .zero
     }
     
     func configuration(with scrollView: ScrollViewProxy) -> ShowcaseStyleConfiguration {
         return .init(
-            anchorLinks: .init(
-                data: item.children,
-                scrollView: scrollView),
             children: .init(
                 data: item.children.map(\.content),
                 level: level + 1),
             content: .init(
                 data: item.content,
                 level: level),
+            index: .init(
+                configuration: .init(
+                    label: .init(
+                        data: item.children,
+                        scrollView: scrollView))),
             level: level,
             scrollView: scrollView
         )
@@ -45,9 +47,9 @@ public struct Showcase: View {
 }
 
 public struct ShowcaseStyleConfiguration {
-    public let anchorLinks: AnchorLinks?
     public let children: Children?
-    public let content: Content
+    public let content: ShowcaseContent
+    public let index: ShowcaseIndex?
     public let level: Int
     public let scrollView: ScrollViewProxy
     
@@ -63,30 +65,11 @@ public struct ShowcaseStyleConfiguration {
         
         public var body: some View {
             ForEach(data) {
-                Content(data: $0, level: level)
+                ShowcaseContent(data: $0, level: level)
             }
         }
     }
     
-    public struct AnchorLinks: View {
-        let data: [ShowcaseItem]
-        let scrollView: ScrollViewProxy
-        
-        init?(data: [ShowcaseItem], scrollView: ScrollViewProxy) {
-            if data.isEmpty { return nil }
-            self.data = data
-            self.scrollView = scrollView
-        }
-        
-        public var body: some View {
-            ForEach(data) {
-                AnchorLink(
-                    id: $0.id,
-                    title: $0.content.title,
-                    scrollView: scrollView)
-            }
-        }
-    }
     
 }
 import SwiftUI
@@ -103,33 +86,32 @@ public extension ShowcaseStyle where Self == ShowcaseStyleStandard {
 /// An example Showcase style to get you started
 public struct ShowcaseStyleStandard: ShowcaseStyle {
     public func makeBody(configuration: Configuration) -> some View {
-        VStack(alignment: .leading) {
+        LazyVStack(alignment: .leading) {
             
             configuration.content
             
-            if let anchorLinks = configuration.anchorLinks {
-                Section {
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack { anchorLinks }
-                    }
-                }
+            if let index = configuration.index {
+                index.padding(.vertical)
+
+                Divider()
             }
             
-            Section {
-                configuration.children
-            }
+            configuration.children
+                .padding(.vertical)
+                .padding(.bottom)
+                .overlay(alignment: .bottom) {
+                    Divider()
+                }
+            
         }
         .padding(configuration.level == .zero ? .horizontal : [])
         .padding(configuration.level == .zero ? [] : .vertical)
-    }
-    
-    private func Section<V: View>(@ViewBuilder content: () -> V) -> some View {
-        content()
-            .padding(.vertical)
-            .padding(.bottom)
-            .overlay(alignment: .bottom) {
-                Divider()
+        .toolbar {
+            ToolbarItem {
+                configuration.index
+                    .showcaseIndexStyle(.menu)
             }
+        }
     }
 }
 

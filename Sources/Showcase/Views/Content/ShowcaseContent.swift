@@ -1,6 +1,6 @@
 import SwiftUI
 
-public struct Content: View, Identifiable {
+public struct ShowcaseContent: View, Identifiable {
     typealias Configuration = ShowcaseContentStyleConfiguration
     
     @Environment(\.showcaseContentStyle) private var style
@@ -27,11 +27,13 @@ public struct Content: View, Identifiable {
     }
 }
 
+// MARK: - Configuration
+
 public struct ShowcaseContentStyleConfiguration {
     public let level: Int
     public let title: Text?
     public let description: Text
-    public let previews: Previews?
+    public let previews: ShowcasePreviews?
     public let externalLinks: ExternalLinks?
     public let snippets: CodeBlocks?
     
@@ -44,7 +46,9 @@ public struct ShowcaseContentStyleConfiguration {
         }
         
         public var body: some View {
-            ForEach(data) { ExternalLink($0) }
+            ForEach(data) {
+                ShowcaseExternalLink($0)
+            }
         }
     }
     
@@ -57,10 +61,14 @@ public struct ShowcaseContentStyleConfiguration {
         }
         
         public var body: some View {
-            ForEach(data) { ShowcaseCodeBlock($0) }
+            ForEach(data) {
+                ShowcaseCodeBlock($0)
+            }
         }
     }
 }
+
+// MARK: - Standard Style
 
 extension ShowcaseContentStyle where Self == ShowcaseContentStyleStandard {
     static var standard: Self { .init() }
@@ -68,13 +76,15 @@ extension ShowcaseContentStyle where Self == ShowcaseContentStyleStandard {
 
 struct ShowcaseContentStyleStandard: ShowcaseContentStyle {
     func makeBody(configuration: Configuration) -> some View {
-        VStack(alignment: .leading, spacing: 24) {
+        LazyVStack(alignment: .leading, spacing: 30) {
             configuration.title
                 .font(.system(title(configuration.level)))
             
-            ScrollView {
-                HStack {
-                    configuration.externalLinks
+            if let externalLinks = configuration.externalLinks {
+                ScrollView {
+                    LazyHStack {
+                        externalLinks
+                    }
                 }
             }
             
@@ -84,6 +94,7 @@ struct ShowcaseContentStyleStandard: ShowcaseContentStyle {
                 .font(.system(description(configuration.level)))
             
             configuration.snippets
+                .padding(.top)
         }
     }
     

@@ -2,7 +2,7 @@ import SwiftUI
 import SwiftUI
 import SafariServices
 
-struct ExternalLink: View {
+struct ShowcaseExternalLink: View {
     @Environment(\.externalLinkStyle) private var style
     let data: ShowcaseItem.ExternalLink
     

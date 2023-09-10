@@ -48,7 +48,7 @@ public struct ShowcaseCodeBlockStyleStandard: ShowcaseCodeBlockStyle {
                 Spacer()
                 configuration.copyToPasteboard
             }
-            .foregroundColor(.primary)
+            .foregroundColor(.secondary)
         }
     }
 }
