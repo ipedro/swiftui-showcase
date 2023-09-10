@@ -92,7 +92,6 @@ public struct ShowcaseStyleStandard: ShowcaseStyle {
             
             if let index = configuration.index {
                 index.padding(.vertical)
-
                 Divider()
             }
             

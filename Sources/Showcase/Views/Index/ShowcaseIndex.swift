@@ -79,8 +79,8 @@ public struct ShowcaseIndexStyleVStack: ShowcaseIndexStyle {
                     Circle()
                         .frame(width: 6)
                 }
-                .padding(.horizontal)
-                .padding(.vertical, 1)
+                .padding(.horizontal, 30)
+                .padding(.vertical, 2)
         }
     }
 }
@@ -100,9 +100,12 @@ public struct ShowcaseIndexStyleMenu: ShowcaseIndexStyle {
                 label
             } label: {
                 Image(systemName: "list.bullet")
-                    .padding(4)
+                    .padding(5)
                     .mask { shape }
-                    .background { shape.stroke(style: .init()) }
+                    .background {
+                        shape
+                            .opacity(0.2)
+                    }
             }
         }
     }
@@ -121,7 +124,7 @@ struct ShowcaseIndex_Previews: PreviewProvider {
                             .accordion
                         ],
                         scrollView: scroll)))
-            //.showcaseIndexStyle(.vertical)
+            .showcaseIndexStyle(.menu)
         }
     }
 }

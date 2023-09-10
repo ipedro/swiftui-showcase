@@ -23,7 +23,9 @@ public struct ShowcaseContent: View, Identifiable {
     }
     
     public var body: some View {
-        style.makeBody(configuration: configuration)
+        style
+            .makeBody(configuration: configuration)
+            .id(data.id)
     }
 }
 
