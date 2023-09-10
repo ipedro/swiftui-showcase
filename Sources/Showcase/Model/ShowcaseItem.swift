@@ -16,13 +16,13 @@ public struct ShowcaseItem: Identifiable {
     ) {
         self.children = children
         self.content = .init(
-            title: title,
-            snippets: snippets(),
             description: description(),
             links: links(),
             previews: .init(
                 aspectRatio: previewRatio,
-                previews: .init(previews()))
+                previews: .init(previews())),
+            snippets: snippets(),
+            title: title
         )
     }
     
@@ -35,20 +35,20 @@ public struct ShowcaseItem: Identifiable {
     ) {
         self.children = children
         self.content = .init(
-            title: title,
-            snippets: snippets(),
             description: description(),
-            links: links()
+            links: links(),
+            snippets: snippets(),
+            title: title
         )
     }
     
     public struct Content: Identifiable {
-        public var id: String { title }
-        public var title: String
-        public var snippets: [CodeBlock]
         public var description: String
+        public var id: String { title }
         public var links: [ExternalLink]
         public var previews: Previews?
+        public var snippets: [CodeBlock]
+        public var title: String
     }
     
     public struct Previews {

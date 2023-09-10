@@ -18,11 +18,17 @@ public struct Showcase: View {
     
     func configuration(with scrollView: ScrollViewProxy) -> ShowcaseStyleConfiguration {
         return .init(
-            anchorLinks: item.children.map { .init($0, scrollView) },
-            label: .init(item.content, level),
+            anchorLinks: .init(
+                data: item.children,
+                scrollView: scrollView),
+            children: .init(
+                data: item.children.map(\.content),
+                level: level + 1),
+            content: .init(
+                data: item.content,
+                level: level),
             level: level,
-            scrollView: scrollView,
-            sections: item.children.map { .init($0.content, level + 1) }
+            scrollView: scrollView
         )
     }
     
@@ -39,11 +45,48 @@ public struct Showcase: View {
 }
 
 public struct ShowcaseStyleConfiguration {
-    public let anchorLinks: [ShowcaseAnchorLink]
-    public let label: ShowcaseContent
+    public let anchorLinks: AnchorLinks?
+    public let children: Children?
+    public let content: Content
     public let level: Int
     public let scrollView: ScrollViewProxy
-    public let sections: [ShowcaseContent]
+    
+    public struct Children: View {
+        let data: [ShowcaseItem.Content]
+        let level: Int
+        
+        init?(data: [ShowcaseItem.Content], level: Int) {
+            if data.isEmpty { return nil }
+            self.data = data
+            self.level = level
+        }
+        
+        public var body: some View {
+            ForEach(data) {
+                Content(data: $0, level: level)
+            }
+        }
+    }
+    
+    public struct AnchorLinks: View {
+        let data: [ShowcaseItem]
+        let scrollView: ScrollViewProxy
+        
+        init?(data: [ShowcaseItem], scrollView: ScrollViewProxy) {
+            if data.isEmpty { return nil }
+            self.data = data
+            self.scrollView = scrollView
+        }
+        
+        public var body: some View {
+            ForEach(data) {
+                AnchorLink(
+                    id: $0.id,
+                    title: $0.content.title,
+                    scrollView: scrollView)
+            }
+        }
+    }
     
 }
 import SwiftUI
@@ -62,33 +105,31 @@ public struct ShowcaseStyleStandard: ShowcaseStyle {
     public func makeBody(configuration: Configuration) -> some View {
         VStack(alignment: .leading) {
             
-            configuration.label
+            configuration.content
             
-            if !configuration.sections.isEmpty {
-                
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack {
-                        ForEach(configuration.anchorLinks) { button in
-                            button
-                        }
+            if let anchorLinks = configuration.anchorLinks {
+                Section {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack { anchorLinks }
                     }
-                }
-                .padding(.vertical)
-            
-                Divider()
-                
-                ForEach(configuration.sections) { section in
-                    VStack(alignment: .leading) {
-                        section
-                    }
-                    .padding(.vertical)
-                    
-                    Divider()
                 }
             }
+            
+            Section {
+                configuration.children
+            }
         }
-        .padding(.horizontal, configuration.level == .zero ? 20 : .zero)
-        .padding(.vertical, configuration.level == .zero ? 0 : 24)
+        .padding(configuration.level == .zero ? .horizontal : [])
+        .padding(configuration.level == .zero ? [] : .vertical)
+    }
+    
+    private func Section<V: View>(@ViewBuilder content: () -> V) -> some View {
+        content()
+            .padding(.vertical)
+            .padding(.bottom)
+            .overlay(alignment: .bottom) {
+                Divider()
+            }
     }
 }
 

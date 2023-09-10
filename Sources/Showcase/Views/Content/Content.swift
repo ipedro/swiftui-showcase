@@ -1,26 +1,24 @@
 import SwiftUI
 
-public struct ShowcaseContent: View, Identifiable {
+public struct Content: View, Identifiable {
     typealias Configuration = ShowcaseContentStyleConfiguration
     
     @Environment(\.showcaseContentStyle) private var style
-    public let id: String
-    let configuration: Configuration
+    let data: ShowcaseItem.Content
+    let level: Int
     
-    init(_ id: String, configuration: Configuration) {
-        self.id = id
-        self.configuration = configuration
+    public var id: String {
+        data.id
     }
     
-    init(_ item: ShowcaseItem.Content, _ level: Int) {
-        self.id = item.id
-        self.configuration = .init(
+    var configuration: Configuration {
+        .init(
             level: level,
-            title: level > 0 ? .init(item.title) : nil,
-            description: .init(item.description),
-            previews: .init(item.previews),
-            externalLinks: .init(data: item.links),
-            snippets: .init(data: item.snippets)
+                title: level > 0 ? .init(data.title) : nil,
+                description: .init(data.description),
+                previews: .init(data.previews),
+                externalLinks: .init(data: data.links),
+                snippets: .init(data: data.snippets)
         )
     }
     
@@ -70,21 +68,23 @@ extension ShowcaseContentStyle where Self == ShowcaseContentStyleStandard {
 
 struct ShowcaseContentStyleStandard: ShowcaseContentStyle {
     func makeBody(configuration: Configuration) -> some View {
-        configuration.title
-            .font(.system(title(configuration.level)))
-        
-        ScrollView {
-            HStack {
-                configuration.externalLinks
+        VStack(alignment: .leading, spacing: 24) {
+            configuration.title
+                .font(.system(title(configuration.level)))
+            
+            ScrollView {
+                HStack {
+                    configuration.externalLinks
+                }
             }
+            
+            configuration.previews
+            
+            configuration.description
+                .font(.system(description(configuration.level)))
+            
+            configuration.snippets
         }
-        
-        configuration.previews
-        
-        configuration.description
-            .font(.system(description(configuration.level)))
-        
-        configuration.snippets
     }
     
     private func title(_ level: Int) -> SwiftUI.Font.TextStyle{

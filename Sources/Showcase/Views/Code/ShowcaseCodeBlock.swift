@@ -1,12 +1,12 @@
 import SwiftUI
 import Splash
 
-public struct ShowcaseCodeBlock: View, Identifiable {
+struct ShowcaseCodeBlock: View, Identifiable {
     @Environment(\.snippetStyle) private var style
     
     typealias Configuration = ShowcaseCodeBlockStyleConfiguration
     
-    public let id: String
+    let id: String
     
     let configuration: Configuration
     
@@ -25,7 +25,7 @@ public struct ShowcaseCodeBlock: View, Identifiable {
         self.configuration = configuration
     }
     
-    public var body: some View {
+    var body: some View {
         style.makeBody(configuration: configuration)
     }
 }
