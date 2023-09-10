@@ -4,13 +4,13 @@ import SwiftUI
 /// all Showcases within a view hierarchy.
 ///
 /// To configure the current Showcase style for a view hierarchy, use the
-/// ``Showcase/ShowcaseSectionStyle(_:)`` modifier.
-public protocol ShowcaseSectionStyle {
+/// ``Showcase/showcasePreviewsStyle(_:)`` modifier.
+public protocol ShowcasePreviewsStyle {
     /// A view that represents the body of a Showcase.
     associatedtype Body: View
 
     /// The properties of a Showcase.
-    typealias Configuration = ShowcaseSectionStyleConfiguration
+    typealias Configuration = ShowcasePreviewsStyleConfiguration
 
     /// Creates a view that represents the body of a Showcase.
     ///
@@ -24,37 +24,34 @@ public protocol ShowcaseSectionStyle {
 // MARK: - View Extension
 
 extension View {
-    /// Sets the style for Showcase within this view to a Showcase style with a
+    /// Sets the style for ``Showcase`` within this view to a Showcase style with a
     /// custom appearance and custom interaction behavior.
     ///
-    /// Use this modifier to set a specific style for Showcase instances
+    /// Use this modifier to set a specific style for ``Showcase`` instances
     /// within a view:
     ///
-    ///     HStack {
-    ///         Showcase()
-    ///         Showcase()
-    ///     }
-    ///     .showcaseSectionStyle(.example)
+    ///     Showcase()
+    ///         .showcasePreviewsStyle(MyCustomStyle())
     ///
-    public func showcaseSectionStyle<S: ShowcaseSectionStyle>(_ style: S) -> some View {
-        environment(\.showcaseSectionStyle, .init(style))
+    public func showcasePreviewsStyle<S: ShowcasePreviewsStyle>(_ style: S) -> some View {
+        environment(\.previewsStyle, .init(style))
     }
 }
 
 // MARK: - Type Erasure
 
-public extension ShowcaseSectionStyle {
+public extension ShowcasePreviewsStyle {
     /// Returns a type erased Showcase.
-    func asAny() -> AnyShowcaseSectionStyle { .init(self) }
+    func asAny() -> AnyShowcasePreviewsStyle { .init(self) }
 }
 
 /// A type erased Showcase style.
-public struct AnyShowcaseSectionStyle: ShowcaseSectionStyle {
+public struct AnyShowcasePreviewsStyle: ShowcasePreviewsStyle {
     /// Current Showcase style.
-    var style: any ShowcaseSectionStyle
+    var style: any ShowcasePreviewsStyle
    
     /// Creates a type erased Showcase style.
-    public init<S: ShowcaseSectionStyle>(_ style: S) {
+    public init<S: ShowcasePreviewsStyle>(_ style: S) {
         self.style = style
     }
     
@@ -66,15 +63,15 @@ public struct AnyShowcaseSectionStyle: ShowcaseSectionStyle {
 // MARK: - Environment Keys
 
 /// A private key needed to save style data in the environment
-private struct ShowcaseSectionStyleKey: EnvironmentKey {
-    static var defaultValue: AnyShowcaseSectionStyle = .init(.system)
-    static func reduce(value: inout AnyShowcaseSectionStyle, nextValue: () -> AnyShowcaseSectionStyle) {}
+private struct ShowcasePreviewsStyleKey: EnvironmentKey {
+    static var defaultValue: AnyShowcasePreviewsStyle = .init(.standard)
+    static func reduce(value: inout AnyShowcasePreviewsStyle, nextValue: () -> AnyShowcasePreviewsStyle) {}
 }
 
 extension EnvironmentValues {
     /// The current Showcase style value.
-    public var showcaseSectionStyle: AnyShowcaseSectionStyle {
-        get { self[ShowcaseSectionStyleKey.self] }
-        set { self[ShowcaseSectionStyleKey.self] = newValue }
+    public var previewsStyle: AnyShowcasePreviewsStyle {
+        get { self[ShowcasePreviewsStyleKey.self] }
+        set { self[ShowcasePreviewsStyleKey.self] = newValue }
     }
 }

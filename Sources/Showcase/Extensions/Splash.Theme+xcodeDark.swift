@@ -1,4 +1,4 @@
-@_implementationOnly import Splash
+@_exported import Splash
 import SwiftUI
 
 extension Theme {

@@ -4,7 +4,7 @@ import SwiftUI
 
 extension ShowcaseItem {
     static let card = Self(
-        name: "Card",
+        title: "Card",
         description: {
             "Cards are surfaces that display content and actions on a single topic."
         },
@@ -20,7 +20,7 @@ extension ShowcaseItem {
 
 extension ShowcaseItem {
     static let navigationalCard = Self(
-        name: "Navigational Card",
+        title: "Navigational Card",
         description: {
 """
 The purpose of navigational cards is to provide users access to more detailed information or navigational elements (other pages).
@@ -29,12 +29,12 @@ By clicking anywhere on the card, users can perform the desired action. While na
 """
         },
         links: {
-            Link("Code", .init(string: "NavigationalCard"))
-            Link("Design", .init(string: "https://google.com"))
+            ExternalLink("Code", .init(string: "NavigationalCard"))
+            ExternalLink("Design", .init(string: "https://google.com"))
         },
-        codeExamples: {
+        snippets: {
             
-            CodeExample("elevated") { """
+            CodeBlock("elevated") { """
 NavigationalCard {
     // action
 } label: {
@@ -44,7 +44,7 @@ NavigationalCard {
 """
             }
             
-            CodeExample("outlined") { """
+            CodeBlock("outlined") { """
 NavigationalCard {
     // action
 } label: {
@@ -65,17 +65,17 @@ NavigationalCard {
 
 extension ShowcaseItem {
     static let selectableCard = Self(
-        name: "Selectable Card",
+        title: "Selectable Card",
         description: {
 """
 Selectable cards serve for selecting an item that is part of a group of options with rich content displayed inside each option, which would be too complex for buttons to contain.
 """
         },
         links: {
-            Link("Code", .init(string: "SelectableCard"))
-            Link("Design", .init(string: "https://google.com"))
+            ExternalLink("Code", .init(string: "SelectableCard"))
+            ExternalLink("Design", .init(string: "https://google.com"))
         },
-        codeExamples: { """
+        snippets: { """
 SelectableCard(isOn: $isOn) {
     Text("I'm content")
 }
@@ -92,7 +92,7 @@ SelectableCard(isOn: $isOn) {
 
 extension ShowcaseItem {
     static let staticCard = Self(
-        name: "Static Card",
+        title: "Static Card",
         description: {
 """
 A static card can have interactive elements such as a call-to-action button, but it is not intended for navigation or selection.
@@ -101,10 +101,10 @@ The card surface does not have interactive states, meaning it cannot be hovered 
 """
         },
         links: {
-            Link("Code", .init(string: "StaticCard"))
-            Link("Design", .init(string: "https://google.com"))
+            ExternalLink("Code", .init(string: "StaticCard"))
+            ExternalLink("Design", .init(string: "https://google.com"))
         },
-        codeExamples: {
+        snippets: {
 """
 StaticCard {
     Text("I'm content")

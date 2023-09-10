@@ -2,7 +2,7 @@ import SwiftUI
 
 extension ShowcaseItem {
     static let accordion = Self(
-        name: "Accordion",
+        title: "Accordion",
         description: { """
     Accordions enable users to expand and collapse multiple sections of content.
     
@@ -14,10 +14,10 @@ extension ShowcaseItem {
     """
         },
         links: {
-            Link("Code", .init(string: "https://google.com"))
-            Link("Design", .init(string: "https://zeroheight.com/700c95a05/p/0309e1-accordion/b/45490a"))
+            ExternalLink("Code", .init(string: "https://google.com"))
+            ExternalLink("Design", .init(string: "https://zeroheight.com/700c95a05/p/0309e1-accordion/b/45490a"))
         },
-        codeExamples: {
+        snippets: {
     """
     Accordion(data, selection: $selectedRow) { item in
         Text(item.title).bold()

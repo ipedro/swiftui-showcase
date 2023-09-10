@@ -4,7 +4,7 @@ import SwiftUI
 /// all Showcases within a view hierarchy.
 ///
 /// To configure the current Showcase style for a view hierarchy, use the
-/// ``Showcase/ShowcaseStyle(_:)`` modifier.
+/// ``Showcase/showcaseStyle(_:)`` modifier.
 public protocol ShowcaseStyle {
     /// A view that represents the body of a Showcase.
     associatedtype Body: View
@@ -30,11 +30,8 @@ extension View {
     /// Use this modifier to set a specific style for Showcase instances
     /// within a view:
     ///
-    ///     HStack {
-    ///         Showcase()
-    ///         Showcase()
-    ///     }
-    ///     .showcaseStyle(.example)
+    ///     Showcase()
+    ///         .showcaseStyle(.example)
     ///
     public func showcaseStyle<S: ShowcaseStyle>(_ style: S) -> some View {
         environment(\.showcaseStyle, .init(style))
@@ -67,7 +64,7 @@ public struct AnyShowcaseStyle: ShowcaseStyle {
 
 /// A private key needed to save style data in the environment
 private struct ShowcaseStyleKey: EnvironmentKey {
-    static var defaultValue: AnyShowcaseStyle = .init(.system)
+    static var defaultValue: AnyShowcaseStyle = .init(.standard)
     static func reduce(value: inout AnyShowcaseStyle, nextValue: () -> AnyShowcaseStyle) {}
 }
 
