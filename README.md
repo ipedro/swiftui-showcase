@@ -58,15 +58,6 @@ Check out the `Examples` directory for a sample project demonstrating how to use
 
 Showcase is available under the MIT License. See the [LICENSE](https://github.com/ipedro/swiftui-showcase/blob/main/LICENSE) file for more details.
 
-## Contact
-
-Have questions or feedback? Feel free to reach out:
-
-- GitHub: [https://github.com/ipedro](https://github.com/ipedro)
 - Email: [your.email@example.com](mailto:your.email@example.com)
-
-## Acknowledgments
-
-Special thanks to the SwiftUI community and contributors who have helped make Showcase better.
 
 ```
