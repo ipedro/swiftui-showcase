@@ -30,8 +30,8 @@ extension View {
     /// Use this modifier to set a specific style for Showcase instances
     /// within a view:
     ///
-    ///     Showcase()
-    ///         .showcaseStyle(.example)
+    ///     Showcase(element)
+    ///         .showcaseStyle(.standard)
     ///
     public func showcaseStyle<S: ShowcaseStyle>(_ style: S) -> some View {
         environment(\.showcaseStyle, .init(style))

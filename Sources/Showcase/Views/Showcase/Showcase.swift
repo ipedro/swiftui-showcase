@@ -53,7 +53,6 @@ public struct Showcase: View {
         )
     }
     
-    /// The body of the showcase view.
     public var body: some View {
         ScrollViewReader { scrollView in
             let configuration = configuration(with: scrollView)

@@ -1,9 +1,20 @@
 import SwiftUI
 
+/// A view that displays navigation anchors to children elements within a Showcase view.
 public struct ShowcaseIndex: View {
-    @Environment(\.indexStyle) private var style
     typealias Configuration = ShowcaseIndexStyleConfiguration
+    
+    /// The style for displaying the index.
+    @Environment(\.indexStyle) private var style
+    
+    /// The configuration for the ShowcaseIndex view.
     let configuration: Configuration
+    
+    /// Initializes a ShowcaseIndex view with the specified configuration.
+    /// - Parameter configuration: The configuration for the ShowcaseIndex view.
+    init(configuration: Configuration) {
+        self.configuration = configuration
+    }
     
     public var body: some View {
         style.makeBody(configuration: configuration)
@@ -13,20 +24,28 @@ public struct ShowcaseIndex: View {
 // MARK: - Configuration
 
 public struct ShowcaseIndexStyleConfiguration {
-    /// A type-erased collection of anchor buttons
+    /// A type-erased collection of anchor buttons.
     public let label: Label?
     
-    /// A type-erased collection of anchor buttons
+    /// A type-erased collection of anchor buttons.
     public struct Label: View {
+        /// The data representing showcase elements.
         let data: [ShowcaseElement]
+        
+        /// The scroll view proxy for scrolling to anchor points.
         let scrollView: ScrollViewProxy?
         
+        /// Initializes a label with the specified data and scroll view proxy.
+        /// - Parameters:
+        ///   - data: The data representing showcase elements.
+        ///   - scrollView: The scroll view proxy for scrolling to anchor points (optional).
         init?(data: [ShowcaseElement]?, scrollView: ScrollViewProxy? = nil) {
             guard let data = data, !data.isEmpty else { return nil }
             self.data = data
             self.scrollView = scrollView
         }
         
+        /// The body of the label view.
         public var body: some View {
             ForEach(data) { item in
                 Button(item.content.title) {
@@ -41,15 +60,17 @@ public struct ShowcaseIndexStyleConfiguration {
 
 // MARK: - Styles
 
-public extension ShowcaseIndexStyle where Self == ShowcaseIndexStyleVStack {
-    static var vertical: Self { .init() }
+public extension ShowcaseIndexStyle where Self == ShowcaseIndexStyleBulletList {
+    /// A bullet list style.
+    static var bulletList: Self { .init() }
 }
 
 public extension ShowcaseIndexStyle where Self == ShowcaseIndexStyleMenu {
+    /// A context menu style.
     static var menu: Self { .init() }
 }
 
-public struct ShowcaseIndexStyleVStack: ShowcaseIndexStyle {
+public struct ShowcaseIndexStyleBulletList: ShowcaseIndexStyle {
     public func makeBody(configuration: Configuration) -> some View {
         LazyVStack(alignment: .leading) {
             configuration.label
@@ -66,6 +87,7 @@ public struct ShowcaseIndexStyleVStack: ShowcaseIndexStyle {
 }
 
 public struct ShowcaseIndexStyleMenu: ShowcaseIndexStyle {
+    /// The shape used for the menu style.
     private let shape = RoundedRectangle(
         cornerRadius: 8,
         style: .continuous)
@@ -91,7 +113,7 @@ public struct ShowcaseIndexStyleMenu: ShowcaseIndexStyle {
 struct ShowcaseIndex_Previews: PreviewProvider {
     static let styles: [AnyShowcaseIndexStyle] = [
         .init(.menu),
-        .init(.vertical)
+        .init(.bulletList)
     ]
     
     static var previews: some View {

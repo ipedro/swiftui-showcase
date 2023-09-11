@@ -82,6 +82,9 @@ public struct ShowcaseElement: Identifiable {
         /// Alignment of the preview content.
         public let alignment: Alignment
         
+        /// Title of the preview.
+        public let title: String?
+        
         /// The content to be displayed in the preview.
         public let content: AnyView
         
@@ -94,6 +97,7 @@ public struct ShowcaseElement: Identifiable {
         ///   - idealHeight: Ideal height of the preview (default is 250).
         ///   - maxHeight: Maximum height of the preview (default is nil).
         ///   - alignment: Alignment of the content within the preview (default is .center).
+        ///   - title: The title of the preview (default is nil).
         ///   - content: A closure returning the content of the preview.
         public init<V: View>(
             minWidth: CGFloat? = nil,
@@ -103,6 +107,7 @@ public struct ShowcaseElement: Identifiable {
             idealHeight: CGFloat? = 250,
             maxHeight: CGFloat? = nil,
             alignment: Alignment = .center,
+            title: String? = nil,
             @ViewBuilder content: () -> V
         ) {
             self.minWidth = minWidth
@@ -112,6 +117,7 @@ public struct ShowcaseElement: Identifiable {
             self.idealHeight = idealHeight
             self.maxHeight = maxHeight
             self.alignment = alignment
+            self.title = title
             self.content = .init(content())
         }
     }
@@ -167,6 +173,7 @@ public struct ShowcaseElement: Identifiable {
         /// Optional title for the code block.
         public let title: String?
         
+        /// Initializes a code block from raw text.
         public init?(rawValue: String) {
             self.title = nil
             self.rawValue = rawValue

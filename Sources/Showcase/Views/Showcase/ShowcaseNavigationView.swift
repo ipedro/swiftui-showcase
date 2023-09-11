@@ -20,7 +20,6 @@ public struct ShowcaseNavigationView<Icon: View>: View {
         self.icon = icon()
     }
     
-    /// The body of the showcase navigation view.
     public var body: some View {
         NavigationView {
             ShowcaseList(data.sections) { icon }

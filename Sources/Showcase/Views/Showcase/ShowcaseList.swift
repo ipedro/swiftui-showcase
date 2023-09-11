@@ -20,7 +20,6 @@ public struct ShowcaseList<Icon: View>: View {
         self.icon = icon()
     }
     
-    /// The body of the showcase list view.
     public var body: some View {
         List {
             ForEach(data) { section in

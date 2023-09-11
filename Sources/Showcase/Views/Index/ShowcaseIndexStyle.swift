@@ -64,7 +64,7 @@ public struct AnyShowcaseIndexStyle: ShowcaseIndexStyle {
 
 /// A private key needed to save style data in the environment
 private struct IndexStyleKey: EnvironmentKey {
-    static var defaultValue: AnyShowcaseIndexStyle = .init(.vertical)
+    static var defaultValue: AnyShowcaseIndexStyle = .init(.bulletList)
     static func reduce(value: inout AnyShowcaseIndexStyle, nextValue: () -> AnyShowcaseIndexStyle) {}
 }
 
