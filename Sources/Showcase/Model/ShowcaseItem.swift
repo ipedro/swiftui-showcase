@@ -3,14 +3,14 @@ import SwiftUI
 public struct ShowcaseItem: Identifiable {
     public var id: String { content.id }
     var content: Content
-    var children: [ShowcaseItem]
+    var children: [ShowcaseItem]?
     
     public init<V: View>(
         title: String,
         description: () -> String,
         @ExternalLinkBuilder links: () -> [ExternalLink] = { [] },
         @CodeBlockBuilder snippets: () -> [CodeBlock] = { [] },
-        children: [ShowcaseItem] = [],
+        children: [ShowcaseItem]? = nil,
         previewRatio: CGSize = .init(width: 3, height: 2),
         @ViewBuilder previews: () -> V
     ) {
@@ -31,7 +31,7 @@ public struct ShowcaseItem: Identifiable {
         description: () -> String,
         @ExternalLinkBuilder links: () -> [ExternalLink] = { [] },
         @CodeBlockBuilder snippets: () -> [CodeBlock] = { [] },
-        children: [ShowcaseItem] = []
+        children: [ShowcaseItem]? = nil
     ) {
         self.children = children
         self.content = .init(

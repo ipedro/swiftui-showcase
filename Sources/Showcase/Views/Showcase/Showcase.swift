@@ -19,7 +19,7 @@ public struct Showcase: View {
     func configuration(with scrollView: ScrollViewProxy) -> ShowcaseStyleConfiguration {
         return .init(
             children: .init(
-                data: item.children.map(\.content),
+                data: item.children?.map(\.content),
                 level: level + 1),
             content: .init(
                 data: item.content,
@@ -57,8 +57,8 @@ public struct ShowcaseStyleConfiguration {
         let data: [ShowcaseItem.Content]
         let level: Int
         
-        init?(data: [ShowcaseItem.Content], level: Int) {
-            if data.isEmpty { return nil }
+        init?(data: [ShowcaseItem.Content]?, level: Int) {
+            guard let data = data, !data.isEmpty else { return nil }
             self.data = data
             self.level = level
         }

@@ -21,8 +21,8 @@ public struct ShowcaseIndexStyleConfiguration {
         let data: [ShowcaseItem]
         let scrollView: ScrollViewProxy
         
-        init?(data: [ShowcaseItem], scrollView: ScrollViewProxy) {
-            if data.isEmpty { return nil }
+        init?(data: [ShowcaseItem]?, scrollView: ScrollViewProxy) {
+            guard let data = data, !data.isEmpty else { return nil }
             self.data = data
             self.scrollView = scrollView
         }
@@ -77,9 +77,9 @@ public struct ShowcaseIndexStyleVStack: ShowcaseIndexStyle {
             configuration.label                        .padding(.horizontal)
                 .overlay(alignment: .leading) {
                     Circle()
-                        .frame(width: 6)
+                        .frame(width: 8)
                 }
-                .padding(.horizontal, 30)
+                .padding(.horizontal)
                 .padding(.vertical, 2)
         }
     }
@@ -124,7 +124,7 @@ struct ShowcaseIndex_Previews: PreviewProvider {
                             .accordion
                         ],
                         scrollView: scroll)))
-            .showcaseIndexStyle(.menu)
+            //.showcaseIndexStyle(.menu)
         }
     }
 }
