@@ -11,10 +11,10 @@ public struct ShowcaseContent: View {
         .init(
             level: level,
                 title: level > 0 ? .init(data.title) : nil,
-                description: .init(data.description),
+                description: data.description.isEmpty ? nil : .init(data.description),
                 previews: .init(data.previews),
                 externalLinks: .init(data: data.links),
-                codeBlocks: .init(data: data.snippets)
+                codeBlocks: .init(data: data.codeBlocks)
         )
     }
     
@@ -30,7 +30,7 @@ public struct ShowcaseContent: View {
 public struct ShowcaseContentStyleConfiguration {
     public let level: Int
     public let title: Text?
-    public let description: Text
+    public let description: Text?
     public let previews: ShowcasePreviews?
     public let externalLinks: ExternalLinks?
     public let codeBlocks: CodeBlocks?

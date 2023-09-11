@@ -1,29 +1,21 @@
 import SwiftUI
 
 public struct ShowcaseNavigationView<Icon: View>: View {
-    var data: [ShowcaseItem]
-    var title: String
+    var data: ShowcaseLibrary
     var icon: Icon
-    var maxWidth: CGFloat
     
     public init(
-        _ data: [ShowcaseItem],
-        title: String = "Components",
-        maxWidth: CGFloat = 600,
-        @ViewBuilder icon: () -> Icon = { Image(systemName: "swift") }
+        _ data: ShowcaseLibrary,
+        @ViewBuilder icon: () -> Icon = { EmptyView() }
     ) {
         self.data = data
-        self.title = title
         self.icon = icon()
-        self.maxWidth = maxWidth
     }
     
     public var body: some View {
         NavigationView {
-            ShowcaseList(data, maxWidth: maxWidth) {
-                icon
-            }
-            .navigationTitle(title)
+            ShowcaseList(data.sections) { icon }
+                .navigationTitle(data.title)
         }
     }
 }
@@ -32,11 +24,18 @@ public struct ShowcaseNavigationView<Icon: View>: View {
 
 struct ShowcaseNavigationView_Previews: PreviewProvider {
     static var list: [ShowcaseItem] = [
-        .accordion,
-        .card
+        .card,
+        .accordion
     ]
-    
+
     static var previews: some View {
-        ShowcaseNavigationView(list)
+        ShowcaseNavigationView(
+            .init(
+                "Library",
+                sections: [
+                    .init("Mock", data: list)
+                ]
+            )
+        )
     }
 }

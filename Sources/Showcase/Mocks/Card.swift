@@ -32,7 +32,7 @@ By clicking anywhere on the card, users can perform the desired action. While na
             ExternalLink("Code", .init(string: "NavigationalCard"))
             ExternalLink("Design", .init(string: "https://google.com"))
         },
-        snippets: {
+        examples: {
             
             CodeBlock("elevated") { """
 NavigationalCard {
@@ -73,7 +73,7 @@ Selectable cards serve for selecting an item that is part of a group of options 
             ExternalLink("Code", .init(string: "SelectableCard"))
             ExternalLink("Design", .init(string: "https://google.com"))
         },
-        snippets: { """
+        examples: { """
 SelectableCard(isOn: $isOn) {
     Text("I'm content")
 }
@@ -101,7 +101,7 @@ The card surface does not have interactive states, meaning it cannot be hovered 
             ExternalLink("Code", .init(string: "StaticCard"))
             ExternalLink("Design", .init(string: "https://google.com"))
         },
-        snippets: {
+        examples: {
 """
 StaticCard {
     Text("I'm content")

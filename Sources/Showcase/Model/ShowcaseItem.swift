@@ -2,44 +2,44 @@ import SwiftUI
 
 public struct ShowcaseItem: Identifiable {
     public var id: String { content.id }
-    var content: Content
-    var children: [ShowcaseItem]?
+    public let content: Content
+    public let children: [ShowcaseItem]?
     
     public init(
         title: String,
-        description: () -> String,
+        description: () -> String = { "" },
         @ExternalLinkBuilder links: () -> [ExternalLink] = { [] },
-        @CodeBlockBuilder snippets: () -> [CodeBlock] = { [] },
+        @CodeBlockBuilder examples: () -> [CodeBlock] = { [] },
         children: [ShowcaseItem]? = nil,
         previews: Previews? = nil
     ) {
-        self.children = children
+        self.children = children?.naturalSort()
         self.content = .init(
+            codeBlocks: examples(),
             description: description(),
             links: links(),
             previews: previews,
-            snippets: snippets(),
             title: title)
     }
     
     public struct Content: Identifiable {
-        public var description: String
         public var id: String { title }
-        public var links: [ExternalLink]
-        public var previews: Previews?
-        public var snippets: [CodeBlock]
-        public var title: String
+        public let codeBlocks: [CodeBlock]
+        public let description: String
+        public let links: [ExternalLink]
+        public let previews: Previews?
+        public let title: String
     }
     
     public struct Previews {
-        public var minWidth: CGFloat?
-        public var idealWidth: CGFloat?
-        public var maxWidth: CGFloat?
-        public var minHeight: CGFloat?
-        public var idealHeight: CGFloat?
-        public var maxHeight: CGFloat?
-        public var alignment: Alignment
-        public var content: AnyView
+        public let minWidth: CGFloat?
+        public let idealWidth: CGFloat?
+        public let maxWidth: CGFloat?
+        public let minHeight: CGFloat?
+        public let idealHeight: CGFloat?
+        public let maxHeight: CGFloat?
+        public let alignment: Alignment
+        public let content: AnyView
         
         public init<V: View>(
             minWidth: CGFloat? = nil,
@@ -63,7 +63,8 @@ public struct ShowcaseItem: Identifiable {
     }
 
     public struct LinkName: CustomStringConvertible, ExpressibleByStringLiteral {
-        public var description: String
+        public let description: String
+        
         public init(_ description: String) {
             self.description = description
         }
@@ -73,9 +74,9 @@ public struct ShowcaseItem: Identifiable {
     }
     
     public struct ExternalLink: Identifiable {
-        public var title: LinkName
-        public var url: URL
         public var id: String { url.absoluteString }
+        public let title: LinkName
+        public let url: URL
         
         public init?(_ title: LinkName, _ url: URL?) {
             guard let url = url else { return nil }
@@ -85,12 +86,12 @@ public struct ShowcaseItem: Identifiable {
     }
     
     public struct CodeBlock: Identifiable, RawRepresentable, ExpressibleByStringLiteral {
-        public var rawValue: String
-        public var title: String?
         public var id: String { rawValue }
-        
+        public let rawValue: String
+        public let title: String?
         
         public init?(rawValue: String) {
+            self.title = nil
             self.rawValue = rawValue
         }
         
@@ -100,6 +101,7 @@ public struct ShowcaseItem: Identifiable {
         }
 
         public init(stringLiteral value: String) {
+            title = nil
             rawValue = value
         }
     }

@@ -17,7 +17,7 @@ extension ShowcaseItem {
             ExternalLink("Code", .init(string: "https://google.com"))
             ExternalLink("Design", .init(string: "https://zeroheight.com/700c95a05/p/0309e1-accordion/b/45490a"))
         },
-        snippets: {
+        examples: {
     """
     Accordion(data, selection: $selectedRow) { item in
         Text(item.title).bold()
