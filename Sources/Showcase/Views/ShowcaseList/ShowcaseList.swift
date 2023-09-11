@@ -4,7 +4,7 @@ public struct ShowcaseList<Icon: View>: View {
     var data: [ShowcaseItem]
     var icon: Icon
     
-    init(_ data: [ShowcaseItem], @ViewBuilder icon: () -> Icon) {
+    public init(_ data: [ShowcaseItem], @ViewBuilder icon: () -> Icon) {
         self.data = data
         self.icon = icon()
     }
