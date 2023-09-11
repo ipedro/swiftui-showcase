@@ -37,7 +37,7 @@ extension View {
     /// within a view:
     ///
     ///     Showcase()
-    ///         .externalLinkStyle(MyCustomStyle())
+    ///         .showcaseExternalLinkStyle(MyCustomStyle())
     ///
     public func showcaseExternalLinkStyle<S: ShowcaseExternalLinkStyle>(_ style: S) -> some View {
         environment(\.externalLinkStyle, .init(style))

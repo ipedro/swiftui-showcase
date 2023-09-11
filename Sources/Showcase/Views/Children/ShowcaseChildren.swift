@@ -39,6 +39,7 @@ public struct ShowcaseChildren: View {
     ///   - data: The data representing child showcase elements.
     ///   - level: The nesting level of the showcase.
     ///   - parentID: The parent ID used for scrolling within the ScrollView.
+    ///   - scrollView: Allows scrolling of the views.
     init?(
         data: [ShowcaseElement.Content]?,
         level: Int,
