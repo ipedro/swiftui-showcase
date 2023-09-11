@@ -1,10 +1,12 @@
 # Showcase
 
-[![Swift Version](https://img.shields.io/badge/Swift-5.5%2B-orange.svg)](https://swift.org)
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![GitHub Actions](https://github.com/ipedro/swiftui-showcase/workflows/Swift/badge.svg)](https://github.com/ipedro/swiftui-showcase/actions)
+![Swift](https://img.shields.io/badge/Swift-5.7-orange.svg)
+![iOS](https://img.shields.io/badge/iOS-15%2B-blue.svg)
+[![GitHub License](https://img.shields.io/github/license/ipedro/swiftui-showcase)](https://github.com/ipedro/swiftui-showcase/blob/main/LICENSE)
+[![GitHub Stars](https://img.shields.io/github/stars/ipedro/swiftui-showcase)](https://github.com/ipedro/swiftui-showcase/stargazers)
+[![GitHub Forks](https://img.shields.io/github/forks/ipedro/swiftui-showcase)](https://github.com/ipedro/swiftui-showcase/network/members)
 
-Showcase is a Swift package for SwiftUI that allows you to create documentation and showcase your SwiftUI components, providing a seamless way to present your UI elements with code samples, previews, and more.
+Showcase is a Swift package designed to simplify the process of documenting and showcasing SwiftUI-based components. It provides a structured approach to create, organize, and present documentation for your SwiftUI projects. Showcase offers a variety of customization options and styles for presenting code samples, previews, and more.
 
 ## Features
 
