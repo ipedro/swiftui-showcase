@@ -24,7 +24,6 @@ public struct ShowcaseNavigationView<Icon: View>: View {
                 icon
             }
             .navigationTitle(title)
-            .listStyle(.sidebar)
         }
     }
 }

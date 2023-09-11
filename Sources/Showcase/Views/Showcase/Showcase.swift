@@ -77,23 +77,24 @@ public struct ShowcaseStyleConfiguration {
             ForEach(data) { item in
                 ZStack(alignment: .topTrailing) {
                     ShowcaseContent(data: item, level: level)
-                    
-                    Button {
-                        withAnimation {
-                            scrollView.scrollTo(parentID)
-                        }
-                    } label: {
-                        Image(systemName: "chevron.up")
-                    }
-                    .padding(.top, 12)
+                    scrollToTop
                 }
             }
         }
+        
+        private var scrollToTop: some View {
+            Button {
+                withAnimation {
+                    scrollView.scrollTo(parentID)
+                }
+            } label: {
+                Image(systemName: "chevron.up")
+            }
+            .padding(.top, 10)
+            .foregroundStyle(.tertiary)
+        }
     }
-    
-    
 }
-import SwiftUI
 
 // MARK: - ShowcaseStyle Extension
 
@@ -140,6 +141,5 @@ struct Showcase_Previews: PreviewProvider {
         NavigationView {
             Showcase(.card)
         }
-        
     }
 }
