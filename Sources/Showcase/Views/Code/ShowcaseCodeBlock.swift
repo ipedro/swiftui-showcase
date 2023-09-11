@@ -1,18 +1,15 @@
 import SwiftUI
 import Splash
 
-struct ShowcaseCodeBlock: View, Identifiable {
+struct ShowcaseCodeBlock: View {
     @Environment(\.snippetStyle) private var style
     
     typealias Configuration = ShowcaseCodeBlockStyleConfiguration
-    
-    let id: String
     
     let configuration: Configuration
     
     init?(_ data: ShowcaseItem.CodeBlock?) {
         guard let data = data else { return nil }
-        self.id = data.id
         self.configuration = .init(
             title: .init(data.title ?? "Sample Code"),
             content: .init(text: data.rawValue),
@@ -20,8 +17,7 @@ struct ShowcaseCodeBlock: View, Identifiable {
         )
     }
     
-    init(_ id: String, configuration: Configuration) {
-        self.id = id
+    init(configuration: Configuration) {
         self.configuration = configuration
     }
     

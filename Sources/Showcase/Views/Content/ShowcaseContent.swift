@@ -78,12 +78,12 @@ extension ShowcaseContentStyle where Self == ShowcaseContentStyleStandard {
 
 struct ShowcaseContentStyleStandard: ShowcaseContentStyle {
     func makeBody(configuration: Configuration) -> some View {
-        LazyVStack(alignment: .leading, spacing: 30) {
+        VStack(alignment: .leading, spacing: 30) {
             configuration.title
                 .font(.system(title(configuration.level)))
             
             if let externalLinks = configuration.externalLinks {
-                LazyHStack {
+                LazyHStack(spacing: .zero) {
                     externalLinks
                 }
             }

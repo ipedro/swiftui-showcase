@@ -54,11 +54,12 @@ public struct ShowcaseIndexStyleHStack: ShowcaseIndexStyle {
             
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHStack {
-                    configuration.label                        .padding(.horizontal)
+                    configuration.label
+                        .padding(.horizontal)
                         .overlay(alignment: .trailing) {
                             Rectangle()
                                 .frame(width: 1)
-                                .opacity(0.1)
+                                .foregroundStyle(.tertiary)
                         }
                 }
             }
