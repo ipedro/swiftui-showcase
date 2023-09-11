@@ -1,17 +1,26 @@
 import SwiftUI
 
 public struct ShowcaseList<Icon: View>: View {
-    var data: [ShowcaseItem]
-    var icon: Icon
+    @State private var selection: ShowcaseItem.ID?
+    let data: [ShowcaseItem]
+    let icon: Icon
     
     public init(_ data: [ShowcaseItem], @ViewBuilder icon: () -> Icon) {
         self.data = data
         self.icon = icon()
+        _selection = State(initialValue: data.first?.id)
     }
     
     public var body: some View {
-        List(data, children: \.children) { item in
-            NavigationLink {
+        List(data, children: \.children, selection: $selection) { item in
+            NavigationLink(
+                isActive: .init(get: {
+                    item.id == selection
+                }, set: { newValue, transaction in
+                    if newValue {
+                        selection = item.id
+                    }
+                })) {
                 Showcase(item)
             } label: {
                 Label {
@@ -34,10 +43,10 @@ struct ShowcaseList_Previews: PreviewProvider {
         NavigationView {
             ShowcaseList(list) {
                 Image(systemName: "swift")
-                    .foregroundColor(.orange)
             }
             .navigationTitle("Components")
-            //.listStyle(.sidebar)
+            .listStyle(.sidebar)
+
         }
     }
 }

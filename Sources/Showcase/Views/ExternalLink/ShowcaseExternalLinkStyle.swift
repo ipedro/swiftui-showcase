@@ -6,19 +6,6 @@ import SwiftUI
 /// To configure the current Showcase style for a view hierarchy, use the
 /// ``Showcase/externalLinkStyle(_:)`` modifier.
 public protocol ShowcaseExternalLinkStyle: PrimitiveButtonStyle {
-//    /// A view that represents the body of a Showcase.
-//    associatedtype Body: View
-//
-//    /// The properties of a Showcase.
-//    typealias Configuration = ShowcaseExternalLinkStyleConfiguration
-//
-//    /// Creates a view that represents the body of a Showcase.
-//    ///
-//    /// The system calls this method for each ``Showcase`` instance in a view
-//    /// hierarchy where this style is the current Showcase style.
-//    ///
-//    /// - Parameter configuration: The properties of a Showcase.
-//    @ViewBuilder func makeBody(configuration: Configuration) -> Body
 }
 
 // MARK: - View Extension

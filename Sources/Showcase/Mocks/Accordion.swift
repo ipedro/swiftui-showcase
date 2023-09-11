@@ -35,14 +35,7 @@ extension ShowcaseItem {
     """
         },
         previewRatio: .init(width: 1, height: 0.8),
-        previews: {
-            VStack {
-                Image(systemName: "swift")
-                Text("Placeholder")
-            }
-            .redacted(reason: .placeholder)
-        }
-    )
+        previews: MockPreviews.init)
 }
 
 struct ShowcaseTopicAccordion_Previews: PreviewProvider {

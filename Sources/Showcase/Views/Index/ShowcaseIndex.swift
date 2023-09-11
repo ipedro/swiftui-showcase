@@ -40,33 +40,7 @@ public struct ShowcaseIndexStyleConfiguration {
 
 }
 
-// MARK: - Row Style
-
-public extension ShowcaseIndexStyle where Self == ShowcaseIndexStyleHStack {
-    static var horizontal: Self { .init() }
-}
-
-public struct ShowcaseIndexStyleHStack: ShowcaseIndexStyle {
-    public func makeBody(configuration: Configuration) -> some View {
-        HStack {
-            Image(systemName: "list.bullet")
-                .foregroundColor(.secondary)
-            
-            ScrollView(.horizontal, showsIndicators: false) {
-                LazyHStack {
-                    configuration.label
-                        .padding(.horizontal)
-                        .overlay(alignment: .trailing) {
-                            Rectangle()
-                                .frame(width: 1)
-                                .foregroundStyle(.tertiary)
-                        }
-                }
-            }
-        }
-    }
-}
-
+// MARK: - Styles
 
 public extension ShowcaseIndexStyle where Self == ShowcaseIndexStyleVStack {
     static var vertical: Self { .init() }
@@ -75,13 +49,15 @@ public extension ShowcaseIndexStyle where Self == ShowcaseIndexStyleVStack {
 public struct ShowcaseIndexStyleVStack: ShowcaseIndexStyle {
     public func makeBody(configuration: Configuration) -> some View {
         LazyVStack(alignment: .leading) {
-            configuration.label                        .padding(.horizontal)
-                .overlay(alignment: .leading) {
-                    Circle()
-                        .frame(width: 8)
-                }
+            configuration.label
                 .padding(.horizontal)
                 .padding(.vertical, 2)
+                .overlay(alignment: .leading) {
+                    Circle()
+                        .frame(width: 6)
+                        .foregroundStyle(.secondary)
+                }
+                .padding(.horizontal, 25)
         }
     }
 }

@@ -40,7 +40,6 @@ NavigationalCard {
 } label: {
     Text("I'm content")
 }
-.cardStyle(.elevated())
 """
             }
             
@@ -50,15 +49,11 @@ NavigationalCard {
 } label: {
     Text("I'm content")
 }
-.cardStyle(.outlined())
 """
             }
             
         },
-        previews: {
-            Text("Placeholder").opacity(0.3)
-        }
-    )
+        previews: MockPreviews.init)
 }
 
 // MARK: - Selectable Card
@@ -79,19 +74,9 @@ Selectable cards serve for selecting an item that is part of a group of options 
 SelectableCard(isOn: $isOn) {
     Text("I'm content")
 }
-.cardStyle(.elevated())
 """
         },
-        previews: {
-            ForEach(0...5, id: \.self) { _ in
-                VStack {
-                    Image(systemName: "swift")
-                    Text("Placeholder")
-                }
-                .redacted(reason: .placeholder)
-            }
-        }
-    )
+        previews: MockPreviews.init)
 }
 
 // MARK: - Static Card
@@ -115,13 +100,9 @@ The card surface does not have interactive states, meaning it cannot be hovered 
 StaticCard {
     Text("I'm content")
 }
-// .cardStyle(.outlined()) optional
 """
         },
-        previews: {
-            Text("Placeholder").opacity(0.3)
-        }
-    )
+        previews: MockPreviews.init)
 }
 
 struct card_Previews: PreviewProvider {

@@ -44,13 +44,6 @@ extension ShowcaseExternalLinkStyle where Self == ShowcaseExternalLinkStyleDefau
 
 struct ShowcaseExternalLinkStyleDefault: ShowcaseExternalLinkStyle {
     func makeBody(configuration: Configuration) -> some View {
-        DefaultButtonStyle().makeBody(configuration: configuration)
-            .padding(.horizontal)
-            .overlay(alignment: .leading) {
-                Rectangle()
-                    .frame(width: 1)
-                    .foregroundStyle(.tertiary)
-            }
-        
+        BorderedButtonStyle().makeBody(configuration: configuration)
     }
 }

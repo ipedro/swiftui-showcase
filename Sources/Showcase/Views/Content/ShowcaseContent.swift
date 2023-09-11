@@ -1,15 +1,11 @@
 import SwiftUI
 
-public struct ShowcaseContent: View, Identifiable {
+public struct ShowcaseContent: View {
     typealias Configuration = ShowcaseContentStyleConfiguration
     
     @Environment(\.showcaseContentStyle) private var style
     let data: ShowcaseItem.Content
     let level: Int
-    
-    public var id: String {
-        data.id
-    }
     
     var configuration: Configuration {
         .init(
@@ -83,7 +79,7 @@ struct ShowcaseContentStyleStandard: ShowcaseContentStyle {
                 .font(.system(title(configuration.level)))
             
             if let externalLinks = configuration.externalLinks {
-                LazyHStack(spacing: .zero) {
+                LazyHStack {
                     externalLinks
                 }
             }
