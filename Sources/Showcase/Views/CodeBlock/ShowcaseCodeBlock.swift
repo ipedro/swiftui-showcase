@@ -1,26 +1,35 @@
 import SwiftUI
 import Splash
 
+/// A view that displays code blocks with syntax highlighting and a copy to pasteboard button.
 struct ShowcaseCodeBlock: View {
+    /// The style for displaying code blocks.
     @Environment(\.snippetStyle) private var style
     
+    /// The configuration for the ShowcaseCodeBlock view.
     typealias Configuration = ShowcaseCodeBlockStyleConfiguration
     
+    /// The configuration for the code block.
     let configuration: Configuration
     
+    /// Initializes a ShowcaseCodeBlock view with the specified code block data.
+    /// - Parameter data: The data representing the code block (optional).
     init?(_ data: ShowcaseElement.CodeBlock?) {
         guard let data = data else { return nil }
-        self.configuration = .init(
+        self.configuration = Configuration(
             title: .init(data.title ?? "Sample Code"),
             content: .init(text: data.rawValue),
             copyToPasteboard: .init(text: data.rawValue)
         )
     }
     
+    /// Initializes a ShowcaseCodeBlock view with the provided configuration.
+    /// - Parameter configuration: The configuration for the code block.
     init(configuration: Configuration) {
         self.configuration = configuration
     }
     
+    /// The body of the ShowcaseCodeBlock view.
     var body: some View {
         style.makeBody(configuration: configuration)
     }
@@ -29,9 +38,11 @@ struct ShowcaseCodeBlock: View {
 // MARK: - Default Style
 
 extension ShowcaseCodeBlockStyle where Self == ShowcaseCodeBlockStyleStandard {
+    /// The standard style for displaying code blocks.
     static var standard: Self { .init() }
 }
 
+/// The standard style for displaying code blocks in ShowcaseCodeBlock.
 public struct ShowcaseCodeBlockStyleStandard: ShowcaseCodeBlockStyle {
     public func makeBody(configuration: Configuration) -> some View {
         GroupBox {
@@ -49,12 +60,18 @@ public struct ShowcaseCodeBlockStyleStandard: ShowcaseCodeBlockStyle {
     }
 }
 
+/// The configuration for a code block in ShowcaseCodeBlock.
 public struct ShowcaseCodeBlockStyleConfiguration {
+    /// The title of the code block.
     public let title: Text
+    /// The content of the code block.
     public let content: Content
+    /// The button to copy the code to the pasteboard.
     public let copyToPasteboard: CopyToPasteboard
     
+    /// The view representing the copy to pasteboard button.
     public struct CopyToPasteboard: View {
+        /// The text to be copied to the pasteboard.
         var text: String
         public var body: some View {
             Button {
@@ -65,8 +82,11 @@ public struct ShowcaseCodeBlockStyleConfiguration {
         }
     }
     
+    /// The view representing the content of the code block with syntax highlighting.
     public struct Content: View {
+        /// The text content of the code block.
         let text: String
+        /// The color scheme environment variable.
         @Environment(\.colorScheme) private var colorScheme
         
         public var body: some View {
@@ -74,6 +94,11 @@ public struct ShowcaseCodeBlockStyleConfiguration {
                 .textSelection(.enabled)
         }
         
+        /// Applies syntax highlighting and creates an AttributedString for the code block content.
+        /// - Parameters:
+        ///   - text: The text content of the code block.
+        ///   - scheme: The color scheme.
+        /// - Returns: An AttributedString with syntax highlighting.
         private func decorated(_ text: String, _ scheme: ColorScheme) -> AttributedString {
             let theme = theme(scheme)
             let format = AttributedStringOutputFormat(theme: theme)
@@ -82,6 +107,9 @@ public struct ShowcaseCodeBlockStyleConfiguration {
             return attributed
         }
         
+        /// Retrieves the theme for syntax highlighting based on the color scheme.
+        /// - Parameter colorScheme: The color scheme.
+        /// - Returns: The theme for syntax highlighting.
         private func theme(_ colorScheme: ColorScheme) -> Theme {
             switch colorScheme {
             case .dark: return .xcodeDark(withFont: .init(size: 14))

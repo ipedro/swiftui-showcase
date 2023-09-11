@@ -35,10 +35,10 @@ public struct ShowcaseChildren: View {
     /// The body of the child views within the showcase.
     public var body: some View {
         ForEach(data) { item in
-            ZStack(alignment: .topTrailing) {
-                ShowcaseContent(data: item, level: level)
-                scrollToTop
-            }
+            ShowcaseContent(data: item, level: level)
+                .overlay(alignment: .topTrailing) {
+                    scrollToTop
+                }
         }
     }
     

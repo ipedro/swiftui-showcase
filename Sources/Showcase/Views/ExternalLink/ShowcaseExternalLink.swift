@@ -1,20 +1,21 @@
 import SwiftUI
-import SwiftUI
 import SafariServices
 
+/// A view that displays an external link to a website in a Safari view controller.
 struct ShowcaseExternalLink: View {
+    /// The style environment variable for displaying external links.
     @Environment(\.externalLinkStyle) private var style
-    let data: ShowcaseElement.ExternalLink
     
-    init(_ data: ShowcaseElement.ExternalLink) {
-        self.data = data
-    }
+    /// The data representing the external link.
+    let data: ShowcaseElement.ExternalLink
     
     var body: some View {
         Button {
+            // Create a Safari view controller to open the external link.
             let safariController = SFSafariViewController(url: data.url)
             safariController.preferredControlTintColor = .label
 
+            // Present the Safari view controller.
             UIApplication
                 .shared
                 .firstKeyWindow?
@@ -33,17 +34,18 @@ struct ShowcaseExternalLink: View {
             }
         )
     }
-    
 }
 
 // MARK: - Default Style
 
-extension ShowcaseExternalLinkStyle where Self == ShowcaseExternalLinkStyleDefault {
+public extension ShowcaseExternalLinkStyle where Self == ShowcaseExternalLinkStyleDefault {
+    /// The default style for showcasing external links.
     static var standard: Self { .init() }
 }
 
-struct ShowcaseExternalLinkStyleDefault: ShowcaseExternalLinkStyle {
-    func makeBody(configuration: Configuration) -> some View {
+/// The default style for showcasing external links.
+public struct ShowcaseExternalLinkStyleDefault: ShowcaseExternalLinkStyle {
+    public func makeBody(configuration: Configuration) -> some View {
         BorderedButtonStyle().makeBody(configuration: configuration)
     }
 }

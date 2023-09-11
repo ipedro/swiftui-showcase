@@ -33,18 +33,20 @@ public struct Showcase: View {
     /// Generates the showcase configuration based on the provided ScrollViewProxy.
     /// - Parameter scrollView: The ScrollViewProxy to interact with the ScrollView.
     /// - Returns: The showcase configuration.
-    private func configuration(with scrollView: ScrollViewProxy) -> ShowcaseStyleConfiguration {
-        ShowcaseStyleConfiguration(
-            children: .init(
+    func configuration(
+        _ scrollView: ScrollViewProxy
+    ) -> Configuration {
+        Configuration(
+            children: ShowcaseChildren(
                 data: data.children?.map(\.content),
                 level: level + 1,
                 parentID: data.id,
                 scrollView: scrollView
             ),
-            content: .init(
+            content: ShowcaseContent(
                 data: data.content,
                 level: level),
-            index: .init(
+            index: ShowcaseIndex(
                 configuration: .init(
                     label: .init(
                         data: data.children,
@@ -55,7 +57,7 @@ public struct Showcase: View {
     
     public var body: some View {
         ScrollViewReader { scrollView in
-            let configuration = configuration(with: scrollView)
+            let configuration = configuration(scrollView)
             
             ScrollView {
                 style.makeBody(configuration: configuration)
