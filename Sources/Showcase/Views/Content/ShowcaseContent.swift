@@ -110,3 +110,21 @@ struct ShowcaseContentStyleStandard: ShowcaseContentStyle {
         }
     }
 }
+
+// MARK: - Previews
+
+struct ShowcaseContent_Previews: PreviewProvider {
+    static let styles: [AnyShowcaseContentStyle] = [
+        .init(.standard)
+    ]
+    
+    static var previews: some View {
+        ForEach(0...styles.count - 1, id: \.self) { index in
+            ScrollView {
+                ShowcaseContent(data: ShowcaseItem.accordion.content, level: index)
+                    .showcaseContentStyle(styles[index])
+                    .padding()
+            }
+        }
+    }
+}

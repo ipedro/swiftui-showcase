@@ -34,7 +34,7 @@ public struct ShowcasePreviewsStyleConfiguration {
     public let previews: Previews
 }
 
-// MARK: - Style
+// MARK: - Styles
 
 public extension ShowcasePreviewsStyle where Self == ShowcasePreviewsStylePaged {
     static var paged: Self { .init() }
@@ -61,3 +61,18 @@ public struct ShowcasePreviewsStylePaged: ShowcasePreviewsStyle {
     }
 }
 
+// MARK: - Previews
+
+struct ShowcasePreviews_Previews: PreviewProvider {
+    static let styles: [AnyShowcasePreviewsStyle] = [
+        .init(.paged)
+    ]
+    
+    static var previews: some View {
+        ForEach(0...styles.count - 1, id: \.self) { index in
+            ShowcasePreviews(.init {
+                MockPreviews()
+            })
+        }
+    }
+}

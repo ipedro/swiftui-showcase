@@ -19,9 +19,9 @@ public struct ShowcaseIndexStyleConfiguration {
     /// A type-erased collection of anchor buttons
     public struct Label: View {
         let data: [ShowcaseItem]
-        let scrollView: ScrollViewProxy
+        let scrollView: ScrollViewProxy?
         
-        init?(data: [ShowcaseItem]?, scrollView: ScrollViewProxy) {
+        init?(data: [ShowcaseItem]?, scrollView: ScrollViewProxy? = nil) {
             guard let data = data, !data.isEmpty else { return nil }
             self.data = data
             self.scrollView = scrollView
@@ -31,19 +31,22 @@ public struct ShowcaseIndexStyleConfiguration {
             ForEach(data) { item in
                 Button(item.content.title) {
                     withAnimation(.spring()) {
-                        scrollView.scrollTo(item.id, anchor: .top)
+                        scrollView?.scrollTo(item.id, anchor: .top)
                     }
                 }
             }
         }
     }
-
 }
 
 // MARK: - Styles
 
 public extension ShowcaseIndexStyle where Self == ShowcaseIndexStyleVStack {
     static var vertical: Self { .init() }
+}
+
+public extension ShowcaseIndexStyle where Self == ShowcaseIndexStyleMenu {
+    static var menu: Self { .init() }
 }
 
 public struct ShowcaseIndexStyleVStack: ShowcaseIndexStyle {
@@ -60,10 +63,6 @@ public struct ShowcaseIndexStyleVStack: ShowcaseIndexStyle {
                 .padding(.horizontal, 25)
         }
     }
-}
-
-public extension ShowcaseIndexStyle where Self == ShowcaseIndexStyleMenu {
-    static var menu: Self { .init() }
 }
 
 public struct ShowcaseIndexStyleMenu: ShowcaseIndexStyle {
@@ -88,20 +87,27 @@ public struct ShowcaseIndexStyleMenu: ShowcaseIndexStyle {
     }
 }
 
+// MARK: - Previews
+
 struct ShowcaseIndex_Previews: PreviewProvider {
+    static let styles: [AnyShowcaseIndexStyle] = [
+        .init(.menu),
+        .init(.vertical)
+    ]
+    
     static var previews: some View {
-        ScrollViewReader { scroll in
+        ForEach(0...styles.count - 1, id: \.self) { index in
             ShowcaseIndex(
                 configuration: .init(
-                    label: .init(
-                        data: [
-                            .staticCard,
-                            .navigationalCard,
-                            .selectableCard,
-                            .accordion
-                        ],
-                        scrollView: scroll)))
-            //.showcaseIndexStyle(.menu)
+                    label: .init(data: [
+                        .staticCard,
+                        .navigationalCard,
+                        .selectableCard,
+                        .accordion
+                    ])
+                )
+            )
+            .showcaseIndexStyle(styles[index])
         }
     }
 }

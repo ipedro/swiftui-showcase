@@ -119,5 +119,6 @@ struct Showcase_Previews: PreviewProvider {
         NavigationView {
             Showcase(.card)
         }
+        
     }
 }

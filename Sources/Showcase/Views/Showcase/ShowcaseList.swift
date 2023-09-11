@@ -3,19 +3,25 @@ import SwiftUI
 public struct ShowcaseList<Icon: View>: View {
     let data: [ShowcaseItem]
     let icon: Icon
+    let maxWidth: CGFloat
     
     public init(
         _ data: [ShowcaseItem],
+        maxWidth: CGFloat = 600,
         @ViewBuilder icon: () -> Icon
     ) {
         self.data = data
+        self.maxWidth = maxWidth
         self.icon = icon()
     }
     
     public var body: some View {
         List(data, children: \.children) { item in
             NavigationLink {
-                Showcase(item)
+                HStack(spacing: .zero) {
+                    Showcase(item).frame(maxWidth: maxWidth)
+                    Spacer(minLength: 0)
+                }
             } label: {
                 Label {
                     Text(item.content.title)
@@ -38,9 +44,6 @@ struct ShowcaseList_Previews: PreviewProvider {
             ShowcaseList(list) {
                 Image(systemName: "swift")
             }
-            .navigationTitle("Components")
-            .listStyle(.sidebar)
-
         }
     }
 }
