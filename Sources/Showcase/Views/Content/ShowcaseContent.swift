@@ -74,7 +74,7 @@ extension ShowcaseContentStyle where Self == ShowcaseContentStyleStandard {
 
 struct ShowcaseContentStyleStandard: ShowcaseContentStyle {
     func makeBody(configuration: Configuration) -> some View {
-        VStack(alignment: .leading, spacing: 30) {
+        LazyVStack(alignment: .leading, spacing: 30) {
             configuration.title
                 .font(.system(title(configuration.level)))
             

@@ -9,8 +9,8 @@ public struct ShowcaseNavigationView<Icon: View>: View {
     public init(
         _ data: [ShowcaseItem],
         title: String = "Components",
-        @ViewBuilder icon: () -> Icon = { Image(systemName: "swift") },
-        maxWidth: CGFloat = 600
+        maxWidth: CGFloat = 600,
+        @ViewBuilder icon: () -> Icon = { Image(systemName: "swift") }
     ) {
         self.data = data
         self.title = title

@@ -30,7 +30,7 @@ public struct ShowcaseIndexStyleConfiguration {
         public var body: some View {
             ForEach(data) { item in
                 Button(item.content.title) {
-                    withAnimation(.spring()) {
+                    withAnimation {
                         scrollView?.scrollTo(item.id, anchor: .top)
                     }
                 }
@@ -79,8 +79,7 @@ public struct ShowcaseIndexStyleMenu: ShowcaseIndexStyle {
                     .padding(5)
                     .mask { shape }
                     .background {
-                        shape
-                            .opacity(0.2)
+                        shape.opacity(0.1)
                     }
             }
         }

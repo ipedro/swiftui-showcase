@@ -5,8 +5,7 @@ import SwiftUI
 ///
 /// To configure the current Showcase style for a view hierarchy, use the
 /// ``Showcase/externalLinkStyle(_:)`` modifier.
-public protocol ShowcaseExternalLinkStyle: PrimitiveButtonStyle {
-}
+public protocol ShowcaseExternalLinkStyle: PrimitiveButtonStyle {}
 
 // MARK: - View Extension
 

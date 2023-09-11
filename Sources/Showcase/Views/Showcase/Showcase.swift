@@ -3,34 +3,36 @@ import SwiftUI
 public struct Showcase: View {
     typealias Configuration = ShowcaseStyleConfiguration
     @Environment(\.showcaseStyle) private var style
-    var item: ShowcaseItem
+    var data: ShowcaseItem
     var level: Int
     
     private init(_ data: ShowcaseItem, level: Int) {
-        self.item = data
+        self.data = data
         self.level = level
     }
     
     public init(_ data: ShowcaseItem) {
-        self.item = data
+        self.data = data
         self.level = .zero
     }
     
     func configuration(with scrollView: ScrollViewProxy) -> ShowcaseStyleConfiguration {
         return .init(
             children: .init(
-                data: item.children?.map(\.content),
-                level: level + 1),
+                data: data.children?.map(\.content),
+                level: level + 1,
+                parentID: data.id,
+                scrollView: scrollView
+            ),
             content: .init(
-                data: item.content,
+                data: data.content,
                 level: level),
             index: .init(
                 configuration: .init(
                     label: .init(
-                        data: item.children,
+                        data: data.children,
                         scrollView: scrollView))),
-            level: level,
-            scrollView: scrollView
+            level: level
         )
     }
     
@@ -41,7 +43,7 @@ public struct Showcase: View {
             ScrollView {
                 style.makeBody(configuration: configuration)
             }
-            .navigationTitle(Text(item.content.title))
+            .navigationTitle(Text(data.content.title))
         }
     }
 }
@@ -51,21 +53,40 @@ public struct ShowcaseStyleConfiguration {
     public let content: ShowcaseContent
     public let index: ShowcaseIndex?
     public let level: Int
-    public let scrollView: ScrollViewProxy
     
     public struct Children: View {
         let data: [ShowcaseItem.Content]
         let level: Int
+        let parentID: ShowcaseItem.ID
+        let scrollView: ScrollViewProxy
         
-        init?(data: [ShowcaseItem.Content]?, level: Int) {
+        init?(
+            data: [ShowcaseItem.Content]?,
+            level: Int,
+            parentID: ShowcaseItem.ID,
+            scrollView: ScrollViewProxy
+        ) {
             guard let data = data, !data.isEmpty else { return nil }
             self.data = data
             self.level = level
+            self.parentID = parentID
+            self.scrollView = scrollView
         }
         
         public var body: some View {
-            ForEach(data) {
-                ShowcaseContent(data: $0, level: level)
+            ForEach(data) { item in
+                ZStack(alignment: .topTrailing) {
+                    ShowcaseContent(data: item, level: level)
+                    
+                    Button {
+                        withAnimation {
+                            scrollView.scrollTo(parentID)
+                        }
+                    } label: {
+                        Image(systemName: "chevron.up")
+                    }
+                    .padding(.top, 12)
+                }
             }
         }
     }

@@ -46,7 +46,7 @@ public struct ShowcaseItem: Identifiable {
             idealWidth: CGFloat? = nil,
             maxWidth: CGFloat? = nil,
             minHeight: CGFloat? = nil,
-            idealHeight: CGFloat? = 200,
+            idealHeight: CGFloat? = 250,
             maxHeight: CGFloat? = nil,
             alignment: Alignment = .center,
             @ViewBuilder content: () -> V
