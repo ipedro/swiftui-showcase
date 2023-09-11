@@ -64,7 +64,7 @@ public struct AnyShowcasePreviewsStyle: ShowcasePreviewsStyle {
 
 /// A private key needed to save style data in the environment
 private struct ShowcasePreviewsStyleKey: EnvironmentKey {
-    static var defaultValue: AnyShowcasePreviewsStyle = .init(.standard)
+    static var defaultValue: AnyShowcasePreviewsStyle = .init(.paged)
     static func reduce(value: inout AnyShowcasePreviewsStyle, nextValue: () -> AnyShowcasePreviewsStyle) {}
 }
 

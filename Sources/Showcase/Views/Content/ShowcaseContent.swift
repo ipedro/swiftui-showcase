@@ -18,7 +18,7 @@ public struct ShowcaseContent: View, Identifiable {
                 description: .init(data.description),
                 previews: .init(data.previews),
                 externalLinks: .init(data: data.links),
-                snippets: .init(data: data.snippets)
+                codeBlocks: .init(data: data.snippets)
         )
     }
     
@@ -37,7 +37,7 @@ public struct ShowcaseContentStyleConfiguration {
     public let description: Text
     public let previews: ShowcasePreviews?
     public let externalLinks: ExternalLinks?
-    public let snippets: CodeBlocks?
+    public let codeBlocks: CodeBlocks?
     
     public struct ExternalLinks: View {
         let data: [ShowcaseItem.ExternalLink]
@@ -83,10 +83,8 @@ struct ShowcaseContentStyleStandard: ShowcaseContentStyle {
                 .font(.system(title(configuration.level)))
             
             if let externalLinks = configuration.externalLinks {
-                ScrollView {
-                    LazyHStack {
-                        externalLinks
-                    }
+                LazyHStack {
+                    externalLinks
                 }
             }
             
@@ -95,7 +93,7 @@ struct ShowcaseContentStyleStandard: ShowcaseContentStyle {
             configuration.description
                 .font(.system(description(configuration.level)))
             
-            configuration.snippets
+            configuration.codeBlocks
                 .padding(.top)
         }
     }

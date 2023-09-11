@@ -21,19 +21,21 @@ public struct ShowcasePreviews: View {
     }
 }
 
+// MARK: - Configuration
+
 public struct ShowcasePreviewsStyleConfiguration {
     public typealias Previews = AnyView
     public let aspectRatio: CGFloat
     public let previews: Previews
 }
 
-// MARK: - Standard Style
+// MARK: - Style
 
-public extension ShowcasePreviewsStyle where Self == ShowcasePreviewsStyleStandard {
-    static var standard: Self { .init() }
+public extension ShowcasePreviewsStyle where Self == ShowcasePreviewsStylePaged {
+    static var paged: Self { .init() }
 }
 
-public struct ShowcasePreviewsStyleStandard: ShowcasePreviewsStyle {
+public struct ShowcasePreviewsStylePaged: ShowcasePreviewsStyle {
     public func makeBody(configuration: Configuration) -> some View {
         GroupBox {
             TabView {
