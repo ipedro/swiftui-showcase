@@ -36,7 +36,11 @@ extension ShowcaseItem {
         },
         previewRatio: .init(width: 1, height: 0.8),
         previews: {
-            Text("Placeholder").opacity(0.3)
+            VStack {
+                Image(systemName: "swift")
+                Text("Placeholder")
+            }
+            .redacted(reason: .placeholder)
         }
     )
 }

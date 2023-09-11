@@ -83,7 +83,13 @@ SelectableCard(isOn: $isOn) {
 """
         },
         previews: {
-            Text("Placeholder").opacity(0.3)
+            ForEach(0...5, id: \.self) { _ in
+                VStack {
+                    Image(systemName: "swift")
+                    Text("Placeholder")
+                }
+                .redacted(reason: .placeholder)
+            }
         }
     )
 }
