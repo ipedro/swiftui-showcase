@@ -39,4 +39,13 @@ public struct ShowcaseSection: Identifiable {
         self.title = title
         self.data = elements.naturalSort()
     }
+    
+    /// Initializes a showcase section with the specified title and showcase elements.
+    /// - Parameters:
+    ///   - title: The title of the section.
+    ///   - elements: The showcase elements within the section.
+    public init(_ title: String, _ elements: ShowcaseElement...) {
+        self.title = title
+        self.data = elements.naturalSort()
+    }
 }
