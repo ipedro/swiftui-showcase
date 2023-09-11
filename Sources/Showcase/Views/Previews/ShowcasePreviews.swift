@@ -2,7 +2,9 @@ import SwiftUI
 
 public struct ShowcasePreviews: View {
     typealias Configuration = ShowcasePreviewsStyleConfiguration
+    
     @Environment(\.previewsStyle) private var style
+    
     let data: ShowcaseElement.Previews
     
     init?(_ data: ShowcaseElement.Previews?) {
@@ -15,15 +17,19 @@ public struct ShowcasePreviews: View {
     }
     
     public var body: some View {
-        style.makeBody(configuration: configuration)
-            .frame(
-                minWidth: data.minWidth,
-                idealWidth: data.idealWidth,
-                maxWidth: data.maxWidth,
-                minHeight: data.minHeight,
-                idealHeight: data.idealHeight,
-                maxHeight: data.maxHeight,
-                alignment: data.alignment)
+        GroupBox {
+            style.makeBody(configuration: configuration)
+                .frame(
+                    minWidth: data.minWidth,
+                    idealWidth: data.idealWidth,
+                    maxWidth: data.maxWidth,
+                    minHeight: data.minHeight,
+                    idealHeight: data.idealHeight,
+                    maxHeight: data.maxHeight,
+                    alignment: data.alignment)
+        } label: {
+            Text(data.title ?? "Previews")
+        }
     }
 }
 
@@ -42,22 +48,17 @@ public extension ShowcasePreviewsStyle where Self == ShowcasePreviewsStylePaged 
 
 public struct ShowcasePreviewsStylePaged: ShowcasePreviewsStyle {
     public func makeBody(configuration: Configuration) -> some View {
-        GroupBox {
-            TabView {
-                configuration.previews
-                    .padding(.bottom, 44)
-            }
-            .tabViewStyle(.page)
-        } label: {
-            Text("Previews")
-                .foregroundColor(.secondary)
+        TabView {
+            configuration.previews
+                .padding(.bottom, 50)
         }
+        .tabViewStyle(.page)
         .onAppear(perform: setupPageControl)
     }
     
     private func setupPageControl() {
-        UIPageControl.appearance().currentPageIndicatorTintColor = .label
-        UIPageControl.appearance().pageIndicatorTintColor = .label.withAlphaComponent(0.3)
+        UIPageControl.appearance().currentPageIndicatorTintColor = .secondaryLabel
+        UIPageControl.appearance().pageIndicatorTintColor = .label.withAlphaComponent(0.15)
     }
 }
 

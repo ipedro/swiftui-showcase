@@ -29,7 +29,7 @@ public struct ShowcaseElement: Identifiable {
         children: [ShowcaseElement]? = nil,
         previews: Previews? = nil
     ) {
-        self.children = children?.naturalSort()
+        self.children = children
         self.content = .init(
             codeBlocks: examples(),
             description: description(),
@@ -104,7 +104,7 @@ public struct ShowcaseElement: Identifiable {
             idealWidth: CGFloat? = nil,
             maxWidth: CGFloat? = nil,
             minHeight: CGFloat? = nil,
-            idealHeight: CGFloat? = 250,
+            idealHeight: CGFloat? = 200,
             maxHeight: CGFloat? = nil,
             alignment: Alignment = .center,
             title: String? = nil,

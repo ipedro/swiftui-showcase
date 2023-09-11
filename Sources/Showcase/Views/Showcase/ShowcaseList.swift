@@ -20,6 +20,18 @@ public struct ShowcaseList<Icon: View>: View {
         self.icon = icon()
     }
     
+    /// Initializes a showcase list with the specified data and optional icon.
+    /// - Parameters:
+    ///   - data: The data representing showcase sections.
+    ///   - icon: A closure that returns the icon view for each showcase item (optional).
+    public init(
+        _ data: ShowcaseSection...,
+        @ViewBuilder icon: () -> Icon = { EmptyView() }
+    ) {
+        self.data = data
+        self.icon = icon()
+    }
+    
     public var body: some View {
         List {
             ForEach(data) { section in
@@ -42,16 +54,16 @@ public struct ShowcaseList<Icon: View>: View {
 }
 
 struct ShowcaseList_Previews: PreviewProvider {
-    static var list: [ShowcaseElement] = [
+    static var elements: [ShowcaseElement] = [
         .accordion,
         .card
     ]
     
     static var previews: some View {
         NavigationView {
-            ShowcaseList([
-                .init("List", elements: list)
-            ])
+            ShowcaseList(
+                ShowcaseSection("List", elements)
+            )
         }
     }
 }

@@ -15,7 +15,16 @@ public struct ShowcaseLibrary: Identifiable {
     /// - Parameters:
     ///   - title: The title of the library.
     ///   - sections: The sections within the library.
-    public init(_ title: String, sections: [ShowcaseSection]) {
+    public init(_ title: String, _ sections: [ShowcaseSection]) {
+        self.title = title
+        self.sections = sections.naturalSort()
+    }
+    
+    /// Initializes a showcase library with the specified title and sections.
+    /// - Parameters:
+    ///   - title: The title of the library.
+    ///   - sections: The sections within the library.
+    public init(_ title: String, _ sections: ShowcaseSection...) {
         self.title = title
         self.sections = sections.naturalSort()
     }

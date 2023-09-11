@@ -31,18 +31,19 @@ public struct ShowcaseNavigationView<Icon: View>: View {
 // MARK: - Previews
 
 struct ShowcaseNavigationView_Previews: PreviewProvider {
-    static var list: [ShowcaseElement] = [
+    static var elements: [ShowcaseElement] = [
         .card,
         .accordion
     ]
 
     static var previews: some View {
         ShowcaseNavigationView(
-            .init(
+            ShowcaseLibrary(
                 "Library",
-                sections: [
-                    .init("Mock", elements: list)
-                ]
+                ShowcaseSection(
+                    "Mock",
+                    elements
+                )
             )
         )
     }
