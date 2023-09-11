@@ -3,15 +3,15 @@ import SwiftUI
 public struct Showcase: View {
     typealias Configuration = ShowcaseStyleConfiguration
     @Environment(\.showcaseStyle) private var style
-    var data: ShowcaseItem
+    var data: ShowcaseElement
     var level: Int
     
-    private init(_ data: ShowcaseItem, level: Int) {
+    private init(_ data: ShowcaseElement, level: Int) {
         self.data = data
         self.level = level
     }
     
-    public init(_ data: ShowcaseItem) {
+    public init(_ data: ShowcaseElement) {
         self.data = data
         self.level = .zero
     }
@@ -55,15 +55,15 @@ public struct ShowcaseStyleConfiguration {
     public let level: Int
     
     public struct Children: View {
-        let data: [ShowcaseItem.Content]
+        let data: [ShowcaseElement.Content]
         let level: Int
-        let parentID: ShowcaseItem.ID
+        let parentID: ShowcaseElement.ID
         let scrollView: ScrollViewProxy
         
         init?(
-            data: [ShowcaseItem.Content]?,
+            data: [ShowcaseElement.Content]?,
             level: Int,
-            parentID: ShowcaseItem.ID,
+            parentID: ShowcaseElement.ID,
             scrollView: ScrollViewProxy
         ) {
             guard let data = data, !data.isEmpty else { return nil }

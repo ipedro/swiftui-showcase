@@ -4,9 +4,9 @@ import SafariServices
 
 struct ShowcaseExternalLink: View {
     @Environment(\.externalLinkStyle) private var style
-    let data: ShowcaseItem.ExternalLink
+    let data: ShowcaseElement.ExternalLink
     
-    init(_ data: ShowcaseItem.ExternalLink) {
+    init(_ data: ShowcaseElement.ExternalLink) {
         self.data = data
     }
     

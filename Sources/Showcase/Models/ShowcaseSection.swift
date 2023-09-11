@@ -3,10 +3,10 @@ import Foundation
 public struct ShowcaseSection: Identifiable {
     public var id: String { "section-\(title)" }
     public var title: String
-    public var data: [ShowcaseItem]
+    public var data: [ShowcaseElement]
     
-    public init(_ title: String, data: [ShowcaseItem]) {
+    public init(_ title: String, elements: [ShowcaseElement]) {
         self.title = title
-        self.data = data.naturalSort()
+        self.data = elements.naturalSort()
     }
 }

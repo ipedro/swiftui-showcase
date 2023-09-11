@@ -8,7 +8,7 @@ struct ShowcaseCodeBlock: View {
     
     let configuration: Configuration
     
-    init?(_ data: ShowcaseItem.CodeBlock?) {
+    init?(_ data: ShowcaseElement.CodeBlock?) {
         guard let data = data else { return nil }
         self.configuration = .init(
             title: .init(data.title ?? "Sample Code"),

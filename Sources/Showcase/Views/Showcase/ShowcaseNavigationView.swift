@@ -23,7 +23,7 @@ public struct ShowcaseNavigationView<Icon: View>: View {
 // MARK: - Previews
 
 struct ShowcaseNavigationView_Previews: PreviewProvider {
-    static var list: [ShowcaseItem] = [
+    static var list: [ShowcaseElement] = [
         .card,
         .accordion
     ]
@@ -33,7 +33,7 @@ struct ShowcaseNavigationView_Previews: PreviewProvider {
             .init(
                 "Library",
                 sections: [
-                    .init("Mock", data: list)
+                    .init("Mock", elements: list)
                 ]
             )
         )

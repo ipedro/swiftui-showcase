@@ -34,7 +34,7 @@ public struct ShowcaseList<Icon: View>: View {
 }
 
 struct ShowcaseList_Previews: PreviewProvider {
-    static var list: [ShowcaseItem] = [
+    static var list: [ShowcaseElement] = [
         .accordion,
         .card
     ]
@@ -42,7 +42,7 @@ struct ShowcaseList_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
             ShowcaseList([
-                .init("List", data: list)
+                .init("List", elements: list)
             ])
         }
     }

@@ -1,16 +1,16 @@
 import SwiftUI
 
-public struct ShowcaseItem: Identifiable {
+public struct ShowcaseElement: Identifiable {
     public var id: String { content.id }
     public let content: Content
-    public let children: [ShowcaseItem]?
+    public let children: [ShowcaseElement]?
     
     public init(
         title: String,
         description: () -> String = { "" },
         @ExternalLinkBuilder links: () -> [ExternalLink] = { [] },
         @CodeBlockBuilder examples: () -> [CodeBlock] = { [] },
-        children: [ShowcaseItem]? = nil,
+        children: [ShowcaseElement]? = nil,
         previews: Previews? = nil
     ) {
         self.children = children?.naturalSort()
@@ -119,5 +119,4 @@ public struct ShowcaseItem: Identifiable {
         public static func buildBlock(_ components: CodeBlock...) -> [CodeBlock] { components }
         public static func buildBlock(_ components: String...) -> [CodeBlock] { components.map { .init(stringLiteral: $0) } }
     }
-
 }

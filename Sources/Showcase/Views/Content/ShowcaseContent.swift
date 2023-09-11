@@ -4,7 +4,7 @@ public struct ShowcaseContent: View {
     typealias Configuration = ShowcaseContentStyleConfiguration
     
     @Environment(\.showcaseContentStyle) private var style
-    let data: ShowcaseItem.Content
+    let data: ShowcaseElement.Content
     let level: Int
     
     var configuration: Configuration {
@@ -36,9 +36,9 @@ public struct ShowcaseContentStyleConfiguration {
     public let codeBlocks: CodeBlocks?
     
     public struct ExternalLinks: View {
-        let data: [ShowcaseItem.ExternalLink]
+        let data: [ShowcaseElement.ExternalLink]
         
-        init?(data: [ShowcaseItem.ExternalLink]) {
+        init?(data: [ShowcaseElement.ExternalLink]) {
             if data.isEmpty { return nil }
             self.data = data
         }
@@ -51,9 +51,9 @@ public struct ShowcaseContentStyleConfiguration {
     }
     
     public struct CodeBlocks: View {
-        let data: [ShowcaseItem.CodeBlock]
+        let data: [ShowcaseElement.CodeBlock]
         
-        init?(data: [ShowcaseItem.CodeBlock]) {
+        init?(data: [ShowcaseElement.CodeBlock]) {
             if data.isEmpty { return nil }
             self.data = data
         }
@@ -121,7 +121,7 @@ struct ShowcaseContent_Previews: PreviewProvider {
     static var previews: some View {
         ForEach(0...styles.count - 1, id: \.self) { index in
             ScrollView {
-                ShowcaseContent(data: ShowcaseItem.accordion.content, level: index)
+                ShowcaseContent(data: ShowcaseElement.accordion.content, level: index)
                     .showcaseContentStyle(styles[index])
                     .padding()
             }

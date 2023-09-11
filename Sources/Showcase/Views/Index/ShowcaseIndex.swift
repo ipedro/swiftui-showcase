@@ -18,10 +18,10 @@ public struct ShowcaseIndexStyleConfiguration {
     
     /// A type-erased collection of anchor buttons
     public struct Label: View {
-        let data: [ShowcaseItem]
+        let data: [ShowcaseElement]
         let scrollView: ScrollViewProxy?
         
-        init?(data: [ShowcaseItem]?, scrollView: ScrollViewProxy? = nil) {
+        init?(data: [ShowcaseElement]?, scrollView: ScrollViewProxy? = nil) {
             guard let data = data, !data.isEmpty else { return nil }
             self.data = data
             self.scrollView = scrollView

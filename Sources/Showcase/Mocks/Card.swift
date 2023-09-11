@@ -2,7 +2,7 @@ import SwiftUI
 
 // MARK: - Card Group
 
-extension ShowcaseItem {
+extension ShowcaseElement {
     static let card = Self(
         title: "Card",
         description: {
@@ -18,7 +18,7 @@ extension ShowcaseItem {
 
 // MARK: - Navigational Card
 
-extension ShowcaseItem {
+extension ShowcaseElement {
     static let navigationalCard = Self(
         title: "Navigational Card",
         description: {
@@ -61,7 +61,7 @@ NavigationalCard {
 
 // MARK: - Selectable Card
 
-extension ShowcaseItem {
+extension ShowcaseElement {
     static let selectableCard = Self(
         title: "Selectable Card",
         description: {
@@ -87,7 +87,7 @@ SelectableCard(isOn: $isOn) {
 
 // MARK: - Static Card
 
-extension ShowcaseItem {
+extension ShowcaseElement {
     static let staticCard = Self(
         title: "Static Card",
         description: {

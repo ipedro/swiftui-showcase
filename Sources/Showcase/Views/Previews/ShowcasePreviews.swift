@@ -3,9 +3,9 @@ import SwiftUI
 public struct ShowcasePreviews: View {
     typealias Configuration = ShowcasePreviewsStyleConfiguration
     @Environment(\.previewsStyle) private var style
-    let data: ShowcaseItem.Previews
+    let data: ShowcaseElement.Previews
     
-    init?(_ data: ShowcaseItem.Previews?) {
+    init?(_ data: ShowcaseElement.Previews?) {
         guard let data = data else { return nil }
         self.data = data
     }
