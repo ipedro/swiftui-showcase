@@ -10,17 +10,19 @@ Showcase is a Swift package designed to simplify the process of documenting and 
 
 ## Features
 
-- Organize and present SwiftUI components.
+- Structured documentation for SwiftUI components.
+- Showcase your SwiftUI views' previews.
+- Showcase libraries and sections for organized content.
+- Link external resources or documentation.
 - Display code samples with syntax highlighting.
-- Showcase previews of your SwiftUI views.
-- Link to external resources or documentation.
-- Easily customize the presentation style.
+- Various styles for code blocks, previews, and external links.
+
 
 ## Requirements
 
 - iOS 15+
 - Xcode 13+
-- Swift 5.5+
+- Swift 5.7+
 
 ## Installation
 
@@ -34,9 +36,15 @@ You can easily integrate Showcase into your Xcode project using [Swift Package M
 4. Choose the version or branch you want to use.
 5. Click "Finish" to add the package to your project.
 
-### Manual
+Alternatively, you can add Showcase as a dependency in your `Package.swift` file:
 
-You can also manually integrate Showcase into your project by copying the source files into your Xcode project.
+```swift
+dependencies: [
+    .package(url: "https://github.com/ipedro/swiftui-showcase", from: "0.3.0")
+]
+```
+
+Also: Don't forget to add `"Showcase"` as a dependency of your package's target.
 
 ## Usage
 
