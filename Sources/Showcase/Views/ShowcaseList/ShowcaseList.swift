@@ -5,10 +5,14 @@ public struct ShowcaseList<Icon: View>: View {
     let data: [ShowcaseItem]
     let icon: Icon
     
-    public init(_ data: [ShowcaseItem], @ViewBuilder icon: () -> Icon) {
+    public init(
+        _ data: [ShowcaseItem],
+        selection: ShowcaseItem.ID? = nil,
+        @ViewBuilder icon: () -> Icon
+    ) {
+        self._selection = State(initialValue: selection)
         self.data = data
         self.icon = icon()
-        _selection = State(initialValue: data.first?.id)
     }
     
     public var body: some View {

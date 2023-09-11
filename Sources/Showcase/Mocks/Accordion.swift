@@ -34,8 +34,10 @@ extension ShowcaseItem {
     }
     """
         },
-        previewRatio: .init(width: 1, height: 0.8),
-        previews: MockPreviews.init)
+        previews: .init {
+            MockPreviews()
+        }
+    )
 }
 
 struct ShowcaseTopicAccordion_Previews: PreviewProvider {

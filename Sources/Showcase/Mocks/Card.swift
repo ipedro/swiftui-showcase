@@ -53,7 +53,10 @@ NavigationalCard {
             }
             
         },
-        previews: MockPreviews.init)
+        previews: .init {
+            MockPreviews()
+        }
+    )
 }
 
 // MARK: - Selectable Card
@@ -76,7 +79,10 @@ SelectableCard(isOn: $isOn) {
 }
 """
         },
-        previews: MockPreviews.init)
+        previews: .init {
+            MockPreviews()
+        }
+    )
 }
 
 // MARK: - Static Card
@@ -102,7 +108,10 @@ StaticCard {
 }
 """
         },
-        previews: MockPreviews.init)
+        previews: .init {
+            MockPreviews()
+        }
+    )
 }
 
 struct card_Previews: PreviewProvider {

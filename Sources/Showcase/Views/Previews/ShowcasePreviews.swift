@@ -3,21 +3,27 @@ import SwiftUI
 public struct ShowcasePreviews: View {
     typealias Configuration = ShowcasePreviewsStyleConfiguration
     @Environment(\.previewsStyle) private var style
-    let configuration: Configuration
+    let data: ShowcaseItem.Previews
     
     init?(_ data: ShowcaseItem.Previews?) {
         guard let data = data else { return nil }
-        self.configuration = .init(
-            aspectRatio: data.aspectRatio,
-            previews: data.previews)
+        self.data = data
     }
     
-    init(_ configuration: Configuration) {
-        self.configuration = configuration
+    var configuration: Configuration {
+        .init(previews: data.content)
     }
     
     public var body: some View {
         style.makeBody(configuration: configuration)
+            .frame(
+                minWidth: data.minWidth,
+                idealWidth: data.idealWidth,
+                maxWidth: data.maxWidth,
+                minHeight: data.minHeight,
+                idealHeight: data.idealHeight,
+                maxHeight: data.maxHeight,
+                alignment: data.alignment)
     }
 }
 
@@ -25,7 +31,6 @@ public struct ShowcasePreviews: View {
 
 public struct ShowcasePreviewsStyleConfiguration {
     public typealias Previews = AnyView
-    public let aspectRatio: CGFloat
     public let previews: Previews
 }
 
@@ -40,9 +45,9 @@ public struct ShowcasePreviewsStylePaged: ShowcasePreviewsStyle {
         GroupBox {
             TabView {
                 configuration.previews
+                    .padding(.bottom, 44)
             }
             .tabViewStyle(.page)
-            .aspectRatio(configuration.aspectRatio, contentMode: .fit)
         } label: {
             Text("Previews")
                 .foregroundColor(.secondary)
@@ -55,3 +60,4 @@ public struct ShowcasePreviewsStylePaged: ShowcasePreviewsStyle {
         UIPageControl.appearance().pageIndicatorTintColor = .label.withAlphaComponent(0.3)
     }
 }
+

@@ -5,41 +5,21 @@ public struct ShowcaseItem: Identifiable {
     var content: Content
     var children: [ShowcaseItem]?
     
-    public init<V: View>(
-        title: String,
-        description: () -> String,
-        @ExternalLinkBuilder links: () -> [ExternalLink] = { [] },
-        @CodeBlockBuilder snippets: () -> [CodeBlock] = { [] },
-        children: [ShowcaseItem]? = nil,
-        previewRatio: CGSize = .init(width: 3, height: 2),
-        @ViewBuilder previews: () -> V
-    ) {
-        self.children = children
-        self.content = .init(
-            description: description(),
-            links: links(),
-            previews: .init(
-                aspectRatio: previewRatio,
-                previews: .init(previews())),
-            snippets: snippets(),
-            title: title
-        )
-    }
-    
     public init(
         title: String,
         description: () -> String,
         @ExternalLinkBuilder links: () -> [ExternalLink] = { [] },
         @CodeBlockBuilder snippets: () -> [CodeBlock] = { [] },
-        children: [ShowcaseItem]? = nil
+        children: [ShowcaseItem]? = nil,
+        previews: Previews? = nil
     ) {
         self.children = children
         self.content = .init(
             description: description(),
             links: links(),
+            previews: previews,
             snippets: snippets(),
-            title: title
-        )
+            title: title)
     }
     
     public struct Content: Identifiable {
@@ -52,12 +32,33 @@ public struct ShowcaseItem: Identifiable {
     }
     
     public struct Previews {
-        public var aspectRatio: CGFloat
-        public var previews: AnyView
+        public var minWidth: CGFloat?
+        public var idealWidth: CGFloat?
+        public var maxWidth: CGFloat?
+        public var minHeight: CGFloat?
+        public var idealHeight: CGFloat?
+        public var maxHeight: CGFloat?
+        public var alignment: Alignment
+        public var content: AnyView
         
-        init(aspectRatio: CGSize, previews: AnyView) {
-            self.aspectRatio = aspectRatio.width / aspectRatio.height
-            self.previews = previews
+        public init<V: View>(
+            minWidth: CGFloat? = nil,
+            idealWidth: CGFloat? = nil,
+            maxWidth: CGFloat? = nil,
+            minHeight: CGFloat? = nil,
+            idealHeight: CGFloat? = 200,
+            maxHeight: CGFloat? = nil,
+            alignment: Alignment = .center,
+            @ViewBuilder content: () -> V
+        ) {
+            self.minWidth = minWidth
+            self.idealWidth = idealWidth
+            self.maxWidth = maxWidth
+            self.minHeight = minHeight
+            self.idealHeight = idealHeight
+            self.maxHeight = maxHeight
+            self.alignment = alignment
+            self.content = .init(content())
         }
     }
 
