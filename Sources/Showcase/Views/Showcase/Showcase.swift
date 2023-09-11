@@ -1,23 +1,40 @@
 import SwiftUI
 
+/// A view for showcasing code examples, descriptions, and links.
 public struct Showcase: View {
+    /// The configuration type for the showcase view.
     typealias Configuration = ShowcaseStyleConfiguration
-    @Environment(\.showcaseStyle) private var style
-    var data: ShowcaseElement
-    var level: Int
     
+    /// The style environment for the showcase view.
+    @Environment(\.showcaseStyle) private var style
+    
+    /// The data to be displayed in the showcase.
+    let data: ShowcaseElement
+    
+    /// The nesting level of the element.
+    let level: Int
+    
+    /// Initializes a showcase view with the specified data and nesting level.
+    /// - Parameters:
+    ///   - data: The data to be displayed in the showcase.
+    ///   - level: The nesting level of the showcase.
     private init(_ data: ShowcaseElement, level: Int) {
         self.data = data
         self.level = level
     }
     
+    /// Initializes a showcase view with the specified data at the root level.
+    /// - Parameter data: The data to be displayed in the showcase.
     public init(_ data: ShowcaseElement) {
         self.data = data
         self.level = .zero
     }
     
-    func configuration(with scrollView: ScrollViewProxy) -> ShowcaseStyleConfiguration {
-        return .init(
+    /// Generates the showcase configuration based on the provided ScrollViewProxy.
+    /// - Parameter scrollView: The ScrollViewProxy to interact with the ScrollView.
+    /// - Returns: The showcase configuration.
+    private func configuration(with scrollView: ScrollViewProxy) -> ShowcaseStyleConfiguration {
+        ShowcaseStyleConfiguration(
             children: .init(
                 data: data.children?.map(\.content),
                 level: level + 1,
@@ -36,6 +53,7 @@ public struct Showcase: View {
         )
     }
     
+    /// The body of the showcase view.
     public var body: some View {
         ScrollViewReader { scrollView in
             let configuration = configuration(with: scrollView)
@@ -48,65 +66,36 @@ public struct Showcase: View {
     }
 }
 
+/// The configuration for a showcase view.
 public struct ShowcaseStyleConfiguration {
-    public let children: Children?
+    /// The children views within the showcase.
+    public let children: ShowcaseChildren?
+    
+    /// The content view of the showcase.
     public let content: ShowcaseContent
+    
+    /// The index view for navigating within the showcase.
     public let index: ShowcaseIndex?
+    
+    /// The nesting level of the showcase.
     public let level: Int
     
-    public struct Children: View {
-        let data: [ShowcaseElement.Content]
-        let level: Int
-        let parentID: ShowcaseElement.ID
-        let scrollView: ScrollViewProxy
-        
-        init?(
-            data: [ShowcaseElement.Content]?,
-            level: Int,
-            parentID: ShowcaseElement.ID,
-            scrollView: ScrollViewProxy
-        ) {
-            guard let data = data, !data.isEmpty else { return nil }
-            self.data = data
-            self.level = level
-            self.parentID = parentID
-            self.scrollView = scrollView
-        }
-        
-        public var body: some View {
-            ForEach(data) { item in
-                ZStack(alignment: .topTrailing) {
-                    ShowcaseContent(data: item, level: level)
-                    scrollToTop
-                }
-            }
-        }
-        
-        private var scrollToTop: some View {
-            Button {
-                withAnimation {
-                    scrollView.scrollTo(parentID)
-                }
-            } label: {
-                Image(systemName: "chevron.up")
-            }
-            .padding(.top, 10)
-            .foregroundStyle(.tertiary)
-        }
-    }
 }
 
 // MARK: - ShowcaseStyle Extension
 
 public extension ShowcaseStyle where Self == ShowcaseStyleStandard {
-    /// <#short overview of the system style#>
+    /// The standard showcase style.
     static var standard: Self {
         .init()
     }
 }
 
-/// An example Showcase style to get you started
+/// The standard showcase style.
 public struct ShowcaseStyleStandard: ShowcaseStyle {
+    /// Generates the body of the showcase based on the provided configuration.
+    /// - Parameter configuration: The showcase configuration.
+    /// - Returns: The body of the showcase.
     public func makeBody(configuration: Configuration) -> some View {
         LazyVStack(alignment: .leading) {
             
