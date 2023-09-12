@@ -34,14 +34,14 @@ jobs:
         uses: actions/configure-pages@v2
       - name: Build DocC
         run: |
-          xcodebuild docbuild -scheme swiftui-showcase \
+          xcodebuild docbuild -scheme Showcase \
             -derivedDataPath /tmp/docbuild \
             -destination 'generic/platform=iOS';
           $(xcrun --find docc) process-archive \
-            transform-for-static-hosting /tmp/docbuild/Build/Products/Debug-iphoneos/swiftui-showcase.doccarchive \
-            --hosting-base-path swiftui-showcase \
+            transform-for-static-hosting /tmp/docbuild/Build/Products/Debug-iphoneos/Showcase.doccarchive \
+            --hosting-base-path Showcase \
             --output-path docs;
-          echo "<script>window.location.href += \"/documentation/swiftui-showcase\"</script>" > docs/index.html;
+          echo "<script>window.location.href += \"/documentation/showcase\"</script>" > docs/index.html;
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
