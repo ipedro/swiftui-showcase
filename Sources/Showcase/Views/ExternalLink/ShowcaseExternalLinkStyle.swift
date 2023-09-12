@@ -25,7 +25,6 @@ import SwiftUI
 ///
 /// To configure the current Showcase style for a view hierarchy, use the
 /// ``Showcase/showcaseExternalLinkStyle(_:)`` modifier.
-public protocol ShowcaseExternalLinkStyle: PrimitiveButtonStyle {}
 
 // MARK: - View Extension
 
@@ -39,44 +38,23 @@ extension View {
     ///     Showcase()
     ///         .showcaseExternalLinkStyle(MyCustomStyle())
     ///
-    public func showcaseExternalLinkStyle<S: ShowcaseExternalLinkStyle>(_ style: S) -> some View {
+    public func showcaseExternalLinkStyle<S: ButtonStyle>(_ style: S) -> some View {
         environment(\.externalLinkStyle, .init(style))
     }
 }
 
-// MARK: - Type Erasure
-
-public extension ShowcaseExternalLinkStyle {
-    /// Returns a type erased Showcase.
-    func asAny() -> AnyShowcaseExternalLinkStyle { .init(self) }
-}
-
-/// A type erased Showcase style.
-public struct AnyShowcaseExternalLinkStyle: ShowcaseExternalLinkStyle {
-    /// Current Showcase style.
-    var style: any ShowcaseExternalLinkStyle
-   
-    /// Creates a type erased Showcase style.
-    public init<S: ShowcaseExternalLinkStyle>(_ style: S) {
-        self.style = style
-    }
-    
-    public func makeBody(configuration: Configuration) -> some View {
-        AnyView(style.makeBody(configuration: configuration))
-    }
-}
 
 // MARK: - Environment Keys
 
 /// A private key needed to save style data in the environment
 private struct ExternalLinkStyleKey: EnvironmentKey {
-    static var defaultValue: AnyShowcaseExternalLinkStyle = .init(.standard)
-    static func reduce(value: inout AnyShowcaseExternalLinkStyle, nextValue: () -> AnyShowcaseExternalLinkStyle) {}
+    static var defaultValue: AnyButtonStyle = .init(.standard)
+    static func reduce(value: inout AnyButtonStyle, nextValue: () -> AnyButtonStyle) {}
 }
 
 extension EnvironmentValues {
     /// The current Showcase style value.
-    public var externalLinkStyle: AnyShowcaseExternalLinkStyle {
+    var externalLinkStyle: AnyButtonStyle {
         get { self[ExternalLinkStyleKey.self] }
         set { self[ExternalLinkStyleKey.self] = newValue }
     }

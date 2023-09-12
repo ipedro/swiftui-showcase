@@ -29,8 +29,12 @@ struct ShowcaseExternalLink: View {
     /// The data representing the external link.
     let data: ShowcaseTopic.ExternalLink
     
+    let impact = UIImpactFeedbackGenerator(style: .light)
+    
     var body: some View {
         Button {
+            impact.impactOccurred()
+            
             // Create a Safari view controller to open the external link.
             let safariController = SFSafariViewController(url: data.url)
             safariController.preferredControlTintColor = .label
@@ -41,7 +45,6 @@ struct ShowcaseExternalLink: View {
                 .firstKeyWindow?
                 .rootViewController?
                 .present(safariController, animated: true)
-            
         } label: {
             HStack {
                 Image(systemName: "safari")
@@ -53,19 +56,37 @@ struct ShowcaseExternalLink: View {
                 style.makeBody(configuration: $0)
             }
         )
+        .onAppear {
+            impact.prepare()
+        }
+        
     }
 }
 
 // MARK: - Default Style
 
-public extension ShowcaseExternalLinkStyle where Self == ShowcaseExternalLinkStyleDefault {
+public extension ButtonStyle where Self == ShowcaseExternalLinkStyleDefault {
     /// The default style for showcasing external links.
     static var standard: Self { .init() }
 }
 
 /// The default style for showcasing external links.
-public struct ShowcaseExternalLinkStyleDefault: ShowcaseExternalLinkStyle {
+public struct ShowcaseExternalLinkStyleDefault: ButtonStyle {
     public func makeBody(configuration: Configuration) -> some View {
-        BorderedButtonStyle().makeBody(configuration: configuration)
+        HStack {
+            configuration.label
+        }
+        .padding(.vertical, 7)
+        .padding(.horizontal, 14)
+        .background {
+            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                .opacity(0.12)
+        }
+        .foregroundStyle(.tint)
+        .scaleEffect(
+            x: configuration.isPressed ? 0.97 : 1,
+            y: configuration.isPressed ? 0.97 : 1,
+            anchor: .center)
+        .animation(.interactiveSpring(), value: configuration.isPressed)
     }
 }

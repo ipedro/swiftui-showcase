@@ -20,7 +20,7 @@
 
 import SwiftUI
 
-struct PassthroughButtonStyle<C: View>: PrimitiveButtonStyle {
+struct PassthroughButtonStyle<C: View>: ButtonStyle {
     @ViewBuilder var content: (_ button: Configuration) -> C
     
     func makeBody(configuration: Configuration) -> some View {

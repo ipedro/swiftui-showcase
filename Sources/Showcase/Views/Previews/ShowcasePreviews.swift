@@ -82,10 +82,7 @@ public struct ShowcasePreviewsStylePaged: ShowcasePreviewsStyle {
     public func makeBody(configuration: Configuration) -> some View {
         TabView {
             configuration.previews
-                .scaledToFit()
-                //.padding(.bottom, 50)
         }
-//        .padding(.bottom, -20)
         .tabViewStyle(.page)
         .onAppear(perform: setupPageControl)
     }

@@ -55,6 +55,8 @@ public struct ShowcaseIndexStyleConfiguration {
         /// The scroll view proxy for scrolling to anchor points.
         let scrollView: ScrollViewProxy?
         
+        let impact = UIImpactFeedbackGenerator(style: .light)
+        
         /// Initializes a label with the specified data and scroll view proxy.
         /// - Parameters:
         ///   - data: The data representing showcase topics.
@@ -69,10 +71,14 @@ public struct ShowcaseIndexStyleConfiguration {
         public var body: some View {
             ForEach(data) { item in
                 Button(item.content.title) {
+                    impact.impactOccurred()
                     withAnimation {
                         scrollView?.scrollTo(item.id, anchor: .top)
                     }
                 }
+            }
+            .onAppear {
+                impact.prepare()
             }
         }
     }
@@ -92,7 +98,7 @@ public extension ShowcaseIndexStyle where Self == ShowcaseIndexStyleMenu {
 
 public struct ShowcaseIndexStyleBulletList: ShowcaseIndexStyle {
     public func makeBody(configuration: Configuration) -> some View {
-        LazyVStack(alignment: .leading) {
+        VStack(alignment: .leading) {
             configuration.label
                 .padding(.horizontal)
                 .padding(.vertical, 2)

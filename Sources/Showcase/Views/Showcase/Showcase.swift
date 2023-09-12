@@ -118,7 +118,7 @@ public struct ShowcaseStyleStandard: ShowcaseStyle {
     /// - Parameter configuration: The showcase configuration.
     /// - Returns: The body of the showcase.
     public func makeBody(configuration: Configuration) -> some View {
-        LazyVStack(alignment: .leading) {
+        VStack(alignment: .leading) {
             
             configuration.content
             

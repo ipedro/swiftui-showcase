@@ -118,7 +118,7 @@ extension ShowcaseContentStyle where Self == ShowcaseContentStyleStandard {
 /// The standard style for showcasing content.
 public struct ShowcaseContentStyleStandard: ShowcaseContentStyle {
     public func makeBody(configuration: Configuration) -> some View {
-        LazyVStack(alignment: .leading, spacing: 30) {
+        VStack(alignment: .leading, spacing: 30) {
             // Display the title with appropriate styling based on the indentation level.
             configuration.title.font(.system(title(configuration.level)))
             
@@ -132,7 +132,7 @@ public struct ShowcaseContentStyleStandard: ShowcaseContentStyle {
             // Display previews, description, and code blocks with appropriate styling.
             configuration.previews
             
-            configuration.description.font(.system(description(configuration.level)))
+            configuration.description
             
             configuration.codeBlocks
                 .padding(.top)
@@ -148,16 +148,6 @@ public struct ShowcaseContentStyleStandard: ShowcaseContentStyle {
         case 1: return .title
         case 2: return .title2
         default: return .title3
-        }
-    }
-    
-    /// Determines the description font style based on the indentation level.
-    /// - Parameter level: The indentation level.
-    /// - Returns: The font style for the description.
-    func description(_ level: Int) -> SwiftUI.Font.TextStyle {
-        switch level {
-        case 0: return .headline
-        default: return .body
         }
     }
 }

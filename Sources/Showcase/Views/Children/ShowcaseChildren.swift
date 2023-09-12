@@ -34,6 +34,8 @@ public struct ShowcaseChildren: View {
     /// Allows scrolling of the views.
     let scrollView: ScrollViewProxy
     
+    private let impact = UIImpactFeedbackGenerator(style: .light)
+    
     /// Initializes child views based on the provided data. If the data is empty returns nil.
     /// - Parameters:
     ///   - data: The data representing child showcase topics.
@@ -66,6 +68,7 @@ public struct ShowcaseChildren: View {
     /// The button used for scrolling to the top of the ScrollView.
     private var scrollToTop: some View {
         Button {
+            impact.impactOccurred()
             withAnimation {
                 scrollView.scrollTo(parentID)
             }
@@ -74,5 +77,8 @@ public struct ShowcaseChildren: View {
         }
         .padding(.top, 10)
         .foregroundStyle(.tertiary)
+        .onAppear {
+            impact.prepare()
+        }
     }
 }

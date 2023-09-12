@@ -60,22 +60,17 @@ extension View {
 
 // MARK: - Type Erasure
 
-public extension ShowcaseCodeBlockStyle {
-    /// Returns a type erased Showcase.
-    func asAny() -> AnyShowcaseCodeBlockStyle { .init(self) }
-}
-
 /// A type erased Showcase style.
-public struct AnyShowcaseCodeBlockStyle: ShowcaseCodeBlockStyle {
+struct AnyShowcaseCodeBlockStyle: ShowcaseCodeBlockStyle {
     /// Current Showcase style.
     var style: any ShowcaseCodeBlockStyle
    
     /// Creates a type erased Showcase style.
-    public init<S: ShowcaseCodeBlockStyle>(_ style: S) {
+    init<S: ShowcaseCodeBlockStyle>(_ style: S) {
         self.style = style
     }
     
-    public func makeBody(configuration: Configuration) -> some View {
+    func makeBody(configuration: Configuration) -> some View {
         AnyView(style.makeBody(configuration: configuration))
     }
 }
@@ -90,7 +85,7 @@ private struct ShowcaseCodeBlockStyleKey: EnvironmentKey {
 
 extension EnvironmentValues {
     /// The current Showcase style value.
-    public var codeBlockStyle: AnyShowcaseCodeBlockStyle {
+    var codeBlockStyle: AnyShowcaseCodeBlockStyle {
         get { self[ShowcaseCodeBlockStyleKey.self] }
         set { self[ShowcaseCodeBlockStyleKey.self] = newValue }
     }
