@@ -79,8 +79,10 @@ public struct ShowcaseExternalLinkStyleDefault: ButtonStyle {
         .padding(.vertical, 7)
         .padding(.horizontal, 14)
         .background {
-            RoundedRectangle(cornerRadius: 8, style: .continuous)
-                .opacity(0.12)
+            RoundedRectangle(
+                cornerRadius: 8,
+                style: .continuous)
+            .opacity(0.15)
         }
         .foregroundStyle(.tint)
         .scaleEffect(

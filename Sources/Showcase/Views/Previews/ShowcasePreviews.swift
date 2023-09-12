@@ -82,9 +82,12 @@ public struct ShowcasePreviewsStylePaged: ShowcasePreviewsStyle {
     public func makeBody(configuration: Configuration) -> some View {
         TabView {
             configuration.previews
+                .offset(y: -30)
         }
+        .offset(y: 20)
         .tabViewStyle(.page)
         .onAppear(perform: setupPageControl)
+        .clipped()
     }
     
     /// Sets up the appearance of the page control for paged previews.
