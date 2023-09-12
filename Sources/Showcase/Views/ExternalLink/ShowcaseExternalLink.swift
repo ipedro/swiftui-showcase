@@ -27,7 +27,7 @@ struct ShowcaseExternalLink: View {
     @Environment(\.externalLinkStyle) private var style
     
     /// The data representing the external link.
-    let data: ShowcaseElement.ExternalLink
+    let data: ShowcaseTopic.ExternalLink
     
     var body: some View {
         Button {

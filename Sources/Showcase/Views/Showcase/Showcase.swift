@@ -29,7 +29,7 @@ public struct Showcase: View {
     @Environment(\.showcaseStyle) private var style
     
     /// The data to be displayed in the showcase.
-    let data: ShowcaseElement
+    let data: ShowcaseTopic
     
     /// The nesting level of the element.
     let level: Int
@@ -38,14 +38,14 @@ public struct Showcase: View {
     /// - Parameters:
     ///   - data: The data to be displayed in the showcase.
     ///   - level: The nesting level of the showcase.
-    private init(_ data: ShowcaseElement, level: Int) {
+    private init(_ data: ShowcaseTopic, level: Int) {
         self.data = data
         self.level = level
     }
     
     /// Initializes a showcase view with the specified data at the root level.
     /// - Parameter data: The data to be displayed in the showcase.
-    public init(_ data: ShowcaseElement) {
+    public init(_ data: ShowcaseTopic) {
         self.data = data
         self.level = .zero
     }
@@ -149,7 +149,7 @@ public struct ShowcaseStyleStandard: ShowcaseStyle {
 struct Showcase_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            Showcase(.card)
+            Showcase(.mockCard)
         }
     }
 }

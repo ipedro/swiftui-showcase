@@ -20,32 +20,32 @@
 
 import Foundation
 
-/// Represents a library of showcase sections containing code examples, descriptions, and links.
-public struct ShowcaseLibrary: Identifiable {
-    /// The unique identifier for the library.
-    public var id: String { "library-\(title)" }
+/// Represents a chapter within a showcase document, containing showcase topics.
+public struct ShowcaseChapter: Identifiable {
+    /// The unique identifier for the chapter.
+    public var id: String { "chapter-\(title)" }
     
-    /// The title of the library.
+    /// The title of the chapter.
     public let title: String
     
-    /// The sections within the library.
-    public let sections: [ShowcaseSection]
+    /// The showcase topics within the chapter.
+    public let data: [ShowcaseTopic]
     
-    /// Initializes a showcase library with the specified title and sections.
+    /// Initializes a showcase chapter with the specified title and showcase topics.
     /// - Parameters:
-    ///   - title: The title of the library.
-    ///   - sections: The sections within the library.
-    public init(_ title: String, _ sections: [ShowcaseSection]) {
+    ///   - title: The title of the chapter.
+    ///   - elements: The showcase topics within the chapter.
+    public init(_ title: String, _ elements: [ShowcaseTopic] = []) {
         self.title = title
-        self.sections = sections.naturalSort()
+        self.data = elements.naturalSort()
     }
     
-    /// Initializes a showcase library with the specified title and sections.
+    /// Initializes a showcase chapter with the specified title and showcase topics.
     /// - Parameters:
-    ///   - title: The title of the library.
-    ///   - sections: The sections within the library.
-    public init(_ title: String, _ sections: ShowcaseSection...) {
+    ///   - title: The title of the chapter.
+    ///   - elements: The showcase topics within the chapter.
+    public init(_ title: String, _ elements: ShowcaseTopic...) {
         self.title = title
-        self.sections = sections.naturalSort()
+        self.data = elements.naturalSort()
     }
 }

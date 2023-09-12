@@ -20,20 +20,20 @@
 
 import SwiftUI
 
-/// A view that displays a navigation view containing a list of showcases organized into sections.
+/// A view that displays a navigation view that displays a document split into chapters.
 public struct ShowcaseNavigationView<Icon: View>: View {
-    /// The data representing a showcase library.
-    let data: ShowcaseLibrary
+    /// The data representing a showcase chapter.
+    let data: ShowcaseDocument
     
     /// The icon to be displayed next to each showcase item in the list.
     let icon: Icon
     
     /// Initializes a showcase navigation view with the specified data and optional icon.
     /// - Parameters:
-    ///   - data: The data representing a showcase library.
+    ///   - data: The data representing a showcase chapter.
     ///   - icon: A closure that returns the icon view for each showcase item (optional).
     public init(
-        _ data: ShowcaseLibrary,
+        _ data: ShowcaseDocument,
         @ViewBuilder icon: () -> Icon = { EmptyView() }
     ) {
         self.data = data
@@ -42,7 +42,7 @@ public struct ShowcaseNavigationView<Icon: View>: View {
     
     public var body: some View {
         NavigationView {
-            ShowcaseList(data.sections) { icon }
+            ShowcaseList(data.chapters) { icon }
                 .navigationTitle(data.title)
         }
     }
@@ -51,16 +51,16 @@ public struct ShowcaseNavigationView<Icon: View>: View {
 // MARK: - Previews
 
 struct ShowcaseNavigationView_Previews: PreviewProvider {
-    static var elements: [ShowcaseElement] = [
-        .card,
-        .accordion
+    static var elements: [ShowcaseTopic] = [
+        .mockCard,
+        .mockAccordion
     ]
 
     static var previews: some View {
         ShowcaseNavigationView(
-            ShowcaseLibrary(
+            ShowcaseDocument(
                 "Library",
-                ShowcaseSection(
+                ShowcaseChapter(
                     "Mock",
                     elements
                 )

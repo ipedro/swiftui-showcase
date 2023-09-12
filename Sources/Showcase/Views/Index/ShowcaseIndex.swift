@@ -49,17 +49,17 @@ public struct ShowcaseIndexStyleConfiguration {
     
     /// A type-erased collection of anchor buttons.
     public struct Label: View {
-        /// The data representing showcase elements.
-        let data: [ShowcaseElement]
+        /// The data representing showcase topics.
+        let data: [ShowcaseTopic]
         
         /// The scroll view proxy for scrolling to anchor points.
         let scrollView: ScrollViewProxy?
         
         /// Initializes a label with the specified data and scroll view proxy.
         /// - Parameters:
-        ///   - data: The data representing showcase elements.
+        ///   - data: The data representing showcase topics.
         ///   - scrollView: The scroll view proxy for scrolling to anchor points (optional).
-        init?(data: [ShowcaseElement]?, scrollView: ScrollViewProxy? = nil) {
+        init?(data: [ShowcaseTopic]?, scrollView: ScrollViewProxy? = nil) {
             guard let data = data, !data.isEmpty else { return nil }
             self.data = data
             self.scrollView = scrollView
@@ -144,7 +144,7 @@ struct ShowcaseIndex_Previews: PreviewProvider {
                         .staticCard,
                         .navigationalCard,
                         .selectableCard,
-                        .accordion
+                        .mockAccordion
                     ])
                 )
             )

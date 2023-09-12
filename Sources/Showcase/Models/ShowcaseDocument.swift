@@ -20,32 +20,32 @@
 
 import Foundation
 
-/// Represents a section within a showcase library, containing showcase elements.
-public struct ShowcaseSection: Identifiable {
-    /// The unique identifier for the section.
-    public var id: String { "section-\(title)" }
+/// Represents a document split into chapters, with navigatable chapters that contain code examples, descriptions, and links.
+public struct ShowcaseDocument: Identifiable {
+    /// The unique identifier for the document.
+    public var id: String { "document-\(title)" }
     
-    /// The title of the section.
+    /// The title of the document.
     public let title: String
     
-    /// The showcase elements within the section.
-    public let data: [ShowcaseElement]
+    /// The chapters within the document.
+    public let chapters: [ShowcaseChapter]
     
-    /// Initializes a showcase section with the specified title and showcase elements.
+    /// Initializes a showcase document with the specified title and chapters.
     /// - Parameters:
-    ///   - title: The title of the section.
-    ///   - elements: The showcase elements within the section.
-    public init(_ title: String, _ elements: [ShowcaseElement]) {
+    ///   - title: The title of the document.
+    ///   - chapters: The chapters within the document.
+    public init(_ title: String, _ chapters: [ShowcaseChapter] = []) {
         self.title = title
-        self.data = elements.naturalSort()
+        self.chapters = chapters.naturalSort()
     }
     
-    /// Initializes a showcase section with the specified title and showcase elements.
+    /// Initializes a showcase document with the specified title and chapters.
     /// - Parameters:
-    ///   - title: The title of the section.
-    ///   - elements: The showcase elements within the section.
-    public init(_ title: String, _ elements: ShowcaseElement...) {
+    ///   - title: The title of the document.
+    ///   - chapters: The chapters within the document.
+    public init(_ title: String, _ chapters: ShowcaseChapter...) {
         self.title = title
-        self.data = elements.naturalSort()
+        self.chapters = chapters.naturalSort()
     }
 }

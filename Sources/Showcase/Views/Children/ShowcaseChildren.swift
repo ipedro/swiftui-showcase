@@ -22,28 +22,28 @@ import SwiftUI
 
 /// The children views within the showcase.
 public struct ShowcaseChildren: View {
-    /// The data representing child showcase elements.
-    let data: [ShowcaseElement.Content]
+    /// The data representing child showcase topics.
+    let data: [ShowcaseTopic.Content]
     
     /// The nesting level of the showcase.
     let level: Int
     
     /// The parent ID used for scrolling within the ScrollView.
-    let parentID: ShowcaseElement.ID
+    let parentID: ShowcaseTopic.ID
     
     /// Allows scrolling of the views.
     let scrollView: ScrollViewProxy
     
     /// Initializes child views based on the provided data. If the data is empty returns nil.
     /// - Parameters:
-    ///   - data: The data representing child showcase elements.
+    ///   - data: The data representing child showcase topics.
     ///   - level: The nesting level of the showcase.
     ///   - parentID: The parent ID used for scrolling within the ScrollView.
     ///   - scrollView: Allows scrolling of the views.
     init?(
-        data: [ShowcaseElement.Content]?,
+        data: [ShowcaseTopic.Content]?,
         level: Int,
-        parentID: ShowcaseElement.ID,
+        parentID: ShowcaseTopic.ID,
         scrollView: ScrollViewProxy
     ) {
         guard let data = data, !data.isEmpty else { return nil }

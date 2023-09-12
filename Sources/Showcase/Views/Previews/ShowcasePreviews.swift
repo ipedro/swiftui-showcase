@@ -20,7 +20,7 @@
 
 import SwiftUI
 
-/// A view that displays previews of showcase elements.
+/// A view that displays previews of showcase topics.
 public struct ShowcasePreviews: View {
     /// The style configuration for ShowcasePreviews.
     typealias Configuration = ShowcasePreviewsStyleConfiguration
@@ -29,11 +29,11 @@ public struct ShowcasePreviews: View {
     @Environment(\.previewsStyle) private var style
     
     /// The data representing the previews.
-    let data: ShowcaseElement.Previews
+    let data: ShowcaseTopic.Previews
     
     /// Initializes a ShowcasePreviews view with the specified previews data.
     /// - Parameter data: The data representing the previews (optional).
-    init?(_ data: ShowcaseElement.Previews?) {
+    init?(_ data: ShowcaseTopic.Previews?) {
         guard let data = data else { return nil }
         self.data = data
     }
@@ -55,7 +55,9 @@ public struct ShowcasePreviews: View {
                     maxHeight: data.maxHeight,
                     alignment: data.alignment)
         } label: {
-            Text(data.title ?? "Previews")
+            if let title = data.title {
+                Text(title)
+            }
         }
     }
 }

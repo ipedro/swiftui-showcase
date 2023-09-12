@@ -19,7 +19,7 @@
 // SOFTWARE.
 
 import SwiftUI
-@_exported import Splash
+@_implementationOnly import Splash
 
 extension Theme {
     static func xcodeDark(withFont font: Splash.Font) -> Theme {

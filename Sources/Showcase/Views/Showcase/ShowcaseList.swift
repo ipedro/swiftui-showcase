@@ -20,20 +20,20 @@
 
 import SwiftUI
 
-/// A view that displays a list of showcases organized into sections.
+/// A view that displays a list of showcases organized into chapters.
 public struct ShowcaseList<Icon: View>: View {
-    /// The data representing showcase sections.
-    let data: [ShowcaseSection]
+    /// The data representing showcase chapters.
+    let data: [ShowcaseChapter]
     
     /// The icon to be displayed next to each showcase item in the list.
     let icon: Icon
     
     /// Initializes a showcase list with the specified data and optional icon.
     /// - Parameters:
-    ///   - data: The data representing showcase sections.
+    ///   - data: The data representing showcase chapters.
     ///   - icon: A closure that returns the icon view for each showcase item (optional).
     public init(
-        _ data: [ShowcaseSection],
+        _ data: [ShowcaseChapter],
         @ViewBuilder icon: () -> Icon = { EmptyView() }
     ) {
         self.data = data
@@ -42,10 +42,10 @@ public struct ShowcaseList<Icon: View>: View {
     
     /// Initializes a showcase list with the specified data and optional icon.
     /// - Parameters:
-    ///   - data: The data representing showcase sections.
+    ///   - data: The data representing showcase chapters.
     ///   - icon: A closure that returns the icon view for each showcase item (optional).
     public init(
-        _ data: ShowcaseSection...,
+        _ data: ShowcaseChapter...,
         @ViewBuilder icon: () -> Icon = { EmptyView() }
     ) {
         self.data = data
@@ -54,9 +54,9 @@ public struct ShowcaseList<Icon: View>: View {
     
     public var body: some View {
         List {
-            ForEach(data) { section in
-                Section(section.title) {
-                    OutlineGroup(section.data, children: \.children) { item in
+            ForEach(data) { chapter in
+                Section(chapter.title) {
+                    OutlineGroup(chapter.data, children: \.children) { item in
                         NavigationLink {
                             Showcase(item)
                         } label: {
@@ -74,15 +74,15 @@ public struct ShowcaseList<Icon: View>: View {
 }
 
 struct ShowcaseList_Previews: PreviewProvider {
-    static var elements: [ShowcaseElement] = [
-        .accordion,
-        .card
+    static var elements: [ShowcaseTopic] = [
+        .mockAccordion,
+        .mockCard
     ]
     
     static var previews: some View {
         NavigationView {
             ShowcaseList(
-                ShowcaseSection("List", elements)
+                ShowcaseChapter("List", elements)
             )
         }
     }

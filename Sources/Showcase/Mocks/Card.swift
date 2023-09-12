@@ -22,8 +22,8 @@ import SwiftUI
 
 // MARK: - Card Group
 
-extension ShowcaseElement {
-    static let card = Self(
+extension ShowcaseTopic {
+    public static let mockCard = Self(
         title: "Card",
         description: {
             "Cards are surfaces that display content and actions on a single topic."
@@ -38,7 +38,7 @@ extension ShowcaseElement {
 
 // MARK: - Navigational Card
 
-extension ShowcaseElement {
+extension ShowcaseTopic {
     static let navigationalCard = Self(
         title: "Navigational Card",
         description: {
@@ -81,7 +81,7 @@ NavigationalCard {
 
 // MARK: - Selectable Card
 
-extension ShowcaseElement {
+extension ShowcaseTopic {
     static let selectableCard = Self(
         title: "Selectable Card",
         description: {
@@ -107,7 +107,7 @@ SelectableCard(isOn: $isOn) {
 
 // MARK: - Static Card
 
-extension ShowcaseElement {
+extension ShowcaseTopic {
     static let staticCard = Self(
         title: "Static Card",
         description: {
@@ -137,7 +137,7 @@ StaticCard {
 struct card_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            Showcase(.card)
+            Showcase(.mockCard)
         }
     }
 }

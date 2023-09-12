@@ -20,8 +20,8 @@
 
 import SwiftUI
 
-extension ShowcaseElement {
-    static let accordion = Self(
+extension ShowcaseTopic {
+    public static let mockAccordion = Self(
         title: "Accordion",
         description: { """
     Accordions enable users to expand and collapse multiple sections of content.
@@ -63,7 +63,7 @@ extension ShowcaseElement {
 struct ShowcaseTopicAccordion_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            Showcase(.accordion)
+            Showcase(.mockAccordion)
         }
     }
 }

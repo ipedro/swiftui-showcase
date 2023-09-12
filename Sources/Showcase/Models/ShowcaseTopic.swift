@@ -23,15 +23,15 @@ import SwiftUI
 /// Represents a showcase element used for displaying rich documentation.
 ///
 /// The documentation can include code examples, descriptions, previews and links.
-public struct ShowcaseElement: Identifiable {
+public struct ShowcaseTopic: Identifiable {
     /// The unique identifier for this showcase element.
     public var id: String { content.id }
     
     /// The content of the showcase element.
     public let content: Content
     
-    /// Optional child showcase elements.
-    public let children: [ShowcaseElement]?
+    /// Optional child showcase topics.
+    public let children: [ShowcaseTopic]?
     
     /// Initializes a showcase element with the specified parameters.
     /// - Parameters:
@@ -39,14 +39,14 @@ public struct ShowcaseElement: Identifiable {
     ///   - description: A closure returning the description of the showcase element (default is an empty string).
     ///   - links: A closure returning external links associated with the showcase element (default is an empty array).
     ///   - examples: A closure returning code examples (default is an empty array).
-    ///   - children: Optional child showcase elements (default is nil).
+    ///   - children: Optional child showcase topics (default is nil).
     ///   - previews: Previews configuration (default is nil).
     public init(
         title: String,
         description: () -> String = { "" },
         @ExternalLinkBuilder links: () -> [ExternalLink] = { [] },
         @CodeBlockBuilder examples: () -> [CodeBlock] = { [] },
-        children: [ShowcaseElement]? = nil,
+        children: [ShowcaseTopic]? = nil,
         previews: Previews? = nil
     ) {
         self.children = children

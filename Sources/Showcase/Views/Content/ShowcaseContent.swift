@@ -29,7 +29,7 @@ public struct ShowcaseContent: View {
     @Environment(\.showcaseContentStyle) private var style
     
     /// The data representing the showcase content.
-    let data: ShowcaseElement.Content
+    let data: ShowcaseTopic.Content
     
     /// The indentation level for the content.
     let level: Int
@@ -71,11 +71,11 @@ public struct ShowcaseContentStyleConfiguration {
     
     /// A view that represents external links.
     public struct ExternalLinks: View {
-        let data: [ShowcaseElement.ExternalLink]
+        let data: [ShowcaseTopic.ExternalLink]
         
         /// Initializes the view with external link data.
         /// - Parameter data: The external link data.
-        init?(data: [ShowcaseElement.ExternalLink]) {
+        init?(data: [ShowcaseTopic.ExternalLink]) {
             if data.isEmpty { return nil }
             self.data = data
         }
@@ -90,11 +90,11 @@ public struct ShowcaseContentStyleConfiguration {
     
     /// A view that represents code blocks.
     public struct CodeBlocks: View {
-        let data: [ShowcaseElement.CodeBlock]
+        let data: [ShowcaseTopic.CodeBlock]
         
         /// Initializes the view with code block data.
         /// - Parameter data: The code block data.
-        init?(data: [ShowcaseElement.CodeBlock]) {
+        init?(data: [ShowcaseTopic.CodeBlock]) {
             if data.isEmpty { return nil }
             self.data = data
         }
@@ -172,7 +172,7 @@ struct ShowcaseContent_Previews: PreviewProvider {
     static var previews: some View {
         ForEach(0...styles.count - 1, id: \.self) { index in
             ScrollView {
-                ShowcaseContent(data: ShowcaseElement.accordion.content, level: index)
+                ShowcaseContent(data: ShowcaseTopic.mockAccordion.content, level: index)
                     .showcaseContentStyle(styles[index])
                     .padding()
             }

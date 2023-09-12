@@ -12,7 +12,7 @@ Showcase is a Swift package designed to simplify the process of documenting and 
 
 - Structured documentation for SwiftUI components.
 - Showcase your SwiftUI views' previews.
-- Showcase libraries and sections for organized content.
+- Showcase libraries and chapters for organized content.
 - Link external resources or documentation.
 - Display code samples with syntax highlighting.
 - Various styles for code blocks, previews, and external links.
@@ -54,11 +54,11 @@ Also: Don't forget to add `"Showcase"` as a dependency of your package's target.
    import Showcase
    ```
 
-2. Create and structure your showcase elements using `ShowcaseElement` instances.
+2. Create and structure your showcase topics using `ShowcaseTopic` instances.
 
 ### Showcase
 
-The `Showcase` view is used to display your showcase elements. Here's an example:
+The `Showcase` view is used to display your showcase topics. Here's an example:
 
 ```swift
 import SwiftUI
@@ -66,8 +66,8 @@ import SwiftUI
 struct ContentView: View {
     var body: some View {
         NavigationView {
-            // Create a Showcase with a ShowcaseElement, e.g., .card
-            Showcase(.card)
+            // Create a Showcase with a ShowcaseTopic, e.g., .card
+            Showcase(.mockCard)
                 .navigationTitle("Component Showcase")
         }
     }
@@ -76,7 +76,7 @@ struct ContentView: View {
 
 ### ShowcaseList
 
-The `ShowcaseList` view allows you to list sections of showcase elements. Here's an example:
+The `ShowcaseList` view allows you to list chapters of showcase topics. Here's an example:
 
 ```swift
 import SwiftUI
@@ -84,10 +84,10 @@ import SwiftUI
 struct ContentView: View {
     var body: some View {
         NavigationView {
-            // Create a list with two sections
+            // Create a list with two chapters
             ShowcaseList(
-                ShowcaseSection("Section 1", .card, .accordion),
-                ShowcaseSection("Section 2", .button, .text)
+                ShowcaseChapter("Section 1", .card, .accordion),
+                ShowcaseChapter("Section 2", .button, .text)
             )
             .navigationTitle("Component Showcase")
         }
@@ -97,19 +97,19 @@ struct ContentView: View {
 
 ### ShowcaseNavigationView
 
-The `ShowcaseNavigationView` view provides navigation to sections of showcase elements. Here's an example:
+The `ShowcaseNavigationView` view provides navigation to chapters of showcase topics. Here's an example:
 
 ```swift
 import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        // Create a ShowcaseNavigationView with a ShowcaseLibrary and optional icon
+        // Create a ShowcaseNavigationView with a ShowcaseChapter and optional icon
         ShowcaseNavigationView(
-            ShowcaseLibrary(
-                "My Library", 
-                ShowcaseSection("Section 1", .card, .accordion),
-                ShowcaseSection("Section 2", .button, .text)
+            ShowcaseChapter(
+                "My Chapter", 
+                ShowcaseChapter("Section 1", .card, .accordion),
+                ShowcaseChapter("Section 2", .button, .text)
             )
         )
     }
