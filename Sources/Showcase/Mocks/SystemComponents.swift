@@ -23,10 +23,40 @@ import SwiftUI
 extension ShowcaseDocument {
     public static let systemComponents = Self(
         "Components",
+        description: "Learn how to use and customize system-defined components to give people a familiar and consistent experience.",
         ShowcaseChapter(
             "Content",
+            description: "Learn how to use and customize system-defined components to give people a familiar and consistent experience.",
             .imageViews,
-            ShowcaseTopic(title: "Charts"),
+            ShowcaseTopic(
+                title: "Charts",
+                description: { "Organize data in a chart to communicate information with clarity and visual appeal." },
+                previews: .init {
+                    Group {
+                        AsyncImage(url: .init(string: "https://docs-assets.developer.apple.com/published/0cb5720be21548b56e12a34af413930a/charts-anatomy~dark@2x.png")
+                        ) { image in
+                            image.resizable()
+                        } placeholder: {
+                            ProgressView()
+                        }
+                        
+                        AsyncImage(url: .init(string: "https://docs-assets.developer.apple.com/published/0cb5720be21548b56e12a34af413930a/charts-anatomy~dark@2x.png")
+                        ) { image in
+                            image.resizable()
+                        } placeholder: {
+                            ProgressView()
+                        }
+                        
+                        AsyncImage(url: .init(string: "https://docs-assets.developer.apple.com/published/93c26abbc5f6694b5b5017d7b6bc83cc/line-marks~dark@2x.png")
+                        ) { image in
+                            image.resizable()
+                        } placeholder: {
+                            ProgressView()
+                        }
+                    }
+                    .scaledToFit()
+                }
+            ),
             ShowcaseTopic(title: "Text views"),
             ShowcaseTopic(title: "Web views")
         ),
@@ -89,33 +119,54 @@ extension ShowcaseTopic {
             "An image view displays a single image — or in some cases, an animated sequence of images — on a transparent or opaque background."
         },
         links: {
-            ExternalLink(.appleHig, .imageViewsDocs)
+            ExternalLink(.docs, .imageViewsDocs)
         },
-        examples: {
-            CodeBlock("Static Image") {
-"""
-Image(systemName: "swift")
+        children: [
+            .init(
+                title: "Image",
+                description: {
+                    "Use an Image instance when you want to add images to your SwiftUI app."
+                },
+                examples: {
+        """
+        Image(systemName: "swift")
 
-// or
+        // or
 
-Image("your-asset-name")
-"""
-            }
-            
-            CodeBlock("Async Image") {
-"""
-AsyncImage(url: .init(string: "https://docs-assets.developer.apple.com/published/b38ef3054b1d61b2a8f936cd81814d10/components-image-view-intro~dark@2x.png")
-"""
-            }
-        },
-        previews: .init {
-            AsyncImage(url: .imageViewsPreview)
-        }
+        Image("your-asset-name")
+        """
+                },
+                previews: .init {
+                    Image(systemName: "star")
+                        .imageScale(.large)
+                }
+            ),
+            .init(
+                title: "AsyncImage",
+                description: {
+                    "This view uses the shared URLSession instance to load an image from the specified URL, and then display it. For example, you can display an icon that’s stored on a server:"
+                },
+                examples: {
+        """
+        AsyncImage(
+            url: .init(
+                string: "https://docs-assets.developer.apple.com/published/b38ef3054b1d61b2a8f936cd81814d10/components-image-view-intro~dark@2x.png")
+        """
+                },
+                previews: .init {
+                    AsyncImage(url: .imageViewsPreview) { image in
+                        image.resizable()
+                    } placeholder: {
+                        ProgressView()
+                    }
+                }
+            ),
+        ]
     )
 }
 
 private extension ShowcaseTopic.LinkName {
-    static let appleHig: Self = "Documentation"
+    static let docs: Self = "Documentation"
 }
 
 private extension URL {
@@ -129,6 +180,6 @@ private extension URL {
 struct SystemLibrary_Previews: PreviewProvider {
     static var previews: some View {
         ShowcaseNavigationView(.systemComponents)
-            .listStyle(.sidebar)
+            //.listStyle(.sidebar)
     }
 }

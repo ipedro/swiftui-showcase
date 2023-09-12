@@ -69,6 +69,7 @@ public struct ShowcaseCodeBlockStyleStandard: ShowcaseCodeBlockStyle {
             ScrollView(.horizontal) {
                 configuration.content
             }
+            .padding(.vertical, 10)
         } label: {
             HStack {
                 configuration.title
@@ -92,7 +93,8 @@ public struct ShowcaseCodeBlockStyleConfiguration {
     /// The view representing the copy to pasteboard button.
     public struct CopyToPasteboard: View {
         /// The text to be copied to the pasteboard.
-        var text: String
+        let text: String
+        
         public var body: some View {
             Button {
                 UIPasteboard.general.string = text
@@ -142,7 +144,8 @@ public struct ShowcaseCodeBlockStyleConfiguration {
 struct ShowcaseCodeBlock_Previews: PreviewProvider {
     static var previews: some View {
         ShowcaseCodeBlock(
-            .init("Example", text: { """
+            .init("Example", text: {
+"""
 HStack {
     Spacer()
     copyButton

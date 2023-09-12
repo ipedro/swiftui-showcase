@@ -22,7 +22,7 @@ import SwiftUI
 
 /// Represents a showcase element used for displaying rich documentation.
 ///
-/// The documentation can include code examples, descriptions, previews and links.
+/// The documentation can include code examples, descriptions, previews, links, and subtopics.
 public struct ShowcaseTopic: Identifiable {
     /// The unique identifier for this showcase element.
     public var id: String { content.id }
@@ -61,7 +61,7 @@ public struct ShowcaseTopic: Identifiable {
     /// Represents the content of a showcase element.
     public struct Content: Identifiable {
         /// The unique identifier for the content.
-        public var id: String { title }
+        public var id: String { "topic-\(title)" }
         
         /// Code blocks associated with the content.
         public let codeBlocks: [CodeBlock]

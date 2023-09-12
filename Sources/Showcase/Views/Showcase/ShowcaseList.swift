@@ -23,7 +23,7 @@ import SwiftUI
 /// A view that displays a list of showcases organized into chapters.
 public struct ShowcaseList<Icon: View>: View {
     /// The data representing showcase chapters.
-    let data: [ShowcaseChapter]
+    let data: ShowcaseDocument
     
     /// The icon to be displayed next to each showcase item in the list.
     let icon: Icon
@@ -33,19 +33,7 @@ public struct ShowcaseList<Icon: View>: View {
     ///   - data: The data representing showcase chapters.
     ///   - icon: A closure that returns the icon view for each showcase item (optional).
     public init(
-        _ data: [ShowcaseChapter],
-        @ViewBuilder icon: () -> Icon = { EmptyView() }
-    ) {
-        self.data = data
-        self.icon = icon()
-    }
-    
-    /// Initializes a showcase list with the specified data and optional icon.
-    /// - Parameters:
-    ///   - data: The data representing showcase chapters.
-    ///   - icon: A closure that returns the icon view for each showcase item (optional).
-    public init(
-        _ data: ShowcaseChapter...,
+        _ data: ShowcaseDocument,
         @ViewBuilder icon: () -> Icon = { EmptyView() }
     ) {
         self.data = data
@@ -54,19 +42,45 @@ public struct ShowcaseList<Icon: View>: View {
     
     public var body: some View {
         List {
-            ForEach(data) { chapter in
-                Section(chapter.title) {
-                    OutlineGroup(chapter.data, children: \.children) { item in
-                        NavigationLink {
-                            Showcase(item)
-                        } label: {
-                            Label {
-                                Text(item.content.title)
-                            } icon: {
-                                icon
-                            }
-                        }
-                    }
+            description()
+            ForEach(data.chapters, content: section)
+        }
+    }
+    
+    @ViewBuilder func description() -> some View {
+        if let description = data.description {
+            Section {
+                Text(description)
+                    .font(.headline)
+                    .foregroundColor(.secondary)
+                    .padding(.top, 5)
+            }
+            .listRowBackground(Color.clear)
+            .listRowInsets(EdgeInsets())
+        }
+    }
+    
+    func section(_ chapter: ShowcaseChapter) -> some View {
+        Section {
+            outlineGroup(chapter)
+        } header: {
+            Text(chapter.title)
+        } footer: {
+            if let footer = chapter.description {
+                Text(footer)
+            }
+        }
+    }
+    
+    func outlineGroup(_ chapter: ShowcaseChapter) -> some View {
+        OutlineGroup(chapter.data, children: \.children) { item in
+            NavigationLink {
+                Showcase(item)
+            } label: {
+                Label {
+                    Text(item.content.title).bold()
+                } icon: {
+                    icon
                 }
             }
         }
@@ -81,9 +95,8 @@ struct ShowcaseList_Previews: PreviewProvider {
     
     static var previews: some View {
         NavigationView {
-            ShowcaseList(
-                ShowcaseChapter("List", elements)
-            )
+            ShowcaseList(.systemComponents)
+                .navigationTitle("Components")
         }
     }
 }

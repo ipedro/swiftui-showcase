@@ -28,6 +28,9 @@ public struct ShowcaseChapter: Identifiable {
     /// The title of the chapter.
     public let title: String
     
+    /// The optional description of the chapter.
+    public let description: String?
+    
     /// The showcase topics within the chapter.
     public let data: [ShowcaseTopic]
     
@@ -35,8 +38,10 @@ public struct ShowcaseChapter: Identifiable {
     /// - Parameters:
     ///   - title: The title of the chapter.
     ///   - elements: The showcase topics within the chapter.
-    public init(_ title: String, _ elements: [ShowcaseTopic] = []) {
+    ///   - description: The optional description of the chapter.
+    public init(_ title: String, description: String? = nil, _ elements: [ShowcaseTopic] = []) {
         self.title = title
+        self.description = description
         self.data = elements.naturalSort()
     }
     
@@ -44,8 +49,10 @@ public struct ShowcaseChapter: Identifiable {
     /// - Parameters:
     ///   - title: The title of the chapter.
     ///   - elements: The showcase topics within the chapter.
-    public init(_ title: String, _ elements: ShowcaseTopic...) {
+    ///   - description: The optional description of the chapter.
+    public init(_ title: String, description: String? = nil, _ elements: ShowcaseTopic...) {
         self.title = title
+        self.description = description
         self.data = elements.naturalSort()
     }
 }

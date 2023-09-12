@@ -42,8 +42,10 @@ public struct ShowcaseNavigationView<Icon: View>: View {
     
     public var body: some View {
         NavigationView {
-            ShowcaseList(data.chapters) { icon }
-                .navigationTitle(data.title)
+            ShowcaseList(data) {
+                icon
+            }
+            .navigationTitle(data.title)
         }
     }
 }
@@ -60,6 +62,7 @@ struct ShowcaseNavigationView_Previews: PreviewProvider {
         ShowcaseNavigationView(
             ShowcaseDocument(
                 "Library",
+                description: "Teste",
                 ShowcaseChapter(
                     "Mock",
                     elements

@@ -28,24 +28,31 @@ public struct ShowcaseDocument: Identifiable {
     /// The title of the document.
     public let title: String
     
+    /// The optional description of the document.
+    public let description: String?
+    
     /// The chapters within the document.
     public let chapters: [ShowcaseChapter]
     
-    /// Initializes a showcase document with the specified title and chapters.
+    /// Initializes a showcase document with the specified title, chapters and an optional description.
     /// - Parameters:
     ///   - title: The title of the document.
     ///   - chapters: The chapters within the document.
-    public init(_ title: String, _ chapters: [ShowcaseChapter] = []) {
+    ///   - description: The optional description of the document.
+    public init(_ title: String, description: String? = nil, _ chapters: [ShowcaseChapter] = []) {
         self.title = title
+        self.description = description
         self.chapters = chapters.naturalSort()
     }
     
-    /// Initializes a showcase document with the specified title and chapters.
+    /// Initializes a showcase document with the specified title, chapters and an optional description.
     /// - Parameters:
     ///   - title: The title of the document.
     ///   - chapters: The chapters within the document.
-    public init(_ title: String, _ chapters: ShowcaseChapter...) {
+    ///   - description: The optional description of the document.
+    public init(_ title: String, description: String? = nil, _ chapters: ShowcaseChapter...) {
         self.title = title
+        self.description = description
         self.chapters = chapters.naturalSort()
     }
 }

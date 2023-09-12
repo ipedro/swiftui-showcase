@@ -146,7 +146,8 @@ public struct ShowcaseContentStyleStandard: ShowcaseContentStyle {
         switch level {
         case 0: return .largeTitle
         case 1: return .title
-        default: return .title2
+        case 2: return .title2
+        default: return .title3
         }
     }
     
@@ -155,9 +156,8 @@ public struct ShowcaseContentStyleStandard: ShowcaseContentStyle {
     /// - Returns: The font style for the description.
     func description(_ level: Int) -> SwiftUI.Font.TextStyle {
         switch level {
-        case 0: return .subheadline
-        case 1: return .body
-        default: return .caption
+        case 0: return .headline
+        default: return .body
         }
     }
 }
