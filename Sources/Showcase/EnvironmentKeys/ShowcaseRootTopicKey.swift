@@ -21,36 +21,21 @@
 
 import SwiftUI
 
-extension Topic {
-    static let mockButton = Topic(
-        title: "Button",
-        description: {
-"""
-A button initiates an instantaneous action.
-
-A stylized representation of two horizontally aligned buttons. The image is tinted red to subtly reflect the red in the original six-color Apple logo.
-Versatile and highly customizable, buttons give people simple, familiar ways to do tasks in your app.
-"""
-        },
-        links: {
-            Topic.Link(" HIG", .init(string: "https://developer.apple.com/design/human-interface-guidelines/buttons"))
-        },
-        examples: {
-            Topic.CodeBlock {
-"""
-Button("I'm a bordered button") {
-// do something
+extension View {
+    func rootTopic(_ id: Topic.ID?) -> some View {
+        environment(\.rootTopic, id)
+    }
 }
-.buttonStyle(.bordered)
-"""
-            }
-        },
-        children: [.mockAccordion],
-        preview: .init {
-            Button("I'm a bordered button") {
-                // do something
-            }
-            .buttonStyle(.bordered)
-        }
-    )
+
+extension EnvironmentValues {
+    /// The current topic nesting level of the environment.
+    var rootTopic: Topic.ID? {
+        get { self[ShowcaseRootTopicKey.self] }
+        set { self[ShowcaseRootTopicKey.self] = newValue }
+    }
+}
+
+private struct ShowcaseRootTopicKey: EnvironmentKey {
+    static var defaultValue: Topic.ID?
+    static func reduce(value: inout Topic.ID, nextValue: () -> Topic.ID) {}
 }

@@ -23,7 +23,7 @@ import Foundation
 /// Represents a chapter within a showcase document, containing showcase topics.
 public struct Chapter: Identifiable {
     /// The unique identifier for the chapter.
-    public var id: String { "chapter-\(title.lowercased())" }
+    public let id = UUID()
     
     /// The title of the chapter.
     public var title: String
@@ -32,27 +32,37 @@ public struct Chapter: Identifiable {
     public var description: String?
     
     /// The showcase topics within the chapter.
-    public var data: [Topic]
+    public var topics: [Topic]
     
     /// Initializes a showcase chapter with the specified title and showcase topics.
     /// - Parameters:
     ///   - title: The title of the chapter.
-    ///   - elements: The showcase topics within the chapter.
+    ///   - topics: The showcase topics within the chapter.
     ///   - description: The optional description of the chapter.
-    public init(_ title: String, description: String? = nil, _ elements: [Topic] = []) {
+    public init(_ title: String, description: String? = nil, _ topics: [Topic] = []) {
         self.title = title
         self.description = description
-        self.data = elements.naturalSort()
+        self.topics = topics.sorted()
     }
     
     /// Initializes a showcase chapter with the specified title and showcase topics.
     /// - Parameters:
     ///   - title: The title of the chapter.
-    ///   - elements: The showcase topics within the chapter.
+    ///   - topics: The showcase topics within the chapter.
     ///   - description: The optional description of the chapter.
-    public init(_ title: String, description: String? = nil, _ elements: Topic...) {
+    public init(_ title: String, description: String? = nil, _ topics: Topic...) {
         self.title = title
         self.description = description
-        self.data = elements.naturalSort()
+        self.topics = topics.sorted()
+    }
+}
+
+extension Chapter: Comparable {
+    public static func < (lhs: Self, rhs: Self) -> Bool {
+        lhs.title.localizedStandardCompare(rhs.title) != .orderedDescending
+    }
+    
+    public static func == (lhs: Self, rhs: Self) -> Bool {
+        lhs.id == rhs.id
     }
 }

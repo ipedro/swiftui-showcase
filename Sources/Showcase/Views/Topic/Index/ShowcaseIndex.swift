@@ -28,12 +28,10 @@ public struct ShowcaseIndex: View {
     @Environment(\.indexStyle) private var style
     
     /// The configuration for the ShowcaseIndex view.
-    let configuration: Configuration
+    var configuration: Configuration
     
-    /// Initializes a ShowcaseIndex view with the specified configuration.
-    /// - Parameter configuration: The configuration for the ShowcaseIndex view.
-    init(configuration: Configuration) {
-        self.configuration = configuration
+    init(_ data: Topic) {
+        configuration = .init(label: .init(data: data))
     }
     
     public var body: some View {
@@ -52,36 +50,50 @@ public struct ShowcaseIndexStyleConfiguration {
         @Environment(\.scrollView) private var scrollView
         
         /// The data representing showcase topics.
-        let data: [Topic]
+        let topic: Topic
+        let children: [Topic]
         
         let impact = UIImpactFeedbackGenerator(style: .light)
         
-        /// Initializes a label with the specified data and scroll view proxy.
-        /// - Parameters:
-        ///   - data: The data representing showcase topics.
-        init?(data: [Topic]?) {
-            guard let data = data, data.count > 1 else { return nil }
-            self.data = data
+        init?(data: Topic) {
+            let children = data.allChildren
+            guard !children.isEmpty else { return nil }
+            self.topic = data
+            self.children = children
         }
         
         /// The body of the label view.
         public var body: some View {
-            if let scrollView = scrollView {
-                ForEach(data) { item in
-                    Button(item.title) {
-                        impact.impactOccurred()
-                        withAnimation {
-                            scrollView.scrollTo(item.id, anchor: .top)
-                        }
-                    }
-                }
-                .onAppear {
-                    impact.prepare()
+            button(topic)
+            ForEach(children, content: button)
+        }
+        
+//        private func buttons(_ topics: Topic) -> some View {
+//            Group {
+//                ForEach(Array(zip(topics.indices, topics)), id: \.0) { index, topic in
+//                    button(topic)
+//                }
+//
+//                Divider()
+//            }
+//        }
+        
+        private func button(_ topic: Topic) -> Button<Text> {
+            Button(topic.title) {
+                impact.impactOccurred()
+                withAnimation {
+                    scrollView?.scrollTo(topic.id, anchor: .top)
                 }
             }
         }
     }
 }
+
+//extension Array: Identifiable where Element == Topic {
+//    public var id: String {
+//        map(\.id).joined(separator: ",")
+//    }
+//}
 
 // MARK: - Styles
 
@@ -143,17 +155,8 @@ struct ShowcaseIndex_Previews: PreviewProvider {
     
     static var previews: some View {
         ForEach(0...styles.count - 1, id: \.self) { index in
-            ShowcaseIndex(
-                configuration: .init(
-                    label: .init(data: [
-                        .staticCard,
-                        .navigationalCard,
-                        .selectableCard,
-                        .mockAccordion
-                    ])
-                )
-            )
-            .showcaseIndexStyle(styles[index])
+            ShowcaseIndex(.mockAccordion)
+                .showcaseIndexStyle(styles[index])
         }
     }
 }

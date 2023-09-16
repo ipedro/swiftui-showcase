@@ -56,7 +56,8 @@ public struct ShowcaseNavigationView<Icon: View>: View {
 struct ShowcaseNavigationView_Previews: PreviewProvider {
     static var elements: [Topic] = [
         .mockCard,
-        .mockAccordion
+        .mockAccordion,
+        .mockButton
     ]
 
     static var previews: some View {

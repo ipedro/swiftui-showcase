@@ -23,7 +23,7 @@ import Foundation
 /// Represents a document split into chapters, with navigatable chapters that contain code examples, descriptions, and links.
 public struct Document: Identifiable {
     /// The unique identifier for the document.
-    public var id: String { "document-\(title.lowercased())" }
+    public let id = UUID()
     
     /// The title of the document.
     public var title: String
@@ -42,7 +42,7 @@ public struct Document: Identifiable {
     public init(_ title: String, description: String? = nil, _ chapters: [Chapter] = []) {
         self.title = title
         self.description = description
-        self.chapters = chapters.naturalSort()
+        self.chapters = chapters.sorted()
     }
     
     /// Initializes a showcase document with the specified title, chapters and an optional description.
@@ -53,6 +53,16 @@ public struct Document: Identifiable {
     public init(_ title: String, description: String? = nil, _ chapters: Chapter...) {
         self.title = title
         self.description = description
-        self.chapters = chapters.naturalSort()
+        self.chapters = chapters.sorted()
+    }
+}
+
+extension Document: Comparable {
+    public static func < (lhs: Self, rhs: Self) -> Bool {
+        lhs.title.localizedStandardCompare(rhs.title) != .orderedDescending
+    }
+    
+    public static func == (lhs: Self, rhs: Self) -> Bool {
+        lhs.id == rhs.id
     }
 }

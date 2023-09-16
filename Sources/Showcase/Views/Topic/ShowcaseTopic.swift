@@ -44,33 +44,32 @@ public struct ShowcaseTopic: View {
     }
     
     var configuration: ShowcaseLayout.Configuration {
-        ShowcaseLayout.Configuration(
-            children: ShowcaseChildren(
-                data: data.children,
-                parentID: data.id
-            ),
-            content: ShowcaseContent(
-                configuration: ShowcaseContent.Configuration(
+        .init(
+            children: .init(data: data.children),
+            content: .init(
+                configuration: .init(
                     title: title,
                     description: description,
                     preview: .init(data.preview),
                     links: .init(data: data.links),
                     codeBlocks: .init(data: data.codeBlocks)
                 )),
-            index: ShowcaseIndex(
-                configuration: ShowcaseIndex.Configuration(
-                    label: .init(data: data.children)))
+            index: .init(data)
         )
     }
-    
 }
 
 // MARK: - Previews
 
 struct Showcase_Previews: PreviewProvider {
     static var previews: some View {
-        ScrollView {
-            ShowcaseTopic(.mockAccordion)
+        NavigationView {
+            ScrollView {
+                ShowcaseTopic(.mockAccordion)
+            }
+            .toolbar {
+                ShowcaseIndex(.mockAccordion)
+            }
         }
     }
 }

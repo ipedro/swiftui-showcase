@@ -73,24 +73,22 @@ public struct ShowcaseDocument<Icon: View>: View {
     }
     
     func outlineGroup(_ chapter: Chapter) -> some View {
-        OutlineGroup(chapter.data, children: \.children) { item in
+        OutlineGroup(chapter.topics, children: \.children) { item in
             NavigationLink {
-                ScrollViewReader { scrollView in
+                ScrollViewReader { scroll in
                     ScrollView {
                         ShowcaseTopic(item)
                             .navigationTitle(item.title)
                             .toolbar {
                                 ToolbarItem {
-                                    ShowcaseIndex(
-                                        configuration: .init(
-                                            label: .init(
-                                                data: [item] + (item.allChildren ?? []))))
-                                    .showcaseIndexStyle(.menu)
+                                    index(item)
                                 }
                             }
+                            .scrollViewProxy(scroll)
                     }
-                    .scrollViewProxy(scrollView)
+                    .rootTopic(item.id)
                 }
+                
             } label: {
                 Label {
                     Text(item.title).bold()
@@ -100,18 +98,28 @@ public struct ShowcaseDocument<Icon: View>: View {
             }
         }
     }
+    
+    func index(_ item: Topic) -> some View {
+        ShowcaseIndex(item)
+            .showcaseIndexStyle(.menu)
+    }
 }
 
 struct ShowcaseList_Previews: PreviewProvider {
     static var elements: [Topic] = [
-        .mockAccordion,
-        .mockCard
+        .mockButton,
+        .mockCard,
+        .mockAccordion
     ]
     
     static var previews: some View {
-        NavigationView {
-            ShowcaseDocument(.systemComponents)
-                .navigationTitle("Components")
-        }
+        ShowcaseNavigationView(
+            .init(
+                "Test",
+                Chapter(
+                    "Chapter",
+                    elements
+                )))
+        
     }
 }

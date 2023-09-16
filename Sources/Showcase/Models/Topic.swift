@@ -25,7 +25,7 @@ import SwiftUI
 /// The documentation can include code examples, descriptions, previews, links, and subtopics.
 public struct Topic: Identifiable {
     /// The unique identifier for the topic.
-    public var id: String { "topic-\(title)" }
+    public let id = UUID()
     
     /// Code blocks associated with the topic.
     public var codeBlocks: [CodeBlock]
@@ -45,8 +45,9 @@ public struct Topic: Identifiable {
     /// Optional child topics.
     public var children: [Topic]?
     
-    var allChildren: [Topic]? {
-        children?.flatMap { [$0] + ($0.children ?? []) }
+    var allChildren: [Topic] {
+        guard let children = children else { return [] }
+        return children.flatMap { [$0] + ($0.children ?? []) }
     }
     
     /// Initializes a showcase element with the specified parameters.
@@ -71,5 +72,15 @@ public struct Topic: Identifiable {
         self.links = links()
         self.preview = preview
         self.title = title
+    }
+}
+
+extension Topic: Comparable {
+    public static func < (lhs: Self, rhs: Self) -> Bool {
+        lhs.title.localizedStandardCompare(rhs.title) != .orderedDescending
+    }
+    
+    public static func == (lhs: Self, rhs: Self) -> Bool {
+        lhs.id == rhs.id
     }
 }
