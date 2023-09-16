@@ -20,57 +20,26 @@
 
 import SwiftUI
 
-/// A view that displays the content of a showcase element, including title, description, previews, external links, and code blocks.
 public struct ShowcaseContent: View {
-    /// The configuration for the ShowcaseContent view.
     typealias Configuration = ShowcaseContentStyleConfiguration
-    
-    /// The style environment variable for displaying showcase content.
     @Environment(\.showcaseContentStyle) private var style
-    
-    /// The data representing the showcase content.
-    let data: Topic
-    
-    /// The indentation level for the content.
-    let level: Int
-    
-    /// The configuration for the showcase content view.
-    var configuration: Configuration {
-        .init(
-            level: level,
-            title: level > 0 ? Text(data.title) : nil,
-            description: description,
-            previews: ShowcasePreviews(data.previews),
-            externalLinks: Configuration.ExternalLinks(data: data.links),
-            codeBlocks: Configuration.CodeBlocks(data: data.codeBlocks)
-        )
-    }
-    
-    /// The description of the showcase content.
-    var description: Text? {
-        data.description.isEmpty ? nil : Text(data.description)
-    }
-    
+    var configuration: Configuration
     public var body: some View {
-        style
-            .makeBody(configuration: configuration)
-            .id(data.id)
+        style.makeBody(configuration: configuration)
     }
 }
 
 // MARK: - Configuration
 
-/// The configuration for styling the ShowcaseContent view.
 public struct ShowcaseContentStyleConfiguration {
-    public let level: Int
     public let title: Text?
     public let description: Text?
-    public let previews: ShowcasePreviews?
-    public let externalLinks: ExternalLinks?
+    public let preview: ShowcasePreview?
+    public let links: Links?
     public let codeBlocks: CodeBlocks?
     
     /// A view that represents external links.
-    public struct ExternalLinks: View {
+    public struct Links: View {
         let data: [Topic.Link]
         
         /// Initializes the view with external link data.
@@ -83,7 +52,7 @@ public struct ShowcaseContentStyleConfiguration {
         /// The body view for displaying external links.
         public var body: some View {
             ForEach(data) {
-                ShowcaseExternalLink(data: $0)
+                ShowcaseLink(data: $0)
             }
         }
     }
@@ -103,68 +72,6 @@ public struct ShowcaseContentStyleConfiguration {
         public var body: some View {
             ForEach(data) {
                 ShowcaseCodeBlock($0)
-            }
-        }
-    }
-}
-
-// MARK: - Standard Style
-
-/// Extension for the standard style of ShowcaseContent.
-extension ShowcaseContentStyle where Self == ShowcaseContentStyleStandard {
-    static var standard: Self { .init() }
-}
-
-/// The standard style for showcasing content.
-public struct ShowcaseContentStyleStandard: ShowcaseContentStyle {
-    public func makeBody(configuration: Configuration) -> some View {
-        VStack(alignment: .leading, spacing: 30) {
-            // Display the title with appropriate styling based on the indentation level.
-            configuration.title.font(.system(title(configuration.level)))
-            
-            // If there are external links, display them horizontally.
-            if let externalLinks = configuration.externalLinks {
-                LazyHStack {
-                    externalLinks
-                }
-            }
-            
-            // Display previews, description, and code blocks with appropriate styling.
-            configuration.previews
-            
-            configuration.description
-            
-            configuration.codeBlocks
-                .padding(.top)
-        }
-    }
-    
-    /// Determines the title font style based on the indentation level.
-    /// - Parameter level: The indentation level.
-    /// - Returns: The font style for the title.
-    func title(_ level: Int) -> SwiftUI.Font.TextStyle {
-        switch level {
-        case 0: return .largeTitle
-        case 1: return .title
-        case 2: return .title2
-        default: return .title3
-        }
-    }
-}
-
-// MARK: - Previews
-
-struct ShowcaseContent_Previews: PreviewProvider {
-    static let styles: [AnyShowcaseContentStyle] = [
-        .init(.standard)
-    ]
-    
-    static var previews: some View {
-        ForEach(0...styles.count - 1, id: \.self) { index in
-            ScrollView {
-                ShowcaseContent(data: Topic.mockAccordion, level: index)
-                    .showcaseContentStyle(styles[index])
-                    .padding()
             }
         }
     }

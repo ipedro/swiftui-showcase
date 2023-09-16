@@ -37,7 +37,7 @@ public struct Topic: Identifiable {
     public var links: [Link]
     
     /// Previews configuration for the topic.
-    public var previews: Previews?
+    public var preview: Preview?
     
     /// Title of the topic.
     public var title: String
@@ -52,20 +52,20 @@ public struct Topic: Identifiable {
     ///   - links: A closure returning external links associated with the showcase element (default is an empty array).
     ///   - examples: A closure returning code examples (default is an empty array).
     ///   - children: Optional child showcase topics (default is nil).
-    ///   - previews: Previews configuration (default is nil).
+    ///   - preview: Optional preview.
     public init(
         title: String,
         description: () -> String = { "" },
         @LinkBuilder links: () -> [Link] = { [] },
         @CodeBlockBuilder examples: () -> [CodeBlock] = { [] },
         children: [Topic]? = nil,
-        previews: Previews? = nil
+        preview: Preview? = nil
     ) {
         self.children = children
         self.codeBlocks = examples()
         self.description = description()
         self.links = links()
-        self.previews = previews
+        self.preview = preview
         self.title = title
     }
 }

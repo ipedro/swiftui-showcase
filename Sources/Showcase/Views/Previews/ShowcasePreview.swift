@@ -21,26 +21,26 @@
 import SwiftUI
 
 /// A view that displays previews of showcase topics.
-public struct ShowcasePreviews: View {
-    /// The style configuration for ShowcasePreviews.
-    typealias Configuration = ShowcasePreviewsStyleConfiguration
+public struct ShowcasePreview: View {
+    /// The style configuration for Preview.
+    typealias Configuration = ShowcasePreviewStyleConfiguration
     
-    /// The style for displaying the previews.
-    @Environment(\.previewsStyle) private var style
+    /// The style for displaying the preview.
+    @Environment(\.showcasePreviewStyle) private var style
     
-    /// The data representing the previews.
-    let data: Topic.Previews
+    /// The data representing the preview.
+    let data: Topic.Preview
     
-    /// Initializes a ShowcasePreviews view with the specified previews data.
-    /// - Parameter data: The data representing the previews (optional).
-    init?(_ data: Topic.Previews?) {
+    /// Initializes a Preview view with the specified preview data.
+    /// - Parameter data: The data representing the preview (optional).
+    init?(_ data: Topic.Preview?) {
         guard let data = data else { return nil }
         self.data = data
     }
     
-    /// The configuration for the ShowcasePreviews view.
+    /// The configuration for the Preview view.
     var configuration: Configuration {
-        .init(previews: data.content)
+        .init(preview: data.content)
     }
     
     public var body: some View {
@@ -64,49 +64,21 @@ public struct ShowcasePreviews: View {
 
 // MARK: - Configuration
 
-public struct ShowcasePreviewsStyleConfiguration {
-    /// The type-erased previews content.
-    public typealias Previews = AnyView
-    /// The previews content.
-    public let previews: Previews
+public struct ShowcasePreviewStyleConfiguration {
+    /// The type-erased preview content.
+    public let preview: AnyView
 }
 
-// MARK: - Styles
+// MARK: - Preview
 
-public extension ShowcasePreviewsStyle where Self == ShowcasePreviewsStylePaged {
-    /// A paged style for ShowcasePreviews.
-    static var paged: Self { .init() }
-}
-
-public struct ShowcasePreviewsStylePaged: ShowcasePreviewsStyle {
-    public func makeBody(configuration: Configuration) -> some View {
-        TabView {
-            configuration.previews
-                .offset(y: -30)
-        }
-        .offset(y: 20)
-        .tabViewStyle(.page)
-        .onAppear(perform: setupPageControl)
-        .clipped()
-    }
-    
-    /// Sets up the appearance of the page control for paged previews.
-    private func setupPageControl() {
-        UIPageControl.appearance().currentPageIndicatorTintColor = .secondaryLabel
-        UIPageControl.appearance().pageIndicatorTintColor = .label.withAlphaComponent(0.15)
-    }
-}
-
-// MARK: - Previews
-
-struct ShowcasePreviews_Previews: PreviewProvider {
-    static let styles: [AnyShowcasePreviewsStyle] = [
+struct Preview_Previews: PreviewProvider {
+    static let styles: [AnyShowcasePreviewStyle] = [
         .init(.paged)
     ]
     
     static var previews: some View {
         ForEach(0...styles.count - 1, id: \.self) { index in
-            ShowcasePreviews(.init {
+            ShowcasePreview(.init {
                 MockPreviews()
             })
         }

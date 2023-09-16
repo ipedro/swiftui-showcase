@@ -31,7 +31,7 @@ extension Document {
             Topic(
                 title: "Charts",
                 description: { "Organize data in a chart to communicate information with clarity and visual appeal." },
-                previews: .init(minHeight: 250) {
+                preview: .init(minHeight: 250) {
                     Group {
                         AsyncImage(url: .init(string: "https://docs-assets.developer.apple.com/published/99ff482fad4dd4768a7280ce055bbe5d/charts-anatomy@2x.png")
                         ) { image in
@@ -136,7 +136,7 @@ extension Topic {
         Image("your-asset-name")
         """
                 },
-                previews: .init {
+                preview: .init {
                     Image(systemName: "star")
                         .imageScale(.large)
                 }
@@ -153,7 +153,7 @@ extension Topic {
                 string: "https://docs-assets.developer.apple.com/published/b38ef3054b1d61b2a8f936cd81814d10/components-image-view-intro@2x.png")
         """
                 },
-                previews: .init {
+                preview: .init {
                     AsyncImage(url: .imageViewsPreview) { image in
                         image.resizable()
                     } placeholder: {

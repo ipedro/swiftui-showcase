@@ -23,19 +23,19 @@ import SwiftUI
 /// A type that applies standard interaction behavior and a custom appearance to
 /// all Showcases within a view hierarchy.
 ///
-/// To configure the current Showcase style for a view hierarchy, use the
-/// ``Showcase/showcaseStyle(_:)`` modifier.
-public protocol ShowcaseStyle {
+/// To configure the current Showcase layout style for a view hierarchy, use the
+/// ``Showcase/layoutStyle(_:)`` modifier.
+public protocol ShowcaseLayoutStyle {
     /// A view that represents the body of a Showcase.
     associatedtype Body: View
 
     /// The properties of a Showcase.
-    typealias Configuration = ShowcaseStyleConfiguration
+    typealias Configuration = ShowcaseLayoutStyleConfiguration
 
     /// Creates a view that represents the body of a Showcase.
     ///
     /// The system calls this method for each ``Showcase`` instance in a view
-    /// hierarchy where this style is the current Showcase style.
+    /// hierarchy where this style is the current Showcase layout style.
     ///
     /// - Parameter configuration: The properties of a Showcase.
     @ViewBuilder func makeBody(configuration: Configuration) -> Body
@@ -44,29 +44,29 @@ public protocol ShowcaseStyle {
 // MARK: - View Extension
 
 extension View {
-    /// Sets the style for Showcase within this view to a Showcase style with a
+    /// Sets the style for Showcase within this view to a Showcase layout style with a
     /// custom appearance and custom interaction behavior.
     ///
     /// Use this modifier to set a specific style for Showcase instances
     /// within a view:
     ///
     ///     Showcase(element)
-    ///         .showcaseStyle(.standard)
+    ///         .layoutStyle(.standard)
     ///
-    public func showcaseStyle<S: ShowcaseStyle>(_ style: S) -> some View {
-        environment(\.showcaseStyle, .init(style))
+    public func layoutStyle<S: ShowcaseLayoutStyle>(_ style: S) -> some View {
+        environment(\.layoutStyle, .init(style))
     }
 }
 
 // MARK: - Type Erasure
 
-/// A type erased Showcase style.
-struct AnyShowcaseStyle: ShowcaseStyle {
-    /// Current Showcase style.
-    var style: any ShowcaseStyle
+/// A type erased Showcase layout style.
+struct AnyShowcaseLayoutStyle: ShowcaseLayoutStyle {
+    /// Current Showcase layout style.
+    var style: any ShowcaseLayoutStyle
    
-    /// Creates a type erased Showcase style.
-    init<S: ShowcaseStyle>(_ style: S) {
+    /// Creates a type erased Showcase layout style.
+    init<S: ShowcaseLayoutStyle>(_ style: S) {
         self.style = style
     }
     
@@ -79,13 +79,13 @@ struct AnyShowcaseStyle: ShowcaseStyle {
 
 /// A private key needed to save style data in the environment
 private struct ShowcaseStyleKey: EnvironmentKey {
-    static var defaultValue: AnyShowcaseStyle = .init(.standard)
-    static func reduce(value: inout AnyShowcaseStyle, nextValue: () -> AnyShowcaseStyle) {}
+    static var defaultValue: AnyShowcaseLayoutStyle = .init(.vertical)
+    static func reduce(value: inout AnyShowcaseLayoutStyle, nextValue: () -> AnyShowcaseLayoutStyle) {}
 }
 
 extension EnvironmentValues {
-    /// The current Showcase style value.
-    var showcaseStyle: AnyShowcaseStyle {
+    /// The current Showcase layout style value.
+    var layoutStyle: AnyShowcaseLayoutStyle {
         get { self[ShowcaseStyleKey.self] }
         set { self[ShowcaseStyleKey.self] = newValue }
     }

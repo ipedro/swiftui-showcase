@@ -23,7 +23,7 @@ import SwiftUI
 
 extension Topic {
     /// Represents the previews configuration for a showcase element's content.
-    public struct Previews {
+    public struct Preview {
         /// Minimum width of the preview.
         public var minWidth: CGFloat?
         

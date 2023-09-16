@@ -73,7 +73,7 @@ NavigationalCard {
             }
             
         },
-        previews: .init {
+        preview: .init {
             MockPreviews()
         }
     )
@@ -99,7 +99,7 @@ SelectableCard(isOn: $isOn) {
 }
 """
         },
-        previews: .init {
+        preview: .init {
             MockPreviews()
         }
     )
@@ -128,7 +128,7 @@ StaticCard {
 }
 """
         },
-        previews: .init {
+        preview: .init {
             MockPreviews()
         }
     )
@@ -137,7 +137,7 @@ StaticCard {
 struct card_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            ShowcaseTopic(.mockCard)
+            Showcase(.mockCard)
         }
     }
 }

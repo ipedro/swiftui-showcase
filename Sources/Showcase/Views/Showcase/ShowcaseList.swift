@@ -75,7 +75,8 @@ public struct ShowcaseList<Icon: View>: View {
     func outlineGroup(_ chapter: Chapter) -> some View {
         OutlineGroup(chapter.data, children: \.children) { item in
             NavigationLink {
-                ShowcaseTopic(item)
+                Showcase(item)
+                    .navigationTitle(item.title)
             } label: {
                 Label {
                     Text(item.title).bold()

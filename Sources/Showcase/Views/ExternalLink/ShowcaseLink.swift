@@ -22,9 +22,9 @@ import SwiftUI
 import SafariServices
 
 /// A view that displays an external link to a website in a Safari view controller.
-struct ShowcaseExternalLink: View {
+struct ShowcaseLink: View {
     /// The style environment variable for displaying external links.
-    @Environment(\.externalLinkStyle) private var style
+    @Environment(\.showcaseLinkStyle) private var style
     
     /// The data representing the external link.
     let data: Topic.Link
@@ -65,13 +65,13 @@ struct ShowcaseExternalLink: View {
 
 // MARK: - Default Style
 
-public extension ButtonStyle where Self == ShowcaseExternalLinkStyleDefault {
+public extension ButtonStyle where Self == ShowcaseLinkStyleDefault {
     /// The default style for showcasing external links.
     static var standard: Self { .init() }
 }
 
 /// The default style for showcasing external links.
-public struct ShowcaseExternalLinkStyleDefault: ButtonStyle {
+public struct ShowcaseLinkStyleDefault: ButtonStyle {
     public func makeBody(configuration: Configuration) -> some View {
         HStack {
             configuration.label

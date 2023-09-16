@@ -22,43 +22,35 @@ import SwiftUI
 
 /// The children views within the showcase.
 public struct ShowcaseChildren: View {
+    @Environment(\.scrollView) private var scrollView
+    @Environment(\.nodeDepth) private var depth
+    
     /// The data representing child showcase topics.
     let data: [Topic]
     
-    /// The nesting level of the showcase.
-    let level: Int
-    
     /// The parent ID used for scrolling within the ScrollView.
     let parentID: Topic.ID
-    
-    /// Allows scrolling of the views.
-    let scrollView: ScrollViewProxy
     
     private let impact = UIImpactFeedbackGenerator(style: .light)
     
     /// Initializes child views based on the provided data. If the data is empty returns nil.
     /// - Parameters:
     ///   - data: The data representing child showcase topics.
-    ///   - level: The nesting level of the showcase.
     ///   - parentID: The parent ID used for scrolling within the ScrollView.
-    ///   - scrollView: Allows scrolling of the views.
     init?(
         data: [Topic]?,
-        level: Int,
-        parentID: Topic.ID,
-        scrollView: ScrollViewProxy
+        parentID: Topic.ID
     ) {
         guard let data = data, !data.isEmpty else { return nil }
         self.data = data
-        self.level = level
         self.parentID = parentID
-        self.scrollView = scrollView
     }
     
     /// The body of the child views within the showcase.
     public var body: some View {
         ForEach(data) { item in
-            ShowcaseContent(data: item, level: level)
+            Showcase(item)
+                .nodeDepth(depth + 1)
                 .overlay(alignment: .topTrailing) {
                     scrollToTop
                 }
@@ -66,19 +58,21 @@ public struct ShowcaseChildren: View {
     }
     
     /// The button used for scrolling to the top of the ScrollView.
-    private var scrollToTop: some View {
-        Button {
-            impact.impactOccurred()
-            withAnimation {
-                scrollView.scrollTo(parentID)
+    @ViewBuilder private var scrollToTop: some View {
+        if let scrollView = scrollView {
+            Button {
+                impact.impactOccurred()
+                withAnimation {
+                    scrollView.scrollTo(parentID)
+                }
+            } label: {
+                Image(systemName: "chevron.up")
             }
-        } label: {
-            Image(systemName: "chevron.up")
-        }
-        .padding(.top, 10)
-        .foregroundStyle(.tertiary)
-        .onAppear {
-            impact.prepare()
+            .padding(.top, 10)
+            .foregroundStyle(.tertiary)
+            .onAppear {
+                impact.prepare()
+            }
         }
     }
 }

@@ -54,16 +54,17 @@ extension Topic {
     }
     """
         },
-        previews: .init {
+        children: [.mockCard],
+        preview: .init {
             MockPreviews()
         }
     )
 }
 
-struct ShowcaseTopicAccordion_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationView {
-            ShowcaseTopic(.mockAccordion)
-        }
-    }
-}
+//struct TopicAccordion_Previews: PreviewProvider {
+//    static var previews: some View {
+//        NavigationView {
+//            ShowcaseContent(.mockAccordion)
+//        }
+//    }
+//}

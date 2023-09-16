@@ -54,7 +54,7 @@ Also: Don't forget to add `"Showcase"` as a dependency of your package's target.
    import Showcase
    ```
 
-2. Create and structure your showcase topics using `ShowcaseTopic` instances.
+2. Create and structure your showcase topics using `Topic` instances.
 
 ### Showcase
 
@@ -66,7 +66,7 @@ import SwiftUI
 struct ContentView: View {
     var body: some View {
         NavigationView {
-            // Create a Showcase with a ShowcaseTopic, e.g., .card
+            // Create a Showcase with a Topic, e.g., .card
             Showcase(.mockCard)
                 .navigationTitle("Component Showcase")
         }
@@ -86,8 +86,8 @@ struct ContentView: View {
         NavigationView {
             // Create a list with two chapters
             ShowcaseList(
-                ShowcaseChapter("Section 1", .card, .accordion),
-                ShowcaseChapter("Section 2", .button, .text)
+                Chapter("Section 1", .card, .accordion),
+                Chapter("Section 2", .button, .text)
             )
             .navigationTitle("Component Showcase")
         }
@@ -104,12 +104,12 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        // Create a ShowcaseNavigationView with a ShowcaseChapter and optional icon
+        // Create a ShowcaseNavigationView with a Chapter and optional icon
         ShowcaseNavigationView(
             ShowcaseChapter(
                 "My Chapter", 
-                ShowcaseChapter("Section 1", .card, .accordion),
-                ShowcaseChapter("Section 2", .button, .text)
+                Chapter("Section 1", .card, .accordion),
+                Chapter("Section 2", .button, .text)
             )
         )
     }

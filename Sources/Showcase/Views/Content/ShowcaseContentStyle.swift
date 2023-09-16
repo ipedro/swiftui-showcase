@@ -20,7 +20,7 @@
 
 import SwiftUI
 
-/// A type that applies standard interaction behavior and a custom appearance to
+/// A type that applies vertical interaction behavior and a custom appearance to
 /// all Showcases within a view hierarchy.
 ///
 /// To configure the current Showcase style for a view hierarchy, use the
@@ -79,7 +79,7 @@ struct AnyShowcaseContentStyle: ShowcaseContentStyle {
 
 /// A private key needed to save style data in the environment
 private struct ShowcaseContentStyleKey: EnvironmentKey {
-    static var defaultValue: AnyShowcaseContentStyle = .init(.standard)
+    static var defaultValue: AnyShowcaseContentStyle = .init(.vertical)
     static func reduce(value: inout AnyShowcaseContentStyle, nextValue: () -> AnyShowcaseContentStyle) {}
 }
 
