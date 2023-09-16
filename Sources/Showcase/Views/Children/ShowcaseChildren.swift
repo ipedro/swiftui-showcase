@@ -23,13 +23,13 @@ import SwiftUI
 /// The children views within the showcase.
 public struct ShowcaseChildren: View {
     /// The data representing child showcase topics.
-    let data: [ShowcaseTopic.Content]
+    let data: [Topic]
     
     /// The nesting level of the showcase.
     let level: Int
     
     /// The parent ID used for scrolling within the ScrollView.
-    let parentID: ShowcaseTopic.ID
+    let parentID: Topic.ID
     
     /// Allows scrolling of the views.
     let scrollView: ScrollViewProxy
@@ -43,9 +43,9 @@ public struct ShowcaseChildren: View {
     ///   - parentID: The parent ID used for scrolling within the ScrollView.
     ///   - scrollView: Allows scrolling of the views.
     init?(
-        data: [ShowcaseTopic.Content]?,
+        data: [Topic]?,
         level: Int,
-        parentID: ShowcaseTopic.ID,
+        parentID: Topic.ID,
         scrollView: ScrollViewProxy
     ) {
         guard let data = data, !data.isEmpty else { return nil }

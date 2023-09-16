@@ -20,34 +20,34 @@
 
 import SwiftUI
 
-extension ShowcaseDocument {
+extension Document {
     public static let systemComponents = Self(
         "Components",
         description: "Learn how to use and customize system-defined components to give people a familiar and consistent experience.",
-        ShowcaseChapter(
+        Chapter(
             "Content",
             description: "Learn how to use and customize system-defined components to give people a familiar and consistent experience.",
             .imageViews,
-            ShowcaseTopic(
+            Topic(
                 title: "Charts",
                 description: { "Organize data in a chart to communicate information with clarity and visual appeal." },
-                previews: .init {
+                previews: .init(minHeight: 250) {
                     Group {
-                        AsyncImage(url: .init(string: "https://docs-assets.developer.apple.com/published/0cb5720be21548b56e12a34af413930a/charts-anatomy~dark@2x.png")
+                        AsyncImage(url: .init(string: "https://docs-assets.developer.apple.com/published/99ff482fad4dd4768a7280ce055bbe5d/charts-anatomy@2x.png")
                         ) { image in
                             image.resizable()
                         } placeholder: {
                             ProgressView()
                         }
                         
-                        AsyncImage(url: .init(string: "https://docs-assets.developer.apple.com/published/0cb5720be21548b56e12a34af413930a/charts-anatomy~dark@2x.png")
+                        AsyncImage(url: .init(string: "https://docs-assets.developer.apple.com/published/2c2b96ba943f42c1d5d1f9a32e3734eb/bar-marks@2x.png")
                         ) { image in
                             image.resizable()
                         } placeholder: {
                             ProgressView()
                         }
                         
-                        AsyncImage(url: .init(string: "https://docs-assets.developer.apple.com/published/93c26abbc5f6694b5b5017d7b6bc83cc/line-marks~dark@2x.png")
+                        AsyncImage(url: .init(string: "https://docs-assets.developer.apple.com/published/ae570f541a660059884424b2f29c9fab/line-marks@2x.png")
                         ) { image in
                             image.resizable()
                         } placeholder: {
@@ -57,62 +57,62 @@ extension ShowcaseDocument {
                     .scaledToFit()
                 }
             ),
-            ShowcaseTopic(title: "Text views"),
-            ShowcaseTopic(title: "Web views")
+            Topic(title: "Text views"),
+            Topic(title: "Web views")
         ),
-        ShowcaseChapter(
+        Chapter(
             "Layout and organization",
-            ShowcaseTopic(title: "Boxes"),
-            ShowcaseTopic(title: "Collections"),
-            ShowcaseTopic(title: "Column views"),
-            ShowcaseTopic(title: "Disclosure controls"),
-            ShowcaseTopic(title: "Labels"),
-            ShowcaseTopic(title: "Lists and tables"),
-            ShowcaseTopic(title: "Lockups"),
-            ShowcaseTopic(title: "Outline views"),
-            ShowcaseTopic(title: "Split views"),
-            ShowcaseTopic(title: "Tab views")
+            Topic(title: "Boxes"),
+            Topic(title: "Collections"),
+            Topic(title: "Column views"),
+            Topic(title: "Disclosure controls"),
+            Topic(title: "Labels"),
+            Topic(title: "Lists and tables"),
+            Topic(title: "Lockups"),
+            Topic(title: "Outline views"),
+            Topic(title: "Split views"),
+            Topic(title: "Tab views")
         ),
-        ShowcaseChapter(
+        Chapter(
             "Menus and actions",
-            ShowcaseTopic(title: "Activity views"),
-            ShowcaseTopic(title: "Buttons"),
-            ShowcaseTopic(title: "Context menus"),
-            ShowcaseTopic(title: "Dock menus"),
-            ShowcaseTopic(title: "Edit menus"),
-            ShowcaseTopic(title: "Menus"),
-            ShowcaseTopic(title: "Ornaments"),
-            ShowcaseTopic(title: "Pop-up buttons"),
-            ShowcaseTopic(title: "Pull-down buttons"),
-            ShowcaseTopic(title: "Toolbars")
+            Topic(title: "Activity views"),
+            Topic(title: "Buttons"),
+            Topic(title: "Context menus"),
+            Topic(title: "Dock menus"),
+            Topic(title: "Edit menus"),
+            Topic(title: "Menus"),
+            Topic(title: "Ornaments"),
+            Topic(title: "Pop-up buttons"),
+            Topic(title: "Pull-down buttons"),
+            Topic(title: "Toolbars")
         ),
-        ShowcaseChapter(
+        Chapter(
             "Navigation and search",
-            ShowcaseTopic(title: "Navigation bars"),
-            ShowcaseTopic(title: "Path controls"),
-            ShowcaseTopic(title: "Search fields"),
-            ShowcaseTopic(title: "Sidebars"),
-            ShowcaseTopic(title: "Tab bars"),
-            ShowcaseTopic(title: "Token fields")
+            Topic(title: "Navigation bars"),
+            Topic(title: "Path controls"),
+            Topic(title: "Search fields"),
+            Topic(title: "Sidebars"),
+            Topic(title: "Tab bars"),
+            Topic(title: "Token fields")
         ),
-        ShowcaseChapter(
+        Chapter(
             "Presentation",
-            ShowcaseTopic(title: "Action sheets"),
-            ShowcaseTopic(title: "Alerts"),
-            ShowcaseTopic(title: "Page controls"),
-            ShowcaseTopic(title: "Panels"),
-            ShowcaseTopic(title: "Popovers"),
-            ShowcaseTopic(title: "Scroll views"),
-            ShowcaseTopic(title: "Sheets"),
-            ShowcaseTopic(title: "Windows")
+            Topic(title: "Action sheets"),
+            Topic(title: "Alerts"),
+            Topic(title: "Page controls"),
+            Topic(title: "Panels"),
+            Topic(title: "Popovers"),
+            Topic(title: "Scroll views"),
+            Topic(title: "Sheets"),
+            Topic(title: "Windows")
         ),
-        ShowcaseChapter("Selection and input"),
-        ShowcaseChapter("Status"),
-        ShowcaseChapter("System experiences")
+        Chapter("Selection and input"),
+        Chapter("Status"),
+        Chapter("System experiences")
     )
 }
 
-extension ShowcaseTopic {
+extension Topic {
     static let imageViews = Self(
         title: "Image views",
         description: {
@@ -150,7 +150,7 @@ extension ShowcaseTopic {
         """
         AsyncImage(
             url: .init(
-                string: "https://docs-assets.developer.apple.com/published/b38ef3054b1d61b2a8f936cd81814d10/components-image-view-intro~dark@2x.png")
+                string: "https://docs-assets.developer.apple.com/published/b38ef3054b1d61b2a8f936cd81814d10/components-image-view-intro@2x.png")
         """
                 },
                 previews: .init {
@@ -165,12 +165,12 @@ extension ShowcaseTopic {
     )
 }
 
-private extension ShowcaseTopic.LinkName {
+private extension LinkName {
     static let docs: Self = "Documentation"
 }
 
 private extension URL {
-    static let imageViewsPreview = Self.init(string: "https://docs-assets.developer.apple.com/published/b38ef3054b1d61b2a8f936cd81814d10/components-image-view-intro~dark@2x.png")
+    static let imageViewsPreview = Self.init(string: "https://docs-assets.developer.apple.com/published/b38ef3054b1d61b2a8f936cd81814d10/components-image-view-intro@2x.png")
     
     static let imageViewsDocs = Self.init(string: "https://developer.apple.com/design/human-interface-guidelines/image-views")
 }
@@ -179,7 +179,10 @@ private extension URL {
 
 struct SystemLibrary_Previews: PreviewProvider {
     static var previews: some View {
-        ShowcaseNavigationView(.systemComponents)
-            //.listStyle(.sidebar)
+        ForEach(["iPhone 14 Pro", "iPad (10th generation)"], id: \.self) { device in
+            ShowcaseNavigationView(.systemComponents)
+                .previewLayout(.sizeThatFits)
+                .previewDevice(PreviewDevice(rawValue: device))
+        }
     }
 }

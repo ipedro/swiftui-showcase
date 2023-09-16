@@ -27,7 +27,7 @@ struct ShowcaseExternalLink: View {
     @Environment(\.externalLinkStyle) private var style
     
     /// The data representing the external link.
-    let data: ShowcaseTopic.ExternalLink
+    let data: ExternalLink
     
     let impact = UIImpactFeedbackGenerator(style: .light)
     

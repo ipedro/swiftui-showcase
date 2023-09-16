@@ -20,7 +20,7 @@
 
 import SwiftUI
 
-extension ShowcaseTopic {
+extension Topic {
     public static let mockAccordion = Self(
         title: "Accordion",
         description: { """
@@ -63,7 +63,7 @@ extension ShowcaseTopic {
 struct ShowcaseTopicAccordion_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            Showcase(.mockAccordion)
+            ShowcaseTopic(.mockAccordion)
         }
     }
 }

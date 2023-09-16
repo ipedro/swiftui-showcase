@@ -50,7 +50,7 @@ public struct ShowcaseIndexStyleConfiguration {
     /// A type-erased collection of anchor buttons.
     public struct Label: View {
         /// The data representing showcase topics.
-        let data: [ShowcaseTopic]
+        let data: [Topic]
         
         /// The scroll view proxy for scrolling to anchor points.
         let scrollView: ScrollViewProxy?
@@ -61,7 +61,7 @@ public struct ShowcaseIndexStyleConfiguration {
         /// - Parameters:
         ///   - data: The data representing showcase topics.
         ///   - scrollView: The scroll view proxy for scrolling to anchor points (optional).
-        init?(data: [ShowcaseTopic]?, scrollView: ScrollViewProxy? = nil) {
+        init?(data: [Topic]?, scrollView: ScrollViewProxy? = nil) {
             guard let data = data, !data.isEmpty else { return nil }
             self.data = data
             self.scrollView = scrollView
@@ -70,7 +70,7 @@ public struct ShowcaseIndexStyleConfiguration {
         /// The body of the label view.
         public var body: some View {
             ForEach(data) { item in
-                Button(item.content.title) {
+                Button(item.title) {
                     impact.impactOccurred()
                     withAnimation {
                         scrollView?.scrollTo(item.id, anchor: .top)

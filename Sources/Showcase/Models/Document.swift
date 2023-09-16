@@ -20,39 +20,39 @@
 
 import Foundation
 
-/// Represents a chapter within a showcase document, containing showcase topics.
-public struct ShowcaseChapter: Identifiable {
-    /// The unique identifier for the chapter.
-    public var id: String { "chapter-\(title)" }
+/// Represents a document split into chapters, with navigatable chapters that contain code examples, descriptions, and links.
+public struct Document: Identifiable {
+    /// The unique identifier for the document.
+    public var id: String { "document-\(title.lowercased())" }
     
-    /// The title of the chapter.
-    public let title: String
+    /// The title of the document.
+    public var title: String
     
-    /// The optional description of the chapter.
-    public let description: String?
+    /// The optional description of the document.
+    public var description: String?
     
-    /// The showcase topics within the chapter.
-    public let data: [ShowcaseTopic]
+    /// The chapters within the document.
+    public var chapters: [Chapter]
     
-    /// Initializes a showcase chapter with the specified title and showcase topics.
+    /// Initializes a showcase document with the specified title, chapters and an optional description.
     /// - Parameters:
-    ///   - title: The title of the chapter.
-    ///   - elements: The showcase topics within the chapter.
-    ///   - description: The optional description of the chapter.
-    public init(_ title: String, description: String? = nil, _ elements: [ShowcaseTopic] = []) {
+    ///   - title: The title of the document.
+    ///   - chapters: The chapters within the document.
+    ///   - description: The optional description of the document.
+    public init(_ title: String, description: String? = nil, _ chapters: [Chapter] = []) {
         self.title = title
         self.description = description
-        self.data = elements.naturalSort()
+        self.chapters = chapters.naturalSort()
     }
     
-    /// Initializes a showcase chapter with the specified title and showcase topics.
+    /// Initializes a showcase document with the specified title, chapters and an optional description.
     /// - Parameters:
-    ///   - title: The title of the chapter.
-    ///   - elements: The showcase topics within the chapter.
-    ///   - description: The optional description of the chapter.
-    public init(_ title: String, description: String? = nil, _ elements: ShowcaseTopic...) {
+    ///   - title: The title of the document.
+    ///   - chapters: The chapters within the document.
+    ///   - description: The optional description of the document.
+    public init(_ title: String, description: String? = nil, _ chapters: Chapter...) {
         self.title = title
         self.description = description
-        self.data = elements.naturalSort()
+        self.chapters = chapters.naturalSort()
     }
 }

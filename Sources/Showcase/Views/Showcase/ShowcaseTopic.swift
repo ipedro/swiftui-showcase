@@ -21,31 +21,31 @@
 import SwiftUI
 
 /// A view for showcasing code examples, descriptions, and links.
-public struct Showcase: View {
+public struct ShowcaseTopic: View {
     /// The configuration type for the showcase view.
     typealias Configuration = ShowcaseStyleConfiguration
     
     /// The style environment for the showcase view.
     @Environment(\.showcaseStyle) private var style
     
-    /// The data to be displayed in the showcase.
-    let data: ShowcaseTopic
+    /// The topic to be displayed in the showcase.
+    let data: Topic
     
-    /// The nesting level of the element.
+    /// The nesting level of the topic.
     let level: Int
     
     /// Initializes a showcase view with the specified data and nesting level.
     /// - Parameters:
     ///   - data: The data to be displayed in the showcase.
     ///   - level: The nesting level of the showcase.
-    private init(_ data: ShowcaseTopic, level: Int) {
+    private init(_ data: Topic, level: Int) {
         self.data = data
         self.level = level
     }
     
     /// Initializes a showcase view with the specified data at the root level.
     /// - Parameter data: The data to be displayed in the showcase.
-    public init(_ data: ShowcaseTopic) {
+    public init(_ data: Topic) {
         self.data = data
         self.level = .zero
     }
@@ -58,13 +58,13 @@ public struct Showcase: View {
     ) -> Configuration {
         Configuration(
             children: ShowcaseChildren(
-                data: data.children?.map(\.content),
+                data: data.children,
                 level: level + 1,
                 parentID: data.id,
                 scrollView: scrollView
             ),
             content: ShowcaseContent(
-                data: data.content,
+                data: data,
                 level: level),
             index: ShowcaseIndex(
                 configuration: .init(
@@ -82,7 +82,7 @@ public struct Showcase: View {
             ScrollView {
                 style.makeBody(configuration: configuration)
             }
-            .navigationTitle(Text(data.content.title))
+            .navigationTitle(Text(data.title))
         }
     }
 }
@@ -149,7 +149,38 @@ public struct ShowcaseStyleStandard: ShowcaseStyle {
 struct Showcase_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            Showcase(.mockCard)
+            ShowcaseTopic(
+                Topic(
+                    title: "Button",
+                    description: {
+"""
+A button initiates an instantaneous action.
+
+A stylized representation of two horizontally aligned buttons. The image is tinted red to subtly reflect the red in the original six-color Apple logo.
+Versatile and highly customizable, buttons give people simple, familiar ways to do tasks in your app.
+"""
+                    },
+                    links: {
+                        ExternalLink(" HIG", .init(string: "https://developer.apple.com/design/human-interface-guidelines/buttons"))
+                    },
+                    examples: {
+                        CodeBlock {
+"""
+Button("I'm a bordered button") {
+    // do something
+}
+.buttonStyle(.bordered)
+"""
+                        }
+                    },
+                    previews: .init {
+                        Button("I'm a bordered button") {
+                            // do something
+                        }
+                        .buttonStyle(.bordered)
+                    }
+                )
+            )
         }
     }
 }

@@ -23,7 +23,7 @@ import SwiftUI
 /// A view that displays a list of showcases organized into chapters.
 public struct ShowcaseList<Icon: View>: View {
     /// The data representing showcase chapters.
-    let data: ShowcaseDocument
+    let data: Document
     
     /// The icon to be displayed next to each showcase item in the list.
     let icon: Icon
@@ -33,7 +33,7 @@ public struct ShowcaseList<Icon: View>: View {
     ///   - data: The data representing showcase chapters.
     ///   - icon: A closure that returns the icon view for each showcase item (optional).
     public init(
-        _ data: ShowcaseDocument,
+        _ data: Document,
         @ViewBuilder icon: () -> Icon = { EmptyView() }
     ) {
         self.data = data
@@ -60,7 +60,7 @@ public struct ShowcaseList<Icon: View>: View {
         }
     }
     
-    func section(_ chapter: ShowcaseChapter) -> some View {
+    func section(_ chapter: Chapter) -> some View {
         Section {
             outlineGroup(chapter)
         } header: {
@@ -72,13 +72,13 @@ public struct ShowcaseList<Icon: View>: View {
         }
     }
     
-    func outlineGroup(_ chapter: ShowcaseChapter) -> some View {
+    func outlineGroup(_ chapter: Chapter) -> some View {
         OutlineGroup(chapter.data, children: \.children) { item in
             NavigationLink {
-                Showcase(item)
+                ShowcaseTopic(item)
             } label: {
                 Label {
-                    Text(item.content.title).bold()
+                    Text(item.title).bold()
                 } icon: {
                     icon
                 }
@@ -88,7 +88,7 @@ public struct ShowcaseList<Icon: View>: View {
 }
 
 struct ShowcaseList_Previews: PreviewProvider {
-    static var elements: [ShowcaseTopic] = [
+    static var elements: [Topic] = [
         .mockAccordion,
         .mockCard
     ]

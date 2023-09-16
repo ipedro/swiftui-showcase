@@ -23,7 +23,7 @@ import SwiftUI
 /// A view that displays a navigation view that displays a document split into chapters.
 public struct ShowcaseNavigationView<Icon: View>: View {
     /// The data representing a showcase chapter.
-    let data: ShowcaseDocument
+    let data: Document
     
     /// The icon to be displayed next to each showcase item in the list.
     let icon: Icon
@@ -33,7 +33,7 @@ public struct ShowcaseNavigationView<Icon: View>: View {
     ///   - data: The data representing a showcase chapter.
     ///   - icon: A closure that returns the icon view for each showcase item (optional).
     public init(
-        _ data: ShowcaseDocument,
+        _ data: Document,
         @ViewBuilder icon: () -> Icon = { EmptyView() }
     ) {
         self.data = data
@@ -47,23 +47,24 @@ public struct ShowcaseNavigationView<Icon: View>: View {
             }
             .navigationTitle(data.title)
         }
+        .previewDisplayName(data.title)
     }
 }
 
 // MARK: - Previews
 
 struct ShowcaseNavigationView_Previews: PreviewProvider {
-    static var elements: [ShowcaseTopic] = [
+    static var elements: [Topic] = [
         .mockCard,
         .mockAccordion
     ]
 
     static var previews: some View {
         ShowcaseNavigationView(
-            ShowcaseDocument(
+            Document(
                 "Library",
                 description: "Teste",
-                ShowcaseChapter(
+                Chapter(
                     "Mock",
                     elements
                 )

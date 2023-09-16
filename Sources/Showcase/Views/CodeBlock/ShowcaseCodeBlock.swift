@@ -34,7 +34,7 @@ struct ShowcaseCodeBlock: View {
     
     /// Initializes a ShowcaseCodeBlock view with the specified code block data.
     /// - Parameter data: The data representing the code block (optional).
-    init?(_ data: ShowcaseTopic.CodeBlock?) {
+    init?(_ data: CodeBlock?) {
         guard let data = data else { return nil }
         self.configuration = Configuration(
             title: .init(data.title ?? "Sample Code"),
