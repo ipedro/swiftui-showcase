@@ -78,18 +78,18 @@ public struct ShowcaseDocument<Icon: View>: View {
                 ScrollViewReader { scrollView in
                     ScrollView {
                         ShowcaseTopic(item)
-                            .scrollViewProxy(scrollView)
                             .navigationTitle(item.title)
+                            .toolbar {
+                                ToolbarItem {
+                                    ShowcaseIndex(
+                                        configuration: .init(
+                                            label: .init(
+                                                data: [item] + (item.allChildren ?? []))))
+                                    .showcaseIndexStyle(.menu)
+                                }
+                            }
                     }
-                }
-                .toolbar {
-                    ToolbarItem {
-                        ShowcaseIndex(
-                            configuration: .init(
-                                label: .init(
-                                    data: item.allChildren)))
-                        .showcaseIndexStyle(.menu)
-                    }
+                    .scrollViewProxy(scrollView)
                 }
             } label: {
                 Label {
