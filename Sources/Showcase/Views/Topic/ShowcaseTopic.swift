@@ -21,10 +21,7 @@
 import SwiftUI
 
 /// A view that displays the content of a showcase element, including title, description, previews, external links, and code blocks.
-public struct Showcase: View {
-    typealias ContentConfiguration = ShowcaseContentStyleConfiguration
-    typealias LayoutConfiguration = ShowcaseLayoutStyleConfiguration
-    
+public struct ShowcaseTopic: View {
     @Environment(\.nodeDepth) private var depth
     
     let data: Topic
@@ -36,7 +33,7 @@ public struct Showcase: View {
     public var body: some View {
         ScrollViewReader { scrollView in
             ScrollView {
-                ShowcaseLayout(configuration: layout)
+                ShowcaseLayout(configuration: configuration)
                     .id(data.id)
                     .scrollViewProxy(scrollView)
             }
@@ -47,25 +44,26 @@ public struct Showcase: View {
         data.description.isEmpty ? nil : Text(data.description)
     }
     
-    var content: ContentConfiguration {
-        .init(
-            title: depth > 0 ? Text(data.title) : nil,
-            description: description,
-            preview: .init(data.preview),
-            links: .init(data: data.links),
-            codeBlocks: .init(data: data.codeBlocks)
-        )
+    var title: Text? {
+        depth > 0 ? Text(data.title) : nil
     }
     
-    var layout: LayoutConfiguration {
-        LayoutConfiguration(
+    var configuration: ShowcaseLayout.Configuration {
+        ShowcaseLayout.Configuration(
             children: ShowcaseChildren(
                 data: data.children,
                 parentID: data.id
             ),
-            content: .init(configuration: content),
+            content: ShowcaseContent(
+                configuration: ShowcaseContent.Configuration(
+                    title: title,
+                    description: description,
+                    preview: .init(data.preview),
+                    links: .init(data: data.links),
+                    codeBlocks: .init(data: data.codeBlocks)
+                )),
             index: ShowcaseIndex(
-                configuration: .init(
+                configuration: ShowcaseIndex.Configuration(
                     label: .init(data: data.children)))
         )
     }
@@ -76,6 +74,6 @@ public struct Showcase: View {
 
 struct Showcase_Previews: PreviewProvider {
     static var previews: some View {
-        Showcase(.mockAccordion)
+        ShowcaseTopic(.mockAccordion)
     }
 }

@@ -137,7 +137,7 @@ StaticCard {
 struct card_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            Showcase(.mockCard)
+            ShowcaseTopic(.mockCard)
         }
     }
 }

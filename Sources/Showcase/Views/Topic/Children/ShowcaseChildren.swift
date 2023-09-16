@@ -49,7 +49,7 @@ public struct ShowcaseChildren: View {
     /// The body of the child views within the showcase.
     public var body: some View {
         ForEach(data) { item in
-            Showcase(item)
+            ShowcaseTopic(item)
                 .nodeDepth(depth + 1)
                 .overlay(alignment: .topTrailing) {
                     scrollToTop

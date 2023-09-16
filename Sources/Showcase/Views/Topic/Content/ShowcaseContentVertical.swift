@@ -35,21 +35,19 @@ public struct ShowcaseContentVertical: ShowcaseContentStyle {
     
     private struct ContentView: View {
         @Environment(\.nodeDepth) private var depth
+        @Environment(\.font) private var font
         var configuration: Configuration
         
         var body: some View {
             VStack(alignment: .leading, spacing: 30) {
-                // Display the title with appropriate styling based on the node depth.
                 configuration.title.font(.system(titleStyle))
                 
-                // If there are external links, display them horizontally.
                 if let links = configuration.links {
                     LazyHStack {
                         links
                     }
                 }
                 
-                // Display previews, description, and code blocks with appropriate styling.
                 configuration.preview
                 
                 configuration.description
@@ -57,17 +55,24 @@ public struct ShowcaseContentVertical: ShowcaseContentStyle {
                 configuration.codeBlocks
                     .padding(.top)
             }
+            .font(font ?? .system(bodyStyle))
         }
         
-        /// Determines the title font style based on the node depth.
-        /// - Parameter depth: The node depth.
-        /// - Returns: The font style for the title.
         var titleStyle: SwiftUI.Font.TextStyle {
             switch depth {
             case 0: return .largeTitle
             case 1: return .title
             case 2: return .title2
-            default: return .title3
+            case 3: return .title3
+            default: return .headline
+            }
+        }
+        
+        var bodyStyle: SwiftUI.Font.TextStyle {
+            switch depth {
+            case 2: return .callout
+            case 3: return .footnote
+            default: return .body
             }
         }
     }

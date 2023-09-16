@@ -21,7 +21,7 @@
 import SwiftUI
 
 /// A view that displays a list of showcases organized into chapters.
-public struct ShowcaseList<Icon: View>: View {
+public struct ShowcaseDocument<Icon: View>: View {
     /// The data representing showcase chapters.
     let data: Document
     
@@ -75,7 +75,7 @@ public struct ShowcaseList<Icon: View>: View {
     func outlineGroup(_ chapter: Chapter) -> some View {
         OutlineGroup(chapter.data, children: \.children) { item in
             NavigationLink {
-                Showcase(item)
+                ShowcaseTopic(item)
                     .navigationTitle(item.title)
             } label: {
                 Label {
@@ -96,7 +96,7 @@ struct ShowcaseList_Previews: PreviewProvider {
     
     static var previews: some View {
         NavigationView {
-            ShowcaseList(.systemComponents)
+            ShowcaseDocument(.systemComponents)
                 .navigationTitle("Components")
         }
     }

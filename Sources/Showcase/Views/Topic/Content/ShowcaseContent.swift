@@ -24,8 +24,10 @@ public struct ShowcaseContent: View {
     typealias Configuration = ShowcaseContentStyleConfiguration
     @Environment(\.showcaseContentStyle) private var style
     var configuration: Configuration
+    
     public var body: some View {
         style.makeBody(configuration: configuration)
+            .previewLayout(.sizeThatFits)
     }
 }
 

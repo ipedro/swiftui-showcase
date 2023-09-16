@@ -42,7 +42,7 @@ public struct ShowcaseNavigationView<Icon: View>: View {
     
     public var body: some View {
         NavigationView {
-            ShowcaseList(data) {
+            ShowcaseDocument(data) {
                 icon
             }
             .navigationTitle(data.title)
