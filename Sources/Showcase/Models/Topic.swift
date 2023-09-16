@@ -34,7 +34,7 @@ public struct Topic: Identifiable {
     public var description: String
     
     /// External links associated with the topic.
-    public var links: [ExternalLink]
+    public var links: [Link]
     
     /// Previews configuration for the topic.
     public var previews: Previews?
@@ -56,7 +56,7 @@ public struct Topic: Identifiable {
     public init(
         title: String,
         description: () -> String = { "" },
-        @ExternalLinkBuilder links: () -> [ExternalLink] = { [] },
+        @LinkBuilder links: () -> [Link] = { [] },
         @CodeBlockBuilder examples: () -> [CodeBlock] = { [] },
         children: [Topic]? = nil,
         previews: Previews? = nil

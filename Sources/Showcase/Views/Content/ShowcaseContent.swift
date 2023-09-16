@@ -71,11 +71,11 @@ public struct ShowcaseContentStyleConfiguration {
     
     /// A view that represents external links.
     public struct ExternalLinks: View {
-        let data: [ExternalLink]
+        let data: [Topic.Link]
         
         /// Initializes the view with external link data.
         /// - Parameter data: The external link data.
-        init?(data: [ExternalLink]) {
+        init?(data: [Topic.Link]) {
             if data.isEmpty { return nil }
             self.data = data
         }
@@ -90,11 +90,11 @@ public struct ShowcaseContentStyleConfiguration {
     
     /// A view that represents code blocks.
     public struct CodeBlocks: View {
-        let data: [CodeBlock]
+        let data: [Topic.CodeBlock]
         
         /// Initializes the view with code block data.
         /// - Parameter data: The code block data.
-        init?(data: [CodeBlock]) {
+        init?(data: [Topic.CodeBlock]) {
             if data.isEmpty { return nil }
             self.data = data
         }

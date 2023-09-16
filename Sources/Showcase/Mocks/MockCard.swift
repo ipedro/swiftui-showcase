@@ -49,8 +49,8 @@ By clicking anywhere on the card, users can perform the desired action. While na
 """
         },
         links: {
-            ExternalLink("Code", .init(string: "NavigationalCard"))
-            ExternalLink("Design", .init(string: "https://google.com"))
+            Link("Code", .init(string: "NavigationalCard"))
+            Link("Design", .init(string: "https://google.com"))
         },
         examples: {
             
@@ -90,8 +90,8 @@ Selectable cards serve for selecting an item that is part of a group of options 
 """
         },
         links: {
-            ExternalLink("Code", .init(string: "SelectableCard"))
-            ExternalLink("Design", .init(string: "https://google.com"))
+            Link("Code", .init(string: "SelectableCard"))
+            Link("Design", .init(string: "https://google.com"))
         },
         examples: { """
 SelectableCard(isOn: $isOn) {
@@ -118,8 +118,8 @@ The card surface does not have interactive states, meaning it cannot be hovered 
 """
         },
         links: {
-            ExternalLink("Code", .init(string: "StaticCard"))
-            ExternalLink("Design", .init(string: "https://google.com"))
+            Link("Code", .init(string: "StaticCard"))
+            Link("Design", .init(string: "https://google.com"))
         },
         examples: {
 """

@@ -34,8 +34,8 @@ extension Topic {
     """
         },
         links: {
-            ExternalLink("Code", .init(string: "https://google.com"))
-            ExternalLink("Design", .init(string: "https://zeroheight.com/700c95a05/p/0309e1-accordion/b/45490a"))
+            Link("Code", .init(string: "https://google.com"))
+            Link("Design", .init(string: "https://zeroheight.com/700c95a05/p/0309e1-accordion/b/45490a"))
         },
         examples: {
     """

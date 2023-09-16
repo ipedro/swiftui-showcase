@@ -161,10 +161,10 @@ Versatile and highly customizable, buttons give people simple, familiar ways to 
 """
                     },
                     links: {
-                        ExternalLink(" HIG", .init(string: "https://developer.apple.com/design/human-interface-guidelines/buttons"))
+                        Topic.Link(" HIG", .init(string: "https://developer.apple.com/design/human-interface-guidelines/buttons"))
                     },
                     examples: {
-                        CodeBlock {
+                        Topic.CodeBlock {
 """
 Button("I'm a bordered button") {
     // do something

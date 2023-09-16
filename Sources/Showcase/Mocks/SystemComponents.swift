@@ -119,7 +119,7 @@ extension Topic {
             "An image view displays a single image — or in some cases, an animated sequence of images — on a transparent or opaque background."
         },
         links: {
-            ExternalLink(.docs, .imageViewsDocs)
+            Link(.docs, .imageViewsDocs)
         },
         children: [
             .init(
@@ -165,7 +165,7 @@ extension Topic {
     )
 }
 
-private extension LinkName {
+private extension Topic.LinkName {
     static let docs: Self = "Documentation"
 }
 

@@ -21,20 +21,16 @@
 
 import Foundation
 
-/// Represents the name of an external link.
-public struct LinkName: CustomStringConvertible, ExpressibleByStringLiteral {
-    /// The description of the link name.
-    public let description: String
-    
-    /// Initializes a link name with the specified description.
-    /// - Parameter description: The description of the link name.
-    public init(_ description: String) {
-        self.description = description
-    }
-    
-    /// Initializes a link name using a string literal.
-    /// - Parameter value: The string literal representing the link name description.
-    public init(stringLiteral value: String) {
-        self.description = value
+extension Topic {
+    /// A result builder for creating code blocks.
+    @resultBuilder public struct CodeBlockBuilder {
+        /// Builds an array of code blocks from individual components.
+        public static func buildBlock() -> [CodeBlock] { [] }
+        
+        /// Builds an array of code blocks from variadic components.
+        public static func buildBlock(_ components: CodeBlock...) -> [CodeBlock] { components }
+        
+        /// Builds an array of code blocks from variadic string components.
+        public static func buildBlock(_ components: String...) -> [CodeBlock] { components.map { .init(stringLiteral: $0) } }
     }
 }

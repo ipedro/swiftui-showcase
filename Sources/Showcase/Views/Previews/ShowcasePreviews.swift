@@ -29,11 +29,11 @@ public struct ShowcasePreviews: View {
     @Environment(\.previewsStyle) private var style
     
     /// The data representing the previews.
-    let data: Previews
+    let data: Topic.Previews
     
     /// Initializes a ShowcasePreviews view with the specified previews data.
     /// - Parameter data: The data representing the previews (optional).
-    init?(_ data: Previews?) {
+    init?(_ data: Topic.Previews?) {
         guard let data = data else { return nil }
         self.data = data
     }
