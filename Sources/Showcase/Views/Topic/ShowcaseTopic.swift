@@ -31,13 +31,8 @@ public struct ShowcaseTopic: View {
     }
     
     public var body: some View {
-        ScrollViewReader { scrollView in
-            ScrollView {
-                ShowcaseLayout(configuration: configuration)
-                    .id(data.id)
-                    .scrollViewProxy(scrollView)
-            }
-        }
+        ShowcaseLayout(configuration: configuration)
+            .id(data.id)
     }
     
     var description: Text? {
@@ -74,6 +69,8 @@ public struct ShowcaseTopic: View {
 
 struct Showcase_Previews: PreviewProvider {
     static var previews: some View {
-        ShowcaseTopic(.mockAccordion)
+        ScrollView {
+            ShowcaseTopic(.mockAccordion)
+        }
     }
 }

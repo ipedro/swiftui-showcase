@@ -29,21 +29,9 @@ public struct ShowcaseLayoutVertical: ShowcaseLayoutStyle {
                 }
                 
                 configuration.children
-                    .padding(.vertical)
-                    .padding(.bottom)
-                    .overlay(alignment: .bottom) {
-                        Divider()
-                    }
-                
             }
             .padding(depth == .zero ? .horizontal : [])
             .padding(depth == .zero ? [] : .vertical)
-            .toolbar {
-                ToolbarItem {
-                    configuration.index
-                        .showcaseIndexStyle(.menu)
-                }
-            }
         }
     }
 }

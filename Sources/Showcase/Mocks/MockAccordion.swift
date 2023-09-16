@@ -63,17 +63,16 @@ extension Topic {
 
 struct TopicAccordion_Previews: PreviewProvider {
     static var previews: some View {
-        ShowcaseContent(
-            configuration: .init(
-                title: Text(verbatim: "Title"),
-                description: Text("Commonly used for content that is useful but not essential such as frequently asked questions (FAQs), or for displaying multiple blocks of related content."),
-                preview: .init(
-                    .init(
-                        .init(maxHeight: 200) {
-                            MockPreviews()
-                        })),
-                links: nil,
-                codeBlocks: nil
-            ))
+        NavigationView {
+            ShowcaseDocument(
+                .init(
+                    "Accordion",
+                    Chapter(
+                        "Chapter",
+                        .mockAccordion
+                    )
+                )
+            )
+        }
     }
 }

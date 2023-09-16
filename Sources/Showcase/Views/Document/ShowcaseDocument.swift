@@ -75,8 +75,22 @@ public struct ShowcaseDocument<Icon: View>: View {
     func outlineGroup(_ chapter: Chapter) -> some View {
         OutlineGroup(chapter.data, children: \.children) { item in
             NavigationLink {
-                ShowcaseTopic(item)
-                    .navigationTitle(item.title)
+                ScrollViewReader { scrollView in
+                    ScrollView {
+                        ShowcaseTopic(item)
+                            .scrollViewProxy(scrollView)
+                            .navigationTitle(item.title)
+                    }
+                }
+                .toolbar {
+                    ToolbarItem {
+                        ShowcaseIndex(
+                            configuration: .init(
+                                label: .init(
+                                    data: item.allChildren)))
+                        .showcaseIndexStyle(.menu)
+                    }
+                }
             } label: {
                 Label {
                     Text(item.title).bold()

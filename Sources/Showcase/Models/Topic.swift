@@ -45,6 +45,10 @@ public struct Topic: Identifiable {
     /// Optional child topics.
     public var children: [Topic]?
     
+    var allChildren: [Topic]? {
+        children?.flatMap { [$0] + ($0.children ?? []) }
+    }
+    
     /// Initializes a showcase element with the specified parameters.
     /// - Parameters:
     ///   - title: The title of the showcase element.

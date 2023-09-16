@@ -49,36 +49,35 @@ public struct ShowcaseIndexStyleConfiguration {
     
     /// A type-erased collection of anchor buttons.
     public struct Label: View {
+        @Environment(\.scrollView) private var scrollView
+        
         /// The data representing showcase topics.
         let data: [Topic]
-        
-        /// The scroll view proxy for scrolling to anchor points.
-        let scrollView: ScrollViewProxy?
         
         let impact = UIImpactFeedbackGenerator(style: .light)
         
         /// Initializes a label with the specified data and scroll view proxy.
         /// - Parameters:
         ///   - data: The data representing showcase topics.
-        ///   - scrollView: The scroll view proxy for scrolling to anchor points (optional).
-        init?(data: [Topic]?, scrollView: ScrollViewProxy? = nil) {
-            guard let data = data, !data.isEmpty else { return nil }
+        init?(data: [Topic]?) {
+            guard let data = data, data.count > 1 else { return nil }
             self.data = data
-            self.scrollView = scrollView
         }
         
         /// The body of the label view.
         public var body: some View {
-            ForEach(data) { item in
-                Button(item.title) {
-                    impact.impactOccurred()
-                    withAnimation {
-                        scrollView?.scrollTo(item.id, anchor: .top)
+            if let scrollView = scrollView {
+                ForEach(data) { item in
+                    Button(item.title) {
+                        impact.impactOccurred()
+                        withAnimation {
+                            scrollView.scrollTo(item.id, anchor: .top)
+                        }
                     }
                 }
-            }
-            .onAppear {
-                impact.prepare()
+                .onAppear {
+                    impact.prepare()
+                }
             }
         }
     }

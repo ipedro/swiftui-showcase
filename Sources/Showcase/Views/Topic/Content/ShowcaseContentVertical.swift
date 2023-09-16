@@ -35,7 +35,6 @@ public struct ShowcaseContentVertical: ShowcaseContentStyle {
     
     private struct ContentView: View {
         @Environment(\.nodeDepth) private var depth
-        @Environment(\.font) private var font
         var configuration: Configuration
         
         var body: some View {
@@ -49,13 +48,13 @@ public struct ShowcaseContentVertical: ShowcaseContentStyle {
                 }
                 
                 configuration.preview
+                    .padding(.bottom)
                 
                 configuration.description
+                    .padding(.bottom)
                 
                 configuration.codeBlocks
-                    .padding(.top)
             }
-            .font(font ?? .system(bodyStyle))
         }
         
         var titleStyle: SwiftUI.Font.TextStyle {
