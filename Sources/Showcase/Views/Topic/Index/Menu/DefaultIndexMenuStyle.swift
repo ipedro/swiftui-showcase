@@ -21,11 +21,11 @@
 
 import SwiftUI
 
-public extension ShowcaseIndexMenuStyle where Self == DefaultIndexMenuStyle<MenuIcon> {
+public extension ShowcaseIndexMenuStyle where Self == DefaultIndexMenuStyle<ShowcaseIndexMenuIcon> {
     /// A context menu style with an icon as a label.
     static func menu(_ iconName: String = "list.bullet") -> Self {
         .init {
-            MenuIcon(systemName: iconName)
+            ShowcaseIndexMenuIcon(systemName: iconName)
         }
     }
 }
@@ -45,23 +45,5 @@ public struct DefaultIndexMenuStyle<Label: View>: ShowcaseIndexMenuStyle {
                 label
             }
         }
-    }
-}
-
-public struct MenuIcon: View {
-    var systemName: String
-    
-    /// The shape used for the icon.
-    private let shape = RoundedRectangle(
-        cornerRadius: 8,
-        style: .continuous)
-    
-    public var body: some View {
-        Image(systemName: systemName)
-            .padding(5)
-            .mask { shape }
-            .background {
-                shape.opacity(0.1)
-            }
     }
 }

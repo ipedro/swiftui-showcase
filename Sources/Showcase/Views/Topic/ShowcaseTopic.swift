@@ -54,7 +54,7 @@ public struct ShowcaseTopic: View {
                     links: .init(data: data.links),
                     codeBlocks: .init(data: data.codeBlocks)
                 )),
-            indexList: depth == 0 ? .init(data) : nil
+            indexList: depth == 0 ? .init(data: data) : nil
         )
     }
 }
@@ -64,8 +64,11 @@ public struct ShowcaseTopic: View {
 struct Showcase_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            ScrollView {
-                ShowcaseTopic(.mockAccordion)
+            ScrollViewReader {
+                ScrollView {
+                    ShowcaseTopic(.mockAccordion)
+                }
+                .scrollViewProxy($0)
             }
             .toolbar {
                 ShowcaseIndexMenu(.mockAccordion)

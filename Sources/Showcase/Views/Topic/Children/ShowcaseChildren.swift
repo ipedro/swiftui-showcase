@@ -22,14 +22,10 @@ import SwiftUI
 
 /// The children views within the showcase.
 public struct ShowcaseChildren: View {
-    @Environment(\.scrollView) private var scrollView
     @Environment(\.nodeDepth) private var depth
-    @Environment(\.rootTopic) private var rootTopic
     
     /// The data representing child showcase topics.
     let data: [Topic]
-    
-    private let impact = UIImpactFeedbackGenerator(style: .light)
     
     init?(data: [Topic]?) {
         guard let data = data, !data.isEmpty else { return nil }
@@ -40,29 +36,7 @@ public struct ShowcaseChildren: View {
     public var body: some View {
         ForEach(data) { item in
             ShowcaseTopic(item)
-                .nodeDepth(depth + 1)
-                .overlay(alignment: .topTrailing) {
-                    scrollToTop
-                }
         }
-    }
-    
-    /// The button used for scrolling to the top of the ScrollView.
-    @ViewBuilder private var scrollToTop: some View {
-        if let scrollView = scrollView, let rootTopic = rootTopic {
-            Button {
-                impact.impactOccurred()
-                withAnimation {
-                    scrollView.scrollTo(rootTopic)
-                }
-            } label: {
-                Image(systemName: "chevron.up")
-            }
-            .padding(.top, 10)
-            .foregroundStyle(.tertiary)
-            .onAppear {
-                impact.prepare()
-            }
-        }
+        .nodeDepth(depth + 1)
     }
 }

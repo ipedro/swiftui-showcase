@@ -23,12 +23,12 @@ import SwiftUI
 
 // MARK: - Styles
 
-public extension ShowcasePreviewStyle where Self == ShowcasePreviewPaged {
+public extension ShowcasePreviewStyle where Self == PagedShowcasePreviewStyle {
     /// A paged style for Preview.
     static var paged: Self { .init() }
 }
 
-public struct ShowcasePreviewPaged: ShowcasePreviewStyle {
+public struct PagedShowcasePreviewStyle: ShowcasePreviewStyle {
     public func makeBody(configuration: Configuration) -> some View {
         TabView {
             configuration.preview

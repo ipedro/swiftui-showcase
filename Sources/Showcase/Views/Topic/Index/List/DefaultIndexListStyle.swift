@@ -21,21 +21,32 @@
 
 import SwiftUI
 
-extension View {
-    func rootTopic(_ id: Topic.ID?) -> some View {
-        environment(\.rootTopic, id)
+public extension ShowcaseIndexListStyle where Self == DefaultIndexListStyle<Circle> {
+    /// A bullet list style.
+    static var bulletList: Self { 
+        .init {
+            Circle()
+        }
     }
 }
 
-extension EnvironmentValues {
-    /// The current topic nesting level of the environment.
-    var rootTopic: Topic.ID? {
-        get { self[ShowcaseRootTopicKey.self] }
-        set { self[ShowcaseRootTopicKey.self] = newValue }
+public struct DefaultIndexListStyle<Icon: View>: ShowcaseIndexListStyle {
+    var icon: Icon
+    
+    init(@ViewBuilder icon: () -> Icon) {
+        self.icon = icon()
     }
-}
-
-private struct ShowcaseRootTopicKey: EnvironmentKey {
-    static var defaultValue: Topic.ID?
-    static func reduce(value: inout Topic.ID, nextValue: () -> Topic.ID) {}
+    
+    public func makeBody(configuration: Configuration) -> some View {
+        VStack(alignment: .leading) {
+            configuration.label(
+                25,
+                icon
+                    .foregroundStyle(.tertiary)
+                    .padding(.top, 7)
+                    .frame(width: 8)
+            )
+            .padding(.vertical, 2)
+        }
+    }
 }

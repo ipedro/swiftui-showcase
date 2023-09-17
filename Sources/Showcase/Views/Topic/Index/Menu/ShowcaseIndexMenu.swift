@@ -87,11 +87,13 @@ public struct ShowcaseIndexMenuStyleConfiguration {
             }
         }
         
-        private func button(_ topic: Topic) -> Button<Text> {
+        private func button(_ topic: Topic) -> some View {
             Button(topic.title) {
                 impact.impactOccurred()
                 withAnimation {
-                    scrollView?.scrollTo(topic.id, anchor: .top)
+                    scrollView?.scrollTo(
+                        topic.id,
+                        anchor: .top)
                 }
             }
         }

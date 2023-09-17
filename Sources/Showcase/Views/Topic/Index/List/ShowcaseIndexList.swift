@@ -26,13 +26,15 @@ public struct ShowcaseIndexList: View {
     
     /// The style for displaying the index.
     @Environment(\.indexListStyle) private var style
+    var data: Topic
     
     /// The configuration for the ShowcaseIndexList view.
-    var configuration: Configuration
-    
-    init(_ data: Topic) {
-        configuration = .init { icon in
-            .init(data: data, icon: icon)
+    var configuration: Configuration {
+        .init { padding, icon in
+            .init(
+                data: data,
+                padding: padding,
+                icon: icon)
         }
     }
     
@@ -44,56 +46,37 @@ public struct ShowcaseIndexList: View {
 // MARK: - Configuration
 
 public struct ShowcaseIndexListStyleConfiguration {
-    /// A type-erased collection of anchor buttons.
-    public let label: (_ icon: any View) -> Label?
+    public let label: (_ padding: CGFloat, _ icon: any View) -> Label?
     
-    /// A type-erased collection of anchor buttons.
     public struct Label: View {
-        @Environment(\.nodeDepth) private var depth
         @Environment(\.scrollView) private var scrollView
-        
-        /// The data representing showcase topics.
-        let topic: Topic
-        let children: [Topic]
+        @Environment(\.nodeDepth) private var depth
+        let data: Topic
         let icon: AnyView
+        let padding: CGFloat
         
         let impact = UIImpactFeedbackGenerator(style: .light)
         
-        init?(data: Topic, icon: any View) {
-            guard
-                let children = data.children,
-                !children.isEmpty
-            else { return nil }
-            
-            self.topic = data
-            self.children = children
+        init?(
+            data: Topic,
+            padding: CGFloat,
+            icon: any View
+        ) {
+            self.data = data
             self.icon = .init(icon)
+            self.padding = padding
         }
         
-        /// The body of the label view.
         public var body: some View {
-            if depth == 0 {
-                Button(topic.title) {
-                    scrollTo(topic)
+            if scrollView != nil {
+                button(data)
+                
+                if let children = data.children?.sorted() {
+                    ForEach(children) { topic in
+                        ShowcaseIndexList(data: topic)
+                    }
+                    .nodeDepth(depth + 1)
                 }
-            } else {
-                button(topic)
-            }
-            
-            ForEach(children.sorted()) { topic in
-                if topic.allChildren.isEmpty {
-                    button(topic)
-                } else {
-                    ShowcaseIndexList(topic)
-                        .nodeDepth(depth + 1)
-                }
-            }
-        }
-        
-        private func scrollTo(_ topic: Topic) {
-            impact.impactOccurred()
-            withAnimation {
-                scrollView?.scrollTo(topic.id, anchor: .top)
             }
         }
         
@@ -101,10 +84,19 @@ public struct ShowcaseIndexListStyleConfiguration {
             Button {
                 scrollTo(topic)
             } label: {
-                HStack(alignment: .center) {
-                    icon.padding(.top, 1)
+                HStack(alignment: .top) {
+                    icon
                     Text(topic.title)
+                    Spacer()
                 }
+            }
+            .padding(.leading, padding * CGFloat(depth))
+        }
+        
+        private func scrollTo(_ topic: Topic) {
+            impact.impactOccurred()
+            withAnimation {
+                scrollView?.scrollTo(topic.id, anchor: .top)
             }
         }
     }
@@ -114,6 +106,9 @@ public struct ShowcaseIndexListStyleConfiguration {
 
 struct ShowcaseIndexList_Previews: PreviewProvider {
     static var previews: some View {
-        ShowcaseIndexList(.mockButton)
+        ScrollViewReader {
+            ShowcaseIndexList(data: .mockButton)
+                .scrollViewProxy($0)
+        }
     }
 }

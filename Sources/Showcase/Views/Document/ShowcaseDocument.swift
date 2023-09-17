@@ -84,9 +84,8 @@ public struct ShowcaseDocument<Icon: View>: View {
                                     ShowcaseIndexMenu(item)
                                 }
                             }
-                            .scrollViewProxy(scroll)
                     }
-                    .rootTopic(item.id)
+                    .scrollViewProxy(scroll)
                 }
                 
             } label: {

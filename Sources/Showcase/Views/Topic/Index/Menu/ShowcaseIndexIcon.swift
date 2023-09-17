@@ -21,32 +21,20 @@
 
 import SwiftUI
 
-public extension ShowcaseIndexListStyle where Self == DefaultIndexListStyle<Circle> {
-    /// A bullet list style.
-    static var bulletList: Self { 
-        .init {
-            Circle()
-        }
-    }
-}
-
-public struct DefaultIndexListStyle<Icon: View>: ShowcaseIndexListStyle {
-    var icon: Icon
+public struct ShowcaseIndexMenuIcon: View {
+    var systemName: String
     
-    init(@ViewBuilder icon: () -> Icon) {
-        self.icon = icon()
-    }
+    /// The shape used for the icon.
+    private let shape = RoundedRectangle(
+        cornerRadius: 8,
+        style: .continuous)
     
-    public func makeBody(configuration: Configuration) -> some View {
-        VStack(alignment: .leading) {
-            configuration.label(
-                icon
-                    .frame(width: 6)
-                    .foregroundStyle(.secondary)
-            )
-            .padding(.horizontal)
-            .padding(.vertical, 2)
-            .padding(.horizontal, 25)
-        }
+    public var body: some View {
+        Image(systemName: systemName)
+            .padding(5)
+            .mask { shape }
+            .background {
+                shape.opacity(0.1)
+            }
     }
 }
