@@ -47,7 +47,7 @@ extension Topic {
     """
     
     """
-    Accorjhjhjdion(data, selection: $selectedRow) { item in
+    Accordion(data, selection: $selectedRow) { item in
         Text(item.title).bold()
     } rowContent: { item in
         Text(item.content)
