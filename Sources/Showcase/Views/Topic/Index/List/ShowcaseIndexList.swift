@@ -33,8 +33,8 @@ public struct ShowcaseIndexList: View {
         .init { padding, icon in
             .init(
                 data: data,
-                padding: padding,
-                icon: icon)
+                icon: .init(icon),
+                padding: padding)
         }
     }
     
@@ -49,55 +49,47 @@ public struct ShowcaseIndexListStyleConfiguration {
     public let label: (_ padding: CGFloat, _ icon: any View) -> Label?
     
     public struct Label: View {
-        @Environment(\.scrollView) private var scrollView
         @Environment(\.nodeDepth) private var depth
+        var depthPadding: CGFloat { CGFloat(depth) * padding }
         let data: Topic
         let icon: AnyView
         let padding: CGFloat
-        
-        let impact = UIImpactFeedbackGenerator(style: .light)
-        
-        init?(
-            data: Topic,
-            padding: CGFloat,
-            icon: any View
-        ) {
-            self.data = data
-            self.icon = .init(icon)
-            self.padding = padding
-        }
-        
+
         public var body: some View {
-            if scrollView != nil {
-                button(data)
-                
-                if let children = data.children?.sorted() {
-                    ForEach(children) { topic in
-                        ShowcaseIndexList(data: topic)
-                    }
-                    .nodeDepth(depth + 1)
+            Item(
+                data: data,
+                icon: depth > 0 ? icon : nil)
+            .padding(.leading, depthPadding)
+            
+            if let children = data.children?.sorted() {
+                ForEach(children) { topic in
+                    ShowcaseIndexList(data: topic)
+                        .nodeDepth(depth + 1)
                 }
             }
         }
+    }
+    
+    struct Item: View {
+        @Environment(\.scrollView) private var scrollView
+        let impact = UIImpactFeedbackGenerator(style: .light)
+        var data: Topic
+        let icon: AnyView?
         
-        private func button(_ topic: Topic) -> some View {
+        var body: some View {
             Button {
-                scrollTo(topic)
+                impact.impactOccurred()
+                withAnimation {
+                    scrollView?.scrollTo(data.id, anchor: .top)
+                }
             } label: {
                 HStack(alignment: .top) {
                     icon
-                    Text(topic.title)
+                    Text(data.title)
                     Spacer()
                 }
             }
-            .padding(.leading, padding * CGFloat(depth))
-        }
-        
-        private func scrollTo(_ topic: Topic) {
-            impact.impactOccurred()
-            withAnimation {
-                scrollView?.scrollTo(topic.id, anchor: .top)
-            }
+            .accessibilityAddTraits(.isLink)
         }
     }
 }
@@ -106,9 +98,6 @@ public struct ShowcaseIndexListStyleConfiguration {
 
 struct ShowcaseIndexList_Previews: PreviewProvider {
     static var previews: some View {
-        ScrollViewReader {
-            ShowcaseIndexList(data: .mockButton)
-                .scrollViewProxy($0)
-        }
+        ShowcaseIndexList(data: .mockButton)
     }
 }

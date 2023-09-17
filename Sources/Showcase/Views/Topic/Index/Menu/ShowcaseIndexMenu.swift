@@ -91,9 +91,7 @@ public struct ShowcaseIndexMenuStyleConfiguration {
             Button(topic.title) {
                 impact.impactOccurred()
                 withAnimation {
-                    scrollView?.scrollTo(
-                        topic.id,
-                        anchor: .top)
+                    scrollView?.scrollTo(topic.id, anchor: .top)
                 }
             }
         }

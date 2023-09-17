@@ -54,3 +54,19 @@ Button("I'm a bordered button") {
         }
     )
 }
+
+struct TopicButton_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationView {
+            ShowcaseDocument(
+                .init(
+                    "Button",
+                    Chapter(
+                        "Chapter",
+                        .mockButton
+                    )
+                )
+            )
+        }
+    }
+}

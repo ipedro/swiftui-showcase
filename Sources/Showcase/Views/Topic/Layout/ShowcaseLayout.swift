@@ -37,7 +37,17 @@ public struct ShowcaseLayoutStyleConfiguration {
     /// The children views within the showcase.
     public let children: ShowcaseChildren?
     /// The content view of the showcase.
-    public let content: ShowcaseContent
+    public let content: Content
     /// The index view for navigating within the showcase.
     public let indexList: ShowcaseIndexList?
+    
+    public struct Content: View {
+        var id: AnyHashable
+        var configuration: ShowcaseContent.Configuration
+        
+        public var body: some View {
+            ShowcaseContent(id: id, configuration: configuration)
+                .equatable()
+        }
+    }
 }

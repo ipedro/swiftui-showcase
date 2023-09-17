@@ -47,6 +47,7 @@ public struct ShowcaseTopic: View {
         .init(
             children: .init(data: data.children),
             content: .init(
+                id: data.id,
                 configuration: .init(
                     title: title,
                     description: description,

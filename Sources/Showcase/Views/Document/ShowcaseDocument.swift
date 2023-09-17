@@ -77,6 +77,10 @@ public struct ShowcaseDocument<Icon: View>: View {
             NavigationLink {
                 ScrollViewReader { scroll in
                     ScrollView {
+                        Color.clear
+                            .frame(height: 0)
+                            .id("top")
+                        
                         ShowcaseTopic(item)
                             .navigationTitle(item.title)
                             .toolbar {
