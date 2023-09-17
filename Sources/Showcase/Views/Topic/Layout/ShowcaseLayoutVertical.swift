@@ -21,12 +21,11 @@ public struct ShowcaseLayoutVertical: ShowcaseLayoutStyle {
         var body: some View {
             VStack(alignment: .leading) {
                 
-                configuration.content
-                
-                if let index = configuration.index {
-                    index.padding(.vertical)
-                    Divider()
+                if let indexList = configuration.indexList {
+                    indexList.padding(.vertical)
                 }
+                
+                configuration.content
                 
                 configuration.children
             }

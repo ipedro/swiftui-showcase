@@ -81,7 +81,7 @@ public struct ShowcaseDocument<Icon: View>: View {
                             .navigationTitle(item.title)
                             .toolbar {
                                 ToolbarItem {
-                                    index(item)
+                                    ShowcaseIndexMenu(item)
                                 }
                             }
                             .scrollViewProxy(scroll)
@@ -97,11 +97,6 @@ public struct ShowcaseDocument<Icon: View>: View {
                 }
             }
         }
-    }
-    
-    func index(_ item: Topic) -> some View {
-        ShowcaseIndex(item)
-            .showcaseIndexStyle(.menu)
     }
 }
 

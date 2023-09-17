@@ -24,13 +24,13 @@ import SwiftUI
 /// all Showcases within a view hierarchy.
 ///
 /// To configure the current Showcase style for a view hierarchy, use the
-/// ``Showcase/showcaseIndexStyle(_:)`` modifier.
-public protocol ShowcaseIndexStyle {
+/// ``Showcase/showcaseIndexListStyle(_:)`` modifier.
+public protocol ShowcaseIndexListStyle {
     /// A view that represents the body of a Showcase.
     associatedtype Body: View
 
     /// The properties of a Showcase.
-    typealias Configuration = ShowcaseIndexStyleConfiguration
+    typealias Configuration = ShowcaseIndexListStyleConfiguration
 
     /// Creates a view that represents the body of a Showcase.
     ///
@@ -51,22 +51,22 @@ extension View {
     /// within a view:
     ///
     ///     Showcase()
-    ///         .showcaseIndexStyle(MyCustomStyle())
+    ///         .showcaseIndexListStyle(MyCustomStyle())
     ///
-    public func showcaseIndexStyle<S: ShowcaseIndexStyle>(_ style: S) -> some View {
-        environment(\.indexStyle, .init(style))
+    public func showcaseIndexListStyle<S: ShowcaseIndexListStyle>(_ style: S) -> some View {
+        environment(\.indexListStyle, .init(style))
     }
 }
 
 // MARK: - Type Erasure
 
 /// A type erased Showcase style.
-struct AnyShowcaseIndexStyle: ShowcaseIndexStyle {
+struct AnyShowcaseIndexListStyle: ShowcaseIndexListStyle {
     /// Current Showcase style.
-    var style: any ShowcaseIndexStyle
+    var style: any ShowcaseIndexListStyle
    
     /// Creates a type erased Showcase style.
-    init<S: ShowcaseIndexStyle>(_ style: S) {
+    init<S: ShowcaseIndexListStyle>(_ style: S) {
         self.style = style
     }
     
@@ -78,15 +78,15 @@ struct AnyShowcaseIndexStyle: ShowcaseIndexStyle {
 // MARK: - Environment Keys
 
 /// A private key needed to save style data in the environment
-private struct IndexStyleKey: EnvironmentKey {
-    static var defaultValue: AnyShowcaseIndexStyle = .init(.bulletList)
-    static func reduce(value: inout AnyShowcaseIndexStyle, nextValue: () -> AnyShowcaseIndexStyle) {}
+private struct IndexListStyleKey: EnvironmentKey {
+    static var defaultValue: AnyShowcaseIndexListStyle = .init(.bulletList)
+    static func reduce(value: inout AnyShowcaseIndexListStyle, nextValue: () -> AnyShowcaseIndexListStyle) {}
 }
 
 extension EnvironmentValues {
     /// The current Showcase style value.
-    var indexStyle: AnyShowcaseIndexStyle {
-        get { self[IndexStyleKey.self] }
-        set { self[IndexStyleKey.self] = newValue }
+    var indexListStyle: AnyShowcaseIndexListStyle {
+        get { self[IndexListStyleKey.self] }
+        set { self[IndexListStyleKey.self] = newValue }
     }
 }

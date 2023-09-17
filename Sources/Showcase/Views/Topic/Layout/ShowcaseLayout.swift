@@ -39,5 +39,5 @@ public struct ShowcaseLayoutStyleConfiguration {
     /// The content view of the showcase.
     public let content: ShowcaseContent
     /// The index view for navigating within the showcase.
-    public let index: ShowcaseIndex?
+    public let indexList: ShowcaseIndexList?
 }
