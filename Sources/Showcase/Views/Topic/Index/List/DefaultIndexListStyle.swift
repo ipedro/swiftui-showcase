@@ -40,7 +40,7 @@ public struct DefaultIndexListStyle<Icon: View>: ShowcaseIndexListStyle {
     public func makeBody(configuration: Configuration) -> some View {
         VStack(alignment: .leading) {
             configuration.label(
-                25,
+                16,
                 icon
                     .foregroundStyle(.tertiary)
                     .padding(.top, 7)

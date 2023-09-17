@@ -45,14 +45,9 @@ public struct Topic: Identifiable {
     /// Optional child topics.
     public var children: [Topic]?
     
-//    var allChildren: [[Topic]] {
-//        guard let children = children else { return [] }
-//        return children.map { [$0] + ($0.children ?? []) }
-//    }
-    
     var allChildren: [Topic] {
         guard let children = children else { return [] }
-        return children.flatMap { [$0] + ($0.children ?? []) }
+        return children.flatMap { [$0] + $0.allChildren }
     }
     
     /// Initializes a showcase element with the specified parameters.

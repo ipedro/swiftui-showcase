@@ -43,6 +43,10 @@ public struct ShowcaseTopic: View {
         depth > 0 ? Text(data.title) : nil
     }
     
+    var showIndexList: Bool {
+        depth == 0 && data.children != nil
+    }
+    
     var configuration: ShowcaseLayout.Configuration {
         .init(
             children: .init(data: data.children),
@@ -55,7 +59,7 @@ public struct ShowcaseTopic: View {
                     links: .init(data: data.links),
                     codeBlocks: .init(data: data.codeBlocks)
                 )),
-            indexList: depth == 0 ? .init(data: data) : nil
+            indexList: showIndexList ? .init(data: data) : nil
         )
     }
 }

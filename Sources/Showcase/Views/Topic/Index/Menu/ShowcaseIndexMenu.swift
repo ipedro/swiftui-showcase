@@ -20,14 +20,11 @@
 
 import SwiftUI
 
-/// A view that displays navigation anchors to children elements within a Showcase view.
 public struct ShowcaseIndexMenu: View {
     typealias Configuration = ShowcaseIndexMenuStyleConfiguration
     
-    /// The style for displaying the index.
     @Environment(\.indexMenuStyle) private var style
     
-    /// The configuration for the ShowcaseIndexMenu view.
     var configuration: Configuration
     
     init(_ data: Topic) {
@@ -42,56 +39,30 @@ public struct ShowcaseIndexMenu: View {
 // MARK: - Configuration
 
 public struct ShowcaseIndexMenuStyleConfiguration {
-    /// A type-erased collection of anchor buttons.
     public let label: Label?
     
-    /// A type-erased collection of anchor buttons.
     public struct Label: View {
         @Environment(\.scrollView) private var scrollView
-        
-        /// The data representing showcase topics.
-        let topic: Topic
-        let children: [Topic]
-        
+        let data: Topic
         let impact = UIImpactFeedbackGenerator(style: .light)
         
-        init?(data: Topic) {
-            guard
-                let children = data.children,
-                !children.isEmpty
-            else { return nil }
-            
-            self.topic = data
-            self.children = children
-        }
-        
-        /// The body of the label view.
         public var body: some View {
-            button(topic)
+            button(data)
             
-            if !topic.allChildren.isEmpty {
-                Divider()
-            }
+            Divider()
             
-            ForEach(children.sorted()) { topic in
-                if topic.allChildren.isEmpty {
-                    button(topic)
-                } else {
-                    ShowcaseIndexMenu(topic)
-                        .showcaseIndexMenuStyle(
-                            DefaultIndexMenuStyle {
-                                button(topic)
-                            }
-                        )
-                }
+            let children = data.allChildren
+            
+            if !children.isEmpty {
+                ForEach(children, content: button)
             }
         }
         
-        private func button(_ topic: Topic) -> some View {
-            Button(topic.title) {
+        private func button(_ data: Topic) -> some View {
+            Button(data.title) {
                 impact.impactOccurred()
                 withAnimation {
-                    scrollView?.scrollTo(topic.id, anchor: .top)
+                    scrollView?.scrollTo(data.id, anchor: .top)
                 }
             }
         }
