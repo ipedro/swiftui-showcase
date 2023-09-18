@@ -20,13 +20,12 @@
 
 import SwiftUI
 
-/// A view that displays the content of a showcase element, including title, description, previews, external links, and code blocks.
 public struct ShowcaseTopic: View {
     @Environment(\.nodeDepth) private var depth
     
     let data: Topic
     
-    init(_ data: Topic) {
+    public init(_ data: Topic) {
         self.data = data
     }
     
