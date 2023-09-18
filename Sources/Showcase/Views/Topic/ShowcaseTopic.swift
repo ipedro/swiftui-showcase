@@ -34,31 +34,19 @@ public struct ShowcaseTopic: View {
             .id(data.id)
     }
     
-    var description: Text? {
-        data.description.isEmpty ? nil : Text(data.description)
-    }
-    
-    var title: Text? {
-        depth > 0 ? Text(data.title) : nil
-    }
-    
-    var showIndexList: Bool {
-        depth == 0 && data.children != nil
-    }
-    
     var configuration: ShowcaseLayout.Configuration {
         .init(
             children: .init(data: data.children),
             content: .init(
                 id: data.id,
                 configuration: .init(
-                    title: title,
-                    description: description,
+                    title: depth > 0 ? Text(data.title) : nil,
+                    description: Text(data.description),
                     preview: .init(data.preview),
                     links: .init(data: data.links),
                     codeBlocks: .init(data: data.codeBlocks)
                 )),
-            indexList: showIndexList ? .init(data: data) : nil
+            indexList: depth == 0 ? .init(data) : nil
         )
     }
 }
