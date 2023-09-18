@@ -27,7 +27,8 @@ public struct ShowcaseIndexMenu: View {
     
     var configuration: Configuration
     
-    init(_ data: Topic) {
+    init?(_ data: Topic) {
+        if data.allChildren.isEmpty { return nil }
         configuration = .init(label: .init(data: data))
     }
     

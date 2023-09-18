@@ -20,17 +20,14 @@
 
 import SwiftUI
 
-/// A view that displays navigation anchors to children elements within a Showcase view.
 public struct ShowcaseIndexList: View {
     typealias Configuration = ShowcaseIndexListStyleConfiguration
-    
-    /// The style for displaying the index.
     @Environment(\.indexListStyle) private var style
-    var data: Topic
+    var configuration: Configuration
     
-    /// The configuration for the ShowcaseIndexList view.
-    var configuration: Configuration {
-        .init { padding, icon in
+    init?(_ data: Topic) {
+        if data.allChildren.isEmpty { return nil }
+        configuration = .init { padding, icon in
             .init(
                 data: data,
                 icon: .init(icon),
@@ -63,7 +60,7 @@ public struct ShowcaseIndexListStyleConfiguration {
             
             if let children = data.children?.sorted() {
                 ForEach(children) { topic in
-                    ShowcaseIndexList(data: topic)
+                    ShowcaseIndexList(topic)
                         .nodeDepth(depth + 1)
                 }
             }
@@ -98,6 +95,6 @@ public struct ShowcaseIndexListStyleConfiguration {
 
 struct ShowcaseIndexList_Previews: PreviewProvider {
     static var previews: some View {
-        ShowcaseIndexList(data: .mockButton)
+        ShowcaseIndexList(.mockButton)
     }
 }
