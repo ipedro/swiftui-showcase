@@ -29,13 +29,14 @@ public extension ShowcasePreviewStyle where Self == PagedShowcasePreviewStyle {
 }
 
 public struct PagedShowcasePreviewStyle: ShowcasePreviewStyle {
+    public init() {}
+    
     public func makeBody(configuration: Configuration) -> some View {
         TabView {
             configuration.preview
-                .offset(y: -30)
         }
-        .offset(y: 20)
         .tabViewStyle(.page)
+        .indexViewStyle(.page(backgroundDisplayMode: .never))
         .onAppear(perform: setupPageControl)
         .clipped()
     }
@@ -43,6 +44,6 @@ public struct PagedShowcasePreviewStyle: ShowcasePreviewStyle {
     /// Sets up the appearance of the page control for paged preview.
     private func setupPageControl() {
         UIPageControl.appearance().currentPageIndicatorTintColor = .secondaryLabel
-        UIPageControl.appearance().pageIndicatorTintColor = .label.withAlphaComponent(0.15)
+        UIPageControl.appearance().pageIndicatorTintColor = .label.withAlphaComponent(0.07)
     }
 }

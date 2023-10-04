@@ -22,7 +22,7 @@ import SwiftUI
 
 extension Topic {
     public static let mockAccordion = Self(
-        title: "Accordion",
+        "Accordion",
         description: { """
     Accordions enable users to expand and collapse multiple sections of content.
     
@@ -37,7 +37,7 @@ extension Topic {
             Link("Code", .init(string: "https://google.com"))
             Link("Design", .init(string: "https://zeroheight.com/700c95a05/p/0309e1-accordion/b/45490a"))
         },
-        examples: {
+        code: {
     """
     Accordion(data, selection: $selectedRow) { item in
         Text(item.title).bold()

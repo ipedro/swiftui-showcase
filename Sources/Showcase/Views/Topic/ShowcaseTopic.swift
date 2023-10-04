@@ -44,9 +44,10 @@ public struct ShowcaseTopic: View {
                     description: Text(data.description),
                     preview: .init(data.preview),
                     links: .init(data: data.links),
+                    embeds: .init(data: data.embeds),
                     codeBlocks: .init(data: data.codeBlocks)
                 )),
-            indexList: depth == 0 ? .init(data) : nil
+            indexList: depth == 0 && !data.allChildren.isEmpty ? .init(data) : nil
         )
     }
 }

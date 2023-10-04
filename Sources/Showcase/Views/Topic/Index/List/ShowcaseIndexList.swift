@@ -26,7 +26,6 @@ public struct ShowcaseIndexList: View {
     var configuration: Configuration
     
     init?(_ data: Topic) {
-        if data.allChildren.isEmpty { return nil }
         configuration = .init { padding, icon in
             .init(
                 data: data,
@@ -58,7 +57,7 @@ public struct ShowcaseIndexListStyleConfiguration {
                 icon: depth > 0 ? icon : nil)
             .padding(.leading, depthPadding)
             
-            if let children = data.children?.sorted() {
+            if let children = data.children {
                 ForEach(children) { topic in
                     ShowcaseIndexList(topic)
                         .nodeDepth(depth + 1)

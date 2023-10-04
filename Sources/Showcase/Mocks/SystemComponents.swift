@@ -1,22 +1,22 @@
-//  Copyright (c) 2023 Pedro Almeida
+// Copyright (c) 2023 Pedro Almeida
 //
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
 //
-//  The above copyright notice and this permission notice shall be included in all
-//  copies or substantial portions of the Software.
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
 //
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-//  SOFTWARE.
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 
 import SwiftUI
 
@@ -29,7 +29,7 @@ extension Document {
             description: "Learn how to use and customize system-defined components to give people a familiar and consistent experience.",
             .imageViews,
             Topic(
-                title: "Charts",
+                "Charts",
                 description: { "Organize data in a chart to communicate information with clarity and visual appeal." },
                 preview: .init(minHeight: 250) {
                     Group {
@@ -57,54 +57,54 @@ extension Document {
                     .scaledToFit()
                 }
             ),
-            Topic(title: "Text views"),
-            Topic(title: "Web views")
+            Topic("Text views"),
+            Topic("Web views")
         ),
         Chapter(
             "Layout and organization",
-            Topic(title: "Boxes"),
-            Topic(title: "Collections"),
-            Topic(title: "Column views"),
-            Topic(title: "Disclosure controls"),
-            Topic(title: "Labels"),
-            Topic(title: "Lists and tables"),
-            Topic(title: "Lockups"),
-            Topic(title: "Outline views"),
-            Topic(title: "Split views"),
-            Topic(title: "Tab views")
+            Topic("Boxes"),
+            Topic("Collections"),
+            Topic("Column views"),
+            Topic("Disclosure controls"),
+            Topic("Labels"),
+            Topic("Lists and tables"),
+            Topic("Lockups"),
+            Topic("Outline views"),
+            Topic("Split views"),
+            Topic("Tab views")
         ),
         Chapter(
             "Menus and actions",
-            Topic(title: "Activity views"),
-            Topic(title: "Buttons"),
-            Topic(title: "Context menus"),
-            Topic(title: "Dock menus"),
-            Topic(title: "Edit menus"),
-            Topic(title: "Menus"),
-            Topic(title: "Ornaments"),
-            Topic(title: "Pop-up buttons"),
-            Topic(title: "Pull-down buttons"),
-            Topic(title: "Toolbars")
+            Topic("Activity views"),
+            Topic("Buttons"),
+            Topic("Context menus"),
+            Topic("Dock menus"),
+            Topic("Edit menus"),
+            Topic("Menus"),
+            Topic("Ornaments"),
+            Topic("Pop-up buttons"),
+            Topic("Pull-down buttons"),
+            Topic("Toolbars")
         ),
         Chapter(
             "Navigation and search",
-            Topic(title: "Navigation bars"),
-            Topic(title: "Path controls"),
-            Topic(title: "Search fields"),
-            Topic(title: "Sidebars"),
-            Topic(title: "Tab bars"),
-            Topic(title: "Token fields")
+            Topic("Navigation bars"),
+            Topic("Path controls"),
+            Topic("Search fields"),
+            Topic("Sidebars"),
+            Topic("Tab bars"),
+            Topic("Token fields")
         ),
         Chapter(
             "Presentation",
-            Topic(title: "Action sheets"),
-            Topic(title: "Alerts"),
-            Topic(title: "Page controls"),
-            Topic(title: "Panels"),
-            Topic(title: "Popovers"),
-            Topic(title: "Scroll views"),
-            Topic(title: "Sheets"),
-            Topic(title: "Windows")
+            Topic("Action sheets"),
+            Topic("Alerts"),
+            Topic("Page controls"),
+            Topic("Panels"),
+            Topic("Popovers"),
+            Topic("Scroll views"),
+            Topic("Sheets"),
+            Topic("Windows")
         ),
         Chapter("Selection and input"),
         Chapter("Status"),
@@ -114,7 +114,7 @@ extension Document {
 
 extension Topic {
     static let imageViews = Self(
-        title: "Image views",
+        "Image views",
         description: {
             "An image view displays a single image — or in some cases, an animated sequence of images — on a transparent or opaque background."
         },
@@ -123,11 +123,11 @@ extension Topic {
         },
         children: [
             .init(
-                title: "Image",
+                "Image",
                 description: {
                     "Use an Image instance when you want to add images to your SwiftUI app."
                 },
-                examples: {
+                code: {
         """
         Image(systemName: "swift")
 
@@ -142,11 +142,11 @@ extension Topic {
                 }
             ),
             .init(
-                title: "AsyncImage",
+                "AsyncImage",
                 description: {
                     "This view uses the shared URLSession instance to load an image from the specified URL, and then display it. For example, you can display an icon that’s stored on a server:"
                 },
-                examples: {
+                code: {
         """
         AsyncImage(
             url: .init(

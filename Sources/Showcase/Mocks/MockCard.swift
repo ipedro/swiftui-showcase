@@ -24,7 +24,7 @@ import SwiftUI
 
 extension Topic {
     public static let mockCard = Self(
-        title: "Card",
+        "Card",
         description: {
             "Cards are surfaces that display content and actions on a single topic."
         },
@@ -40,7 +40,7 @@ extension Topic {
 
 extension Topic {
     static let navigationalCard = Self(
-        title: "Navigational Card",
+        "Navigational Card",
         description: {
 """
 The purpose of navigational cards is to provide users access to more detailed information or navigational elements (other pages).
@@ -52,7 +52,7 @@ By clicking anywhere on the card, users can perform the desired action. While na
             Link("Code", .init(string: "NavigationalCard"))
             Link("Design", .init(string: "https://google.com"))
         },
-        examples: {
+        code: {
             
             CodeBlock("elevated") { """
 NavigationalCard {
@@ -83,7 +83,7 @@ NavigationalCard {
 
 extension Topic {
     static let selectableCard = Self(
-        title: "Selectable Card",
+        "Selectable Card",
         description: {
 """
 Selectable cards serve for selecting an item that is part of a group of options with rich content displayed inside each option, which would be too complex for buttons to contain.
@@ -93,7 +93,7 @@ Selectable cards serve for selecting an item that is part of a group of options 
             Link("Code", .init(string: "SelectableCard"))
             Link("Design", .init(string: "https://google.com"))
         },
-        examples: { """
+        code: { """
 SelectableCard(isOn: $isOn) {
     Text("I'm content")
 }
@@ -109,7 +109,7 @@ SelectableCard(isOn: $isOn) {
 
 extension Topic {
     static let staticCard = Self(
-        title: "Static Card",
+        "Static Card",
         description: {
 """
 A static card can have interactive elements such as a call-to-action button, but it is not intended for navigation or selection.
@@ -121,7 +121,7 @@ The card surface does not have interactive states, meaning it cannot be hovered 
             Link("Code", .init(string: "StaticCard"))
             Link("Design", .init(string: "https://google.com"))
         },
-        examples: {
+        code: {
 """
 StaticCard {
     Text("I'm content")

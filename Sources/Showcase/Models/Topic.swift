@@ -36,6 +36,9 @@ public struct Topic: Identifiable {
     /// External links associated with the topic.
     public var links: [Link]
     
+    /// External content associated with the topic.
+    public var embeds: [Embed]
+    
     /// Previews configuration for the topic.
     public var preview: Preview?
     
@@ -50,26 +53,35 @@ public struct Topic: Identifiable {
         return children.flatMap { [$0] + $0.allChildren }
     }
     
+    var isEmpty: Bool {
+        codeBlocks.isEmpty &&
+        description.isEmpty &&
+        links.isEmpty &&
+        children?.isEmpty != false
+    }
+    
     /// Initializes a showcase element with the specified parameters.
     /// - Parameters:
     ///   - title: The title of the showcase element.
     ///   - description: A closure returning the description of the showcase element (default is an empty string).
     ///   - links: A closure returning external links associated with the showcase element (default is an empty array).
-    ///   - examples: A closure returning code examples (default is an empty array).
+    ///   - codeBlocks: A closure returning code examples (default is an empty array).
     ///   - children: Optional child showcase topics (default is nil).
     ///   - preview: Optional preview.
     public init(
-        title: String,
+        _ title: String,
         description: () -> String = { "" },
         @LinkBuilder links: () -> [Link] = { [] },
-        @CodeBlockBuilder examples: () -> [CodeBlock] = { [] },
+        @EmbedBuilder embeds: () -> [Embed] = { [] },
+        @CodeBlockBuilder code: () -> [CodeBlock] = { [] },
         children: [Topic]? = nil,
         preview: Preview? = nil
     ) {
         self.children = children
-        self.codeBlocks = examples()
+        self.codeBlocks = code()
         self.description = description()
         self.links = links()
+        self.embeds = embeds()
         self.preview = preview
         self.title = title
     }
