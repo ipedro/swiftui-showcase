@@ -43,7 +43,25 @@ public struct ShowcaseContentStyleConfiguration {
     public let description: Text?
     public let preview: ShowcasePreview?
     public let links: Links?
+    public let embeds: Embeds?
     public let codeBlocks: CodeBlocks?
+    
+    public struct Embeds: View {
+        let data: [Topic.Embed]
+        
+        /// Initializes the view with external link data.
+        /// - Parameter data: The external link data.
+        init?(data: [Topic.Embed]) {
+            if data.isEmpty { return nil }
+            self.data = data
+        }
+        
+        public var body: some View {
+            ForEach(data) {
+                ShowcaseEmbed(data: $0)
+            }
+        }
+    }
     
     /// A view that represents external links.
     public struct Links: View {
