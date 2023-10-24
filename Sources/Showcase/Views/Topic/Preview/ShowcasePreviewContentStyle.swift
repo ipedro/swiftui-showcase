@@ -62,11 +62,7 @@ extension View {
 
 /// A private key needed to save style data in the environment
 private struct ShowcasePreviewContentStyleKey: EnvironmentKey {
-    #if canImport(UIKit)
-    static var defaultValue: any ShowcasePreviewContentStyle = .paged()
-    #else
     static var defaultValue: any ShowcasePreviewContentStyle = .default
-    #endif
 }
 
 extension EnvironmentValues {

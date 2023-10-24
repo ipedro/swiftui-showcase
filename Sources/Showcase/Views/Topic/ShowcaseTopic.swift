@@ -42,7 +42,7 @@ public struct ShowcaseTopic: View {
                 configuration: .init(
                     title: depth > 0 ? Text(data.title) : nil,
                     description: Text(data.description),
-                    preview: .init(data.preview),
+                    preview: .init(data),
                     links: .init(data: data.links),
                     embeds: .init(data: data.embeds),
                     codeBlocks: .init(data: data.codeBlocks)

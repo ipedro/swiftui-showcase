@@ -40,7 +40,10 @@ public struct Topic: Identifiable {
     public var embeds: [Embed]
     
     /// Previews configuration for the topic.
-    public var preview: Preview?
+    public var previews: AnyView?
+
+    /// Optional title of the preview.
+    public var previewTitle: String?
 
     public var icon: AnyView?
 
@@ -61,7 +64,7 @@ public struct Topic: Identifiable {
         links.isEmpty &&
         children?.isEmpty != false
     }
-    
+
     /// Initializes a showcase element with the specified parameters.
     /// - Parameters:
     ///   - title: The title of the showcase element.
@@ -69,15 +72,13 @@ public struct Topic: Identifiable {
     ///   - links: A closure returning external links associated with the showcase element (default is an empty array).
     ///   - codeBlocks: A closure returning code examples (default is an empty array).
     ///   - children: Optional child showcase topics (default is nil).
-    ///   - preview: Optional preview.
     public init(
         _ title: String,
         description: () -> String = { "" },
         @LinkBuilder links: () -> [Link] = { [] },
         @EmbedBuilder embeds: () -> [Embed] = { [] },
         @CodeBlockBuilder code: () -> [CodeBlock] = { [] },
-        children: [Topic]? = nil,
-        preview: Preview? = nil
+        children: [Topic]? = nil
     ) {
         self.icon = nil
         self.children = children
@@ -85,7 +86,37 @@ public struct Topic: Identifiable {
         self.description = description()
         self.links = links()
         self.embeds = embeds()
-        self.preview = preview
+        self.previews = nil
+        self.previewTitle = nil
+        self.title = title
+    }
+
+    /// Initializes a showcase element with the specified parameters.
+    /// - Parameters:
+    ///   - title: The title of the showcase element.
+    ///   - description: A closure returning the description of the showcase element (default is an empty string).
+    ///   - links: A closure returning external links associated with the showcase element (default is an empty array).
+    ///   - codeBlocks: A closure returning code examples (default is an empty array).
+    ///   - children: Optional child showcase topics (default is nil).
+    ///   - previews: Optional previews.
+    public init<P: View>(
+        _ title: String,
+        description: () -> String = { "" },
+        @LinkBuilder links: () -> [Link] = { [] },
+        @EmbedBuilder embeds: () -> [Embed] = { [] },
+        @CodeBlockBuilder code: () -> [CodeBlock] = { [] },
+        children: [Topic]? = nil,
+        previewTitle: String? = nil,
+        @ViewBuilder previews: () -> P
+    ) {
+        self.icon = nil
+        self.children = children
+        self.codeBlocks = code()
+        self.description = description()
+        self.links = links()
+        self.embeds = embeds()
+        self.previews = .init(previews())
+        self.previewTitle = previewTitle
         self.title = title
     }
 
@@ -97,15 +128,16 @@ public struct Topic: Identifiable {
     ///   - codeBlocks: A closure returning code examples (default is an empty array).
     ///   - children: Optional child showcase topics (default is nil).
     ///   - preview: Optional preview.
-    public init<I: View>(
+    public init<I: View, P: View>(
         _ title: String,
         description: () -> String = { "" },
-        icon: () -> I,
+        @ViewBuilder icon: () -> I,
         @LinkBuilder links: () -> [Link] = { [] },
         @EmbedBuilder embeds: () -> [Embed] = { [] },
         @CodeBlockBuilder code: () -> [CodeBlock] = { [] },
         children: [Topic]? = nil,
-        preview: Preview? = nil
+        previewTitle: String? = nil,
+        @ViewBuilder previews: () -> P
     ) {
         self.icon = .init(icon())
         self.children = children
@@ -113,7 +145,8 @@ public struct Topic: Identifiable {
         self.description = description()
         self.links = links()
         self.embeds = embeds()
-        self.preview = preview
+        self.previews = .init(previews())
+        self.previewTitle = previewTitle
         self.title = title
     }
 }

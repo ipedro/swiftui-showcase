@@ -55,7 +55,7 @@ extension Topic {
     """
         },
         children: [.mockCard],
-        preview: .init {
+        previews: {
             MockPreviews()
         }
     )

@@ -73,7 +73,7 @@ NavigationalCard {
             }
             
         },
-        preview: .init {
+        previews: {
             MockPreviews()
         }
     )
@@ -99,7 +99,7 @@ SelectableCard(isOn: $isOn) {
 }
 """
         },
-        preview: .init {
+        previews: {
             MockPreviews()
         }
     )
@@ -128,7 +128,7 @@ StaticCard {
 }
 """
         },
-        preview: .init {
+        previews: {
             MockPreviews()
         }
     )

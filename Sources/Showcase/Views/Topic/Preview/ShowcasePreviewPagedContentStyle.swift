@@ -68,6 +68,6 @@ public extension ShowcasePreviewContentStyle where Self == ShowcasePreviewDefaul
 
 public struct ShowcasePreviewDefaultContentStyle: ShowcasePreviewContentStyle {
     public func makeBody(configuration: Configuration) -> some View {
-        configuration.content
+        configuration.content.frame(maxWidth: .infinity)
     }
 }

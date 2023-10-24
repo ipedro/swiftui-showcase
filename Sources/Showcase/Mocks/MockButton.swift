@@ -45,7 +45,7 @@ Button("I'm a bordered button") {
             }
         },
         children: [.mockAccordion],
-        preview: .init {
+        previews: {
             Button("I'm a bordered button") {
                 // do something
             }

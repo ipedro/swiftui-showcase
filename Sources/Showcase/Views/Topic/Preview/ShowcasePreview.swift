@@ -28,20 +28,22 @@ public struct ShowcasePreview: View {
     @Environment(\.showcasePreviewBoxStyle) private var boxStyle
 
     /// The data representing the preview.
-    let data: Topic.Preview
-    
-    /// Initializes a Preview view with the specified preview data.
-    /// - Parameter data: The data representing the preview (optional).
-    init?(_ data: Topic.Preview?) {
-        guard let data = data else { return nil }
-        self.data = data
+    let configuration: ShowcasePreviewContentStyleConfiguration
+    let title: String?
+
+    /// Initializes a Preview view with the specified previews data.
+    /// - Parameter data: The data representing the previews (optional).
+    init?(_ data: Topic) {
+        guard let preview = data.previews else { return nil }
+        self.configuration = .init(content: .init(preview))
+        self.title = data.previewTitle
     }
 
     public var body: some View {
         GroupBox {
-            AnyView(framedContent)
+            AnyView(content)
         } label: {
-            if let title = data.title {
+            if let title {
                 Text(title)
             }
         }
@@ -49,26 +51,7 @@ public struct ShowcasePreview: View {
     }
 
     private var content: any View {
-        contentStyle.makeBody(configuration: .init(content: .init(data.content)))
-    }
-
-    private var framedContent: any View {
-        switch data.frame {
-        case let .fixed(width, height):
-            return content.frame(
-                width: width,
-                height: height,
-                alignment: data.alignment)
-        case let .flexible(minWidth, idealWidth, maxWidth, minHeight, idealHeight, maxHeight):
-            return content.frame(
-                minWidth: minWidth,
-                idealWidth: idealWidth,
-                maxWidth: maxWidth,
-                minHeight: minHeight,
-                idealHeight: idealHeight,
-                maxHeight: maxHeight,
-                alignment: data.alignment)
-        }
+        contentStyle.makeBody(configuration: configuration)
     }
 }
 
