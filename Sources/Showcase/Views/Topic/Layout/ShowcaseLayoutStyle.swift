@@ -80,7 +80,6 @@ struct AnyShowcaseLayoutStyle: ShowcaseLayoutStyle {
 /// A private key needed to save style data in the environment
 private struct ShowcaseStyleKey: EnvironmentKey {
     static var defaultValue: AnyShowcaseLayoutStyle = .init(.vertical)
-    static func reduce(value: inout AnyShowcaseLayoutStyle, nextValue: () -> AnyShowcaseLayoutStyle) {}
 }
 
 extension EnvironmentValues {

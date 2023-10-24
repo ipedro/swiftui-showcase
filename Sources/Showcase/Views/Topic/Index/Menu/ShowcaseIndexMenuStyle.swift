@@ -80,7 +80,6 @@ struct AnyShowcaseIndexMenuStyle: ShowcaseIndexMenuStyle {
 /// A private key needed to save style data in the environment
 private struct IndexMenuStyleKey: EnvironmentKey {
     static var defaultValue: AnyShowcaseIndexMenuStyle = .init(.menu())
-    static func reduce(value: inout AnyShowcaseIndexMenuStyle, nextValue: () -> AnyShowcaseIndexMenuStyle) {}
 }
 
 extension EnvironmentValues {

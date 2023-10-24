@@ -36,5 +36,4 @@ extension EnvironmentValues {
 
 private struct ShowcaseNodeDepthKey: EnvironmentKey {
     static var defaultValue: Int = .zero
-    static func reduce(value: inout Int, nextValue: () -> Int) {}
 }

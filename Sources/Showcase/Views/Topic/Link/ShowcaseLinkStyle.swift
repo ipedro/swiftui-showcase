@@ -49,7 +49,6 @@ extension View {
 /// A private key needed to save style data in the environment
 private struct LinkStyleKey: EnvironmentKey {
     static var defaultValue: AnyButtonStyle = .init(.standard)
-    static func reduce(value: inout AnyButtonStyle, nextValue: () -> AnyButtonStyle) {}
 }
 
 extension EnvironmentValues {

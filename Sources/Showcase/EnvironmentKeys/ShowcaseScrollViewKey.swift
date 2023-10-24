@@ -36,5 +36,4 @@ extension EnvironmentValues {
 
 private struct ShowcaseScrollViewKey: EnvironmentKey {
     static var defaultValue: ScrollViewProxy?
-    static func reduce(value: inout ScrollViewProxy?, nextValue: () -> ScrollViewProxy?) {}
 }
