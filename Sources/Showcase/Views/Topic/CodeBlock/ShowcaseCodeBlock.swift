@@ -94,17 +94,26 @@ public struct ShowcaseCodeBlockStyleConfiguration {
     public struct CopyToPasteboard: View {
         /// The text to be copied to the pasteboard.
         let text: String
-        let impact = UIImpactFeedbackGenerator(style: .light)
         
+        #if canImport(UIKit)
+        let impact = UIImpactFeedbackGenerator(style: .light)
+        #endif
+
         public var body: some View {
             Button {
+                #if canImport(UIKit)
                 UIPasteboard.general.string = text
                 impact.impactOccurred()
+                #elseif canImport(AppKit)
+                NSPasteboard.general.setString(text, forType: .string)
+                #endif
             } label: {
                 Image(systemName: "doc.on.doc")
             }
             .onAppear {
+                #if canImport(UIKit)
                 impact.prepare()
+                #endif
             }
         }
     }

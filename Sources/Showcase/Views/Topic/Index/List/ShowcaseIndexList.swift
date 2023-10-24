@@ -68,13 +68,20 @@ public struct ShowcaseIndexListStyleConfiguration {
     
     struct Item: View {
         @Environment(\.scrollView) private var scrollView
+        
+        #if canImport(UIKit)
         let impact = UIImpactFeedbackGenerator(style: .light)
+        #endif
+
         var data: Topic
         let icon: AnyView?
         
         var body: some View {
             Button {
+                #if canImport(UIKit)
                 impact.impactOccurred()
+                #endif
+
                 withAnimation {
                     scrollView?.scrollTo(data.id, anchor: .top)
                 }

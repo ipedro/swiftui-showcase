@@ -180,7 +180,7 @@ private extension URL {
 struct SystemLibrary_Previews: PreviewProvider {
     static var previews: some View {
         ForEach(["iPhone 14 Pro", "iPad (10th generation)"], id: \.self) { device in
-            ShowcaseNavigationView(.systemComponents)
+            ShowcaseDocument(.systemComponents)
                 .previewLayout(.sizeThatFits)
                 .previewDevice(PreviewDevice(rawValue: device))
         }

@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import Foundation
+import SwiftUI
 
 /// Represents a chapter within a showcase document, containing showcase topics.
 public struct Chapter: Identifiable {
@@ -27,7 +27,9 @@ public struct Chapter: Identifiable {
     
     /// The title of the chapter.
     public var title: String
-    
+
+    public var icon: Image?
+
     /// The optional description of the chapter.
     public var description: String?
     
@@ -39,10 +41,11 @@ public struct Chapter: Identifiable {
     ///   - title: The title of the chapter.
     ///   - topics: The showcase topics within the chapter.
     ///   - description: The optional description of the chapter.
-    public init(_ title: String, description: String? = nil, _ topics: [Topic] = []) {
+    public init(_ title: String, description: String? = nil, icon: Image? = nil, _ topics: [Topic] = []) {
         self.title = title
         self.description = description
         self.topics = topics.sorted()
+        self.icon = icon
     }
     
     /// Initializes a showcase chapter with the specified title and showcase topics.
@@ -50,10 +53,11 @@ public struct Chapter: Identifiable {
     ///   - title: The title of the chapter.
     ///   - topics: The showcase topics within the chapter.
     ///   - description: The optional description of the chapter.
-    public init(_ title: String, description: String? = nil, _ topics: Topic...) {
+    public init(_ title: String, description: String? = nil, icon: Image? = nil, _ topics: Topic...) {
         self.title = title
         self.description = description
         self.topics = topics.sorted()
+        self.icon = icon
     }
 }
 

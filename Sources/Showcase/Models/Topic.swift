@@ -41,7 +41,9 @@ public struct Topic: Identifiable {
     
     /// Previews configuration for the topic.
     public var preview: Preview?
-    
+
+    public var icon: AnyView?
+
     /// Title of the topic.
     public var title: String
     
@@ -77,6 +79,35 @@ public struct Topic: Identifiable {
         children: [Topic]? = nil,
         preview: Preview? = nil
     ) {
+        self.icon = nil
+        self.children = children
+        self.codeBlocks = code()
+        self.description = description()
+        self.links = links()
+        self.embeds = embeds()
+        self.preview = preview
+        self.title = title
+    }
+
+    /// Initializes a showcase element with the specified parameters.
+    /// - Parameters:
+    ///   - title: The title of the showcase element.
+    ///   - description: A closure returning the description of the showcase element (default is an empty string).
+    ///   - links: A closure returning external links associated with the showcase element (default is an empty array).
+    ///   - codeBlocks: A closure returning code examples (default is an empty array).
+    ///   - children: Optional child showcase topics (default is nil).
+    ///   - preview: Optional preview.
+    public init<I: View>(
+        _ title: String,
+        description: () -> String = { "" },
+        icon: () -> I,
+        @LinkBuilder links: () -> [Link] = { [] },
+        @EmbedBuilder embeds: () -> [Embed] = { [] },
+        @CodeBlockBuilder code: () -> [CodeBlock] = { [] },
+        children: [Topic]? = nil,
+        preview: Preview? = nil
+    ) {
+        self.icon = .init(icon())
         self.children = children
         self.codeBlocks = code()
         self.description = description()

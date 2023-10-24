@@ -28,13 +28,16 @@ struct ShowcaseLink: View {
     
     /// The data representing the external link.
     let data: Topic.Link
-    
+
+    #if canImport(UIKit)
     let impact = UIImpactFeedbackGenerator(style: .light)
-    
+    #endif
+
     var body: some View {
         Button {
+            #if canImport(UIKit)
             impact.impactOccurred()
-            
+
             // Create a Safari view controller to open the external link.
             let safariController = SFSafariViewController(url: data.url)
             safariController.preferredControlTintColor = .label
@@ -45,19 +48,18 @@ struct ShowcaseLink: View {
                 .firstKeyWindow?
                 .rootViewController?
                 .present(safariController, animated: true)
+            #endif
         } label: {
             HStack {
                 Image(systemName: "safari")
                 Text(data.title.description)
             }
         }
-        .buttonStyle(
-            PassthroughButtonStyle {
-                style.makeBody(configuration: $0)
-            }
-        )
+        .buttonStyle(style)
         .onAppear {
+            #if canImport(UIKit)
             impact.prepare()
+            #endif
         }
         
     }

@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import Foundation
+import SwiftUI
 
 /// Represents a document split into chapters, with navigatable chapters that contain code examples, descriptions, and links.
 public struct Document: Identifiable {
@@ -27,7 +27,9 @@ public struct Document: Identifiable {
     
     /// The title of the document.
     public var title: String
-    
+
+    public var icon: Image?
+
     /// The optional description of the document.
     public var description: String?
     
@@ -39,10 +41,11 @@ public struct Document: Identifiable {
     ///   - title: The title of the document.
     ///   - chapters: The chapters within the document.
     ///   - description: The optional description of the document.
-    public init(_ title: String, description: String? = nil, _ chapters: [Chapter] = []) {
+    public init(_ title: String, description: String? = nil, icon: Image? = nil, _ chapters: [Chapter] = []) {
         self.title = title
         self.description = description
         self.chapters = chapters.sorted()
+        self.icon = icon
     }
     
     /// Initializes a showcase document with the specified title, chapters and an optional description.
@@ -50,10 +53,11 @@ public struct Document: Identifiable {
     ///   - title: The title of the document.
     ///   - chapters: The chapters within the document.
     ///   - description: The optional description of the document.
-    public init(_ title: String, description: String? = nil, _ chapters: Chapter...) {
+    public init(_ title: String, description: String? = nil, icon: Image? = nil, _ chapters: Chapter...) {
         self.title = title
         self.description = description
         self.chapters = chapters.sorted()
+        self.icon = icon
     }
 }
 

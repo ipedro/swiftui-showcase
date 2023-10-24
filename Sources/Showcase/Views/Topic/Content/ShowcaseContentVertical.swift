@@ -37,7 +37,7 @@ public struct ShowcaseContentVertical: ShowcaseContentStyle {
         var configuration: Configuration
         
         var body: some View {
-            VStack(alignment: .leading, spacing: 30) {
+            LazyVStack(alignment: .leading, spacing: 30) {
                 configuration.title.font(.system(titleStyle))
                 
                 if let links = configuration.links {

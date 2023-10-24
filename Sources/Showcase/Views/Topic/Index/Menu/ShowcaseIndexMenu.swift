@@ -45,8 +45,11 @@ public struct ShowcaseIndexMenuStyleConfiguration {
     public struct Label: View {
         @Environment(\.scrollView) private var scrollView
         let data: Topic
+
+        #if canImport(UIKit)
         let impact = UIImpactFeedbackGenerator(style: .light)
-        
+        #endif
+
         public var body: some View {
             button(data)
             
@@ -61,7 +64,10 @@ public struct ShowcaseIndexMenuStyleConfiguration {
         
         private func button(_ data: Topic) -> some View {
             Button(data.title) {
+                #if canImport(UIKit)
                 impact.impactOccurred()
+                #endif
+                
                 withAnimation {
                     scrollView?.scrollTo(data.id, anchor: .top)
                 }

@@ -21,34 +21,31 @@
 import SwiftUI
 
 /// A view that displays a list of showcases organized into chapters.
-public struct ShowcaseDocument<Icon: View>: View {
+public struct ShowcaseDocument: View {
     /// The data representing showcase chapters.
-    let data: Document
-    
-    /// The icon to be displayed next to each showcase item in the list.
-    let icon: Icon
-    
+    let document: Document
+
     /// Initializes a showcase list with the specified data and optional icon.
     /// - Parameters:
     ///   - data: The data representing showcase chapters.
-    ///   - icon: A closure that returns the icon view for each showcase item (optional).
-    public init(
-        _ data: Document,
-        @ViewBuilder icon: () -> Icon = { EmptyView() }
-    ) {
-        self.data = data
-        self.icon = icon()
+    public init(_ document: Document) {
+        self.document = document
     }
     
     public var body: some View {
-        List {
-            description()
-            ForEach(data.chapters, content: section)
+        NavigationView {
+            List {
+                description()
+                ForEach(document.chapters, content: section)
+            }
+            .navigationTitle(document.title)
         }
+        .previewDisplayName(document.title)
     }
     
-    @ViewBuilder func description() -> some View {
-        if let description = data.description {
+    @ViewBuilder 
+    func description() -> some View {
+        if let description = document.description {
             Section {
                 Text(description)
                     .font(.headline)
@@ -96,7 +93,11 @@ public struct ShowcaseDocument<Icon: View>: View {
                 Label {
                     Text(item.title).bold()
                 } icon: {
-                    icon
+                    if let icon = item.icon {
+                        icon
+                    } else {
+                        chapter.icon ?? document.icon
+                    }
                 }
             }
         }
@@ -111,7 +112,7 @@ struct ShowcaseList_Previews: PreviewProvider {
     ]
     
     static var previews: some View {
-        ShowcaseNavigationView(
+        ShowcaseDocument(
             .init(
                 "Test",
                 Chapter(
