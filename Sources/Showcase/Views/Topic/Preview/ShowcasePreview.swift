@@ -22,12 +22,11 @@ import SwiftUI
 
 /// A view that displays previews of showcase topics.
 public struct ShowcasePreview: View {
-    /// The style configuration for Preview.
-    typealias Configuration = ShowcasePreviewStyleConfiguration
-    
-    /// The style for displaying the preview.
-    @Environment(\.showcasePreviewStyle) private var style
-    
+    /// The style for displaying the preview content.
+    @Environment(\.showcasePreviewContentStyle) private var contentStyle
+    /// The style for displaying the preview box.
+    @Environment(\.showcasePreviewBoxStyle) private var boxStyle
+
     /// The data representing the preview.
     let data: Topic.Preview
     
@@ -37,50 +36,69 @@ public struct ShowcasePreview: View {
         guard let data = data else { return nil }
         self.data = data
     }
-    
-    /// The configuration for the Preview view.
-    var configuration: Configuration {
-        .init(preview: data.content)
-    }
-    
+
     public var body: some View {
         GroupBox {
-            style.makeBody(configuration: configuration)
-                .frame(
-                    minWidth: data.minWidth,
-                    idealWidth: data.idealWidth,
-                    maxWidth: data.maxWidth,
-                    minHeight: data.minHeight,
-                    idealHeight: data.idealHeight,
-                    maxHeight: data.maxHeight,
-                    alignment: data.alignment)
+            AnyView(framedContent)
         } label: {
             if let title = data.title {
                 Text(title)
             }
+        }
+        .groupBoxStyle(AnyGroupBoxStyle(boxStyle))
+    }
+
+    private var content: any View {
+        contentStyle.makeBody(configuration: .init(content: .init(data.content)))
+    }
+
+    private var framedContent: any View {
+        switch data.frame {
+        case let .fixed(width, height):
+            return content.frame(
+                width: width,
+                height: height,
+                alignment: data.alignment)
+        case let .flexible(minWidth, idealWidth, maxWidth, minHeight, idealHeight, maxHeight):
+            return content.frame(
+                minWidth: minWidth,
+                idealWidth: idealWidth,
+                maxWidth: maxWidth,
+                minHeight: minHeight,
+                idealHeight: idealHeight,
+                maxHeight: maxHeight,
+                alignment: data.alignment)
         }
     }
 }
 
 // MARK: - Configuration
 
-public struct ShowcasePreviewStyleConfiguration {
+public struct ShowcasePreviewContentStyleConfiguration {
+    public typealias Content = AnyView
     /// The type-erased preview content.
-    public let preview: AnyView
-}
+    public let content: Content
 
-// MARK: - Preview
-
-struct Preview_Previews: PreviewProvider {
-    static let styles: [AnyShowcasePreviewStyle] = [
-        .init(.paged)
-    ]
-    
-    static var previews: some View {
-        ForEach(0...styles.count - 1, id: \.self) { index in
-            ShowcasePreview(.init {
-                MockPreviews()
-            })
-        }
-    }
+//    public struct Content: View {
+//        var data: Topic.Preview
+//
+//        public var body: some View {
+//            switch data.frame {
+//            case let .fixed(width, height):
+//                data.content.frame(
+//                    width: width,
+//                    height: height,
+//                    alignment: data.alignment)
+//            case let .flexible(minWidth, idealWidth, maxWidth, minHeight, idealHeight, maxHeight):
+//                data.content.frame(
+//                    minWidth: minWidth,
+//                    idealWidth: idealWidth,
+//                    maxWidth: maxWidth,
+//                    minHeight: minHeight,
+//                    idealHeight: idealHeight,
+//                    maxHeight: maxHeight,
+//                    alignment: data.alignment)
+//            }
+//        }
+//    }
 }

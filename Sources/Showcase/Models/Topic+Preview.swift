@@ -20,27 +20,23 @@
 
 import SwiftUI
 
+#warning("Create Topic.Preview Builder")
 extension Topic {
     /// Represents the previews configuration for a showcase element's content.
     public struct Preview {
-        /// Minimum width of the preview.
-        public var minWidth: CGFloat?
-        
-        /// Ideal width of the preview.
-        public var idealWidth: CGFloat?
-        
-        /// Maximum width of the preview.
-        public var maxWidth: CGFloat?
-        
-        /// Minimum height of the preview.
-        public var minHeight: CGFloat?
-        
-        /// Ideal height of the preview.
-        public var idealHeight: CGFloat?
-        
-        /// Maximum height of the preview.
-        public var maxHeight: CGFloat?
-        
+
+        public enum Frame {
+            case fixed(width: CGFloat?, height: CGFloat?)
+            case flexible(minWidth: CGFloat?,
+                          idealWidth: CGFloat?,
+                          maxWidth: CGFloat?,
+                          minHeight: CGFloat?,
+                          idealHeight: CGFloat?,
+                          maxHeight: CGFloat?)
+        }
+
+        public var frame: Frame
+
         /// Alignment of the preview content.
         public var alignment: Alignment
         
@@ -72,12 +68,39 @@ extension Topic {
             title: String? = nil,
             @ViewBuilder content: () -> V
         ) {
-            self.minWidth = minWidth
-            self.idealWidth = idealWidth
-            self.maxWidth = maxWidth
-            self.minHeight = minHeight
-            self.idealHeight = idealHeight
-            self.maxHeight = maxHeight
+            self.frame = .flexible(
+                minWidth: minWidth,
+                idealWidth: idealWidth,
+                maxWidth: maxWidth,
+                minHeight: minHeight,
+                idealHeight: idealHeight,
+                maxHeight: maxHeight)
+            self.alignment = alignment
+            self.title = title
+            self.content = .init(content())
+        }
+
+        /// Initializes the previews configuration with the specified parameters.
+        /// - Parameters:
+        ///   - width: width of the preview (default is nil).
+        ///   - height: Ideal width of the preview (default is nil).
+        ///   - maxWidth: Maximum width of the preview (default is nil).
+        ///   - minHeight: Minimum height of the preview (default is nil).
+        ///   - idealHeight: Ideal height of the preview (default is 250).
+        ///   - maxHeight: Maximum height of the preview (default is nil).
+        ///   - alignment: Alignment of the content within the preview (default is .center).
+        ///   - title: The title of the preview (default is nil).
+        ///   - content: A closure returning the content of the preview.
+        public init<V: View>(
+            width: CGFloat?,
+            height: CGFloat?,
+            alignment: Alignment = .center,
+            title: String? = nil,
+            @ViewBuilder content: () -> V
+        ) {
+            self.frame = .fixed(
+                width: width,
+                height: height)
             self.alignment = alignment
             self.title = title
             self.content = .init(content())

@@ -24,8 +24,22 @@ import SwiftUI
 /// all Showcases within a view hierarchy.
 ///
 /// To configure the current Showcase style for a view hierarchy, use the
-/// ``Showcase/showcasePreviewBoxStyle(_:)`` modifier.
-public protocol ShowcasePreviewBoxStyle: GroupBoxStyle {}
+/// ``Showcase/showcasePreviewContentStyle(_:)`` modifier.
+public protocol ShowcasePreviewContentStyle {
+    /// A view that represents the body of a Showcase.
+    associatedtype Body: View
+
+    /// The properties of a Showcase.
+    typealias Configuration = ShowcasePreviewContentStyleConfiguration
+
+    /// Creates a view that represents the body of a Showcase.
+    ///
+    /// The system calls this method for each ``Showcase`` instance in a view
+    /// hierarchy where this style is the current Showcase style.
+    ///
+    /// - Parameter configuration: The properties of a Showcase.
+    @ViewBuilder func makeBody(configuration: Configuration) -> Body
+}
 
 // MARK: - View Extension
 
@@ -37,26 +51,28 @@ extension View {
     /// within a view:
     ///
     ///     Showcase()
-    ///         .showcasePreviewBoxStyle(MyCustomStyle())
+    ///         .showcasePreviewContentStyle(MyCustomStyle())
     ///
-    public func showcasePreviewBoxStyle<S: ShowcasePreviewBoxStyle>(_ style: S) -> some View {
-        environment(\.showcasePreviewBoxStyle, style)
+    public func showcasePreviewContentStyle<S: ShowcasePreviewContentStyle>(_ style: S) -> some View {
+        environment(\.showcasePreviewContentStyle, style)
     }
 }
 
 // MARK: - Environment Keys
 
 /// A private key needed to save style data in the environment
-private struct ShowcasePreviewBoxStyleKey: EnvironmentKey {
-    static var defaultValue: any ShowcasePreviewBoxStyle = DefaultGroupBoxStyle()
+private struct ShowcasePreviewContentStyleKey: EnvironmentKey {
+    #if canImport(UIKit)
+    static var defaultValue: any ShowcasePreviewContentStyle = .paged()
+    #else
+    static var defaultValue: any ShowcasePreviewContentStyle = .default
+    #endif
 }
 
 extension EnvironmentValues {
     /// The current Showcase style value.
-    var showcasePreviewBoxStyle: any ShowcasePreviewBoxStyle {
-        get { self[ShowcasePreviewBoxStyleKey.self] }
-        set { self[ShowcasePreviewBoxStyleKey.self] = newValue }
+    var showcasePreviewContentStyle: any ShowcasePreviewContentStyle {
+        get { self[ShowcasePreviewContentStyleKey.self] }
+        set { self[ShowcasePreviewContentStyleKey.self] = newValue }
     }
 }
-
-extension DefaultGroupBoxStyle: ShowcasePreviewBoxStyle {}
