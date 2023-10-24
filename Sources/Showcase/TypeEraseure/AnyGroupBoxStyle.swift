@@ -20,10 +20,14 @@
 
 import SwiftUI
 
-struct PassthroughButtonStyle<C: View>: ButtonStyle {
-    @ViewBuilder var content: (_ button: Configuration) -> C
-    
+struct AnyGroupBoxStyle: GroupBoxStyle {
+    var style: any GroupBoxStyle
+
+    init(_ style: any GroupBoxStyle) {
+        self.style = style
+    }
+
     func makeBody(configuration: Configuration) -> some View {
-        content(configuration)
+        AnyView(style.makeBody(configuration: configuration))
     }
 }
