@@ -106,7 +106,7 @@ public struct Topic: Identifiable {
         @EmbedBuilder embeds: () -> [Embed] = { [] },
         @CodeBlockBuilder code: () -> [CodeBlock] = { [] },
         children: [Topic]? = nil,
-        previewTitle: String? = nil,
+        previewTitle: String? = "Preview",
         @ViewBuilder previews: () -> P
     ) {
         self.icon = nil
@@ -136,7 +136,7 @@ public struct Topic: Identifiable {
         @EmbedBuilder embeds: () -> [Embed] = { [] },
         @CodeBlockBuilder code: () -> [CodeBlock] = { [] },
         children: [Topic]? = nil,
-        previewTitle: String? = nil,
+        previewTitle: String? = "Preview",
         @ViewBuilder previews: () -> P
     ) {
         self.icon = .init(icon())
