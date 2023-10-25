@@ -32,7 +32,7 @@ Versatile and highly customizable, buttons give people simple, familiar ways to 
 """
         },
         links: {
-            Topic.Link(" HIG", .init(string: "https://developer.apple.com/design/human-interface-guidelines/buttons"))
+            Topic.Link(" HIG", "https://developer.apple.com/design/human-interface-guidelines/buttons")
         },
         code: {
             Topic.CodeBlock {

@@ -27,8 +27,8 @@ extension Topic {
         public var id: String { url.absoluteString }
         
         /// The title of the external link.
-        public var title: Topic.LinkName
-        
+        public var name: Topic.LinkName
+
         /// The URL of the external link.
         public var url: URL
         
@@ -36,9 +36,19 @@ extension Topic {
         /// - Parameters:
         ///   - title: The title of the external link.
         ///   - url: The URL of the external link.
-        public init?(_ title: Topic.LinkName, _ url: URL?) {
+        public init?(_ name: Topic.LinkName, _ url: URL?) {
             guard let url = url else { return nil }
-            self.title = title
+            self.name = name
+            self.url = url
+        }
+
+        /// Initializes an external link with the specified title and URL.
+        /// - Parameters:
+        ///   - title: The title of the external link.
+        ///   - url: The URL of the external link.
+        public init?(_ name: Topic.LinkName, _ urlString: String) {
+            guard let url = URL(string: urlString) else { return nil }
+            self.name = name
             self.url = url
         }
     }
