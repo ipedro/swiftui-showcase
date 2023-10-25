@@ -48,7 +48,7 @@ extension View {
 
 /// A private key needed to save style data in the environment
 private struct ShowcasePreviewBoxStyleKey: EnvironmentKey {
-    static var defaultValue: any ShowcasePreviewBoxStyle = DefaultGroupBoxStyle()
+    static var defaultValue: any ShowcasePreviewBoxStyle = .automatic
 }
 
 extension EnvironmentValues {
@@ -58,5 +58,3 @@ extension EnvironmentValues {
         set { self[ShowcasePreviewBoxStyleKey.self] = newValue }
     }
 }
-
-extension DefaultGroupBoxStyle: ShowcasePreviewBoxStyle {}
