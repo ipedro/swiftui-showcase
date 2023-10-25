@@ -24,7 +24,7 @@ import SafariServices
 /// A view that displays an external link to a website in a Safari view controller.
 struct ShowcaseLink: View {
     /// The style environment variable for displaying external links.
-    @Environment(\.showcaseLinkStyle) private var style
+    @Environment(\.linkStyle) private var style
     @Environment(\.controlSize) private var controlSize
 
     /// The data representing the external link.

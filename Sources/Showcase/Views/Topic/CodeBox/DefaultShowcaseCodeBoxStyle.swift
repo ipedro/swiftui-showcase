@@ -21,14 +21,14 @@
 import SwiftUI
 
 extension ShowcaseCodeBoxStyle where Self == DefaultShowcaseCodeBoxStyle<BackgroundStyle> {
-    /// The default style for code box views.
+    /// The default style for code boxes.
     public static var automatic: Self {
         .init(background: .background)
     }
 }
 
 extension ShowcaseCodeBoxStyle where Self == DefaultShowcaseCodeBoxStyle<SwiftUI.Color> {
-    /// The default style for code box views.
+    /// The default style for code boxes.
     /// - Parameters:
     ///   - background: The style to render the background within the view.
     ///   - padding: An amount, given in points, to pad the content on all edges. If you set the value to nil, SwiftUI uses a platform-specific default amount. The default value of this parameter is `nil`.
@@ -37,7 +37,7 @@ extension ShowcaseCodeBoxStyle where Self == DefaultShowcaseCodeBoxStyle<SwiftUI
     }
 }
 
-/// The default style for code box views.
+/// The default style for code boxes.
 public struct DefaultShowcaseCodeBoxStyle<S: ShapeStyle>: ShowcaseCodeBoxStyle {
     var background: S
     var padding: CGFloat?

@@ -22,7 +22,7 @@ import SwiftUI
 
 struct ShowcaseContent: View, Equatable {
     typealias Configuration = ShowcaseContentStyleConfiguration
-    @Environment(\.showcaseContentStyle) private var style
+    @Environment(\.contentStyle) private var style
     let id: AnyHashable
     var configuration: Configuration
     

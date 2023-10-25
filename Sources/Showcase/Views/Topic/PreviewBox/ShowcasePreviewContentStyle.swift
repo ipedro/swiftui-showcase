@@ -54,7 +54,7 @@ extension View {
     ///         .showcasePreviewContentStyle(MyCustomStyle())
     ///
     public func showcasePreviewContentStyle<S: ShowcasePreviewContentStyle>(_ style: S) -> some View {
-        environment(\.showcasePreviewContentStyle, style)
+        environment(\.previewContentStyle, style)
     }
 }
 
@@ -67,7 +67,7 @@ private struct ShowcasePreviewContentStyleKey: EnvironmentKey {
 
 extension EnvironmentValues {
     /// The current Showcase style value.
-    var showcasePreviewContentStyle: any ShowcasePreviewContentStyle {
+    var previewContentStyle: any ShowcasePreviewContentStyle {
         get { self[ShowcasePreviewContentStyleKey.self] }
         set { self[ShowcasePreviewContentStyleKey.self] = newValue }
     }

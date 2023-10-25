@@ -39,7 +39,7 @@ extension View {
     ///         .showcaseLinkStyle(MyCustomStyle())
     ///
     public func showcaseLinkStyle<S: ButtonStyle>(_ style: S) -> some View {
-        environment(\.showcaseLinkStyle, .init(style))
+        environment(\.linkStyle, .init(style))
     }
 }
 
@@ -52,7 +52,7 @@ private struct LinkStyleKey: EnvironmentKey {
 
 extension EnvironmentValues {
     /// The current Showcase style value.
-    var showcaseLinkStyle: AnyButtonStyle {
+    var linkStyle: AnyButtonStyle {
         get { self[LinkStyleKey.self] }
         set { self[LinkStyleKey.self] = newValue }
     }

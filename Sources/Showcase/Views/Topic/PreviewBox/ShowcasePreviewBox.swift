@@ -23,9 +23,9 @@ import SwiftUI
 /// A view that displays previews of showcase topics.
 public struct ShowcasePreviewBox: View {
     /// The style for displaying the preview content.
-    @Environment(\.showcasePreviewContentStyle) private var contentStyle
+    @Environment(\.previewContentStyle) private var contentStyle
     /// The style for displaying the preview box.
-    @Environment(\.showcasePreviewBoxStyle) private var boxStyle
+    @Environment(\.previewBoxStyle) private var boxStyle
 
     /// The data representing the preview.
     let configuration: ShowcasePreviewContentStyleConfiguration
