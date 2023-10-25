@@ -25,7 +25,8 @@ import SafariServices
 struct ShowcaseLink: View {
     /// The style environment variable for displaying external links.
     @Environment(\.showcaseLinkStyle) private var style
-    
+    @Environment(\.controlSize) private var controlSize
+
     /// The data representing the external link.
     let data: Topic.Link
 
@@ -52,7 +53,7 @@ struct ShowcaseLink: View {
         } label: {
             HStack {
                 Image(systemName: "safari")
-                Text(data.title.description)
+                Text(data.name.description)
             }
         }
         .buttonStyle(style)

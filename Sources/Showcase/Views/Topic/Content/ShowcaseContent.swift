@@ -28,7 +28,6 @@ struct ShowcaseContent: View, Equatable {
     
     var body: some View {
         style.makeBody(configuration: configuration)
-            .previewLayout(.sizeThatFits)
     }
     
     static func == (lhs: ShowcaseContent, rhs: ShowcaseContent) -> Bool {
@@ -44,8 +43,9 @@ public struct ShowcaseContentStyleConfiguration {
     public let preview: ShowcasePreview?
     public let links: Links?
     public let embeds: Embeds?
-    public let codeBlocks: CodeBlocks?
+    public let codeBoxes: CodeBoxes?
     
+    /// A view that represents a list of web embeds.
     public struct Embeds: View {
         let data: [Topic.Embed]
         
@@ -63,7 +63,7 @@ public struct ShowcaseContentStyleConfiguration {
         }
     }
     
-    /// A view that represents external links.
+    /// A view that represents a list of external links.
     public struct Links: View {
         let data: [Topic.Link]
         
@@ -82,8 +82,8 @@ public struct ShowcaseContentStyleConfiguration {
         }
     }
     
-    /// A view that represents code blocks.
-    public struct CodeBlocks: View {
+    /// A view that represents a list of code examples.
+    public struct CodeBoxes: View {
         let data: [Topic.CodeBlock]
         
         /// Initializes the view with code block data.
@@ -96,7 +96,7 @@ public struct ShowcaseContentStyleConfiguration {
         /// The body view for displaying code blocks.
         public var body: some View {
             ForEach(data) {
-                ShowcaseCodeBlock($0)
+                ShowcaseCodeBox($0)
             }
         }
     }

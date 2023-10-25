@@ -20,16 +20,20 @@ public struct VerticalShowcaseLayoutStyle: ShowcaseLayoutStyle {
         
         var body: some View {
             VStack(alignment: .leading) {
+                if depth > 0 {
+                    Divider().padding(.bottom)
+                }
+
                 configuration.indexList
-                    .padding()
-                    .padding(.bottom)
-                
+                    .padding(.bottom, 30)
+
                 configuration.content
                 
                 configuration.children
             }
             .padding(depth == .zero ? .horizontal : [])
             .padding(depth == .zero ? [] : .vertical)
+            .padding(depth > .zero ? .bottom : [], 20)
         }
     }
 }

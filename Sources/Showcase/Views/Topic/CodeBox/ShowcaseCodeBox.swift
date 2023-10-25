@@ -22,114 +22,68 @@ import SwiftUI
 @_implementationOnly import Splash
 
 /// A view that displays code blocks with syntax highlighting and a copy to pasteboard button.
-struct ShowcaseCodeBlock: View {
+struct ShowcaseCodeBox: View {
     /// The style for displaying code blocks.
-    @Environment(\.codeBlockStyle) private var style
+    @Environment(\.codeBoxStyle) private var style
     
-    /// The configuration for the ShowcaseCodeBlock view.
-    typealias Configuration = ShowcaseCodeBlockStyleConfiguration
+    let data: Topic.CodeBlock
     
-    /// The configuration for the code block.
-    let configuration: Configuration
-    
-    /// Initializes a ShowcaseCodeBlock view with the specified code block data.
+    /// Initializes a ShowcaseCodeBox view with the specified code block data.
     /// - Parameter data: The data representing the code block (optional).
     init?(_ data: Topic.CodeBlock?) {
         guard let data = data else { return nil }
-        self.configuration = Configuration(
-            title: .init(data.title ?? "Sample Code"),
-            content: .init(text: data.rawValue),
-            copyToPasteboard: .init(text: data.rawValue)
-        )
+        self.data = data
     }
-    
-    /// Initializes a ShowcaseCodeBlock view with the provided configuration.
-    /// - Parameter configuration: The configuration for the code block.
-    init(configuration: Configuration) {
-        self.configuration = configuration
-    }
-    
-    /// The body of the ShowcaseCodeBlock view.
+
     var body: some View {
-        style.makeBody(configuration: configuration)
-    }
-}
-
-// MARK: - Default Style
-
-extension ShowcaseCodeBlockStyle where Self == ShowcaseCodeBlockStyleStandard {
-    /// The standard style for displaying code blocks.
-    static var standard: Self { .init() }
-}
-
-/// The standard style for displaying code blocks in ShowcaseCodeBlock.
-public struct ShowcaseCodeBlockStyleStandard: ShowcaseCodeBlockStyle {
-    public func makeBody(configuration: Configuration) -> some View {
+        let content = data.rawValue
         GroupBox {
             ScrollView(.horizontal) {
-                configuration.content
+                Content(text: content)
             }
-            .padding(.vertical, 10)
         } label: {
-            HStack {
-                configuration.title
-                Spacer()
-                configuration.copyToPasteboard
-            }
-            .foregroundColor(.secondary)
+            Text(data.title)
         }
+        .overlay(alignment: .topTrailing) {
+            CopyToPasteboard(text: content).padding()
+        }
+        .groupBoxStyle(AnyGroupBoxStyle(style))
     }
-}
 
-/// The configuration for a code block in ShowcaseCodeBlock.
-public struct ShowcaseCodeBlockStyleConfiguration {
-    /// The title of the code block.
-    public let title: Text
-    /// The content of the code block.
-    public let content: Content
-    /// The button to copy the code to the pasteboard.
-    public let copyToPasteboard: CopyToPasteboard
-    
-    /// The view representing the copy to pasteboard button.
-    public struct CopyToPasteboard: View {
+    // MARK: - CopyToPasteboard
+
+    /// A view representing the copy to pasteboard button.
+    private struct CopyToPasteboard: View {
         /// The text to be copied to the pasteboard.
         let text: String
-        
-        #if canImport(UIKit)
-        let impact = UIImpactFeedbackGenerator(style: .light)
-        #endif
 
-        public var body: some View {
+        private let impact = UIImpactFeedbackGenerator(style: .light)
+
+        var body: some View {
             Button {
-                #if canImport(UIKit)
                 UIPasteboard.general.string = text
                 impact.impactOccurred()
-                #elseif canImport(AppKit)
-                NSPasteboard.general.setString(text, forType: .string)
-                #endif
             } label: {
                 Image(systemName: "doc.on.doc")
             }
-            .onAppear {
-                #if canImport(UIKit)
-                impact.prepare()
-                #endif
-            }
+            .onAppear(perform: impact.prepare)
         }
     }
-    
-    /// The view representing the content of the code block with syntax highlighting.
-    public struct Content: View {
+
+    // MARK: - Content
+
+    /// A view representing the content of the code block with syntax highlighting.
+    private struct Content: View {
         /// The text content of the code block.
         let text: String
         /// The color scheme environment variable.
         @Environment(\.colorScheme) private var colorScheme
-        
-        public var body: some View {
+
+        var body: some View {
             Text(decorated(text, colorScheme))
                 .textSelection(.enabled)
         }
-        
+
         /// Applies syntax highlighting and creates an AttributedString for the code block content.
         /// - Parameters:
         ///   - text: The text content of the code block.
@@ -142,7 +96,7 @@ public struct ShowcaseCodeBlockStyleConfiguration {
             let attributed = AttributedString(highlighter.highlight(text))
             return attributed
         }
-        
+
         /// Retrieves the theme for syntax highlighting based on the color scheme.
         /// - Parameter colorScheme: The color scheme.
         /// - Returns: The theme for syntax highlighting.
@@ -155,16 +109,26 @@ public struct ShowcaseCodeBlockStyleConfiguration {
     }
 }
 
-struct ShowcaseCodeBlock_Previews: PreviewProvider {
-    static var previews: some View {
-        ShowcaseCodeBlock(
-            .init("Example", text: {
+#Preview {
+    ShowcaseCodeBox(
+        Topic.CodeBlock("Example", text: {
 """
 HStack {
     Spacer()
     copyButton
 }
 """
-            }))
-    }
+        }))
+}
+#Preview {
+    ShowcaseCodeBox(
+        Topic.CodeBlock(text: {
+"""
+HStack {
+    Spacer()
+    copyButton
+}
+"""
+        }))
+    //.showcaseCodeBoxStyle(.automatic(background: .red))
 }

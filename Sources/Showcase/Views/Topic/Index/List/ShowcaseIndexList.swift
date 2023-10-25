@@ -22,8 +22,8 @@ import SwiftUI
 
 public struct ShowcaseIndexList: View {
     typealias Configuration = ShowcaseIndexListStyleConfiguration
-    @Environment(\.indexListStyle) private var style
     var configuration: Configuration
+    @Environment(\.indexListStyle) private var style
     
     init?(_ data: Topic) {
         configuration = .init { padding, icon in
@@ -51,17 +51,24 @@ public struct ShowcaseIndexListStyleConfiguration {
         let icon: AnyView
         let padding: CGFloat
 
+        init(data: Topic, icon: AnyView, padding: CGFloat) {
+            self.data = data
+            self.icon = icon
+            self.padding = padding
+        }
+
+        private var topics: [Topic] {
+            data.children ?? []
+        }
+
         public var body: some View {
-            Item(
-                data: data,
-                icon: depth > 0 ? icon : nil)
-            .padding(.leading, depthPadding)
-            
-            if let children = data.children {
-                ForEach(children) { topic in
-                    ShowcaseIndexList(topic)
-                        .nodeDepth(depth + 1)
-                }
+            if depth > 0 {
+                Item(data: data, icon: icon)
+                    .padding(.leading, depthPadding)
+            }
+
+            ForEach(topics) { topic in
+                ShowcaseIndexList(topic).nodeDepth(depth + 1)
             }
         }
     }

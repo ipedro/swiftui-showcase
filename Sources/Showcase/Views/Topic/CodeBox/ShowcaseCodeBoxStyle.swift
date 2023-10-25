@@ -24,22 +24,8 @@ import SwiftUI
 /// all Showcases within a view hierarchy.
 ///
 /// To configure the current Showcase style for a view hierarchy, use the
-/// ``Showcase/showcaseCodeBlockStyle(_:)`` modifier.
-public protocol ShowcaseCodeBlockStyle {
-    /// A view that represents the body of a Showcase.
-    associatedtype Body: View
-
-    /// The properties of a Showcase.
-    typealias Configuration = ShowcaseCodeBlockStyleConfiguration
-
-    /// Creates a view that represents the body of a Showcase.
-    ///
-    /// The system calls this method for each ``Showcase`` instance in a view
-    /// hierarchy where this style is the current Showcase style.
-    ///
-    /// - Parameter configuration: The properties of a Showcase.
-    @ViewBuilder func makeBody(configuration: Configuration) -> Body
-}
+/// ``ShowcaseCodeBox/showcaseCodeBoxStyle(_:)`` modifier.
+public protocol ShowcaseCodeBoxStyle: GroupBoxStyle {}
 
 // MARK: - View Extension
 
@@ -51,41 +37,24 @@ extension View {
     /// within a view:
     ///
     ///     Showcase()
-    ///         .showcaseCodeBlockStyle(MyCustomStyle())
+    ///         .showcaseCodeBoxStyle(MyCustomStyle())
     ///
-    public func showcaseCodeBlockStyle<S: ShowcaseCodeBlockStyle>(_ style: S) -> some View {
-        environment(\.codeBlockStyle, .init(style))
-    }
-}
-
-// MARK: - Type Erasure
-
-/// A type erased Showcase style.
-struct AnyShowcaseCodeBlockStyle: ShowcaseCodeBlockStyle {
-    /// Current Showcase style.
-    var style: any ShowcaseCodeBlockStyle
-   
-    /// Creates a type erased Showcase style.
-    init<S: ShowcaseCodeBlockStyle>(_ style: S) {
-        self.style = style
-    }
-    
-    func makeBody(configuration: Configuration) -> some View {
-        AnyView(style.makeBody(configuration: configuration))
+    public func showcaseCodeBoxStyle<S: ShowcaseCodeBoxStyle>(_ style: S) -> some View {
+        environment(\.codeBoxStyle, style)
     }
 }
 
 // MARK: - Environment Keys
 
 /// A private key needed to save style data in the environment
-private struct ShowcaseCodeBlockStyleKey: EnvironmentKey {
-    static var defaultValue: AnyShowcaseCodeBlockStyle = .init(.standard)
+private struct ShowcaseCodeBoxStyleKey: EnvironmentKey {
+    static var defaultValue: any ShowcaseCodeBoxStyle = .automatic
 }
 
 extension EnvironmentValues {
     /// The current Showcase style value.
-    var codeBlockStyle: AnyShowcaseCodeBlockStyle {
-        get { self[ShowcaseCodeBlockStyleKey.self] }
-        set { self[ShowcaseCodeBlockStyleKey.self] = newValue }
+    var codeBoxStyle: any ShowcaseCodeBoxStyle {
+        get { self[ShowcaseCodeBoxStyleKey.self] }
+        set { self[ShowcaseCodeBoxStyleKey.self] = newValue }
     }
 }

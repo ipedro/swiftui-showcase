@@ -38,7 +38,7 @@ public struct DefaultIndexListStyle<Icon: View>: ShowcaseIndexListStyle {
     }
     
     public func makeBody(configuration: Configuration) -> some View {
-        VStack(alignment: .leading) {
+        LazyVStack(alignment: .leading) {
             configuration.label(
                 16,
                 icon

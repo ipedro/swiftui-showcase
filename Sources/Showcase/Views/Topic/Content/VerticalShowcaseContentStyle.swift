@@ -20,14 +20,13 @@
 
 import SwiftUI
 
-extension ShowcaseContentStyle where Self == ShowcaseContentVertical {
+extension ShowcaseContentStyle where Self == VerticalShowcaseContentStyle {
     /// A vertical content style.
     static var vertical: Self { .init() }
 }
 
 /// A vertical content style.
-public struct ShowcaseContentVertical: ShowcaseContentStyle {
-    
+public struct VerticalShowcaseContentStyle: ShowcaseContentStyle {
     public func makeBody(configuration: Configuration) -> some View {
         ContentView(configuration: configuration)
     }
@@ -54,7 +53,7 @@ public struct ShowcaseContentVertical: ShowcaseContentStyle {
                 
                 configuration.embeds
                 
-                configuration.codeBlocks
+                configuration.codeBoxes
             }
         }
         

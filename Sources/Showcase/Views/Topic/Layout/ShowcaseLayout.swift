@@ -46,8 +46,7 @@ public struct ShowcaseLayoutStyleConfiguration {
         var configuration: ShowcaseContent.Configuration
         
         public var body: some View {
-            ShowcaseContent(id: id, configuration: configuration)
-                .equatable()
+            ShowcaseContent(id: id, configuration: configuration).equatable()
         }
     }
 }
