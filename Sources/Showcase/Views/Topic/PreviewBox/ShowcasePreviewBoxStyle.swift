@@ -21,22 +21,22 @@
 import SwiftUI
 
 /// A type that applies standard interaction behavior and a custom appearance to
-/// all Showcases within a view hierarchy.
+/// all preview boxes within a view hierarchy.
 ///
 /// To configure the current Showcase style for a view hierarchy, use the
-/// ``Showcase/showcasePreviewBoxStyle(_:)`` modifier.
+/// ``ShowcaseDocument/showcasePreviewBoxStyle(_:)`` modifier.
 public protocol ShowcasePreviewBoxStyle: GroupBoxStyle {}
 
 // MARK: - View Extension
 
 extension View {
-    /// Sets the style for ``Showcase`` within this view to a Showcase style with a
+    /// Sets the style for ``ShowcaseDocument`` within this view to a Showcase style with a
     /// custom appearance and custom interaction behavior.
     ///
-    /// Use this modifier to set a specific style for ``Showcase`` instances
+    /// Use this modifier to set a specific style for ``ShowcaseDocument`` instances
     /// within a view:
     ///
-    ///     Showcase()
+    ///     ShowcaseDocument()
     ///         .showcasePreviewBoxStyle(MyCustomStyle())
     ///
     public func showcasePreviewBoxStyle<S: ShowcasePreviewBoxStyle>(_ style: S) -> some View {

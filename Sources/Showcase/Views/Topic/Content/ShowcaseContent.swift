@@ -40,7 +40,7 @@ struct ShowcaseContent: View, Equatable {
 public struct ShowcaseContentStyleConfiguration {
     public let title: Text?
     public let description: Text?
-    public let preview: ShowcasePreview?
+    public let preview: ShowcasePreviewBox?
     public let links: Links?
     public let embeds: Embeds?
     public let codeBoxes: CodeBoxes?

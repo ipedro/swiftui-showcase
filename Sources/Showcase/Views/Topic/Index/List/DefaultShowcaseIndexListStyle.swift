@@ -18,24 +18,17 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //  SOFTWARE.
 
-
 import SwiftUI
 
-public extension ShowcaseIndexListStyle where Self == DefaultIndexListStyle<Circle> {
+public extension ShowcaseIndexListStyle where Self == DefaultShowcaseIndexListStyle<Circle> {
     /// A bullet list style.
     static var bulletList: Self { 
-        .init {
-            Circle()
-        }
+        .init(icon: Circle())
     }
 }
 
-public struct DefaultIndexListStyle<Icon: View>: ShowcaseIndexListStyle {
+public struct DefaultShowcaseIndexListStyle<Icon: View>: ShowcaseIndexListStyle {
     var icon: Icon
-    
-    init(@ViewBuilder icon: () -> Icon) {
-        self.icon = icon()
-    }
     
     public func makeBody(configuration: Configuration) -> some View {
         LazyVStack(alignment: .leading) {

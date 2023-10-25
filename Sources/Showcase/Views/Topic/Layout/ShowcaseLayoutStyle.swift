@@ -24,7 +24,7 @@ import SwiftUI
 /// all Showcases within a view hierarchy.
 ///
 /// To configure the current Showcase layout style for a view hierarchy, use the
-/// ``Showcase/layoutStyle(_:)`` modifier.
+/// ``ShowcaseDocument/layoutStyle(_:)`` modifier.
 public protocol ShowcaseLayoutStyle {
     /// A view that represents the body of a Showcase.
     associatedtype Body: View
@@ -34,7 +34,7 @@ public protocol ShowcaseLayoutStyle {
 
     /// Creates a view that represents the body of a Showcase.
     ///
-    /// The system calls this method for each ``Showcase`` instance in a view
+    /// The system calls this method for each ``ShowcaseDocument`` instance in a view
     /// hierarchy where this style is the current Showcase layout style.
     ///
     /// - Parameter configuration: The properties of a Showcase.

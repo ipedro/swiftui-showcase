@@ -18,25 +18,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-
 import SwiftUI
 
 /// A type that applies standard interaction behavior and a custom appearance to
-/// all Showcases within a view hierarchy.
+/// all links within a view hierarchy.
 ///
 /// To configure the current Showcase style for a view hierarchy, use the
-/// ``Showcase/showcaseLinkStyle(_:)`` modifier.
+/// ``ShowcaseDocument/showcaseLinkStyle(_:)`` modifier.
 
 // MARK: - View Extension
 
 extension View {
-    /// Sets the style for ``Showcase`` within this view to a Showcase style with a
+    /// Sets the style for ``ShowcaseDocument`` within this view to a Showcase style with a
     /// custom appearance and custom interaction behavior.
     ///
-    /// Use this modifier to set a specific style for ``Showcase`` instances
+    /// Use this modifier to set a specific style for ``ShowcaseDocument`` instances
     /// within a view:
     ///
-    ///     Showcase()
+    ///     ShowcaseDocument()
     ///         .showcaseLinkStyle(MyCustomStyle())
     ///
     public func showcaseLinkStyle<S: ButtonStyle>(_ style: S) -> some View {

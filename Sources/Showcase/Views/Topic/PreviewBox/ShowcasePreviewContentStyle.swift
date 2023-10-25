@@ -24,7 +24,7 @@ import SwiftUI
 /// all Showcases within a view hierarchy.
 ///
 /// To configure the current Showcase style for a view hierarchy, use the
-/// ``Showcase/showcasePreviewContentStyle(_:)`` modifier.
+/// ``ShowcaseDocument/showcasePreviewContentStyle(_:)`` modifier.
 public protocol ShowcasePreviewContentStyle {
     /// A view that represents the body of a Showcase.
     associatedtype Body: View
@@ -34,7 +34,7 @@ public protocol ShowcasePreviewContentStyle {
 
     /// Creates a view that represents the body of a Showcase.
     ///
-    /// The system calls this method for each ``Showcase`` instance in a view
+    /// The system calls this method for each ``ShowcaseDocument`` instance in a view
     /// hierarchy where this style is the current Showcase style.
     ///
     /// - Parameter configuration: The properties of a Showcase.
@@ -44,13 +44,13 @@ public protocol ShowcasePreviewContentStyle {
 // MARK: - View Extension
 
 extension View {
-    /// Sets the style for ``Showcase`` within this view to a Showcase style with a
+    /// Sets the style for ``ShowcaseDocument`` within this view to a Showcase style with a
     /// custom appearance and custom interaction behavior.
     ///
-    /// Use this modifier to set a specific style for ``Showcase`` instances
+    /// Use this modifier to set a specific style for ``ShowcaseDocument`` instances
     /// within a view:
     ///
-    ///     Showcase()
+    ///     ShowcaseDocument()
     ///         .showcasePreviewContentStyle(MyCustomStyle())
     ///
     public func showcasePreviewContentStyle<S: ShowcasePreviewContentStyle>(_ style: S) -> some View {
