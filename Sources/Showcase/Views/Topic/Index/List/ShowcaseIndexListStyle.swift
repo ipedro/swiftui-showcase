@@ -26,18 +26,19 @@ import SwiftUI
 /// To configure the current Showcase style for a view hierarchy, use the
 /// ``ShowcaseDocument/showcaseIndexListStyle(_:)`` modifier.
 public protocol ShowcaseIndexListStyle {
-    /// A view that represents the body of a Showcase.
+    /// A view that represents the body of an index list view.
     associatedtype Body: View
 
-    /// The properties of a Showcase.
+    /// The properties of an index list view.
     typealias Configuration = ShowcaseIndexListStyleConfiguration
 
-    /// Creates a view that represents the body of a Showcase.
+    /// Creates a view that represents the body of an index list view.
     ///
     /// The system calls this method for each ``ShowcaseDocument`` instance in a view
-    /// hierarchy where this style is the current Showcase style.
+    /// hierarchy where this style is the current index list style.
     ///
-    /// - Parameter configuration: The properties of a Showcase.
+    /// - Parameter configuration: The properties of an index list view.
+    /// - Returns: A view that represents the body of an index list view.
     @ViewBuilder func makeBody(configuration: Configuration) -> Body
 }
 
@@ -46,13 +47,15 @@ public protocol ShowcaseIndexListStyle {
 extension View {
     /// Sets the style for ``ShowcaseDocument`` within this view to a Showcase style with a
     /// custom appearance and custom interaction behavior.
-    ///
+    /// 
     /// Use this modifier to set a specific style for ``ShowcaseDocument`` instances
     /// within a view:
-    ///
+    /// 
     ///     ShowcaseDocument()
     ///         .showcaseIndexListStyle(MyCustomStyle())
-    ///
+    /// 
+    /// - Parameter style: Any index list style.
+    /// - Returns: A view that has the index list style set in its environment.
     public func showcaseIndexListStyle<S: ShowcaseIndexListStyle>(_ style: S) -> some View {
         environment(\.indexListStyle, .init(style))
     }
@@ -60,12 +63,13 @@ extension View {
 
 // MARK: - Type Erasure
 
-/// A type erased Showcase style.
+/// A type erased index list style.
 struct AnyShowcaseIndexListStyle: ShowcaseIndexListStyle {
-    /// Current Showcase style.
+    /// Current index list style.
     var style: any ShowcaseIndexListStyle
    
-    /// Creates a type erased Showcase style.
+    /// Creates a type erased index list style.
+    /// - Parameter style: Any index list style.
     init<S: ShowcaseIndexListStyle>(_ style: S) {
         self.style = style
     }

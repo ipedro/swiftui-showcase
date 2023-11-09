@@ -26,6 +26,7 @@ struct AnyButtonStyle: ButtonStyle {
     var style: any ButtonStyle
    
     /// Creates a type erased Showcase style.
+    /// - Parameter style: some showcase style.
     public init<S: ButtonStyle>(_ style: S) {
         self.style = style
     }

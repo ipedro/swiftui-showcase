@@ -34,7 +34,7 @@ extension Topic {
         
         /// Initializes an external link with the specified title and URL.
         /// - Parameters:
-        ///   - title: The title of the external link.
+        ///   - name: The title of the external link.
         ///   - url: The URL of the external link.
         public init?(_ name: Topic.LinkName, _ url: URL?) {
             guard let url = url else { return nil }
@@ -44,7 +44,7 @@ extension Topic {
 
         /// Initializes an external link with the specified title and URL.
         /// - Parameters:
-        ///   - title: The title of the external link.
+        ///   - name: The title of the external link.
         ///   - url: The URL of the external link.
         public init?(_ name: Topic.LinkName, _ urlString: String) {
             guard let url = URL(string: urlString) else { return nil }

@@ -19,6 +19,7 @@
 // SOFTWARE.
 
 import SwiftUI
+import Chalk
 
 /// A view that displays a list of showcases organized into chapters.
 public struct ShowcaseDocument: View {
@@ -27,7 +28,7 @@ public struct ShowcaseDocument: View {
 
     /// Initializes a showcase list with the specified data and optional icon.
     /// - Parameters:
-    ///   - data: The data representing showcase chapters.
+    ///   - document: The document representing showcase chapters.
     public init(_ document: Document) {
         self.document = document
     }
@@ -121,4 +122,9 @@ struct ShowcaseList_Previews: PreviewProvider {
                 )))
         
     }
+}
+
+func write(_ content: String) throws {
+    guard let data = content.data(using: .utf8) else { throw NSError() }
+    try FileHandle.standardOutput.write(contentsOf: data)
 }

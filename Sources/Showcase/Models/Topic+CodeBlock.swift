@@ -33,6 +33,7 @@ extension Topic {
         public var title: String?
         
         /// Initializes a code block from raw text.
+        /// - Parameter rawValue: The raw string value of the code block.
         public init?(rawValue: String) {
             self.title = nil
             self.rawValue = rawValue
