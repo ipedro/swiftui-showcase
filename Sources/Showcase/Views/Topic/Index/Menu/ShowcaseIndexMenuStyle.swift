@@ -23,7 +23,7 @@ import SwiftUI
 /// A type that applies standard interaction behavior and a custom appearance to
 /// all Showcases within a view hierarchy.
 ///
-/// To configure the current Showcase style for a view hierarchy, use the
+/// To configure the current index menu style for a view hierarchy, use the
 /// ``ShowcaseDocument/showcaseIndexMenuStyle(_:)`` modifier.
 public protocol ShowcaseIndexMenuStyle {
     /// A view that represents the body of a Showcase.
@@ -35,7 +35,7 @@ public protocol ShowcaseIndexMenuStyle {
     /// Creates a view that represents the body of a Showcase.
     ///
     /// The system calls this method for each ``ShowcaseDocument`` instance in a view
-    /// hierarchy where this style is the current Showcase style.
+    /// hierarchy where this style is the current index menu style.
     ///
     /// - Parameter configuration: The properties of a Showcase.
     @ViewBuilder func makeBody(configuration: Configuration) -> Body
@@ -44,15 +44,17 @@ public protocol ShowcaseIndexMenuStyle {
 // MARK: - View Extension
 
 extension View {
-    /// Sets the style for ``ShowcaseDocument`` within this view to a Showcase style with a
+    /// Sets the style for ``ShowcaseDocument`` within this view to a index menu style with a
     /// custom appearance and custom interaction behavior.
-    ///
+    /// 
     /// Use this modifier to set a specific style for ``ShowcaseDocument`` instances
     /// within a view:
-    ///
+    /// 
     ///     ShowcaseDocument()
     ///         .showcaseIndexMenuStyle(MyCustomStyle())
-    ///
+    /// 
+    /// - Parameter style: Any index menu style
+    /// - Returns: A view that has the index menu style set in its environment.
     public func showcaseIndexMenuStyle<S: ShowcaseIndexMenuStyle>(_ style: S) -> some View {
         environment(\.indexMenuStyle, .init(style))
     }
@@ -60,12 +62,13 @@ extension View {
 
 // MARK: - Type Erasure
 
-/// A type erased Showcase style.
+/// A type erased index menu style.
 struct AnyShowcaseIndexMenuStyle: ShowcaseIndexMenuStyle {
-    /// Current Showcase style.
+    /// Current index menu style.
     var style: any ShowcaseIndexMenuStyle
    
-    /// Creates a type erased Showcase style.
+    /// Creates a type erased index menu style.
+    /// - Parameter style: Any index menu style
     init<S: ShowcaseIndexMenuStyle>(_ style: S) {
         self.style = style
     }
@@ -83,7 +86,7 @@ private struct IndexMenuStyleKey: EnvironmentKey {
 }
 
 extension EnvironmentValues {
-    /// The current Showcase style value.
+    /// The current index menu style value.
     var indexMenuStyle: AnyShowcaseIndexMenuStyle {
         get { self[IndexMenuStyleKey.self] }
         set { self[IndexMenuStyleKey.self] = newValue }

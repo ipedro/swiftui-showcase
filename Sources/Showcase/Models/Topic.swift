@@ -36,7 +36,7 @@ public struct Topic: Identifiable {
     /// External links associated with the topic.
     public var links: [Link]
     
-    /// External content associated with the topic.
+    /// External contents associated with the topic.
     public var embeds: [Embed]
     
     /// Previews configuration for the topic.
@@ -45,6 +45,7 @@ public struct Topic: Identifiable {
     /// Optional title of the preview.
     public var previewTitle: String?
 
+    /// Optional icon for the topic.
     public var icon: AnyView?
 
     /// Title of the topic.
@@ -67,13 +68,12 @@ public struct Topic: Identifiable {
 
     /// Initializes a showcase element with the specified parameters.
     /// - Parameters:
+    ///   - title: The title of the topic.
+    ///   - description: A closure returning the description of the topic (default is an empty string).
+    ///   - links: A closure returning external links associated with the topic (default is an empty array).
+    ///   - embeds: A closure returning external contents associated with the topic (default is an empty string).
+    ///   - code: A closure returning code examples (default is an empty array).
     ///   - children: Optional child showcase topics (default is nil).
-    ///   - code: <#code description#>
-    ///   - codeBlocks: A closure returning code examples (default is an empty array).
-    ///   - description: A closure returning the description of the showcase element (default is an empty string).
-    ///   - embeds: <#embeds description#>
-    ///   - links: A closure returning external links associated with the showcase element (default is an empty array).
-    ///   - title: The title of the showcase element.
     public init(
         _ title: String,
         description: () -> String = { "" },
@@ -95,15 +95,14 @@ public struct Topic: Identifiable {
 
     /// Initializes a showcase element with the specified parameters.
     /// - Parameters:
+    ///   - title: The title of the topic.
+    ///   - description: A closure returning the description of the topic (default is an empty string).
+    ///   - links: A closure returning external links associated with the topic (default is an empty array).
+    ///   - embeds: A closure returning external contents associated with the topic (default is an empty string).
+    ///   - code: A closure returning code examples (default is an empty array).
     ///   - children: Optional child showcase topics (default is nil).
-    ///   - code: <#code description#>
-    ///   - codeBlocks: A closure returning code examples (default is an empty array).
-    ///   - description: A closure returning the description of the showcase element (default is an empty string).
-    ///   - embeds: <#embeds description#>
-    ///   - links: A closure returning external links associated with the showcase element (default is an empty array).
     ///   - previewTitle: Optional previews title
     ///   - previews: Optional previews.
-    ///   - title: The title of the showcase element.
     public init<P: View>(
         _ title: String,
         description: () -> String = { "" },
@@ -127,16 +126,15 @@ public struct Topic: Identifiable {
 
     /// Initializes a showcase element with the specified parameters.
     /// - Parameters:
+    ///   - title: The title of the topic.
+    ///   - description: A closure returning the description of the topic (default is an empty string).
+    ///   - icon: A closure returning an optional icon of the preview when shown in a list.
+    ///   - links: A closure returning external links associated with the topic (default is an empty array).
+    ///   - embeds: A closure returning external contents associated with the topic (default is an empty string).
+    ///   - code: A closure returning code examples (default is an empty array).
     ///   - children: Optional child showcase topics (default is nil).
-    ///   - code: <#code description#>
-    ///   - codeBlocks: A closure returning code examples (default is an empty array).
-    ///   - description: A closure returning the description of the showcase element (default is an empty string).
-    ///   - embeds: <#embeds description#>
-    ///   - icon: <#icon description#>
-    ///   - links: A closure returning external links associated with the showcase element (default is an empty array).
-    ///   - previewTitle: <#previewTitle description#>
+    ///   - previewTitle: Optional previews title
     ///   - previews: Optional previews.
-    ///   - title: The title of the showcase element.
     public init<I: View, P: View>(
         _ title: String,
         description: () -> String = { "" },

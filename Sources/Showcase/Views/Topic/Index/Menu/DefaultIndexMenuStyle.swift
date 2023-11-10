@@ -22,6 +22,7 @@ import SwiftUI
 
 public extension ShowcaseIndexMenuStyle where Self == DefaultIndexMenuStyle<ShowcaseIndexMenuIcon> {
     /// A context menu style with an icon as a label.
+    /// - Parameter iconName: The name of the system symbol image. Use the SF Symbols app to look up the names of system symbol images.
     static func menu(_ iconName: String = "list.bullet") -> Self {
         .init {
             ShowcaseIndexMenuIcon(systemName: iconName)
@@ -32,6 +33,8 @@ public extension ShowcaseIndexMenuStyle where Self == DefaultIndexMenuStyle<Show
 public struct DefaultIndexMenuStyle<Label: View>: ShowcaseIndexMenuStyle {
     var label: Label
     
+    /// Creates a default index menu style.
+    /// - Parameter label: A closure that returns a view
     init(@ViewBuilder label: () -> Label) {
         self.label = label()
     }

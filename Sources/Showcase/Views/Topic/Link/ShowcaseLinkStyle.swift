@@ -37,7 +37,9 @@ extension View {
     ///
     ///     ShowcaseDocument()
     ///         .showcaseLinkStyle(MyCustomStyle())
-    ///
+    /// 
+    /// - Parameter style: <#style description#>
+    /// - Returns: <#description#>
     public func showcaseLinkStyle<S: ButtonStyle>(_ style: S) -> some View {
         environment(\.linkStyle, .init(style))
     }

@@ -28,6 +28,7 @@ public struct Chapter: Identifiable {
     /// The title of the chapter.
     public var title: String
 
+    /// Optional icon for the chapter.
     public var icon: Image?
 
     /// The optional description of the chapter.
@@ -39,8 +40,9 @@ public struct Chapter: Identifiable {
     /// Initializes a showcase chapter with the specified title and showcase topics.
     /// - Parameters:
     ///   - title: The title of the chapter.
-    ///   - topics: The showcase topics within the chapter.
     ///   - description: The optional description of the chapter.
+    ///   - icon: Optional icon for the chapter.
+    ///   - topics: The showcase topics within the chapter.
     public init(_ title: String, description: String? = nil, icon: Image? = nil, _ topics: [Topic] = []) {
         self.title = title
         self.description = description
@@ -51,8 +53,9 @@ public struct Chapter: Identifiable {
     /// Initializes a showcase chapter with the specified title and showcase topics.
     /// - Parameters:
     ///   - title: The title of the chapter.
-    ///   - topics: The showcase topics within the chapter.
     ///   - description: The optional description of the chapter.
+    ///   - icon: Optional icon for the chapter.
+    ///   - topics: The showcase topics within the chapter.
     public init(_ title: String, description: String? = nil, icon: Image? = nil, _ topics: Topic...) {
         self.title = title
         self.description = description

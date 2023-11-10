@@ -40,9 +40,9 @@ public struct Document: Identifiable {
     /// Initializes a showcase document with the specified title, chapters and an optional description.
     /// - Parameters:
     ///   - title: The title of the document.
-    ///   - chapters: The chapters within the document.
     ///   - description: The optional description of the document.
     ///   - icon: An optional default icon for topics.
+    ///   - chapters: The chapters within the document.
     public init(_ title: String, description: String? = nil, icon: Image? = nil, _ chapters: [Chapter] = []) {
         self.title = title
         self.description = description
@@ -53,9 +53,9 @@ public struct Document: Identifiable {
     /// Initializes a showcase document with the specified title, chapters and an optional description.
     /// - Parameters:
     ///   - title: The title of the document.
-    ///   - chapters: The chapters within the document.
     ///   - description: The optional description of the document.
     ///   - icon: An optional default icon for topics.
+    ///   - chapters: The chapters within the document.
     public init(_ title: String, description: String? = nil, icon: Image? = nil, _ chapters: Chapter...) {
         self.title = title
         self.description = description

@@ -22,6 +22,7 @@ import Foundation
 import WebKit
 
 extension Topic {
+    /// External content associated with a topic.
     public struct Embed: Identifiable {
         public typealias NavigationHandler = (_ action: WKNavigationAction) -> WKNavigationActionPolicy
         public var id: String { url.absoluteString }
