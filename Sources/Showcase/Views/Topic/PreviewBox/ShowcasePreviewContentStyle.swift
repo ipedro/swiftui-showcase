@@ -62,7 +62,7 @@ extension View {
 
 /// A private key needed to save style data in the environment
 private struct ShowcasePreviewContentStyleKey: EnvironmentKey {
-    static var defaultValue: any ShowcasePreviewContentStyle = .default
+    static var defaultValue: any ShowcasePreviewContentStyle = .inline
 }
 
 extension EnvironmentValues {

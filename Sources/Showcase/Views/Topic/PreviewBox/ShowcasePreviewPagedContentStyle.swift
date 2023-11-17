@@ -57,17 +57,3 @@ public struct ShowcasePreviewPagedContentStyle: ShowcasePreviewContentStyle {
     }
 }
 #endif
-
-public extension ShowcasePreviewContentStyle where Self == ShowcasePreviewDefaultContentStyle {
-    /// A paged style for content preview.
-    /// - Parameters:
-    ///   - currentIndicator: The tint color to apply to the current page indicator.
-    ///   - indicator: The tint color to apply to the page indicator.
-    static var `default`: ShowcasePreviewDefaultContentStyle { .init() }
-}
-
-public struct ShowcasePreviewDefaultContentStyle: ShowcasePreviewContentStyle {
-    public func makeBody(configuration: Configuration) -> some View {
-        configuration.content.frame(maxWidth: .infinity)
-    }
-}

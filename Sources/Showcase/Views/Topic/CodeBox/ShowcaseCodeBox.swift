@@ -42,10 +42,11 @@ struct ShowcaseCodeBox: View {
                 Content(text: content)
             }
         } label: {
-            Text(data.title)
-        }
-        .overlay(alignment: .topTrailing) {
-            CopyToPasteboard(text: content).padding()
+            HStack {
+                Text(data.title)
+                Spacer()
+                CopyToPasteboard(text: content)
+            }
         }
         .groupBoxStyle(AnyGroupBoxStyle(style))
     }
