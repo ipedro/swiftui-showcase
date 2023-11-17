@@ -51,20 +51,13 @@ public struct ShowcaseIndexListStyleConfiguration {
         let icon: AnyView
         let padding: CGFloat
 
-        init(data: Topic, icon: AnyView, padding: CGFloat) {
-            self.data = data
-            self.icon = icon
-            self.padding = padding
-        }
-
         private var topics: [Topic] {
             data.children ?? []
         }
 
         public var body: some View {
             if depth > 0 {
-                Item(data: data, icon: icon)
-                    .padding(.leading, depthPadding)
+                Item(data: data, icon: icon).padding(.leading, depthPadding)
             }
 
             ForEach(topics) { topic in

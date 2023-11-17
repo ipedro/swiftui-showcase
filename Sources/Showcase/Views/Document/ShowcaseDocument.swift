@@ -19,7 +19,6 @@
 // SOFTWARE.
 
 import SwiftUI
-import Chalk
 
 /// A view that displays a list of showcases organized into chapters.
 public struct ShowcaseDocument: View {
