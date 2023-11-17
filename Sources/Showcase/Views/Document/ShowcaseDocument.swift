@@ -25,19 +25,31 @@ public struct ShowcaseDocument: View {
     /// The data representing showcase chapters.
     let document: Document
 
+    @State
+    private var searchQuery = String()
+
     /// Initializes a showcase list with the specified data and optional icon.
     /// - Parameters:
     ///   - document: The document representing showcase chapters.
     public init(_ document: Document) {
         self.document = document
     }
-    
+
+    private var chapters: [Chapter] {
+        let searchQuery = searchQuery.localizedLowercase.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        if searchQuery.isEmpty { return document.chapters }
+
+        return document.chapters.search(searchQuery)
+    }
+
     public var body: some View {
         NavigationView {
             List {
                 description()
-                ForEach(document.chapters, content: section)
+                ForEach(chapters, content: section)
             }
+            .searchable(text: $searchQuery)
             .navigationTitle(document.title)
         }
         .previewDisplayName(document.title)
@@ -121,9 +133,4 @@ struct ShowcaseList_Previews: PreviewProvider {
                 )))
         
     }
-}
-
-func write(_ content: String) throws {
-    guard let data = content.data(using: .utf8) else { throw NSError() }
-    try FileHandle.standardOutput.write(contentsOf: data)
 }

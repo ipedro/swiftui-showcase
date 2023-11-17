@@ -54,7 +54,7 @@ extension Topic {
     }
     """
         },
-        children: [.mockCard],
+//        children: [.mockCard],
         previews: {
             MockPreviews()
         }

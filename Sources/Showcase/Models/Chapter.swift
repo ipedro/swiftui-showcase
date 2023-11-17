@@ -73,3 +73,27 @@ extension Chapter: Comparable {
         lhs.id == rhs.id
     }
 }
+
+extension [Chapter] {
+    func search(_ query: String) -> Self {
+        compactMap { chapter in
+            if chapter.title.localizedLowercase.contains(query) {
+                return chapter
+            }
+
+            if chapter.description?.localizedLowercase.contains(query) == true {
+                return chapter
+            }
+
+            let topics = chapter.topics.search(query)
+
+            if !topics.isEmpty {
+                var chapter = chapter
+                chapter.topics = topics
+                return chapter
+            }
+
+            return nil
+        }
+    }
+}

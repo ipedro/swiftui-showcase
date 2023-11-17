@@ -167,3 +167,33 @@ extension Topic: Comparable {
         lhs.id == rhs.id
     }
 }
+
+extension [Topic] {
+    func search(_ query: String) -> Self {
+        compactMap { topic in
+            if topic.title.localizedLowercase.contains(query) {
+                return topic
+            }
+
+            if topic.description.localizedLowercase.contains(query) {
+                return topic
+            }
+
+            let codeBlocks = topic.codeBlocks
+                .map(\.rawValue.localizedLowercase)
+                .joined(separator: "\n")
+
+            if codeBlocks.contains(query) {
+                return topic
+            }
+
+            if let children = topic.children?.search(query), !children.isEmpty {
+                var topic = topic
+                topic.children = children
+                return topic
+            }
+
+            return nil
+        }
+    }
+}
