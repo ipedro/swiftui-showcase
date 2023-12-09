@@ -30,24 +30,25 @@ public struct ShowcaseTopic: View {
     }
     
     public var body: some View {
-        ShowcaseLayout(configuration: configuration)
-            .id(data.id)
+        ShowcaseLayout(configuration).id(data.id)
     }
-    
-    var configuration: ShowcaseLayout.Configuration {
+
+    private var contentConfiguration: ShowcaseContent.Configuration {
         .init(
-            children: .init(data: data.children),
-            content: .init(
-                id: data.id,
-                configuration: .init(
-                    title: depth > 0 ? Text(data.title) : nil,
-                    description: Text(data.description),
-                    preview: .init(data),
-                    links: .init(data: data.links),
-                    embeds: .init(data: data.embeds),
-                    codeBoxes: .init(data: data.codeBlocks)
-                )),
-            indexList: depth == 0 && !data.allChildren.isEmpty ? .init(data) : nil
+            id: data.id,
+            title: depth > 0 ? Text(data.title) : nil,
+            description: Text(data.description),
+            preview: ShowcasePreviewBox(data),
+            links: ShowcaseContent.Configuration.Links(data: data.links),
+            embeds: ShowcaseContent.Configuration.Embeds(data: data.embeds),
+            codeBoxes: ShowcaseContent.Configuration.CodeBoxes(data: data.codeBlocks))
+    }
+
+    private var configuration: ShowcaseLayoutStyleConfiguration {
+        .init(
+            children: ShowcaseChildren(data: data.children),
+            indexList: depth == 0 && !data.allChildren.isEmpty ? ShowcaseIndexList(data) : nil,
+            content: ShowcaseLayoutStyleConfiguration.Content(configuration: contentConfiguration)
         )
     }
 }

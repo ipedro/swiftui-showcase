@@ -21,17 +21,20 @@
 import SwiftUI
 
 public struct ShowcaseIndexMenu: View {
-    typealias Configuration = ShowcaseIndexMenuStyleConfiguration
-    
     @Environment(\.indexMenuStyle) private var style
-    
-    var configuration: Configuration
-    
+
+    typealias Configuration = ShowcaseIndexMenuStyleConfiguration
+    private let configuration: Configuration
+
     init?(_ data: Topic) {
         if data.allChildren.isEmpty { return nil }
         configuration = .init(label: .init(data: data))
     }
-    
+
+    public init(_ configuration: ShowcaseIndexMenuStyleConfiguration) {
+        self.configuration = configuration
+    }
+
     public var body: some View {
         style.makeBody(configuration: configuration)
     }

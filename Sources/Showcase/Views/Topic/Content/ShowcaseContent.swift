@@ -20,24 +20,29 @@
 
 import SwiftUI
 
-struct ShowcaseContent: View, Equatable {
-    typealias Configuration = ShowcaseContentStyleConfiguration
+public struct ShowcaseContent: View, Equatable {
     @Environment(\.contentStyle) private var style
-    let id: AnyHashable
-    var configuration: Configuration
     
-    var body: some View {
+    typealias Configuration = ShowcaseContentStyleConfiguration
+    let configuration: Configuration
+
+    public init(_ configuration: ShowcaseContentStyleConfiguration) {
+        self.configuration = configuration
+    }
+
+    public var body: some View {
         style.makeBody(configuration: configuration)
     }
     
-    static func == (lhs: ShowcaseContent, rhs: ShowcaseContent) -> Bool {
-        lhs.id == rhs.id
+    public static func == (lhs: ShowcaseContent, rhs: ShowcaseContent) -> Bool {
+        lhs.configuration.id == rhs.configuration.id
     }
 }
 
 // MARK: - Configuration
 
 public struct ShowcaseContentStyleConfiguration {
+    public let id: AnyHashable
     public let title: Text?
     public let description: Text?
     public let preview: ShowcasePreviewBox?

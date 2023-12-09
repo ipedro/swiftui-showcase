@@ -28,22 +28,24 @@ public struct ShowcasePreviewBox: View {
     @Environment(\.previewBoxStyle) private var boxStyle
 
     /// The data representing the preview.
-    let configuration: ShowcasePreviewContentStyleConfiguration
-    let title: String?
+    private let configuration: ShowcasePreviewContentStyleConfiguration
 
     /// Initializes a Preview view with the specified previews data.
     /// - Parameter data: The data representing the previews (optional).
     init?(_ data: Topic) {
         guard let preview = data.previews else { return nil }
-        self.configuration = .init(content: .init(preview))
-        self.title = data.previewTitle
+        self.configuration = .init(title: data.previewTitle, content: .init(preview))
+    }
+
+    public init(_ configuration: ShowcasePreviewContentStyleConfiguration) {
+        self.configuration = configuration
     }
 
     public var body: some View {
         GroupBox {
             AnyView(content)
         } label: {
-            if let title {
+            if let title = configuration.title {
                 Text(title)
             }
         }
@@ -58,30 +60,9 @@ public struct ShowcasePreviewBox: View {
 // MARK: - Configuration
 
 public struct ShowcasePreviewContentStyleConfiguration {
+    let title: String?
+
     public typealias Content = AnyView
     /// The type-erased preview content.
     public let content: Content
-
-//    public struct Content: View {
-//        var data: Topic.Preview
-//
-//        public var body: some View {
-//            switch data.frame {
-//            case let .fixed(width, height):
-//                data.content.frame(
-//                    width: width,
-//                    height: height,
-//                    alignment: data.alignment)
-//            case let .flexible(minWidth, idealWidth, maxWidth, minHeight, idealHeight, maxHeight):
-//                data.content.frame(
-//                    minWidth: minWidth,
-//                    idealWidth: idealWidth,
-//                    maxWidth: maxWidth,
-//                    minHeight: minHeight,
-//                    idealHeight: idealHeight,
-//                    maxHeight: maxHeight,
-//                    alignment: data.alignment)
-//            }
-//        }
-//    }
 }

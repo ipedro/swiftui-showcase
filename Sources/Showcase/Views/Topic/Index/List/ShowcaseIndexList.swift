@@ -21,10 +21,11 @@
 import SwiftUI
 
 public struct ShowcaseIndexList: View {
-    typealias Configuration = ShowcaseIndexListStyleConfiguration
-    var configuration: Configuration
     @Environment(\.indexListStyle) private var style
-    
+
+    typealias Configuration = ShowcaseIndexListStyleConfiguration
+    private let configuration: Configuration
+
     init?(_ data: Topic) {
         configuration = .init { padding, icon in
             .init(
@@ -33,7 +34,11 @@ public struct ShowcaseIndexList: View {
                 padding: padding)
         }
     }
-    
+
+    public init(configuration: ShowcaseIndexListStyleConfiguration) {
+        self.configuration = configuration
+    }
+
     public var body: some View {
         style.makeBody(configuration: configuration)
     }

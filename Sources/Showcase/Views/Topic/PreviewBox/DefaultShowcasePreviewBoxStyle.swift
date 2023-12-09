@@ -58,7 +58,6 @@ public struct DefaultShowcasePreviewBoxStyle<S: ShapeStyle>: ShowcasePreviewBoxS
     }
 
     private func backgroundView() -> some View {
-        RoundedRectangle(cornerRadius: 8, style: .continuous)
-            .foregroundStyle(background)
+        RoundedRectangle(cornerRadius: 8, style: .continuous).foregroundStyle(background)
     }
 }
