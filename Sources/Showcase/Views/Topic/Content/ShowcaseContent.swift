@@ -21,8 +21,9 @@
 import SwiftUI
 
 public struct ShowcaseContent: View, Equatable {
-    @Environment(\.contentStyle) private var style
-    
+    @Environment(\.contentStyle) 
+    private var style
+
     typealias Configuration = ShowcaseContentStyleConfiguration
     let configuration: Configuration
 
@@ -31,7 +32,7 @@ public struct ShowcaseContent: View, Equatable {
     }
 
     public var body: some View {
-        AnyShowcaseContentStyle(style).makeBody(configuration: configuration)
+        AnyView(style.resolve(configuration: configuration))
     }
     
     public static func == (lhs: ShowcaseContent, rhs: ShowcaseContent) -> Bool {

@@ -25,7 +25,7 @@ import SwiftUI
 ///
 /// To configure the current index menu style for a view hierarchy, use the
 /// ``ShowcaseDocument/showcaseIndexMenuStyle(_:)`` modifier.
-public protocol ShowcaseIndexMenuStyle {
+public protocol ShowcaseIndexMenuStyle: DynamicProperty {
     /// A view that represents the body of a Showcase.
     associatedtype Body: View
 
@@ -60,24 +60,6 @@ extension View {
     }
 }
 
-// MARK: - Type Erasure
-
-/// A type erased index menu style.
-struct AnyShowcaseIndexMenuStyle: ShowcaseIndexMenuStyle {
-    /// Current index menu style.
-    var style: any ShowcaseIndexMenuStyle
-   
-    /// Creates a type erased index menu style.
-    /// - Parameter style: Any index menu style
-    init<S: ShowcaseIndexMenuStyle>(_ style: S) {
-        self.style = style
-    }
-    
-    func makeBody(configuration: Configuration) -> some View {
-        AnyView(style.makeBody(configuration: configuration))
-    }
-}
-
 // MARK: - Environment Keys
 
 /// A private key needed to save style data in the environment
@@ -90,5 +72,22 @@ extension EnvironmentValues {
     var indexMenuStyle: any ShowcaseIndexMenuStyle {
         get { self[IndexMenuStyleKey.self] }
         set { self[IndexMenuStyleKey.self] = newValue }
+    }
+}
+
+// MARK: - Dynamic Property
+
+private struct ResolvedShowcaseIndexMenuStyle<Style: ShowcaseIndexMenuStyle>: View {
+    let configuration: ShowcaseIndexMenuStyleConfiguration
+    let style: Style
+
+    var body: some View {
+        style.makeBody(configuration: configuration)
+    }
+}
+
+extension ShowcaseIndexMenuStyle {
+    func resolve(configuration: Configuration) -> some View {
+        ResolvedShowcaseIndexMenuStyle(configuration: configuration, style: self)
     }
 }

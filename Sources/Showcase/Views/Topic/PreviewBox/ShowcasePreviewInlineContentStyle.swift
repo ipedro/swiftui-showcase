@@ -20,12 +20,12 @@
 
 import SwiftUI
 
-public extension ShowcasePreviewContentStyle where Self == InlineShowcasePreviewContentStyle {
+public extension ShowcasePreviewContentStyle where Self == ShowcasePreviewInlineContentStyle {
     /// A inline style for content preview.
-    static var inline: InlineShowcasePreviewContentStyle { .init() }
+    static var inline: ShowcasePreviewInlineContentStyle { .init() }
 }
 
-public struct InlineShowcasePreviewContentStyle: ShowcasePreviewContentStyle {
+public struct ShowcasePreviewInlineContentStyle: ShowcasePreviewContentStyle {
     public func makeBody(configuration: Configuration) -> some View {
         configuration.content.frame(maxWidth: .infinity)
     }

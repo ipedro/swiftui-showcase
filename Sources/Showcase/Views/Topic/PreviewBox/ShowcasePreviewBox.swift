@@ -45,15 +45,20 @@ public struct ShowcasePreviewBox: View {
         GroupBox {
             AnyView(content)
         } label: {
-            if let title = configuration.title {
-                Text(title)
-            }
+
         }
         .groupBoxStyle(AnyGroupBoxStyle(boxStyle))
     }
 
     private var content: any View {
-        contentStyle.makeBody(configuration: configuration)
+        contentStyle.resolve(configuration: configuration)
+    }
+
+    @ViewBuilder
+    private var label: some View {
+        if let title = configuration.title {
+            Text(title)
+        }
     }
 }
 

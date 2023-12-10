@@ -21,7 +21,8 @@
 import SwiftUI
 
 public struct ShowcaseIndexMenu: View {
-    @Environment(\.indexMenuStyle) private var style
+    @Environment(\.indexMenuStyle) 
+    private var style
 
     typealias Configuration = ShowcaseIndexMenuStyleConfiguration
     private let configuration: Configuration
@@ -36,7 +37,7 @@ public struct ShowcaseIndexMenu: View {
     }
 
     public var body: some View {
-        AnyShowcaseIndexMenuStyle(style).makeBody(configuration: configuration)
+        AnyView(style.resolve(configuration: configuration))
     }
 }
 

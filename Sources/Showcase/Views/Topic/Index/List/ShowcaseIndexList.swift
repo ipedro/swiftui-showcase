@@ -40,7 +40,7 @@ public struct ShowcaseIndexList: View {
     }
 
     public var body: some View {
-        AnyShowcaseIndexListStyle(style).makeBody(configuration: configuration)
+        AnyView(style.resolve(configuration: configuration))
     }
 }
 

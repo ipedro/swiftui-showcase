@@ -25,7 +25,7 @@ import SwiftUI
 ///
 /// To configure the current Showcase style for a view hierarchy, use the
 /// ``ShowcaseDocument/showcaseIndexListStyle(_:)`` modifier.
-public protocol ShowcaseIndexListStyle {
+public protocol ShowcaseIndexListStyle: DynamicProperty {
     /// A view that represents the body of an index list view.
     associatedtype Body: View
 
@@ -61,24 +61,6 @@ extension View {
     }
 }
 
-// MARK: - Type Erasure
-
-/// A type erased index list style.
-struct AnyShowcaseIndexListStyle: ShowcaseIndexListStyle {
-    /// Current index list style.
-    var style: any ShowcaseIndexListStyle
-   
-    /// Creates a type erased index list style.
-    /// - Parameter style: Any index list style.
-    init<S: ShowcaseIndexListStyle>(_ style: S) {
-        self.style = style
-    }
-    
-    func makeBody(configuration: Configuration) -> some View {
-        AnyView(style.makeBody(configuration: configuration))
-    }
-}
-
 // MARK: - Environment Keys
 
 /// A private key needed to save style data in the environment
@@ -91,5 +73,22 @@ extension EnvironmentValues {
     var indexListStyle: any ShowcaseIndexListStyle {
         get { self[IndexListStyleKey.self] }
         set { self[IndexListStyleKey.self] = newValue }
+    }
+}
+
+// MARK: - Dynamic Property
+
+private struct ResolvedShowcaseIndexListStyle<Style: ShowcaseIndexListStyle>: View {
+    let configuration: ShowcaseIndexListStyleConfiguration
+    let style: Style
+
+    var body: some View {
+        style.makeBody(configuration: configuration)
+    }
+}
+
+extension ShowcaseIndexListStyle {
+    func resolve(configuration: Configuration) -> some View {
+        ResolvedShowcaseIndexListStyle(configuration: configuration, style: self)
     }
 }

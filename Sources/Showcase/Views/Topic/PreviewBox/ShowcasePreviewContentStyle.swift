@@ -25,7 +25,7 @@ import SwiftUI
 ///
 /// To configure the current Showcase style for a view hierarchy, use the
 /// ``ShowcaseDocument/showcasePreviewContentStyle(_:)`` modifier.
-public protocol ShowcasePreviewContentStyle {
+public protocol ShowcasePreviewContentStyle: DynamicProperty {
     /// A view that represents the body of a Showcase.
     associatedtype Body: View
 
@@ -70,5 +70,22 @@ extension EnvironmentValues {
     var previewContentStyle: any ShowcasePreviewContentStyle {
         get { self[ShowcasePreviewContentStyleKey.self] }
         set { self[ShowcasePreviewContentStyleKey.self] = newValue }
+    }
+}
+
+// MARK: - Dynamic Property
+
+private struct ResolvedShowcasePreviewContentStyle<Style: ShowcasePreviewContentStyle>: View {
+    let configuration: ShowcasePreviewContentStyleConfiguration
+    let style: Style
+
+    var body: some View {
+        style.makeBody(configuration: configuration)
+    }
+}
+
+extension ShowcasePreviewContentStyle {
+    func resolve(configuration: Configuration) -> some View {
+        ResolvedShowcasePreviewContentStyle(configuration: configuration, style: self)
     }
 }

@@ -25,7 +25,7 @@ import SwiftUI
 ///
 /// To configure the current Showcase layout style for a view hierarchy, use the
 /// ``ShowcaseDocument/layoutStyle(_:)`` modifier.
-public protocol ShowcaseLayoutStyle {
+public protocol ShowcaseLayoutStyle: DynamicProperty {
     /// A view that represents the body of a showcase layout.
     associatedtype Body: View
 
@@ -61,24 +61,6 @@ extension View {
     }
 }
 
-// MARK: - Type Erasure
-
-/// A type erased Showcase layout style.
-struct AnyShowcaseLayoutStyle: ShowcaseLayoutStyle {
-    /// Current Showcase layout style.
-    var style: any ShowcaseLayoutStyle
-   
-    /// Creates a type erased Showcase layout style.
-    /// - Parameter style: Any showcase layout style.
-    init<S: ShowcaseLayoutStyle>(_ style: S) {
-        self.style = style
-    }
-    
-    func makeBody(configuration: Configuration) -> some View {
-        AnyView(style.makeBody(configuration: configuration))
-    }
-}
-
 // MARK: - Environment Keys
 
 /// A private key needed to save style data in the environment
@@ -91,5 +73,22 @@ extension EnvironmentValues {
     var layoutStyle: any ShowcaseLayoutStyle {
         get { self[ShowcaseStyleKey.self] }
         set { self[ShowcaseStyleKey.self] = newValue }
+    }
+}
+
+// MARK: - Dynamic Property
+
+private struct ResolvedShowcaseLayoutStyle<Style: ShowcaseLayoutStyle>: View {
+    let configuration: ShowcaseLayoutStyleConfiguration
+    let style: Style
+
+    var body: some View {
+        style.makeBody(configuration: configuration)
+    }
+}
+
+extension ShowcaseLayoutStyle {
+    func resolve(configuration: Configuration) -> some View {
+        ResolvedShowcaseLayoutStyle(configuration: configuration, style: self)
     }
 }
