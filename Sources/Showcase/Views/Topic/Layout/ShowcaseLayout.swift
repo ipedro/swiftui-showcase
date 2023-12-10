@@ -21,7 +21,8 @@
 import SwiftUI
 
 public struct ShowcaseLayout: View {
-    @Environment(\.layoutStyle) private var style
+    @Environment(\.layoutStyle) 
+    private var style
 
     let configuration: ShowcaseLayoutStyleConfiguration
 

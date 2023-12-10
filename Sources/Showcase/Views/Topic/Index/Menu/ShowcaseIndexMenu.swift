@@ -47,7 +47,8 @@ public struct ShowcaseIndexMenuStyleConfiguration {
     public let label: Label?
     
     public struct Label: View {
-        @Environment(\.scrollView) private var scrollView
+        @Environment(\.scrollView) 
+        private var scrollView
         let data: Topic
 
         #if canImport(UIKit)

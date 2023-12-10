@@ -27,52 +27,42 @@ extension ShowcaseContentStyle where Self == VerticalShowcaseContentStyle {
 
 /// A vertical content style.
 public struct VerticalShowcaseContentStyle: ShowcaseContentStyle {
+    @Environment(\.nodeDepth)
+    private var depth
+
+    private var titleStyle: SwiftUI.Font.TextStyle {
+        switch depth {
+        case 0: return .largeTitle
+        case 1: return .title
+        case 2: return .title2
+        case 3: return .title3
+        default: return .headline
+        }
+    }
+
+    private var bodyStyle: SwiftUI.Font.TextStyle {
+        switch depth {
+        case 2: return .callout
+        case 3: return .footnote
+        default: return .body
+        }
+    }
+
     public func makeBody(configuration: Configuration) -> some View {
-        ContentView(configuration: configuration)
-    }
-    
-    private struct ContentView: View {
-        @Environment(\.nodeDepth) private var depth
-        var configuration: Configuration
-        
-        var body: some View {
-            LazyVStack(alignment: .leading, spacing: 30) {
-                configuration.title.font(.system(titleStyle))
-                
-                if let links = configuration.links {
-                    LazyHStack {
-                        links
-                    }
+        LazyVStack(alignment: .leading, spacing: 30) {
+            configuration.title.font(.system(titleStyle))
+
+            if let links = configuration.links {
+                LazyHStack {
+                    links
                 }
-                
-                configuration.preview
-                    .padding(.bottom)
-                
-                configuration.description
-                    .padding(.bottom)
-                
-                configuration.embeds
-                
-                configuration.codeBoxes
             }
-        }
-        
-        var titleStyle: SwiftUI.Font.TextStyle {
-            switch depth {
-            case 0: return .largeTitle
-            case 1: return .title
-            case 2: return .title2
-            case 3: return .title3
-            default: return .headline
-            }
-        }
-        
-        var bodyStyle: SwiftUI.Font.TextStyle {
-            switch depth {
-            case 2: return .callout
-            case 3: return .footnote
-            default: return .body
-            }
+
+            configuration.preview.padding(.bottom)
+            configuration.description.padding(.bottom)
+            configuration.embeds
+            configuration.codeBoxes
         }
     }
+
 }

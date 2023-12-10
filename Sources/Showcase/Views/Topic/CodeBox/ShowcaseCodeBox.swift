@@ -24,8 +24,9 @@ import SwiftUI
 /// A view that displays code blocks with syntax highlighting and a copy to pasteboard button.
 struct ShowcaseCodeBox: View {
     /// The style for displaying code blocks.
-    @Environment(\.codeBoxStyle) private var style
-    
+    @Environment(\.codeBoxStyle) 
+    private var style
+
     let data: Topic.CodeBlock
     
     /// Initializes a ShowcaseCodeBox view with the specified code block data.
@@ -65,7 +66,9 @@ struct ShowcaseCodeBox: View {
                 UIPasteboard.general.string = text
                 impact.impactOccurred()
             } label: {
-                Image(systemName: "doc.on.doc")
+                let image = Image(systemName: "doc.on.doc")
+                if #available(iOS 16, *) { image.fontWeight(.regular) }
+                else { image }
             }
             .onAppear(perform: impact.prepare)
         }
@@ -78,7 +81,8 @@ struct ShowcaseCodeBox: View {
         /// The text content of the code block.
         let text: String
         /// The color scheme environment variable.
-        @Environment(\.colorScheme) private var colorScheme
+        @Environment(\.colorScheme)
+        private var colorScheme
 
         var body: some View {
             Text(decorated(text, colorScheme))

@@ -21,7 +21,8 @@
 import SwiftUI
 
 public struct ShowcaseIndexList: View {
-    @Environment(\.indexListStyle) private var style
+    @Environment(\.indexListStyle) 
+    private var style
 
     typealias Configuration = ShowcaseIndexListStyleConfiguration
     private let configuration: Configuration

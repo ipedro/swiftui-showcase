@@ -145,13 +145,14 @@ struct ShowcaseList_Previews: PreviewProvider {
     ]
     
     static var previews: some View {
-        ShowcaseDocument(
-            .init(
-                "Test",
-                Chapter(
-                    "Chapter",
-                    elements
-                )))
-        
+        NavigationView {
+            ShowcaseDocument(
+                .init(
+                    "Test",
+                    Chapter(
+                        "Chapter",
+                        elements
+                    )))
+        }
     }
 }

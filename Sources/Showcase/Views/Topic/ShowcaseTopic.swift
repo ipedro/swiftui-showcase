@@ -60,7 +60,16 @@ struct Showcase_Previews: PreviewProvider {
         NavigationView {
             ScrollViewReader {
                 ScrollView {
-                    ShowcaseTopic(.mockAccordion)
+                    ShowcaseTopic(
+                        .init(
+                            "Title",
+                            children: [
+                                .mockAccordion,
+                                .mockButton,
+                                .mockCard
+                            ]
+                        )
+                    )
                 }
                 .scrollViewProxy($0)
             }

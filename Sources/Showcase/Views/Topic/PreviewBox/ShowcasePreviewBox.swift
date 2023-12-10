@@ -23,9 +23,12 @@ import SwiftUI
 /// A view that displays previews of showcase topics.
 public struct ShowcasePreviewBox: View {
     /// The style for displaying the preview content.
-    @Environment(\.previewContentStyle) private var contentStyle
+    @Environment(\.previewContentStyle) 
+    private var contentStyle
+    
     /// The style for displaying the preview box.
-    @Environment(\.previewBoxStyle) private var boxStyle
+    @Environment(\.previewBoxStyle)
+    private var boxStyle
 
     /// The data representing the preview.
     private let configuration: ShowcasePreviewContentStyleConfiguration
@@ -42,23 +45,16 @@ public struct ShowcasePreviewBox: View {
     }
 
     public var body: some View {
-        GroupBox {
-            AnyView(content)
-        } label: {
-
-        }
-        .groupBoxStyle(AnyGroupBoxStyle(boxStyle))
+        GroupBox(content: content, label: label).groupBoxStyle(AnyGroupBoxStyle(boxStyle))
     }
 
-    private var content: any View {
-        contentStyle.resolve(configuration: configuration)
+    private func content() -> some View {
+        AnyView(contentStyle.resolve(configuration: configuration))
     }
 
     @ViewBuilder
-    private var label: some View {
-        if let title = configuration.title {
-            Text(title)
-        }
+    private func label() -> some View {
+        if let title = configuration.title { Text(title) }
     }
 }
 
