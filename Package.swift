@@ -4,10 +4,17 @@ import PackageDescription
 
 let package = Package(
     name: "swiftui-showcase",
-    platforms: [.iOS(.v15)],
+    platforms: [
+        .iOS(.v15)
+    ],
     products: [
         .library(
             name: "Showcase",
+            type: .dynamic,
+            targets: ["Showcase"]
+        ),
+        .library(
+            name: "Showcase-auto",
             targets: ["Showcase"]
         ),
     ],
