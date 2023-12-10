@@ -21,7 +21,7 @@
 import SwiftUI
 
 extension Topic {
-    public static let mockAccordion = Self(
+    static let mockAccordion = Self(
         "Accordion",
         description: { """
     Accordions enable users to expand and collapse multiple sections of content.
