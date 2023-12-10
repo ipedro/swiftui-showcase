@@ -30,7 +30,7 @@ public struct ShowcaseLayout: View {
     }
 
     public var body: some View {
-        style.makeBody(configuration: configuration)
+        AnyShowcaseLayoutStyle(style).makeBody(configuration: configuration)
     }
 }
 

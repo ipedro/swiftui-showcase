@@ -31,7 +31,7 @@ public struct ShowcaseContent: View, Equatable {
     }
 
     public var body: some View {
-        style.makeBody(configuration: configuration)
+        AnyShowcaseContentStyle(style).makeBody(configuration: configuration)
     }
     
     public static func == (lhs: ShowcaseContent, rhs: ShowcaseContent) -> Bool {

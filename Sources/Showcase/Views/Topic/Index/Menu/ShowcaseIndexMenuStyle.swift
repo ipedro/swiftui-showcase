@@ -56,7 +56,7 @@ extension View {
     /// - Parameter style: Any index menu style
     /// - Returns: A view that has the index menu style set in its environment.
     public func showcaseIndexMenuStyle<S: ShowcaseIndexMenuStyle>(_ style: S) -> some View {
-        environment(\.indexMenuStyle, .init(style))
+        environment(\.indexMenuStyle, style)
     }
 }
 
@@ -82,12 +82,12 @@ struct AnyShowcaseIndexMenuStyle: ShowcaseIndexMenuStyle {
 
 /// A private key needed to save style data in the environment
 private struct IndexMenuStyleKey: EnvironmentKey {
-    static var defaultValue: AnyShowcaseIndexMenuStyle = .init(.menu())
+    static var defaultValue: any ShowcaseIndexMenuStyle = .menu()
 }
 
 extension EnvironmentValues {
     /// The current index menu style value.
-    var indexMenuStyle: AnyShowcaseIndexMenuStyle {
+    var indexMenuStyle: any ShowcaseIndexMenuStyle {
         get { self[IndexMenuStyleKey.self] }
         set { self[IndexMenuStyleKey.self] = newValue }
     }

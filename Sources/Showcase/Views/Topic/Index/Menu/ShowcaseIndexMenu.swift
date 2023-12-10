@@ -36,7 +36,7 @@ public struct ShowcaseIndexMenu: View {
     }
 
     public var body: some View {
-        style.makeBody(configuration: configuration)
+        AnyShowcaseIndexMenuStyle(style).makeBody(configuration: configuration)
     }
 }
 

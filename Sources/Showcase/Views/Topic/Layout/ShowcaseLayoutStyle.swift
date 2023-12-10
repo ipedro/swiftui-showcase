@@ -57,7 +57,7 @@ extension View {
     /// - Parameter style: Any showcase layout style.
     /// - Returns: A view that has the showcase layout style set in its environment.
     public func layoutStyle<S: ShowcaseLayoutStyle>(_ style: S) -> some View {
-        environment(\.layoutStyle, .init(style))
+        environment(\.layoutStyle, style)
     }
 }
 
@@ -83,12 +83,12 @@ struct AnyShowcaseLayoutStyle: ShowcaseLayoutStyle {
 
 /// A private key needed to save style data in the environment
 private struct ShowcaseStyleKey: EnvironmentKey {
-    static var defaultValue: AnyShowcaseLayoutStyle = .init(.vertical)
+    static var defaultValue: any ShowcaseLayoutStyle = .vertical
 }
 
 extension EnvironmentValues {
     /// The current Showcase layout style value.
-    var layoutStyle: AnyShowcaseLayoutStyle {
+    var layoutStyle: any ShowcaseLayoutStyle {
         get { self[ShowcaseStyleKey.self] }
         set { self[ShowcaseStyleKey.self] = newValue }
     }

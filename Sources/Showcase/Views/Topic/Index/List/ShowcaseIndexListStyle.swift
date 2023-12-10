@@ -57,7 +57,7 @@ extension View {
     /// - Parameter style: Any index list style.
     /// - Returns: A view that has the index list style set in its environment.
     public func showcaseIndexListStyle<S: ShowcaseIndexListStyle>(_ style: S) -> some View {
-        environment(\.indexListStyle, .init(style))
+        environment(\.indexListStyle, style)
     }
 }
 
@@ -83,12 +83,12 @@ struct AnyShowcaseIndexListStyle: ShowcaseIndexListStyle {
 
 /// A private key needed to save style data in the environment
 private struct IndexListStyleKey: EnvironmentKey {
-    static var defaultValue: AnyShowcaseIndexListStyle = .init(.bulletList)
+    static var defaultValue: any ShowcaseIndexListStyle = .bulletList
 }
 
 extension EnvironmentValues {
     /// The current Showcase style value.
-    var indexListStyle: AnyShowcaseIndexListStyle {
+    var indexListStyle: any ShowcaseIndexListStyle {
         get { self[IndexListStyleKey.self] }
         set { self[IndexListStyleKey.self] = newValue }
     }
