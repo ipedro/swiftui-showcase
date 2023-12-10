@@ -23,7 +23,7 @@ import SwiftUI
 /// A view that displays a list of showcases organized into chapters.
 public struct ShowcaseDocument: View {
     /// The data representing showcase chapters.
-    let document: Document
+    private let data: Document
 
     @State
     private var searchQuery = String()
@@ -32,43 +32,29 @@ public struct ShowcaseDocument: View {
     /// - Parameters:
     ///   - document: The document representing showcase chapters.
     public init(_ document: Document) {
-        self.document = document
+        self.data = document
     }
 
     private var chapters: [Chapter] {
-        let searchQuery = searchQuery.localizedLowercase.trimmingCharacters(in: .whitespacesAndNewlines)
+        let searchQuery = searchQuery
+            .localizedLowercase
+            .trimmingCharacters(in: .whitespacesAndNewlines)
 
-        if searchQuery.isEmpty { return document.chapters }
+        if searchQuery.isEmpty { return data.chapters }
 
-        return document.chapters.search(searchQuery)
+        return data.chapters.search(searchQuery)
     }
 
     public var body: some View {
-        NavigationView {
-            List {
-                description()
-                ForEach(chapters, content: section)
-            }
-            .searchable(text: $searchQuery)
-            .navigationTitle(document.title)
+        List {
+            DescriptionView(data.description)
+            ForEach(chapters, content: section)
         }
-        .previewDisplayName(document.title)
+        .searchable(text: $searchQuery)
+        .navigationTitle(data.title)
+        .previewDisplayName(data.title)
     }
-    
-    @ViewBuilder 
-    func description() -> some View {
-        if let description = document.description {
-            Section {
-                Text(description)
-                    .font(.headline)
-                    .foregroundColor(.secondary)
-                    .padding(.top, 5)
-            }
-            .listRowBackground(Color.clear)
-            .listRowInsets(EdgeInsets())
-        }
-    }
-    
+
     func section(_ chapter: Chapter) -> some View {
         Section {
             outlineGroup(chapter)
@@ -84,34 +70,69 @@ public struct ShowcaseDocument: View {
     func outlineGroup(_ chapter: Chapter) -> some View {
         OutlineGroup(chapter.topics, children: \.children) { item in
             NavigationLink {
-                ScrollViewReader { scroll in
-                    ScrollView {
-                        Color.clear
-                            .frame(height: 0)
-                            .id("top")
-                        
-                        ShowcaseTopic(item)
-                            .navigationTitle(item.title)
-                            .toolbar {
-                                ToolbarItem {
-                                    ShowcaseIndexMenu(item)
-                                }
-                            }
-                    }
-                    .scrollViewProxy(scroll)
-                }
-                
+                ScrollableTopic(data: item)
             } label: {
-                Label {
-                    Text(item.title).bold()
-                } icon: {
-                    if let icon = item.icon {
-                        icon
-                    } else {
-                        chapter.icon ?? document.icon
-                    }
-                }
+                TopicListLabel(
+                    data: item,
+                    fallbackIcon: chapter.icon ?? data.icon
+                )
             }
+        }
+    }
+}
+
+private struct DescriptionView: View {
+    let content: String
+
+    init?(_ content: String?) {
+        guard let content else { return nil }
+        self.content = content
+    }
+
+    var body: some View {
+        Section {
+            Text(content)
+                .font(.headline)
+                .foregroundColor(.secondary)
+                .padding(.top, 5)
+        }
+        .listRowBackground(Color.clear)
+        .listRowInsets(EdgeInsets())
+    }
+}
+
+
+private struct TopicListLabel: View {
+    let data: Topic
+    let fallbackIcon: Image?
+
+    var body: some View {
+        Label {
+            Text(data.title).bold()
+        } icon: {
+            if let icon = data.icon { icon }
+            else { fallbackIcon }
+        }
+    }
+}
+
+private struct ScrollableTopic: View {
+    let data: Topic
+
+    var body: some View {
+        ScrollViewReader { scroll in
+            ScrollView {
+                Color.clear
+                    .frame(height: .zero)
+                    .id("top")
+
+                ShowcaseTopic(data)
+                    .navigationTitle(data.title)
+                    .toolbar {
+                        ToolbarItem { ShowcaseIndexMenu(data) }
+                    }
+            }
+            .scrollViewProxy(scroll)
         }
     }
 }
