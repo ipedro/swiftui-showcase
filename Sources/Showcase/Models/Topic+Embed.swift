@@ -25,7 +25,7 @@ extension Topic {
     /// External content associated with a topic.
     public struct Embed: Identifiable {
         public typealias NavigationHandler = (_ action: WKNavigationAction) -> WKNavigationActionPolicy
-        public var id: String { url.absoluteString }
+        public let id = UUID()
         public var url: URL
         public var navigationHandler: NavigationHandler
         public var isInteractionEnabled: Bool

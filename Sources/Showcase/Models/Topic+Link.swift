@@ -24,7 +24,7 @@ extension Topic {
     /// Represents an external link associated with a showcase element.
     public struct Link: Identifiable {
         /// The unique identifier for the external link (based on the URL).
-        public var id: String { url.absoluteString }
+        public let id = UUID()
         
         /// The title of the external link.
         public var name: Topic.LinkName

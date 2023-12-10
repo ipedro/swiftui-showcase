@@ -24,7 +24,7 @@ extension Topic {
     /// Represents a code block associated with a showcase element.
     public struct CodeBlock: Identifiable, RawRepresentable, ExpressibleByStringLiteral {
         /// The unique identifier for the code block.
-        public var id: String { rawValue }
+        public let id = UUID()
         
         /// The raw string value of the code block.
         public var rawValue: String
