@@ -18,8 +18,8 @@ let package = Package(
             targets: ["Showcase"]
         ),
         .library(
-            name: "DynamicValuePicker",
-            targets: ["DynamicValuePicker"]
+            name: "DynamicValueSelector",
+            targets: ["DynamicValueSelector"]
         )
     ],
     dependencies: [
@@ -30,7 +30,7 @@ let package = Package(
             name: "Showcase",
             dependencies: ["Splash"]
         ),
-        .target(name: "DynamicValuePicker"),
+        .target(name: "DynamicValueSelector"),
         .testTarget(
             name: "ShowcaseTests",
             dependencies: ["Showcase"]
