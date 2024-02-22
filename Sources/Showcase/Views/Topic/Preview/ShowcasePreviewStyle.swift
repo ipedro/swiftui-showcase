@@ -24,13 +24,13 @@ import SwiftUI
 /// all Showcases within a view hierarchy.
 ///
 /// To configure the current Showcase style for a view hierarchy, use the
-/// ``ShowcaseDocument/showcasePreviewContentStyle(_:)`` modifier.
-public protocol ShowcasePreviewContentStyle: DynamicProperty {
+/// ``ShowcaseDocument/showcasePreviewStyle(_:)`` modifier.
+public protocol ShowcasePreviewStyle: DynamicProperty {
     /// A view that represents the body of a Showcase.
     associatedtype Body: View
 
     /// The properties of a Showcase.
-    typealias Configuration = ShowcasePreviewContentStyleConfiguration
+    typealias Configuration = ShowcasePreviewStyleConfiguration
 
     /// Creates a view that represents the body of a Showcase.
     ///
@@ -50,33 +50,32 @@ extension View {
     /// Use this modifier to set a specific style for ``ShowcaseDocument`` instances
     /// within a view:
     ///
-    ///     ShowcaseDocument()
-    ///         .showcasePreviewContentStyle(MyCustomStyle())
+    ///     ShowcaseDocument().showcasePreviewStyle(MyCustomStyle())
     ///
-    public func showcasePreviewContentStyle<S: ShowcasePreviewContentStyle>(_ style: S) -> some View {
-        environment(\.previewContentStyle, style)
+    public func showcasePreviewStyle<S: ShowcasePreviewStyle>(_ style: S) -> some View {
+        environment(\.previewStyle, style)
     }
 }
 
 // MARK: - Environment Keys
 
 /// A private key needed to save style data in the environment
-private struct ShowcasePreviewContentStyleKey: EnvironmentKey {
-    static var defaultValue: any ShowcasePreviewContentStyle = .inline
+private struct ShowcasePreviewStyleKey: EnvironmentKey {
+    static var defaultValue: any ShowcasePreviewStyle = .plain
 }
 
 extension EnvironmentValues {
     /// The current Showcase style value.
-    var previewContentStyle: any ShowcasePreviewContentStyle {
-        get { self[ShowcasePreviewContentStyleKey.self] }
-        set { self[ShowcasePreviewContentStyleKey.self] = newValue }
+    var previewStyle: any ShowcasePreviewStyle {
+        get { self[ShowcasePreviewStyleKey.self] }
+        set { self[ShowcasePreviewStyleKey.self] = newValue }
     }
 }
 
 // MARK: - Dynamic Property
 
-private struct ResolvedShowcasePreviewContentStyle<Style: ShowcasePreviewContentStyle>: View {
-    let configuration: ShowcasePreviewContentStyleConfiguration
+private struct ResolvedStyle<Style: ShowcasePreviewStyle>: View {
+    let configuration: ShowcasePreviewStyleConfiguration
     let style: Style
 
     var body: some View {
@@ -84,8 +83,8 @@ private struct ResolvedShowcasePreviewContentStyle<Style: ShowcasePreviewContent
     }
 }
 
-extension ShowcasePreviewContentStyle {
+extension ShowcasePreviewStyle {
     func resolve(configuration: Configuration) -> some View {
-        ResolvedShowcasePreviewContentStyle(configuration: configuration, style: self)
+        ResolvedStyle(configuration: configuration, style: self)
     }
 }

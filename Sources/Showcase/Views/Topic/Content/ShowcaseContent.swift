@@ -46,7 +46,7 @@ public struct ShowcaseContentStyleConfiguration {
     public let id: AnyHashable
     public let title: Text?
     public let description: Text?
-    public let preview: ShowcasePreviewBox?
+    public let preview: ShowcasePreview?
     public let links: Links?
     public let embeds: Embeds?
     public let codeBoxes: CodeBoxes?

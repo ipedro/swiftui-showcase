@@ -21,47 +21,38 @@
 import SwiftUI
 
 /// A view that displays previews of showcase topics.
-public struct ShowcasePreviewBox: View {
+public struct ShowcasePreview: View {
     /// The style for displaying the preview content.
-    @Environment(\.previewContentStyle) 
-    private var contentStyle
-    
-    /// The style for displaying the preview box.
-    @Environment(\.previewBoxStyle)
-    private var boxStyle
+    @Environment(\.previewStyle) 
+    private var style
 
     /// The data representing the preview.
-    private let configuration: ShowcasePreviewContentStyleConfiguration
+    private let configuration: ShowcasePreviewStyleConfiguration
 
     /// Initializes a Preview view with the specified previews data.
     /// - Parameter data: The data representing the previews (optional).
     init?(_ data: Topic) {
         guard let preview = data.previews else { return nil }
-        self.configuration = .init(title: data.previewTitle, content: .init(preview))
+        configuration = ShowcasePreviewStyleConfiguration(
+            title: Text(optional: LocalizedStringKey(optional: data.previewTitle)),
+            content: .init(preview)
+        )
     }
 
-    public init(_ configuration: ShowcasePreviewContentStyleConfiguration) {
+    /// Initializes a Preview view with an existing configuration.
+    public init(_ configuration: ShowcasePreviewStyleConfiguration) {
         self.configuration = configuration
     }
 
     public var body: some View {
-        GroupBox(content: content, label: label).groupBoxStyle(AnyGroupBoxStyle(boxStyle))
-    }
-
-    private func content() -> some View {
-        AnyView(contentStyle.resolve(configuration: configuration))
-    }
-
-    @ViewBuilder
-    private func label() -> some View {
-        if let title = configuration.title { Text(title) }
+        AnyView(style.resolve(configuration: configuration))
     }
 }
 
 // MARK: - Configuration
 
-public struct ShowcasePreviewContentStyleConfiguration {
-    let title: String?
+public struct ShowcasePreviewStyleConfiguration {
+    let title: Text?
 
     public typealias Content = AnyView
     /// The type-erased preview content.

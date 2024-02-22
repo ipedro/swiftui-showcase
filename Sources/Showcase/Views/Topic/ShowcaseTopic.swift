@@ -38,7 +38,7 @@ public struct ShowcaseTopic: View {
             id: data.id,
             title: depth > 0 ? Text(data.title) : nil,
             description: Text(data.description),
-            preview: ShowcasePreviewBox(data),
+            preview: ShowcasePreview(data),
             links: ShowcaseContent.Configuration.Links(data: data.links),
             embeds: ShowcaseContent.Configuration.Embeds(data: data.embeds),
             codeBoxes: ShowcaseContent.Configuration.CodeBoxes(data: data.codeBlocks))
@@ -77,5 +77,12 @@ struct Showcase_Previews: PreviewProvider {
                 ShowcaseIndexMenu(.mockAccordion)
             }
         }
+        .showcasePreviewStyle(.groupBox(.automatic))
+    }
+}
+
+struct CustomBox: GroupBoxStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.content
     }
 }

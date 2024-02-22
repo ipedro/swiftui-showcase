@@ -44,7 +44,7 @@ struct ShowcaseCodeBox: View {
             }
         } label: {
             HStack {
-                Text(data.title)
+                Text(optional: LocalizedStringKey(optional: data.title))
                 Spacer()
                 CopyToPasteboard(text: content)
             }

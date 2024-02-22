@@ -20,21 +20,15 @@
 
 import SwiftUI
 
-extension Text {
-    init?<S: StringProtocol>(optional content: S?) {
-        guard let content, !content.isEmpty else { return nil }
-        self.init(content)
-    }
-
-    init?(optional content: LocalizedStringKey?) {
-        guard let content else { return nil }
-        self.init(content)
+extension ShowcasePreviewStyle where Self == PlainShowcasePreviewStyle {
+    /// Shows the content in full frame.
+    static var plain: PlainShowcasePreviewStyle {
+        PlainShowcasePreviewStyle()
     }
 }
 
-extension LocalizedStringKey {
-    init?(optional value: String?) {
-        guard let value, !value.isEmpty else { return nil }
-        self.init(value)
+public struct PlainShowcasePreviewStyle: ShowcasePreviewStyle {
+    public func makeBody(configuration: Configuration) -> some View {
+        configuration.content.frame(maxWidth: .infinity)
     }
 }

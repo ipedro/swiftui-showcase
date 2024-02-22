@@ -20,21 +20,26 @@
 
 import SwiftUI
 
-extension Text {
-    init?<S: StringProtocol>(optional content: S?) {
-        guard let content, !content.isEmpty else { return nil }
-        self.init(content)
+extension ShowcasePreviewStyle where Self == GroupBoxShowcasePreviewStyle<DefaultGroupBoxStyle> {
+    /// Shows the preview content inside a group box, with an optional title.
+    static var groupBox: GroupBoxShowcasePreviewStyle<DefaultGroupBoxStyle> {
+        GroupBoxShowcasePreviewStyle(style: .automatic)
     }
 
-    init?(optional content: LocalizedStringKey?) {
-        guard let content else { return nil }
-        self.init(content)
+    /// Shows the preview content inside a custom group box.
+    static func groupBox<S: GroupBoxStyle>(_ style: S) -> GroupBoxShowcasePreviewStyle<S> {
+        GroupBoxShowcasePreviewStyle(style: style)
     }
 }
 
-extension LocalizedStringKey {
-    init?(optional value: String?) {
-        guard let value, !value.isEmpty else { return nil }
-        self.init(value)
+public struct GroupBoxShowcasePreviewStyle<S: GroupBoxStyle>: ShowcasePreviewStyle {
+    var style: S
+
+    public func makeBody(configuration: Configuration) -> some View {
+        GroupBox(
+            label: configuration.title,
+            content: { configuration.content }
+        )
+        .groupBoxStyle(style)
     }
 }
