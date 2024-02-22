@@ -1,27 +1,46 @@
 import SwiftUI
 
-/// A view modifier that dynamically selects environment values for SwiftUI views.
-/// This allows views to adapt their appearance or behavior based on selected values,
-/// facilitating customization and dynamic UI updates.
+/// A SwiftUI ViewModifier for dynamically selecting and applying environment values.
+///
+/// This ViewModifier leverages `ObservableObject` for state management, enabling dynamic
+/// updates of SwiftUI views based on user-selected values. It is designed to facilitate
+/// customization and enhance interactivity within the SwiftUI environment.
+///
+/// Usage:
+///
+/// ```swift
+/// struct ContentView: View {
+///     var body: some View {
+///         Text("Hello, Dynamic World!")
+///             .dynamicValue(MyDynamicKey.self)
+///     }
+/// }
+/// ```
+///
+/// - Requires: `Key` conforming to `DynamicValueKey` protocol.
 struct DynamicValueContent<Key>: ViewModifier where Key: DynamicValueKey {
-    /// The key type that identifies the dynamic value.
+    /// Identifies the dynamic value using a generic Key.
     let key: Key.Type
 
-    // Simplify the dynamic value management by using ObservableObject for global state management.
+    /// Internal ObservableObject for managing the dynamic selection state.
     private class Store: ObservableObject {
         @Published var selection = Key.defaultCase
     }
 
-    /// The current selection of the dynamic value.
+    /// The current selection state of the dynamic value.
     @StateObject private var store = Store()
 
-    /// Initializes the selector with a specific dynamic value key.
+    /// Initializes the view modifier with a specific dynamic value key.
+    ///
     /// - Parameter key: The type of the dynamic value key to use for selection.
     init(_ key: Key.Type) {
         self.key = key
     }
 
-    /// The content and behavior of the view.
+    /// Modifies the provided content view to dynamically apply selected environment values.
+    ///
+    /// - Parameter content: The original content view to modify.
+    /// - Returns: A modified view with dynamic environment values applied.
     func body(content: Content) -> some View {
         content
             .environment(Key.keyPath, store.selection.value)
@@ -29,36 +48,40 @@ struct DynamicValueContent<Key>: ViewModifier where Key: DynamicValueKey {
                 GeometryReader { _ in
                     Color.clear.preference(
                         key: DynamicValuePreferenceKey.self,
-                        value: [.init(keyValuePicker)])
+                        value: [.init(selection: $store.selection)]
+                    )
                 }
             }
     }
-
-    /// Creates a picker view for selecting a dynamic value.
-    private var keyValuePicker: some View {
-        Picker(Key.defaultDescription, selection: $store.selection) {
-            ForEach(Key.allCases, id: \.self) { key in
-                Text(key.rawValue).tag(key)
-            }
-        }
-    }
 }
 
-/// Extends `String` to include a method for adding spaces before capital letters,
-/// improving readability of camelCase strings.
+/// Extension to `String` for improving readability of camelCase strings by adding spaces.
 private extension String {
-    /// Adds spaces to a camelCase string to improve readability.
+    /// Adds spaces before each uppercase letter in a camelCase string.
+    ///
+    /// Usage:
+    ///
+    /// ```swift
+    /// let camelCaseString = "dynamicValueKey"
+    /// let readableString = camelCaseString.addingSpacesToCamelCase()
+    /// // readableString is "dynamic Value Key"
+    /// ```
+    ///
     /// - Returns: A new string with spaces added before each uppercase letter.
     func addingSpacesToCamelCase() -> String {
-        return self.replacingOccurrences(of: "(?<=[a-z])(?=[A-Z])", with: " $0", options: .regularExpression, range: self.range(of: self))
+        self.replacingOccurrences(of: "(?<=[a-z])(?=[A-Z])", with: " $0", options: .regularExpression, range: self.range(of: self))
     }
 }
 
 /// An extension on `View` to apply the `DynamicValueContent` modifier.
+///
+/// This extension allows any SwiftUI view to dynamically select and apply environment values
+/// using a specified key conforming to `DynamicValueKey`.
 public extension View {
-    /// Applies a dynamic value selector to the view.
+    /// Applies a dynamic value selector to the view based on the specified key.
+    ///
     /// - Parameter key: The type of the dynamic value key.
-    /// - Returns: A view modified to select and apply a dynamic environment value based on the given key.
+    /// - Returns: A view modified to dynamically select and apply an environment value.
     func dynamicValue<Key: DynamicValueKey>(_ key: Key.Type) -> some View {
         modifier(DynamicValueContent(key))
     }
@@ -72,41 +95,53 @@ public extension View {
         environment(\.selectorStyle, style)
     }
 }
-
-/// A protocol defining the requirements for keys used with dynamic environment values.
-/// Types conforming to this protocol can be used to dynamically select and apply values to the SwiftUI environment.
+/// Defines the requirements for keys used with dynamic environment values in SwiftUI.
+///
+/// Conforming types can dynamically select and apply values to the SwiftUI environment,
+/// enabling customizable and responsive UI components.
 public protocol DynamicValueKey: CaseIterable, RawRepresentable, Hashable where AllCases == [Self], RawValue == String {
-    /// The type of value associated with the key.
+    /// The associated value type for the dynamic key.
     associatedtype Value
     /// The key path to the associated value in the environment.
     static var keyPath: WritableKeyPath<EnvironmentValues, Value> { get }
-    /// The default selection for the key.
+    /// The default selection case for the key.
     static var defaultCase: Self { get }
-    /// The default description for the key.
+    /// A user-friendly description for the key, improving UI readability.
     static var defaultDescription: String { get }
     /// The current value associated with the key.
     var value: Value { get }
 }
 
-/// Provides a default implementation for `defaultValue` to use the first case.
+/// Provides default implementations for the `DynamicValueKey` protocol,
+/// ensuring a minimal configuration is required for conforming types.
 public extension DynamicValueKey {
+    /// Returns the first case as the default selection if available, otherwise triggers a runtime error.
     static var defaultCase: Self {
-        if let first = allCases.first { return first }
-        fatalError("DynamicValueKey requires at least one case")
+        guard let first = allCases.first else {
+            fatalError("DynamicValueKey requires at least one case")
+        }
+        return first
     }
 
+    /// Generates a user-friendly description by adding spaces before capital letters in the type name.
     static var defaultDescription: String {
         String(describing: Self.self).addingSpacesToCamelCase()
     }
 }
 
 /// A preference key for storing dynamic value entries.
-/// This key allows for the aggregation of menu items to be displayed in a custom menu.
+///
+/// This key aggregates values to be displayed in a custom selection menu, allowing
+/// for dynamic updates and customization of menu content based on user selection.
 struct DynamicValuePreferenceKey: PreferenceKey {
-    /// The default value for the menu content.
+    /// The default value for the dynamic value entries.
     static var defaultValue: [DynamicValueEntry] = []
 
     /// Combines the current value with the next value.
+    ///
+    /// - Parameters:
+    ///   - value: The current value of dynamic value entries.
+    ///   - nextValue: A closure that returns the next set of dynamic value entries.
     static func reduce(value: inout [DynamicValueEntry], nextValue: () -> [DynamicValueEntry]) {
         value.append(contentsOf: nextValue())
     }
@@ -189,7 +224,18 @@ public struct DynamicValueInlineStyle: DynamicValueSelectorStyle {
             }
             .frame(maxWidth: .infinity)
         }
-        .scrollBounceBehavior(.basedOnSize)
+        .scrollBounceBehaviorBasedOnSize()
+    }
+}
+
+private extension View {
+    @ViewBuilder func scrollBounceBehaviorBasedOnSize() -> some View {
+        if #available(iOS 16.4, *) {
+            scrollBounceBehavior(.basedOnSize)
+        }
+        else {
+            self
+        }
     }
 }
 
@@ -226,10 +272,23 @@ extension EnvironmentValues {
 
 public struct DynamicValueSelectorStyleConfiguration {
     public typealias Content = AnyView
-    public typealias Entries = ForEach<[DynamicValueEntry], DynamicValueEntry.ID, AnyView>
     public let content: Content
     public let isEmpty: Bool
     public let entries: Entries
+
+    public struct Entries: View {
+        let data: [DynamicValueEntry]
+
+        public var body: some View {
+            ForEach(data) { entry in
+                Picker(entry.title, selection: entry.selection) {
+                    ForEach(entry.options, id: \.self) { item in
+                        Text(item).tag(item)
+                    }
+                }
+            }
+        }
+    }
 }
 
 public struct DynamicValueSelector<Content: View>: View {
@@ -250,7 +309,7 @@ public struct DynamicValueSelector<Content: View>: View {
         .init(
             content: .init(content),
             isEmpty: data.isEmpty,
-            entries: .init(data, content: { $0.view })
+            entries: .init(data: data)
         )
     }
 
@@ -293,27 +352,25 @@ private extension View {
     }
 }
 
-/// Represents a view that can be uniquely identified and compared for equality.
-/// This allows views to be managed and manipulated within collections, such as menus.
-public struct DynamicValueEntry: Identifiable, Equatable {
-    /// Enables comparison between instances of `MenuEntry`.
-    public static func == (lhs: DynamicValueEntry, rhs: DynamicValueEntry) -> Bool {
-        lhs.id == rhs.id
+struct DynamicValueEntry: Identifiable, Equatable {
+    let id = UUID()
+    let title: String
+    let selection: Binding<String>
+    let options: [String]
+
+    init<Key: DynamicValueKey>(_ key: Key.Type = Key.self, selection: Binding<Key>) {
+        self.options = Key.allCases.map(\.rawValue)
+        self.title = Key.defaultDescription
+        self.selection = Binding {
+            selection.wrappedValue.rawValue
+        } set: { newValue in
+            for aCase in Key.allCases where aCase.rawValue == newValue {
+                selection.wrappedValue = aCase
+            }
+        }
     }
 
-    /// A unique identifier for the view.
-    public let id: UUID
-    /// The view being managed.
-    let view: AnyView
-    /// The view type managed.
-    let viewType: String
-    /// Initializes a new instance with a specific view and an optional identifier.
-    /// - Parameters:
-    ///   - view: The view to be managed.
-    ///   - id: An optional unique identifier. A new UUID is generated if not provided.
-    init<V: View>(_ view: V, id: UUID = UUID()) {
-        self.view = AnyView(view)
-        self.viewType = String(describing: V.self)
-        self.id = id
+    static func == (lhs: DynamicValueEntry, rhs: DynamicValueEntry) -> Bool {
+        lhs.id == rhs.id
     }
 }
