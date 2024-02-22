@@ -12,13 +12,13 @@ import SwiftUI
 /// struct ContentView: View {
 ///     var body: some View {
 ///         Text("Hello, Dynamic World!")
-///             .dynamicValue(MyDynamicKey.self)
+///             .environmentPickerValue(MyDynamicKey.self)
 ///     }
 /// }
 /// ```
 ///
-/// - Requires: `Key` conforming to `DynamicValueKey` protocol.
-struct DynamicValueContent<Key>: ViewModifier where Key: DynamicValueKey {
+/// - Requires: `Key` conforming to `EnvironmentPickerKey` protocol.
+struct EnvironmentPickerContainer<Key>: ViewModifier where Key: EnvironmentPickerKey {
     /// Identifies the dynamic value using a generic Key.
     let key: Key.Type
 
@@ -44,46 +44,28 @@ struct DynamicValueContent<Key>: ViewModifier where Key: DynamicValueKey {
     func body(content: Content) -> some View {
         content
             .environment(Key.keyPath, store.selection.value)
-            .background {
+            .background(
                 GeometryReader { _ in
                     Color.clear.preference(
-                        key: DynamicValuePreferenceKey.self,
+                        key: EnvironmentPickerPreferenceKey.self,
                         value: [.init(selection: $store.selection)]
                     )
                 }
-            }
+            )
     }
 }
 
-/// Extension to `String` for improving readability of camelCase strings by adding spaces.
-private extension String {
-    /// Adds spaces before each uppercase letter in a camelCase string.
-    ///
-    /// Usage:
-    ///
-    /// ```swift
-    /// let camelCaseString = "dynamicValueKey"
-    /// let readableString = camelCaseString.addingSpacesToCamelCase()
-    /// // readableString is "dynamic Value Key"
-    /// ```
-    ///
-    /// - Returns: A new string with spaces added before each uppercase letter.
-    func addingSpacesToCamelCase() -> String {
-        self.replacingOccurrences(of: "(?<=[a-z])(?=[A-Z])", with: " $0", options: .regularExpression, range: self.range(of: self))
-    }
-}
-
-/// An extension on `View` to apply the `DynamicValueContent` modifier.
+/// An extension on `View` to apply the `EnvironmentPickerContainer` modifier.
 ///
 /// This extension allows any SwiftUI view to dynamically select and apply environment values
-/// using a specified key conforming to `DynamicValueKey`.
+/// using a specified key conforming to `EnvironmentPickerKey`.
 public extension View {
     /// Applies a dynamic value selector to the view based on the specified key.
     ///
     /// - Parameter key: The type of the dynamic value key.
     /// - Returns: A view modified to dynamically select and apply an environment value.
-    func dynamicValue<Key: DynamicValueKey>(_ key: Key.Type) -> some View {
-        modifier(DynamicValueContent(key))
+    func environmentPickerValue<Key: EnvironmentPickerKey>(_ key: Key.Type) -> some View {
+        modifier(EnvironmentPickerContainer(key))
     }
 }
 
@@ -91,15 +73,15 @@ public extension View {
     /// Applies a dynamic value selector to the view.
     /// - Parameter key: The type of the dynamic value key.
     /// - Returns: A view modified to select and apply a dynamic environment value based on the given key.
-    func dynamicValueSelectorStyle<S: DynamicValueSelectorStyle>(_ style: S) -> some View {
-        environment(\.selectorStyle, style)
+    func environmentPickerStyle<S: EnvironmentPickerStyle>(_ style: S) -> some View {
+        environment(\.style, style)
     }
 }
 /// Defines the requirements for keys used with dynamic environment values in SwiftUI.
 ///
 /// Conforming types can dynamically select and apply values to the SwiftUI environment,
 /// enabling customizable and responsive UI components.
-public protocol DynamicValueKey: CaseIterable, RawRepresentable, Hashable where AllCases == [Self], RawValue == String {
+public protocol EnvironmentPickerKey: CaseIterable, RawRepresentable, Hashable where AllCases == [Self], RawValue == String {
     /// The associated value type for the dynamic key.
     associatedtype Value
     /// The key path to the associated value in the environment.
@@ -112,13 +94,13 @@ public protocol DynamicValueKey: CaseIterable, RawRepresentable, Hashable where 
     var value: Value { get }
 }
 
-/// Provides default implementations for the `DynamicValueKey` protocol,
+/// Provides default implementations for the `EnvironmentPickerKey` protocol,
 /// ensuring a minimal configuration is required for conforming types.
-public extension DynamicValueKey {
+public extension EnvironmentPickerKey {
     /// Returns the first case as the default selection if available, otherwise triggers a runtime error.
     static var defaultCase: Self {
         guard let first = allCases.first else {
-            fatalError("DynamicValueKey requires at least one case")
+            fatalError("EnvironmentPickerKey requires at least one case")
         }
         return first
     }
@@ -133,30 +115,31 @@ public extension DynamicValueKey {
 ///
 /// This key aggregates values to be displayed in a custom selection menu, allowing
 /// for dynamic updates and customization of menu content based on user selection.
-struct DynamicValuePreferenceKey: PreferenceKey {
+struct EnvironmentPickerPreferenceKey: PreferenceKey {
     /// The default value for the dynamic value entries.
-    static var defaultValue: [DynamicValueEntry] = []
+    static var defaultValue: [EnvironmentPickerEntry] = []
 
     /// Combines the current value with the next value.
     ///
     /// - Parameters:
     ///   - value: The current value of dynamic value entries.
     ///   - nextValue: A closure that returns the next set of dynamic value entries.
-    static func reduce(value: inout [DynamicValueEntry], nextValue: () -> [DynamicValueEntry]) {
+    static func reduce(value: inout [EnvironmentPickerEntry], nextValue: () -> [EnvironmentPickerEntry]) {
         value.append(contentsOf: nextValue())
     }
 }
 
-public extension DynamicValueSelectorStyle where Self == DynamicValueSheetPresentation {
+@available(macOS 12.0, *)
+public extension EnvironmentPickerStyle where Self == SheetEnvironmentPicker {
     static func sheet(isPresented: Binding<Bool>) -> Self {
         .init(isPresenting: isPresented)
     }
 }
 
 /// Defines static presentation detents for menu sizes.
-@available(iOS 16.4, *)
+@available(iOS 16.4, macOS 13.0, *)
 extension PresentationDetent {
-    enum DynamicValueSelector {
+    enum EnvironmentPicker {
         /// A detent representing an expanded menu.
         static let expanded = PresentationDetent.fraction(1/2)
         /// A detent representing a compact menu.
@@ -167,7 +150,8 @@ extension PresentationDetent {
 /// A view modifier that adds a custom expandable menu to a SwiftUI view.
 /// This modifier tracks and displays menu items dynamically added to the view,
 /// providing a customizable and interactive menu experience.
-public struct DynamicValueSheetPresentation: DynamicValueSelectorStyle {
+@available(macOS 12.0, *)
+public struct SheetEnvironmentPicker: EnvironmentPickerStyle {
     /// Indicates whether the menu is expanded.
     @Binding var presenting: Bool
 
@@ -211,16 +195,16 @@ public struct DynamicValueSheetPresentation: DynamicValueSelectorStyle {
     }
 }
 
-// MARK: - DynamicValueSelectorStyle Protocol Extensions
+// MARK: - EnvironmentPickerStyle Protocol Extensions
 
 /// Provides a convenient static property for accessing the inline selector style.
-public extension DynamicValueSelectorStyle where Self == DynamicValueInlineStyle {
+public extension EnvironmentPickerStyle where Self == InlineEnvironmentPicker {
     /// A static property to access an inline selector style instance.
     static var inline: Self { .init() }
 }
 
 /// A style that presents dynamic value options inline within the view hierarchy.
-public struct DynamicValueInlineStyle: DynamicValueSelectorStyle {
+public struct InlineEnvironmentPicker: EnvironmentPickerStyle {
     /// Creates the view for the inline style, embedding the dynamic value options directly within a scrollable area.
     ///
     /// - Parameter configuration: The configuration containing the dynamic value options and content.
@@ -241,7 +225,7 @@ public struct DynamicValueInlineStyle: DynamicValueSelectorStyle {
 private extension View {
     /// Applies scroll bounce behavior based on the size for iOS 16.4 and later; otherwise, does nothing.
     @ViewBuilder func scrollBounceBehaviorBasedOnSize() -> some View {
-        if #available(iOS 16.4, *) {
+        if #available(iOS 16.4, macOS 13.3, *) {
             scrollBounceBehavior(.basedOnSize)
         } else {
             self
@@ -250,13 +234,13 @@ private extension View {
 }
 
 /// Provides a convenient static property for accessing the context menu selector style.
-public extension DynamicValueSelectorStyle where Self == DynamicValueContextMenuStyle {
+public extension EnvironmentPickerStyle where Self == ContextMenuEnvironmentPicker {
     /// A static property to access a context menu selector style instance.
     static var contextMenu: Self { .init() }
 }
 
 /// A style that presents dynamic value options within a context menu.
-public struct DynamicValueContextMenuStyle: DynamicValueSelectorStyle {
+public struct ContextMenuEnvironmentPicker: EnvironmentPickerStyle {
     /// Creates the view for the context menu style, presenting the dynamic value options within a context menu.
     ///
     /// - Parameter configuration: The configuration containing the dynamic value options and content.
@@ -268,15 +252,15 @@ public struct DynamicValueContextMenuStyle: DynamicValueSelectorStyle {
     }
 }
 
-// MARK: - DynamicValueSelectorStyle Protocol
+// MARK: - EnvironmentPickerStyle Protocol
 
 /// A protocol for defining custom styles for presenting dynamic value selectors.
-public protocol DynamicValueSelectorStyle {
+public protocol EnvironmentPickerStyle {
     /// The associated type representing the body of the selector style.
     associatedtype Body: View
 
     /// A typealias for the configuration used by the selector style.
-    typealias Configuration = DynamicValueSelectorStyleConfiguration
+    typealias Configuration = EnvironmentPickerStyleConfiguration
 
     /// Creates the body of the selector style using the provided configuration.
     ///
@@ -285,27 +269,27 @@ public protocol DynamicValueSelectorStyle {
     @ViewBuilder func makeBody(configuration: Configuration) -> Body
 }
 
-// MARK: - Environment Key for Selector Style
+// MARK: - Environment Key for Picker Style
 
 /// An environment key for storing the current dynamic value selector style.
-private struct DynamicValueSelectorStyleKey: EnvironmentKey {
-    /// The default value for the selector style, using `DynamicValueInlineStyle` as the default.
-    static let defaultValue: any DynamicValueSelectorStyle = DynamicValueInlineStyle()
+private struct EnvironmentPickerStyleKey: EnvironmentKey {
+    /// The default value for the selector style, using `EnvironmentPickerInlineStyle` as the default.
+    static let defaultValue: any EnvironmentPickerStyle = InlineEnvironmentPicker()
 }
 
 /// Extends `EnvironmentValues` to include a property for accessing the dynamic value selector style.
 extension EnvironmentValues {
     /// The current dynamic value selector style within the environment.
-    var selectorStyle: any DynamicValueSelectorStyle {
-        get { self[DynamicValueSelectorStyleKey.self] }
-        set { self[DynamicValueSelectorStyleKey.self] = newValue }
+    var style: any EnvironmentPickerStyle {
+        get { self[EnvironmentPickerStyleKey.self] }
+        set { self[EnvironmentPickerStyleKey.self] = newValue }
     }
 }
 
-// MARK: - Configuration for Selector Styles
+// MARK: - Configuration for Picker Styles
 
 /// Represents the configuration for dynamic value selector styles, encapsulating the content and dynamic value entries.
-public struct DynamicValueSelectorStyleConfiguration {
+public struct EnvironmentPickerStyleConfiguration {
     /// The content to be presented alongside the dynamic value entries.
     public typealias Content = AnyView
     /// The actual content view.
@@ -318,7 +302,7 @@ public struct DynamicValueSelectorStyleConfiguration {
     /// Represents the dynamic value entries within the selector.
     public struct Entries: View {
         /// The data for each dynamic value entry.
-        let data: [DynamicValueEntry]
+        let data: [EnvironmentPickerEntry]
 
         /// Creates the view for each dynamic value entry, typically as a picker.
         public var body: some View {
@@ -333,7 +317,7 @@ public struct DynamicValueSelectorStyleConfiguration {
     }
 }
 
-// MARK: - DynamicValueSelector View
+// MARK: - EnvironmentPicker View
 
 /** 
 
@@ -350,16 +334,16 @@ public struct DynamicValueSelectorStyleConfiguration {
  ### Key Features
 
  - **Dynamic Value Selection**: Dynamically select environment values with an extendable protocol-based approach.
- - **Customizable Selector Styles**: Implement custom selector styles to provide unique UI elements for value selection.
+ - **Customizable Picker Styles**: Implement custom selector styles to provide unique UI elements for value selection.
  - **Advanced State Management**: Utilize `ObservableObject` for managing selections, enhancing reactivity and performance.
 
  ## Getting Started
 
  To start using this package, integrate it into your SwiftUI project and follow the steps below to implement dynamic value selection in your views.
 
- ### DynamicValueContent Modifier
+ ### EnvironmentPickerContent Modifier
 
- The `DynamicValueContent` view modifier applies dynamic environment values to SwiftUI views. This modifier uses a generic `Key` parameter conforming to the `DynamicValueKey` protocol to identify the specific environment value to modify.
+ The `EnvironmentPickerContent` view modifier applies dynamic environment values to SwiftUI views. This modifier uses a generic `Key` parameter conforming to the `EnvironmentPickerKey` protocol to identify the specific environment value to modify.
 
  #### Example Usage
 
@@ -367,21 +351,21 @@ public struct DynamicValueSelectorStyleConfiguration {
  struct ContentView: View {
      var body: some View {
          Text("Hello, Dynamic World!")
-             .dynamicValue(MyDynamicKey.self)
+             .environmentPickerValue(MyDynamicKey.self)
      }
  }
  ```
 
  ### Defining Dynamic Keys
 
- To define dynamic keys, conform to the `DynamicValueKey` protocol. This protocol requires specifying a `keyPath`, `defaultCase`, and associated value type.
+ To define dynamic keys, conform to the `EnvironmentPickerKey` protocol. This protocol requires specifying a `keyPath`, `defaultCase`, and associated value type.
 
  ```swift
- enum MyDynamicKey: String, DynamicValueKey {
+ enum MyDynamicKey: String, EnvironmentPickerKey {
      case optionOne, optionTwo
 
      static var keyPath: WritableKeyPath<EnvironmentValues, String> {
-         \.myDynamicValue
+         \.myEnvironmentPicker
      }
 
      static var defaultCase: Self {
@@ -397,61 +381,54 @@ public struct DynamicValueSelectorStyleConfiguration {
  }
  ```
 
- ### Custom Selector Styles
+ ### Custom Picker Styles
 
- This package introduces a `DynamicValueSelectorStyle` protocol to create customizable selector styles. Implement this protocol to define custom UI elements for selecting dynamic values.
+ This package introduces a `EnvironmentPickerStyle` protocol to create customizable selector styles. Implement this protocol to define custom UI elements for selecting dynamic values.
 
  #### Example: Inline Style
 
  ```swift
- struct InlineSelectorStyle: DynamicValueSelectorStyle {
+ struct InlinePickerStyle: EnvironmentPickerStyle {
      // Implementation details...
  }
  ```
 
- Apply your custom style using the `dynamicValueSelectorStyle` modifier:
+ Apply your custom style using the `environmentPickerStyle` modifier:
 
  ```swift
  Text("Select Option")
-     .dynamicValueSelectorStyle(InlineSelectorStyle())
+     .environmentPickerStyle(InlinePickerStyle())
  ```
 
  ## Advanced Usage
 
  ### Handling Selection Changes
 
- To respond to changes in the selected dynamic value, use the `@ObservedObject` or `@EnvironmentObject` property wrappers to observe the `DynamicValueManager` object.
+ To respond to changes in the selected dynamic value, use the `@ObservedObject` or `@EnvironmentObject` property wrappers to observe the `EnvironmentPickerManager` object.
 
- ### Extending Selector Styles
+ ### Extending Picker Styles
 
- Extend the `DynamicValueSelectorStyle` protocol to create sophisticated selector UIs, such as context menus or custom popovers. This approach encourages modular design and reusability.
+ Extend the `EnvironmentPickerStyle` protocol to create sophisticated selector UIs, such as context menus or custom popovers. This approach encourages modular design and reusability.
 
  */
-public struct DynamicValueSelector<Content: View>: View {
+public struct EnvironmentPicker<Content: View>: View {
     /// The content to be presented alongside the dynamic value selector.
     let content: Content
-    /// The title for the selector, used in some styles.
-    let title: LocalizedStringKey
     /// The state holding the dynamic value entries.
-    @State private var data: [DynamicValueEntry] = []
+    @State private var data: [EnvironmentPickerEntry] = []
     /// The current dynamic value selector style from the environment.
-    @Environment(\.selectorStyle) private var style
+    @Environment(\.style) private var style
 
     /// Initializes the dynamic value selector with the specified content and optional title.
     ///
     /// - Parameters:
-    ///   - title: The title for the selector, used in some styles.
     ///   - content: A closure returning the content to be presented.
-    public init(
-        title: LocalizedStringKey = "Settings",
-        @ViewBuilder content: () -> Content
-    ) {
-        self.title = title
+    public init(@ViewBuilder content: () -> Content) {
         self.content = content()
     }
 
     /// Creates the configuration for the selector style and presents the content accordingly.
-    private var configuration: DynamicValueSelectorStyle.Configuration {
+    private var configuration: EnvironmentPickerStyle.Configuration {
         .init(
             content: .init(content),
             isEmpty: data.isEmpty,
@@ -462,7 +439,7 @@ public struct DynamicValueSelector<Content: View>: View {
     /// The body of the dynamic value selector, presenting the content using the current selector style.
     public var body: some View {
         AnyView(style.makeBody(configuration: configuration))
-            .onPreferenceChange(DynamicValuePreferenceKey.self) { newValue in
+            .onPreferenceChange(EnvironmentPickerPreferenceKey.self) { newValue in
                 data = newValue
             }
     }
@@ -474,10 +451,10 @@ public struct DynamicValueSelector<Content: View>: View {
 private extension View {
     /// Applies presentation detents to the view for iOS 16.4 and later; otherwise, does nothing.
     @ViewBuilder func menuPresentationDetents() -> some View {
-        if #available(iOS 16.4, *) {
+        if #available(iOS 16.4, macOS 13.3, *) {
             presentationDetents([
-                .DynamicValueSelector.compact,
-                .DynamicValueSelector.expanded
+                .EnvironmentPicker.compact,
+                .EnvironmentPicker.expanded
             ])
             .presentationBackgroundInteraction(.enabled)
             .presentationContentInteraction(.resizes)
@@ -493,7 +470,7 @@ private extension View {
 private extension View {
     /// Hides the scroll content background for iOS 16.0 and later; otherwise, does nothing.
     @ViewBuilder func hideScrollContentBackground() -> some View {
-        if #available(iOS 16.0, *) {
+        if #available(iOS 16.0, macOS 13.0, *) {
             self.edgesIgnoringSafeArea(.top)
                 .listRowBackground(EmptyView())
                 .scrollContentBackground(.hidden)
@@ -504,7 +481,7 @@ private extension View {
 }
 
 /// Represents a dynamic value entry with a unique identifier, title, and selectable options.
-struct DynamicValueEntry: Identifiable, Equatable {
+struct EnvironmentPickerEntry: Identifiable, Equatable {
     /// A unique identifier for the entry.
     let id = UUID()
     /// The title of the entry, used as a label in the UI.
@@ -519,7 +496,7 @@ struct DynamicValueEntry: Identifiable, Equatable {
     /// - Parameters:
     ///   - key: The dynamic value key type.
     ///   - selection: A binding to the currently selected key.
-    init<Key: DynamicValueKey>(_ key: Key.Type = Key.self, selection: Binding<Key>) {
+    init<Key: EnvironmentPickerKey>(_ key: Key.Type = Key.self, selection: Binding<Key>) {
         self.options = Key.allCases.map(\.rawValue)
         self.title = Key.defaultDescription
         self.selection = Binding {
@@ -532,7 +509,25 @@ struct DynamicValueEntry: Identifiable, Equatable {
     }
 
     /// Determines if two entries are equal based on their identifiers.
-    static func == (lhs: DynamicValueEntry, rhs: DynamicValueEntry) -> Bool {
+    static func == (lhs: EnvironmentPickerEntry, rhs: EnvironmentPickerEntry) -> Bool {
         lhs.id == rhs.id
+    }
+}
+
+/// Extension to `String` for improving readability of camelCase strings by adding spaces.
+private extension String {
+    /// Adds spaces before each uppercase letter in a camelCase string.
+    ///
+    /// Usage:
+    ///
+    /// ```swift
+    /// let camelCaseString = "environmentPickerKey"
+    /// let readableString = camelCaseString.addingSpacesToCamelCase()
+    /// // readableString is "dynamic Value Key"
+    /// ```
+    ///
+    /// - Returns: A new string with spaces added before each uppercase letter.
+    func addingSpacesToCamelCase() -> String {
+        self.replacingOccurrences(of: "(?<=[a-z])(?=[A-Z])", with: " $0", options: .regularExpression, range: self.range(of: self))
     }
 }

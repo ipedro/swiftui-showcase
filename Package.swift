@@ -5,7 +5,8 @@ import PackageDescription
 let package = Package(
     name: "swiftui-showcase",
     platforms: [
-        .iOS(.v15)
+        .iOS(.v15),
+        .macOS(.v11),
     ],
     products: [
         .library(
@@ -18,8 +19,8 @@ let package = Package(
             targets: ["Showcase"]
         ),
         .library(
-            name: "DynamicValueSelector",
-            targets: ["DynamicValueSelector"]
+            name: "EnvironmentPicker",
+            targets: ["EnvironmentPicker"]
         )
     ],
     dependencies: [
@@ -30,7 +31,7 @@ let package = Package(
             name: "Showcase",
             dependencies: ["Splash"]
         ),
-        .target(name: "DynamicValueSelector"),
+        .target(name: "EnvironmentPicker"),
         .testTarget(
             name: "ShowcaseTests",
             dependencies: ["Showcase"]
