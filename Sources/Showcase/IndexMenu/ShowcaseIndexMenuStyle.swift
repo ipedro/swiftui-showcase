@@ -60,21 +60,6 @@ extension View {
     }
 }
 
-// MARK: - Environment Keys
-
-/// A private key needed to save style data in the environment
-private struct IndexMenuStyleKey: EnvironmentKey {
-    static var defaultValue: any ShowcaseIndexMenuStyle = .menu()
-}
-
-extension EnvironmentValues {
-    /// The current index menu style value.
-    var indexMenuStyle: any ShowcaseIndexMenuStyle {
-        get { self[IndexMenuStyleKey.self] }
-        set { self[IndexMenuStyleKey.self] = newValue }
-    }
-}
-
 // MARK: - Dynamic Property
 
 private struct ResolvedShowcaseIndexMenuStyle<Style: ShowcaseIndexMenuStyle>: View {

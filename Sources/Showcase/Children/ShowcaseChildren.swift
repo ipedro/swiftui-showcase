@@ -37,6 +37,6 @@ public struct ShowcaseChildren: View {
         ForEach(data) { item in
             ShowcaseTopic(item)
         }
-        .nodeDepth(depth + 1)
+        .environment(\.nodeDepth, depth + 1)
     }
 }

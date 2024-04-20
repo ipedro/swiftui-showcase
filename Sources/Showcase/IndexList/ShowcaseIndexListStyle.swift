@@ -61,21 +61,6 @@ extension View {
     }
 }
 
-// MARK: - Environment Keys
-
-/// A private key needed to save style data in the environment
-private struct IndexListStyleKey: EnvironmentKey {
-    static var defaultValue: any ShowcaseIndexListStyle = .bulletList
-}
-
-extension EnvironmentValues {
-    /// The current Showcase style value.
-    var indexListStyle: any ShowcaseIndexListStyle {
-        get { self[IndexListStyleKey.self] }
-        set { self[IndexListStyleKey.self] = newValue }
-    }
-}
-
 // MARK: - Dynamic Property
 
 private struct ResolvedShowcaseIndexListStyle<Style: ShowcaseIndexListStyle>: View {

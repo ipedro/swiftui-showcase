@@ -58,21 +58,14 @@ public struct ShowcaseTopic: View {
 struct Showcase_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            ScrollViewReader {
-                ScrollView {
-                    ShowcaseTopic(
-                        .init(
-                            "Title",
-                            children: [
-                                .mockAccordion,
-                                .mockButton,
-                                .mockCard
-                            ]
-                        )
-                    )
-                }
-                .scrollViewProxy($0)
-            }
+            ShowcaseTopic(
+                Topic("Title", children: [
+                    .mockAccordion,
+                    .mockButton,
+                    .mockCard
+                ])
+            )
+            .modifier(ScrollViewReaderModifier())
             .toolbar {
                 ShowcaseIndexMenu(.mockAccordion)
             }

@@ -20,55 +20,45 @@
 
 import SwiftUI
 
-extension ShowcaseCodeBlockStyle where Self == DefaultShowcaseCodeBlockStyle<BackgroundStyle> {
+public extension ShowcaseCodeBlockStyle where Self == DefaultShowcaseCodeBlockStyle {
     /// The default style for code boxes.
-    public static var automatic: Self {
-        DefaultShowcaseCodeBlockStyle(
-            wordWrap: false,
-            background: .background,
-            theme: nil
-        )
+    static var automatic: Self {
+        DefaultShowcaseCodeBlockStyle(wordWrap: false)
     }
 
-    public static var wordWrap: Self {
-        DefaultShowcaseCodeBlockStyle(
-            wordWrap: true,
-            background: .background,
-            theme: nil
-        )
+    static var wordWrap: Self {
+        DefaultShowcaseCodeBlockStyle(wordWrap: true)
     }
-
-    /// The default style for code boxes with a custom color theme.
-    public static func automatic(
-        wordWrap: Bool = false,
-        theme: ((_ colorScheme: ColorScheme) -> Splash.Theme)? = nil
-    ) -> Self {
-        DefaultShowcaseCodeBlockStyle(
-            wordWrap: wordWrap,
-            background: .background,
-            theme: theme
-        )
-    }
-
-    @available(iOS 16, *)
-    public static func automatic<S: ShapeStyle>(
-        wordWrap: Bool = false,
-        background: S,
-        theme: ((_ colorScheme: ColorScheme) -> Splash.Theme)? = nil
-    ) -> DefaultShowcaseCodeBlockStyle<S> {
-        DefaultShowcaseCodeBlockStyle(
-            wordWrap: wordWrap,
-            background: background,
-            theme: theme
-        )
-    }
+//
+//    /// The default style for code boxes with a custom color theme.
+//    public static func automatic(
+//        wordWrap: Bool = false,
+//        theme: ((_ colorScheme: ColorScheme) -> Splash.Theme)? = nil
+//    ) -> Self {
+//        DefaultShowcaseCodeBlockStyle(
+//            wordWrap: wordWrap,
+//            background: .background,
+//            theme: theme
+//        )
+//    }
+//
+//    @available(iOS 16, *)
+//    public static func automatic<S: ShapeStyle>(
+//        wordWrap: Bool = false,
+//        background: S,
+//        theme: ((_ colorScheme: ColorScheme) -> Splash.Theme)? = nil
+//    ) -> DefaultShowcaseCodeBlockStyle<S> {
+//        DefaultShowcaseCodeBlockStyle(
+//            wordWrap: wordWrap,
+//            background: background,
+//            theme: theme
+//        )
+//    }
 }
 
 /// The default style for code boxes.
-public struct DefaultShowcaseCodeBlockStyle<S: ShapeStyle>: ShowcaseCodeBlockStyle {
+public struct DefaultShowcaseCodeBlockStyle: ShowcaseCodeBlockStyle {
     var wordWrap: Bool
-    var background: S
-    var theme: ((ColorScheme) -> Splash.Theme)?
 
     public func makeBody(configuration: Configuration) -> some View {
         GroupBox(
@@ -93,9 +83,10 @@ public struct DefaultShowcaseCodeBlockStyle<S: ShapeStyle>: ShowcaseCodeBlockSty
                     Spacer()
                     configuration.copyToPasteboard
                 }
+                .foregroundStyle(Color(uiColor: configuration.theme.plainTextColor))
             }
         )
-        .ios16_backgroundStyle(background)
+        .ios16_backgroundStyle(Color(uiColor: configuration.theme.backgroundColor))
     }
 
     private func font(_ typeSize: DynamicTypeSize) -> Splash.Font {
@@ -117,11 +108,10 @@ public struct DefaultShowcaseCodeBlockStyle<S: ShapeStyle>: ShowcaseCodeBlockSty
     }
 
     public func makeTheme(colorScheme: ColorScheme, typeSize: DynamicTypeSize) -> Theme {
-        if let theme = theme?(colorScheme) { return theme }
-
+        let font = font(typeSize)
         return switch colorScheme {
-        case .dark: .sundellsColors(withFont: font(typeSize))
-        default:    .presentation(withFont: font(typeSize))
+        case .dark: .sundellsColors(withFont: font)
+        default:    .presentation(withFont: font)
         }
     }
 }
@@ -148,7 +138,7 @@ GroupBox(
 )
 """
         }))
-    .showcaseCodeBlockStyle(.automatic(wordWrap: true))
+    .showcaseCodeBlockStyle(.automatic)
 }
 
 #Preview {

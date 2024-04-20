@@ -44,18 +44,3 @@ extension View {
         environment(\.linkStyle, .init(style))
     }
 }
-
-// MARK: - Environment Keys
-
-/// A private key needed to save style data in the environment
-private struct LinkStyleKey: EnvironmentKey {
-    static var defaultValue: AnyButtonStyle = .init(.standard)
-}
-
-extension EnvironmentValues {
-    /// The current Showcase style value.
-    var linkStyle: AnyButtonStyle {
-        get { self[LinkStyleKey.self] }
-        set { self[LinkStyleKey.self] = newValue }
-    }
-}

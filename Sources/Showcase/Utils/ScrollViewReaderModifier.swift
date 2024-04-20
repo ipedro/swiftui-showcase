@@ -31,7 +31,7 @@ struct ScrollViewReaderModifier: ViewModifier {
 
                 content
             }
-            .scrollViewProxy(scroll)
+            .environment(\.scrollView, scroll)
         }
     }
 }

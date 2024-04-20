@@ -27,6 +27,12 @@ struct ShowcaseCodeBlock: View {
     @Environment(\.codeBlockStyle) 
     private var style
 
+    @Environment(\.colorScheme)
+    private var colorScheme
+
+    @Environment(\.dynamicTypeSize)
+    private var typeSize
+
     var data: Topic.CodeBlock
 
     /// Initializes a ShowcaseCodeBlock view with the specified code block data.
@@ -38,14 +44,12 @@ struct ShowcaseCodeBlock: View {
 
     var configuration: Configuration {
         Configuration(
-            content: Configuration.Content(
-                rawValue: data.rawValue,
-                theme: style.makeTheme(colorScheme:typeSize:)
-            ),
-            copyToPasteboard: Configuration.CopyToPasteboard(
-                rawValue: data.rawValue
-            ),
-            title: Text(optional: LocalizedStringKey(optional: data.title))
+            title: Text(optional: LocalizedStringKey(optional: data.title)),
+            rawValue: data.rawValue,
+            theme: style.makeTheme(
+                colorScheme: colorScheme,
+                typeSize: typeSize
+            )
         )
     }
 
@@ -57,7 +61,15 @@ struct ShowcaseCodeBlock: View {
 public struct ShowcaseCodeBlockStyleConfiguration {
     public let content: Content
     public let copyToPasteboard: CopyToPasteboard
+    public let theme: Splash.Theme
     public let title: Text?
+
+    init(title: Text?, rawValue: String, theme: Splash.Theme) {
+        self.content = Content(rawValue: rawValue, theme: theme)
+        self.copyToPasteboard = CopyToPasteboard(rawValue: rawValue)
+        self.theme = theme
+        self.title = title
+    }
 }
 
 // MARK: - Copy To Pasteboard
@@ -88,10 +100,11 @@ public extension ShowcaseCodeBlockStyleConfiguration {
     /// A view representing the content of the code block with syntax highlighting.
     struct Content: View {
         var rawValue: String
-        var theme: (ColorScheme, DynamicTypeSize) -> Theme
+        var theme: Splash.Theme
+//        var theme: (ColorScheme, DynamicTypeSize) -> Splash.Theme
 
-        @Environment(\.colorScheme)
-        private var colorScheme
+//        @Environment(\.colorScheme)
+//        private var colorScheme
 
         @Environment(\.dynamicTypeSize)
         private var typeSize
@@ -101,7 +114,7 @@ public extension ShowcaseCodeBlockStyleConfiguration {
         }
 
         private func makeAttributed(string: String) -> AttributedString {
-            let theme = theme(colorScheme, typeSize)
+            let theme = theme//(colorScheme, typeSize)
             let format = AttributedStringOutputFormat(theme: theme)
             let highlighter = SyntaxHighlighter(format: format)
             let attributed = AttributedString(highlighter.highlight(string))

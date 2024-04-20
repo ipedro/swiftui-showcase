@@ -67,7 +67,8 @@ public struct ShowcaseIndexListStyleConfiguration {
             }
 
             ForEach(topics) { topic in
-                ShowcaseIndexList(topic).nodeDepth(depth + 1)
+                ShowcaseIndexList(topic)
+                    .environment(\.nodeDepth, depth + 1)
             }
         }
     }

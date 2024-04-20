@@ -63,21 +63,6 @@ extension View {
     }
 }
 
-// MARK: - Environment Keys
-
-/// A private key needed to save style data in the environment
-private struct ShowcaseCodeBlockStyleKey: EnvironmentKey {
-    static var defaultValue: any ShowcaseCodeBlockStyle = .automatic
-}
-
-extension EnvironmentValues {
-    /// The current Showcase style value.
-    var codeBlockStyle: any ShowcaseCodeBlockStyle {
-        get { self[ShowcaseCodeBlockStyleKey.self] }
-        set { self[ShowcaseCodeBlockStyleKey.self] = newValue }
-    }
-}
-
 // MARK: - Dynamic Property
 
 private struct ResolvedStyle<Style: ShowcaseCodeBlockStyle>: View {
