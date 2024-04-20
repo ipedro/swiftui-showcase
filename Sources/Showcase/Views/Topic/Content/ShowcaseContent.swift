@@ -49,7 +49,7 @@ public struct ShowcaseContentStyleConfiguration {
     public let preview: ShowcasePreview?
     public let links: Links?
     public let embeds: Embeds?
-    public let codeBoxes: CodeBoxes?
+    public let codeBlocks: CodeBlocks?
     
     /// A view that represents a list of web embeds.
     public struct Embeds: View {
@@ -89,7 +89,7 @@ public struct ShowcaseContentStyleConfiguration {
     }
     
     /// A view that represents a list of code examples.
-    public struct CodeBoxes: View {
+    public struct CodeBlocks: View {
         let data: [Topic.CodeBlock]
         
         /// Initializes the view with code block data.
@@ -102,7 +102,7 @@ public struct ShowcaseContentStyleConfiguration {
         /// The body view for displaying code blocks.
         public var body: some View {
             ForEach(data) {
-                ShowcaseCodeBox($0)
+                ShowcaseCodeBlock($0)
             }
         }
     }

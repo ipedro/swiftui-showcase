@@ -41,7 +41,7 @@ public struct ShowcaseTopic: View {
             preview: ShowcasePreview(data),
             links: ShowcaseContent.Configuration.Links(data: data.links),
             embeds: ShowcaseContent.Configuration.Embeds(data: data.embeds),
-            codeBoxes: ShowcaseContent.Configuration.CodeBoxes(data: data.codeBlocks))
+            codeBlocks: ShowcaseContent.Configuration.CodeBlocks(data: data.codeBlocks))
     }
 
     private var configuration: ShowcaseLayoutStyleConfiguration {

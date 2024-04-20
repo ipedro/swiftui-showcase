@@ -61,7 +61,7 @@ public struct VerticalShowcaseContentStyle: ShowcaseContentStyle {
             configuration.preview.padding(.bottom)
             configuration.description.padding(.bottom)
             configuration.embeds
-            configuration.codeBoxes
+            configuration.codeBlocks
         }
     }
 
