@@ -27,7 +27,7 @@ struct LinkStyleKey: EnvironmentKey {
 
 /// An internal key needed to save style data in the environment
 struct StyleKey: EnvironmentKey {
-    static var defaultValue: any ShowcaseLayoutStyle = .vertical
+    static var defaultValue: any ShowcaseLayoutStyle = .automatic
 }
 
 /// An internal key needed to save style data in the environment
@@ -45,14 +45,6 @@ struct PreviewStyleKey: EnvironmentKey {
     static var defaultValue: any ShowcasePreviewStyle = .plain
 }
 
-struct ScrollViewKey: EnvironmentKey {
-    static var defaultValue: ScrollViewProxy?
-}
-
-struct NodeDepthKey: EnvironmentKey {
-    static var defaultValue: Int = .zero
-}
-
 /// An internal key needed to save style data in the environment
 struct CodeBlockStyleKey: EnvironmentKey {
     static var defaultValue: any ShowcaseCodeBlockStyle = .automatic
@@ -61,4 +53,12 @@ struct CodeBlockStyleKey: EnvironmentKey {
 /// An internal key needed to save style data in the environment
 struct ContentStyleKey: EnvironmentKey {
     static var defaultValue: any ShowcaseContentStyle = .automatic
+}
+
+struct ScrollViewKey: EnvironmentKey {
+    static var defaultValue: ScrollViewProxy?
+}
+
+struct NodeDepthKey: EnvironmentKey {
+    static var defaultValue: Int = .zero
 }

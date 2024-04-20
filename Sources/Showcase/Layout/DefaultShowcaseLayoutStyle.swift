@@ -2,13 +2,15 @@ import SwiftUI
 
 // MARK: - ShowcaseStyle Extension
 
-public extension ShowcaseLayoutStyle where Self == VerticalShowcaseLayoutStyle {
+public extension ShowcaseLayoutStyle where Self == DefaultShowcaseLayoutStyle {
     /// A vertical showcase layout.
-    static var vertical: Self { .init() }
+    static var automatic: DefaultShowcaseLayoutStyle {
+        DefaultShowcaseLayoutStyle()
+    }
 }
 
 /// The standard showcase style.
-public struct VerticalShowcaseLayoutStyle: ShowcaseLayoutStyle {
+public struct DefaultShowcaseLayoutStyle: ShowcaseLayoutStyle {
     @Environment(\.nodeDepth) 
     private var depth
 
