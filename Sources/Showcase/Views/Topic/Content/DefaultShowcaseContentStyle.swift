@@ -20,15 +20,32 @@
 
 import SwiftUI
 
-extension ShowcaseContentStyle where Self == VerticalShowcaseContentStyle {
+extension ShowcaseContentStyle where Self == DefaultShowcaseContentStyle {
     /// A vertical content style.
-    static var vertical: Self { .init() }
+    static var automatic: Self { .init() }
 }
 
 /// A vertical content style.
-public struct VerticalShowcaseContentStyle: ShowcaseContentStyle {
+public struct DefaultShowcaseContentStyle: ShowcaseContentStyle {
     @Environment(\.nodeDepth)
     private var depth
+
+    public func makeBody(configuration: Configuration) -> some View {
+        LazyVStack(alignment: .leading, spacing: 30) {
+            configuration.title.font(.system(titleStyle))
+
+            if let links = configuration.links {
+                LazyHStack {
+                    links
+                }
+            }
+
+            configuration.preview.padding(.bottom)
+            configuration.description.padding(.bottom)
+            configuration.embeds
+            configuration.codeBlocks
+        }
+    }
 
     private var titleStyle: SwiftUI.Font.TextStyle {
         switch depth {
@@ -45,23 +62,6 @@ public struct VerticalShowcaseContentStyle: ShowcaseContentStyle {
         case 2: return .callout
         case 3: return .footnote
         default: return .body
-        }
-    }
-
-    public func makeBody(configuration: Configuration) -> some View {
-        LazyVStack(alignment: .leading, spacing: 30) {
-            configuration.title.font(.system(titleStyle))
-
-            if let links = configuration.links {
-                LazyHStack {
-                    links
-                }
-            }
-
-            configuration.preview.padding(.bottom)
-            configuration.description.padding(.bottom)
-            configuration.embeds
-            configuration.codeBlocks
         }
     }
 

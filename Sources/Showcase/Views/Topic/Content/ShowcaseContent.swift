@@ -20,12 +20,13 @@
 
 import SwiftUI
 
-public struct ShowcaseContent: View, Equatable {
-    @Environment(\.contentStyle) 
+struct ShowcaseContent: View, Equatable {
+    typealias Configuration = ShowcaseContentStyleConfiguration
+
+    @Environment(\.contentStyle)
     private var style
 
-    typealias Configuration = ShowcaseContentStyleConfiguration
-    let configuration: Configuration
+    var configuration: Configuration
 
     public init(_ configuration: ShowcaseContentStyleConfiguration) {
         self.configuration = configuration
@@ -50,36 +51,44 @@ public struct ShowcaseContentStyleConfiguration {
     public let links: Links?
     public let embeds: Embeds?
     public let codeBlocks: CodeBlocks?
-    
+}
+
+// MARK: -  Embeds
+
+public extension ShowcaseContentStyleConfiguration {
     /// A view that represents a list of web embeds.
-    public struct Embeds: View {
+    struct Embeds: View {
         let data: [Topic.Embed]
-        
+
         /// Initializes the view with external link data.
         /// - Parameter data: The external link data.
         init?(data: [Topic.Embed]) {
             if data.isEmpty { return nil }
             self.data = data
         }
-        
+
         public var body: some View {
             ForEach(data) {
                 ShowcaseEmbed(data: $0)
             }
         }
     }
-    
+}
+
+// MARK: -  Links
+
+public extension ShowcaseContentStyleConfiguration {
     /// A view that represents a list of external links.
-    public struct Links: View {
+    struct Links: View {
         let data: [Topic.Link]
-        
+
         /// Initializes the view with external link data.
         /// - Parameter data: The external link data.
         init?(data: [Topic.Link]) {
             if data.isEmpty { return nil }
             self.data = data
         }
-        
+
         /// The body view for displaying external links.
         public var body: some View {
             ForEach(data) {
@@ -87,9 +96,13 @@ public struct ShowcaseContentStyleConfiguration {
             }
         }
     }
-    
+}
+
+// MARK: -  Code Blocks
+
+public extension ShowcaseContentStyleConfiguration {
     /// A view that represents a list of code examples.
-    public struct CodeBlocks: View {
+    struct CodeBlocks: View {
         let data: [Topic.CodeBlock]
         
         /// Initializes the view with code block data.

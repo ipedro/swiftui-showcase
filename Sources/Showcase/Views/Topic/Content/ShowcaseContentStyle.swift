@@ -62,7 +62,7 @@ extension View {
 
 /// A private key needed to save style data in the environment
 private struct ShowcaseContentStyleKey: EnvironmentKey {
-    static var defaultValue: any ShowcaseContentStyle = .vertical
+    static var defaultValue: any ShowcaseContentStyle = .automatic
 }
 
 extension EnvironmentValues {
@@ -76,8 +76,8 @@ extension EnvironmentValues {
 // MARK: - Dynamic Property
 
 private struct ResolvedShowcaseContentStyle<Style: ShowcaseContentStyle>: View {
-    let configuration: ShowcaseContentStyleConfiguration
-    let style: Style
+    var configuration: ShowcaseContentStyleConfiguration
+    var style: Style
 
     var body: some View {
         style.makeBody(configuration: configuration)

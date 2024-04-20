@@ -27,7 +27,7 @@ struct ShowcaseCodeBlock: View {
     @Environment(\.codeBlockStyle) 
     private var style
 
-    let data: Topic.CodeBlock
+    var data: Topic.CodeBlock
 
     /// Initializes a ShowcaseCodeBlock view with the specified code block data.
     /// - Parameter data: The data representing the code block (optional).
@@ -38,7 +38,7 @@ struct ShowcaseCodeBlock: View {
 
     var configuration: Configuration {
         Configuration(
-            code: Configuration.CodeBlock(
+            content: Configuration.Content(
                 rawValue: data.rawValue,
                 theme: style.makeTheme(colorScheme:)
             ),
@@ -55,12 +55,16 @@ struct ShowcaseCodeBlock: View {
 }
 
 public struct ShowcaseCodeBlockStyleConfiguration {
-    public let code: CodeBlock
+    public let content: Content
     public let copyToPasteboard: CopyToPasteboard
     public let title: Text?
+}
 
+// MARK: - Copy To Pasteboard
+
+public extension ShowcaseCodeBlockStyleConfiguration {
     /// A view representing the copy to pasteboard button.
-    public struct CopyToPasteboard: View {
+    struct CopyToPasteboard: View {
         /// The text to be copied to the pasteboard.
         let rawValue: String
 
@@ -76,9 +80,13 @@ public struct ShowcaseCodeBlockStyleConfiguration {
             .onAppear(perform: impact.prepare)
         }
     }
+}
 
+// MARK: - Content
+
+public extension ShowcaseCodeBlockStyleConfiguration {
     /// A view representing the content of the code block with syntax highlighting.
-    public struct CodeBlock: View {
+    struct Content: View {
         let rawValue: String
         let theme: (ColorScheme) -> Theme
         @Environment(\.colorScheme)

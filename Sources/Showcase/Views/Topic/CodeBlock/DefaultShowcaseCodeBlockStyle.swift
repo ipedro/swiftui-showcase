@@ -77,7 +77,7 @@ public struct DefaultShowcaseCodeBlockStyle<S: ShapeStyle>: ShowcaseCodeBlockSty
         GroupBox(
             content: {
                 ScrollView(wordWrap ? .vertical : .horizontal) {
-                    configuration.code.frame(
+                    configuration.content.frame(
                         maxWidth: .infinity,
                         alignment: .leading
                     )
