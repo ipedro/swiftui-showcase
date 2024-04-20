@@ -70,7 +70,6 @@ struct Showcase_Previews: PreviewProvider {
                 ShowcaseIndexMenu(.mockAccordion)
             }
         }
-        .showcasePreviewStyle(.groupBox(.automatic))
     }
 }
 

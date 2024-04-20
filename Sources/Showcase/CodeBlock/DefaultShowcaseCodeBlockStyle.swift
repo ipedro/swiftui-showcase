@@ -29,31 +29,6 @@ public extension ShowcaseCodeBlockStyle where Self == DefaultShowcaseCodeBlockSt
     static var wordWrap: Self {
         DefaultShowcaseCodeBlockStyle(wordWrap: true)
     }
-//
-//    /// The default style for code boxes with a custom color theme.
-//    public static func automatic(
-//        wordWrap: Bool = false,
-//        theme: ((_ colorScheme: ColorScheme) -> Splash.Theme)? = nil
-//    ) -> Self {
-//        DefaultShowcaseCodeBlockStyle(
-//            wordWrap: wordWrap,
-//            background: .background,
-//            theme: theme
-//        )
-//    }
-//
-//    @available(iOS 16, *)
-//    public static func automatic<S: ShapeStyle>(
-//        wordWrap: Bool = false,
-//        background: S,
-//        theme: ((_ colorScheme: ColorScheme) -> Splash.Theme)? = nil
-//    ) -> DefaultShowcaseCodeBlockStyle<S> {
-//        DefaultShowcaseCodeBlockStyle(
-//            wordWrap: wordWrap,
-//            background: background,
-//            theme: theme
-//        )
-//    }
 }
 
 /// The default style for code boxes.

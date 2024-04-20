@@ -87,12 +87,14 @@ struct ShowcaseList_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
             ShowcaseDocument(
-                .init(
+                Document(
                     "Test",
                     Chapter(
                         "Chapter",
                         elements
-                    )))
+                    )
+                )
+            )
         }
         .showcasePreviewStyle(.groupBoxPage)
         //.showcaseCodeBlockStyle(.wordWrap)

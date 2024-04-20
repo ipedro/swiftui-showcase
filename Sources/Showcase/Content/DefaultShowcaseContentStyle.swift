@@ -22,7 +22,9 @@ import SwiftUI
 
 extension ShowcaseContentStyle where Self == DefaultShowcaseContentStyle {
     /// A vertical content style.
-    static var automatic: Self { .init() }
+    static var automatic: Self {
+        DefaultShowcaseContentStyle()
+    }
 }
 
 /// A vertical content style.
@@ -40,8 +42,8 @@ public struct DefaultShowcaseContentStyle: ShowcaseContentStyle {
                 }
             }
 
-            configuration.preview.padding(.bottom)
-            configuration.description.padding(.bottom)
+            configuration.description
+            configuration.preview
             configuration.embeds
             configuration.codeBlocks
         }
