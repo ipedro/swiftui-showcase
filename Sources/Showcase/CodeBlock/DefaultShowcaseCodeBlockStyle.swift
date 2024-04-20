@@ -70,9 +70,6 @@ public struct DefaultShowcaseCodeBlockStyle<S: ShapeStyle>: ShowcaseCodeBlockSty
     var background: S
     var theme: ((ColorScheme) -> Splash.Theme)?
 
-    @Environment(\.dynamicTypeSize)
-    private var typeSize
-
     public func makeBody(configuration: Configuration) -> some View {
         GroupBox(
             content: {
@@ -101,7 +98,7 @@ public struct DefaultShowcaseCodeBlockStyle<S: ShapeStyle>: ShowcaseCodeBlockSty
         .ios16_backgroundStyle(background)
     }
 
-    private var font: Splash.Font {
+    private func font(_ typeSize: DynamicTypeSize) -> Splash.Font {
         switch typeSize {
         case .xSmall:         Font(size: 9)
         case .small:          Font(size: 11)
@@ -119,12 +116,12 @@ public struct DefaultShowcaseCodeBlockStyle<S: ShapeStyle>: ShowcaseCodeBlockSty
         }
     }
 
-    public func makeTheme(colorScheme: ColorScheme) -> Splash.Theme {
+    public func makeTheme(colorScheme: ColorScheme, typeSize: DynamicTypeSize) -> Theme {
         if let theme = theme?(colorScheme) { return theme }
 
         return switch colorScheme {
-        case .dark: .sundellsColors(withFont: font)
-        default:    .presentation(withFont: font)
+        case .dark: .sundellsColors(withFont: font(typeSize))
+        default:    .presentation(withFont: font(typeSize))
         }
     }
 }

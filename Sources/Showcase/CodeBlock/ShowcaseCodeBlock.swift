@@ -40,7 +40,7 @@ struct ShowcaseCodeBlock: View {
         Configuration(
             content: Configuration.Content(
                 rawValue: data.rawValue,
-                theme: style.makeTheme(colorScheme:)
+                theme: style.makeTheme(colorScheme:typeSize:)
             ),
             copyToPasteboard: Configuration.CopyToPasteboard(
                 rawValue: data.rawValue
@@ -87,17 +87,21 @@ public extension ShowcaseCodeBlockStyleConfiguration {
 public extension ShowcaseCodeBlockStyleConfiguration {
     /// A view representing the content of the code block with syntax highlighting.
     struct Content: View {
-        let rawValue: String
-        let theme: (ColorScheme) -> Theme
+        var rawValue: String
+        var theme: (ColorScheme, DynamicTypeSize) -> Theme
+
         @Environment(\.colorScheme)
         private var colorScheme
+
+        @Environment(\.dynamicTypeSize)
+        private var typeSize
 
         public var body: some View {
             Text(makeAttributed(string: rawValue)).textSelection(.enabled)
         }
 
         private func makeAttributed(string: String) -> AttributedString {
-            let theme = theme(colorScheme)
+            let theme = theme(colorScheme, typeSize)
             let format = AttributedStringOutputFormat(theme: theme)
             let highlighter = SyntaxHighlighter(format: format)
             let attributed = AttributedString(highlighter.highlight(string))

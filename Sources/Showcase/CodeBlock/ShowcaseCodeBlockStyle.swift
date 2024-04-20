@@ -43,17 +43,7 @@ public protocol ShowcaseCodeBlockStyle: DynamicProperty {
     @ViewBuilder 
     func makeBody(configuration: Configuration) -> Body
 
-    func makeTheme(colorScheme: ColorScheme) -> Splash.Theme
-}
-
-extension ShowcaseCodeBlockStyle {
-    func makeAttributed(_ string: String, in colorScheme: ColorScheme) -> AttributedString {
-        let theme = makeTheme(colorScheme: colorScheme)
-        let format = AttributedStringOutputFormat(theme: theme)
-        let highlighter = SyntaxHighlighter(format: format)
-        let attributed = AttributedString(highlighter.highlight(string))
-        return attributed
-    }
+    func makeTheme(colorScheme: ColorScheme, typeSize: DynamicTypeSize) -> Splash.Theme
 }
 
 // MARK: - View Extension
