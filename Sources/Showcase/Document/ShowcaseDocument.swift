@@ -48,37 +48,13 @@ public struct ShowcaseDocument: View {
     public var body: some View {
         List {
             DescriptionView(data.description)
-            ForEach(chapters, content: section)
+            ForEach(chapters, content: ShowcaseChapter.init(data:))
         }
         .searchable(text: $searchQuery)
         .navigationTitle(data.title)
         .previewDisplayName(data.title)
     }
 
-    func section(_ chapter: Chapter) -> some View {
-        Section {
-            outlineGroup(chapter)
-        } header: {
-            Text(chapter.title)
-        } footer: {
-            if let footer = chapter.description {
-                Text(footer)
-            }
-        }
-    }
-    
-    func outlineGroup(_ chapter: Chapter) -> some View {
-        OutlineGroup(chapter.topics, children: \.children) { item in
-            NavigationLink {
-                ScrollableTopic(data: item)
-            } label: {
-                TopicListLabel(
-                    data: item,
-                    fallbackIcon: chapter.icon ?? data.icon
-                )
-            }
-        }
-    }
 }
 
 private struct DescriptionView: View {
@@ -101,42 +77,6 @@ private struct DescriptionView: View {
     }
 }
 
-
-private struct TopicListLabel: View {
-    let data: Topic
-    let fallbackIcon: Image?
-
-    var body: some View {
-        Label {
-            Text(data.title).bold()
-        } icon: {
-            if let icon = data.icon { icon }
-            else { fallbackIcon }
-        }
-    }
-}
-
-private struct ScrollableTopic: View {
-    let data: Topic
-
-    var body: some View {
-        ScrollViewReader { scroll in
-            ScrollView {
-                Color.clear
-                    .frame(height: .zero)
-                    .id("top")
-
-                ShowcaseTopic(data)
-                    .navigationTitle(data.title)
-                    .toolbar {
-                        ToolbarItem { ShowcaseIndexMenu(data) }
-                    }
-            }
-            .scrollViewProxy(scroll)
-        }
-    }
-}
-
 struct ShowcaseList_Previews: PreviewProvider {
     static var elements: [Topic] = [
         .mockButton,
@@ -154,5 +94,7 @@ struct ShowcaseList_Previews: PreviewProvider {
                         elements
                     )))
         }
+        .showcasePreviewStyle(.groupBoxPage)
+        //.showcaseCodeBlockStyle(.wordWrap)
     }
 }

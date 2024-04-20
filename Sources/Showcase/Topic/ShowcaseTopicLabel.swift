@@ -19,3 +19,18 @@
 //  SOFTWARE.
 
 import Foundation
+import SwiftUI
+
+struct ShowcaseTopicLabel: View {
+    let data: Topic
+    let fallbackIcon: Image?
+
+    var body: some View {
+        Label {
+            Text(data.title).bold()
+        } icon: {
+            if let icon = data.icon { icon }
+            else { fallbackIcon }
+        }
+    }
+}

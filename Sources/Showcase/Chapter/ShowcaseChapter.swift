@@ -19,3 +19,47 @@
 //  SOFTWARE.
 
 import Foundation
+import SwiftUI
+
+struct ShowcaseChapter: View {
+    var data: Chapter
+
+    var body: some View {
+        Section(
+            content: content,
+            header: header,
+            footer: footer
+        )
+    }
+
+    private func content() -> some View {
+        OutlineGroup(data.topics, children: \.children) { item in
+            NavigationLink {
+                ShowcaseTopic(item)
+                    .modifier(ScrollViewReaderModifier())
+                    .navigationTitle(data.title)
+                    .toolbar {
+                        ToolbarItem {
+                            ShowcaseIndexMenu(item)
+                        }
+                    }
+            } label: {
+                ShowcaseTopicLabel(
+                    data: item,
+                    fallbackIcon: data.icon ?? data.icon
+                )
+            }
+        }
+    }
+
+    private func header() -> some View {
+        Text(data.title)
+    }
+
+    @ViewBuilder
+    private func footer() -> some View {
+        if let footer = data.description {
+            Text(footer)
+        }
+    }
+}
