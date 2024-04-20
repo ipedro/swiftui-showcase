@@ -18,10 +18,6 @@ let package = Package(
             name: "Showcase-auto",
             targets: ["Showcase"]
         ),
-        .library(
-            name: "EnvironmentPicker",
-            targets: ["EnvironmentPicker"]
-        )
     ],
     dependencies: [
         .package(url: "https://github.com/JohnSundell/Splash", from: "0.16.0"),
@@ -31,7 +27,6 @@ let package = Package(
             name: "Showcase",
             dependencies: ["Splash"]
         ),
-        .target(name: "EnvironmentPicker"),
         .testTarget(
             name: "ShowcaseTests",
             dependencies: ["Showcase"]
