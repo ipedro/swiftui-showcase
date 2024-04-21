@@ -46,6 +46,12 @@ extension EnvironmentValues {
     }
 
     /// The current Showcase style value.
+    var codeBlockTheme: ShowcaseCodeBlockTheme? {
+        get { self[CodeBlockThemeKey.self] }
+        set { self[CodeBlockThemeKey.self] = newValue }
+    }
+
+    /// The current Showcase style value.
     var contentStyle: any ShowcaseContentStyle {
         get { self[ContentStyleKey.self] }
         set { self[ContentStyleKey.self] = newValue }

@@ -21,8 +21,9 @@
 import SwiftUI
 
 public struct ShowcaseTopic: View {
-    @Environment(\.nodeDepth) private var depth
-    
+    @Environment(\.nodeDepth)
+    private var depth
+
     let data: Topic
     
     public init(_ data: Topic) {
@@ -33,15 +34,15 @@ public struct ShowcaseTopic: View {
         ShowcaseLayout(configuration).id(data.id)
     }
 
-    private var contentConfiguration: ShowcaseContent.Configuration {
+    private var contentConfiguration: ShowcaseContentStyleConfiguration {
         .init(
             id: data.id,
             title: depth > 0 ? Text(data.title) : nil,
             description: Text(data.description),
             preview: ShowcasePreview(data),
-            links: ShowcaseContent.Configuration.Links(data: data.links),
-            embeds: ShowcaseContent.Configuration.Embeds(data: data.embeds),
-            codeBlocks: ShowcaseContent.Configuration.CodeBlocks(data: data.codeBlocks))
+            links: ShowcaseLinks(data: data.links),
+            embeds: ShowcaseEmbeds(data: data.embeds),
+            codeBlocks: ShowcaseCodeBlocks(data: data.codeBlocks))
     }
 
     private var configuration: ShowcaseLayoutStyleConfiguration {

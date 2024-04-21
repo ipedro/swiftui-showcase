@@ -62,3 +62,7 @@ struct ScrollViewKey: EnvironmentKey {
 struct NodeDepthKey: EnvironmentKey {
     static var defaultValue: Int = .zero
 }
+
+struct CodeBlockThemeKey: EnvironmentKey {
+    static var defaultValue: ShowcaseCodeBlockTheme?
+}

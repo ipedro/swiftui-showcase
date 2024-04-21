@@ -31,9 +31,16 @@ public extension ShowcaseCodeBlockStyle where Self == DefaultShowcaseCodeBlockSt
     }
 }
 
+public extension View {
+    func showcaseCodeBlockTheme(_ theme: ShowcaseCodeBlockTheme?) -> some View {
+        environment(\.codeBlockTheme, theme)
+    }
+}
+
 /// The default style for code boxes.
 public struct DefaultShowcaseCodeBlockStyle: ShowcaseCodeBlockStyle {
     var wordWrap: Bool
+
 
     public func makeBody(configuration: Configuration) -> some View {
         GroupBox(
@@ -64,29 +71,10 @@ public struct DefaultShowcaseCodeBlockStyle: ShowcaseCodeBlockStyle {
         .ios16_backgroundStyle(Color(uiColor: configuration.theme.backgroundColor))
     }
 
-    private func font(_ typeSize: DynamicTypeSize) -> Splash.Font {
-        switch typeSize {
-        case .xSmall:         Font(size: 9)
-        case .small:          Font(size: 11)
-        case .medium:         Font(size: 13)
-        case .large:          Font(size: 15)
-        case .xLarge:         Font(size: 17)
-        case .xxLarge:        Font(size: 19)
-        case .xxxLarge:       Font(size: 21)
-        case .accessibility1: Font(size: 25)
-        case .accessibility2: Font(size: 29)
-        case .accessibility3: Font(size: 33)
-        case .accessibility4: Font(size: 37)
-        case .accessibility5: Font(size: 41)
-        @unknown default:     Font(size: 17)
-        }
-    }
-
-    public func makeTheme(colorScheme: ColorScheme, typeSize: DynamicTypeSize) -> Theme {
-        let font = font(typeSize)
+    public func resolve(in colorScheme: ColorScheme) -> ShowcaseCodeBlockTheme {
         return switch colorScheme {
-        case .dark: .sundellsColors(withFont: font)
-        default:    .presentation(withFont: font)
+        case .dark: .xcodeDark
+        default: .xcodeLight
         }
     }
 }
@@ -96,6 +84,7 @@ public struct DefaultShowcaseCodeBlockStyle: ShowcaseCodeBlockStyle {
     ShowcaseCodeBlock(
         Topic.CodeBlock("Example", text: {
 """
+// test
 GroupBox(
     content: {
         configuration.code.frame(maxWidth: .infinity, alignment: .leading)
@@ -113,13 +102,13 @@ GroupBox(
 )
 """
         }))
-    .showcaseCodeBlockStyle(.automatic)
 }
 
 #Preview {
     ShowcaseCodeBlock(
         Topic.CodeBlock(text: {
 """
+// test
 HStack {
     Spacer()
     copyButton

@@ -19,7 +19,7 @@
 // SOFTWARE.
 
 import SwiftUI
-@_exported import Splash
+import Splash
 
 /// A type that applies standard interaction behavior and a custom appearance to
 /// all code boxes within a view hierarchy.
@@ -40,10 +40,10 @@ public protocol ShowcaseCodeBlockStyle: DynamicProperty {
     ///
     /// - Parameter configuration: The properties of an index list view.
     /// - Returns: A view that represents the body of an index list view.
-    @ViewBuilder 
+    @ViewBuilder
     func makeBody(configuration: Configuration) -> Body
 
-    func makeTheme(colorScheme: ColorScheme, typeSize: DynamicTypeSize) -> Splash.Theme
+    func resolve(in colorScheme: ColorScheme) -> ShowcaseCodeBlockTheme
 }
 
 // MARK: - View Extension

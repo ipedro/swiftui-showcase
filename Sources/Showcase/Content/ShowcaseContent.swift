@@ -48,75 +48,8 @@ public struct ShowcaseContentStyleConfiguration {
     public let title: Text?
     public let description: Text?
     public let preview: ShowcasePreview?
-    public let links: Links?
-    public let embeds: Embeds?
-    public let codeBlocks: CodeBlocks?
+    public let links: ShowcaseLinks?
+    public let embeds: ShowcaseEmbeds?
+    public let codeBlocks: ShowcaseCodeBlocks?
 }
 
-// MARK: -  Embeds
-
-public extension ShowcaseContentStyleConfiguration {
-    /// A view that represents a list of web embeds.
-    struct Embeds: View {
-        let data: [Topic.Embed]
-
-        /// Initializes the view with external link data.
-        /// - Parameter data: The external link data.
-        init?(data: [Topic.Embed]) {
-            if data.isEmpty { return nil }
-            self.data = data
-        }
-
-        public var body: some View {
-            ForEach(data) {
-                ShowcaseEmbed(data: $0)
-            }
-        }
-    }
-}
-
-// MARK: -  Links
-
-public extension ShowcaseContentStyleConfiguration {
-    /// A view that represents a list of external links.
-    struct Links: View {
-        let data: [Topic.Link]
-
-        /// Initializes the view with external link data.
-        /// - Parameter data: The external link data.
-        init?(data: [Topic.Link]) {
-            if data.isEmpty { return nil }
-            self.data = data
-        }
-
-        /// The body view for displaying external links.
-        public var body: some View {
-            ForEach(data) {
-                ShowcaseLink(data: $0)
-            }
-        }
-    }
-}
-
-// MARK: -  Code Blocks
-
-public extension ShowcaseContentStyleConfiguration {
-    /// A view that represents a list of code examples.
-    struct CodeBlocks: View {
-        let data: [Topic.CodeBlock]
-        
-        /// Initializes the view with code block data.
-        /// - Parameter data: The code block data.
-        init?(data: [Topic.CodeBlock]) {
-            if data.isEmpty { return nil }
-            self.data = data
-        }
-        
-        /// The body view for displaying code blocks.
-        public var body: some View {
-            ForEach(data) {
-                ShowcaseCodeBlock($0)
-            }
-        }
-    }
-}
