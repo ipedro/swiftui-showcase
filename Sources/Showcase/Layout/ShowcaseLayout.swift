@@ -40,7 +40,7 @@ public struct ShowcaseLayout: View {
 /// The configuration for a showcase view.
 public struct ShowcaseLayoutStyleConfiguration {
     /// The children views within the showcase.
-    public let children: ShowcaseChildren?
+    public let children: ShowcaseTopics?
     /// The index view for navigating within the showcase.
     public let indexList: ShowcaseIndexList?
     /// The content view of the showcase.

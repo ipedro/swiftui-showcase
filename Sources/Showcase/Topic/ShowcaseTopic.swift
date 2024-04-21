@@ -47,7 +47,7 @@ public struct ShowcaseTopic: View {
 
     private var configuration: ShowcaseLayoutStyleConfiguration {
         .init(
-            children: ShowcaseChildren(data: data.children),
+            children: ShowcaseTopics(data: data.children),
             indexList: depth == 0 && !data.allChildren.isEmpty ? ShowcaseIndexList(data) : nil,
             content: ShowcaseLayoutStyleConfiguration.Content(configuration: contentConfiguration)
         )

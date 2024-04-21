@@ -21,7 +21,7 @@
 import SwiftUI
 
 /// The children views within the showcase.
-public struct ShowcaseChildren: View {
+public struct ShowcaseTopics: View {
     @Environment(\.nodeDepth) private var depth
     
     /// The data representing child showcase topics.
