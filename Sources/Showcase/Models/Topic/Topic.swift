@@ -168,6 +168,12 @@ extension Topic: Comparable {
     }
 }
 
+extension Array: Identifiable where Element == Topic {
+    public var id: [Element.ID] {
+        map(\.id)
+    }
+}
+
 extension [Topic] {
     func search(_ query: String) -> Self {
         compactMap { topic in

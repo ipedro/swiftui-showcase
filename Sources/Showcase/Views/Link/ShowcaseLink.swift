@@ -96,3 +96,17 @@ public struct ShowcaseLinkStyleDefault: ButtonStyle {
         .animation(.interactiveSpring(), value: configuration.isPressed)
     }
 }
+
+#if canImport(UIKit)
+import UIKit
+
+preivate extension UIApplication {
+    var firstKeyWindow: UIWindow? {
+        UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .filter { $0.activationState == .foregroundActive }
+            .first?
+            .keyWindow
+    }
+}
+#endif
