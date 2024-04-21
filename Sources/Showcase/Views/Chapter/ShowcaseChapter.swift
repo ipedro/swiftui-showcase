@@ -37,7 +37,7 @@ struct ShowcaseChapter: View {
             NavigationLink {
                 ShowcaseTopic(item)
                     .modifier(ScrollViewReaderModifier())
-                    .navigationTitle(data.title)
+                    .navigationTitle(item.title)
                     .toolbar {
                         ToolbarItem {
                             ShowcaseIndexMenu(item)

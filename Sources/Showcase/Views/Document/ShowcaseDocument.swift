@@ -78,7 +78,7 @@ private struct DescriptionView: View {
 }
 
 struct ShowcaseList_Previews: PreviewProvider {
-    static var elements: [Topic] = [
+    static var topics: [Topic] = [
         .mockButton,
         .mockCard,
         .mockAccordion
@@ -88,15 +88,17 @@ struct ShowcaseList_Previews: PreviewProvider {
         NavigationView {
             ShowcaseDocument(
                 Document(
-                    "Test",
+                    "My Document",
+                    description: "This document contains one chapter. That chapter has \(topics.count) topics that you can find below.",
                     Chapter(
-                        "Chapter",
-                        elements
+                        "Components",
+                        description: "This chapter is about \(topics.count) components",
+                        topics
                     )
                 )
             )
         }
         .showcasePreviewStyle(.groupBoxPage)
-        //.showcaseCodeBlockStyle(.wordWrap)
+        .showcaseCodeBlockStyle(.wordWrap)
     }
 }

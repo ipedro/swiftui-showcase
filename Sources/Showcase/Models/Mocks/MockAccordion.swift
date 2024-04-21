@@ -27,10 +27,6 @@ extension Topic {
     Accordions enable users to expand and collapse multiple sections of content.
     
     An accordion is vertically stacked set of interactive headings that each contain a headline and description representing a section of content.
-    
-    They are useful for breaking down long and complex content into smaller digestible chunks and to reduce information overload.
-    
-    Commonly used for content that is useful but not essential such as frequently asked questions (FAQs), or for displaying multiple blocks of related content.
     """
         },
         links: {
