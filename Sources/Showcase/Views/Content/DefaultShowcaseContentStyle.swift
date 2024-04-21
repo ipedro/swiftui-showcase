@@ -33,7 +33,7 @@ public struct DefaultShowcaseContentStyle: ShowcaseContentStyle {
     private var depth
 
     public func makeBody(configuration: Configuration) -> some View {
-        LazyVStack(alignment: .leading, spacing: 30) {
+        VStack(alignment: .leading, spacing: 30) {
             configuration.title.font(.system(titleStyle))
 
             if let links = configuration.links {

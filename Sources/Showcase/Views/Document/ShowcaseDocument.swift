@@ -21,9 +21,11 @@
 import SwiftUI
 
 /// A view that displays a list of showcases organized into chapters.
-public struct ShowcaseDocument: View {
+public struct ShowcaseDocument<L: ListStyle>: View {
     /// The data representing showcase chapters.
     private let data: Document
+
+    private let listStyle: L
 
     @State
     private var searchQuery = String()
@@ -31,8 +33,17 @@ public struct ShowcaseDocument: View {
     /// Initializes a showcase list with the specified data and optional icon.
     /// - Parameters:
     ///   - document: The document representing showcase chapters.
-    public init(_ document: Document) {
+    public init(listStyle: L, _ document: Document) {
         self.data = document
+        self.listStyle = listStyle
+    }
+
+    /// Initializes a showcase list with the specified data and optional icon.
+    /// - Parameters:
+    ///   - document: The document representing showcase chapters.
+    public init(_ document: Document) where L == DefaultListStyle {
+        self.data = document
+        self.listStyle = .automatic
     }
 
     private var chapters: [Chapter] {
@@ -48,8 +59,11 @@ public struct ShowcaseDocument: View {
     public var body: some View {
         List {
             DescriptionView(data.description)
-            ForEach(chapters, content: ShowcaseChapter.init(data:))
+            ForEach(chapters) {
+                ShowcaseChapter(data: $0)
+            }
         }
+        .listStyle(listStyle)
         .searchable(text: $searchQuery)
         .navigationTitle(data.title)
         .previewDisplayName(data.title)
@@ -66,14 +80,12 @@ private struct DescriptionView: View {
     }
 
     var body: some View {
-        Section {
-            Text(content)
-                .font(.headline)
-                .foregroundColor(.secondary)
-                .padding(.top, 5)
-        }
-        .listRowBackground(Color.clear)
-        .listRowInsets(EdgeInsets())
+        Text(content)
+            .font(.headline)
+            .foregroundColor(.secondary)
+            .padding(.top, 5)
+            .listRowBackground(Color.clear)
+            .listRowSeparator(.hidden)
     }
 }
 

@@ -15,7 +15,7 @@ public struct DefaultShowcaseLayoutStyle: ShowcaseLayoutStyle {
     private var depth
 
     public func makeBody(configuration: Configuration) -> some View {
-        VStack(alignment: .leading) {
+        LazyVStack(alignment: .leading) {
             if depth > 0 {
                 Divider().padding(.bottom)
             }
