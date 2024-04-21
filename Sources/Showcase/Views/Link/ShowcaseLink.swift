@@ -100,7 +100,7 @@ public struct ShowcaseLinkStyleDefault: ButtonStyle {
 #if canImport(UIKit)
 import UIKit
 
-preivate extension UIApplication {
+private extension UIApplication {
     var firstKeyWindow: UIWindow? {
         UIApplication.shared.connectedScenes
             .compactMap { $0 as? UIWindowScene }
