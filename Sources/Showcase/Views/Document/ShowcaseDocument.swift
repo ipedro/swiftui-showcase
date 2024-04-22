@@ -46,7 +46,7 @@ public struct ShowcaseDocument: View {
         List {
             DescriptionView(data.description)
             ForEach(chapters) {
-                ShowcaseChapter(data: $0).navigationTitle($0.title)
+                ShowcaseChapter(data: $0)
             }
         }
         .searchable(text: $searchQuery)

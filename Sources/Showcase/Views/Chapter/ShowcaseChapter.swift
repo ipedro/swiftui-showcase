@@ -50,7 +50,6 @@ struct ShowcaseChapter: View {
                 )
             }
         }
-        .navigationTitle(data.title)
     }
 
     private func header() -> some View {
