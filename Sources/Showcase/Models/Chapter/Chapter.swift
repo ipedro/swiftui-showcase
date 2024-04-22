@@ -70,30 +70,36 @@ extension Chapter: Comparable {
     }
     
     public static func == (lhs: Self, rhs: Self) -> Bool {
-        lhs.id == rhs.id
+        lhs.id == rhs.id && lhs.topics.count == rhs.topics.count
     }
 }
 
-extension [Chapter] {
-    func search(_ query: String) -> Self {
-        compactMap { chapter in
-            if chapter.title.localizedLowercase.contains(query) {
-                return chapter
-            }
-
-            if chapter.description?.localizedLowercase.contains(query) == true {
-                return chapter
-            }
-
-            let topics = chapter.topics.search(query)
-
-            if !topics.isEmpty {
-                var chapter = chapter
-                chapter.topics = topics
-                return chapter
-            }
-
-            return nil
+extension Collection where Element == Chapter {
+    func search(_ query: String) -> [Chapter] {
+        compactMap {
+            $0.search(query: query)
         }
+    }
+}
+
+extension Chapter {
+    /// Searches for a query string within the chapter, including the chapter title, description, and all contained topics.
+    /// - Parameter query: The text string to search for.
+    /// - Returns: `true` if the query matches any part of the chapter or its topics, `false` otherwise.
+    func search(query: String) -> Chapter? {
+        // Convert query to lowercase for case-insensitive comparison.
+        let query = query.lowercased()
+
+        // Check the chapter title and description for a match.
+        if title.localizedCaseInsensitiveContains(query) || description?.localizedCaseInsensitiveContains(query) == true {
+            return self
+        }
+
+        // Check all topics within the chapter.
+        var copy = self //Chapter(self)
+        copy.topics = topics
+            .compactMap { $0.search(query: query) }
+
+        return copy.topics.isEmpty ? nil : copy
     }
 }

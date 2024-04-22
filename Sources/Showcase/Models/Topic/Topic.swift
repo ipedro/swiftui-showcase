@@ -164,7 +164,7 @@ extension Topic: Comparable {
     }
     
     public static func == (lhs: Self, rhs: Self) -> Bool {
-        lhs.id == rhs.id
+        lhs.id == rhs.id && lhs.children?.count == rhs.children?.count
     }
 }
 
@@ -174,32 +174,31 @@ extension Array: Identifiable where Element == Topic {
     }
 }
 
-extension [Topic] {
-    func search(_ query: String) -> Self {
-        compactMap { topic in
-            if topic.title.localizedLowercase.contains(query) {
-                return topic
-            }
-
-            if topic.description.localizedLowercase.contains(query) {
-                return topic
-            }
-
-            let codeBlocks = topic.codeBlocks
-                .map(\.rawValue.localizedLowercase)
-                .joined(separator: "\n")
-
-            if codeBlocks.contains(query) {
-                return topic
-            }
-
-            if let children = topic.children?.search(query), !children.isEmpty {
-                var topic = topic
-                topic.children = children
-                return topic
-            }
-
-            return nil
+extension Topic {
+    /// Searches for a query string within the topic, including descriptions, titles, code blocks, links, and recursively in child topics.
+    /// - Parameter query: The text string to search for.
+    /// - Returns: `true` if the query matches any part of the topic or its children, `false` otherwise.
+    func search(query: String) -> Topic? {
+        // Convert query to lowercase for case-insensitive comparison.
+        // Check the topic title, description, and optionally preview title for a match.
+        if title.localizedCaseInsensitiveContains(query) ||
+            description.localizedCaseInsensitiveContains(query) ||
+            previewTitle?.localizedCaseInsensitiveContains(query) == true {
+            return self
         }
+
+        // Check code blocks for a match in the raw value or title.
+        if codeBlocks.contains(where: { $0.rawValue.localizedCaseInsensitiveContains(query) || $0.title?.localizedCaseInsensitiveContains(query) == true }) {
+            return self
+        }
+
+        // Check links for a match in the URL or the name of the link.
+        if links.contains(where: { $0.url.absoluteString.localizedCaseInsensitiveContains(query) || $0.name.description.localizedCaseInsensitiveContains(query) }) {
+            return self
+        }
+
+        var copy = self
+        copy.children = children?.compactMap { $0.search(query: query) }
+        return copy.children?.isEmpty != false ? nil : copy
     }
 }
