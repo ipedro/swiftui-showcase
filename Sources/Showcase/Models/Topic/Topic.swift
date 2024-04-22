@@ -158,6 +158,12 @@ public struct Topic: Identifiable {
     }
 }
 
+extension Topic: Hashable {
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+}
+
 extension Topic: Comparable {
     public static func < (lhs: Self, rhs: Self) -> Bool {
         lhs.title.localizedStandardCompare(rhs.title) != .orderedDescending
