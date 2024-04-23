@@ -22,11 +22,15 @@ import SwiftUI
 
 /// A view that displays a list of showcases organized into chapters.
 @available(iOS 16.0, *)
-public struct ShowcaseNavigationSplitView<Sidebar: View>: View {
+public struct ShowcaseNavigationSplitView<Sidebar: View, ContentToolbar: View, DetailToolbar: View>: View {
     /// The data representing showcase chapters.
     private let data: Document
 
     private let _sidebar: Sidebar
+
+    private let contentToolbar: ContentToolbar
+
+    private let detailToolbar: DetailToolbar
 
     @State
     private var searchQuery = String()
@@ -37,14 +41,19 @@ public struct ShowcaseNavigationSplitView<Sidebar: View>: View {
     @State
     private var selection: Topic?
 
+    /// Creates a two or three-column layout
     public init(
         _ data: Document,
         columnVisibility: Binding<NavigationSplitViewVisibility> = .constant(.automatic),
-        @ViewBuilder sidebar: () -> Sidebar
+        @ViewBuilder sidebar: () -> Sidebar = EmptyView.init,
+        @ViewBuilder contentToolbar: () -> ContentToolbar = EmptyView.init,
+        @ViewBuilder detailToolbar: () -> DetailToolbar = EmptyView.init
     ) {
         self.data = data
         self._columnVisibility = columnVisibility
         self._sidebar = sidebar()
+        self.contentToolbar = contentToolbar()
+        self.detailToolbar = detailToolbar()
     }
 
     public var body: some View {
@@ -77,7 +86,9 @@ public struct ShowcaseNavigationSplitView<Sidebar: View>: View {
 
     @ViewBuilder
     private func detail() -> some View {
-        ShowcaseNavigationTopic(selection)
+        ShowcaseNavigationTopic(selection).toolbar(content: {
+            detailToolbar
+        })
     }
 
     private var list: some View {
@@ -90,13 +101,12 @@ public struct ShowcaseNavigationSplitView<Sidebar: View>: View {
         }
         .searchable(text: $searchQuery)
         .navigationTitle(data.title)
+        .toolbar(content: {
+            contentToolbar
+        })
     }
 }
 
 #Preview {
-    ShowcaseNavigationSplitView(
-        .systemComponents,
-        columnVisibility: .constant(.automatic),
-        sidebar: EmptyView.init
-    )
+    ShowcaseNavigationSplitView(.systemComponents)
 }
