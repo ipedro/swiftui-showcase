@@ -21,7 +21,8 @@
 import SwiftUI
 
 /// A view that displays a list of showcases organized into chapters.
-public struct ShowcaseDocument: View {
+@available(iOS 16.0, *)
+public struct ShowcaseNavigationStack: View {
     /// The data representing showcase chapters.
     private let data: Document
 
@@ -35,42 +36,23 @@ public struct ShowcaseDocument: View {
         self.data = document
     }
 
-    private var chapters: [Chapter] {
-        let searchQuery = searchQuery.trimmingCharacters(in: .whitespacesAndNewlines)
-        if searchQuery.isEmpty { return data.chapters }
-        let result = data.chapters.search(searchQuery)
-        return result
-    }
-
     public var body: some View {
-        List {
-            DescriptionView(data.description)
-            ForEach(chapters) {
-                ShowcaseChapter(data: $0)
+        NavigationStack {
+            List {
+                DescriptionView(data.description)
+                SearchableChapters(
+                    searchQuery: $searchQuery,
+                    data: data.chapters
+                )
             }
+            .navigationDestination(
+                for: Topic.self,
+                destination: ShowcaseNavigationTopic.init
+            )
+            .searchable(text: $searchQuery)
+            .navigationTitle(data.title)
         }
-        .searchable(text: $searchQuery)
-        .navigationTitle(data.title)
         .previewDisplayName(data.title)
-    }
-
-}
-
-private struct DescriptionView: View {
-    let content: String
-
-    init?(_ content: String?) {
-        guard let content else { return nil }
-        self.content = content
-    }
-
-    var body: some View {
-        Text(content)
-            .font(.headline)
-            .foregroundColor(.secondary)
-            .padding(.top, 5)
-            .listRowBackground(Color.clear)
-            .listRowSeparator(.hidden)
     }
 }
 
@@ -80,21 +62,19 @@ struct ShowcaseList_Previews: PreviewProvider {
         .mockCard,
         .mockAccordion
     ]
-    
+
     static var previews: some View {
-        NavigationView {
-            ShowcaseDocument(
-                Document(
-                    "My Document",
-                    description: "This document contains one chapter. That chapter has \(topics.count) topics that you can find below.",
-                    Chapter(
-                        "Components",
-                        description: "This chapter is about \(topics.count) components",
-                        topics
-                    )
+        ShowcaseNavigationStack(
+            Document(
+                "My Document",
+                description: "This document contains one chapter. That chapter has \(topics.count) topics that you can find below.",
+                Chapter(
+                    "Components",
+                    description: "This chapter is about \(topics.count) components",
+                    topics
                 )
             )
-        }
+        )
         .showcasePreviewStyle(.groupBoxPage)
         .showcaseCodeBlockStyle(.wordWrap)
     }

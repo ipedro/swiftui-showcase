@@ -55,7 +55,7 @@ extension View {
     /// Use this modifier to set a specific style for ``ShowcaseDocument`` instances
     /// within a view:
     ///
-    ///     ShowcaseDocument()
+    ///     ShowcaseNavigationStack()
     ///         .showcaseCodeBlockStyle(MyCustomStyle())
     ///
     public func showcaseCodeBlockStyle<S: ShowcaseCodeBlockStyle>(_ style: S) -> some View {

@@ -105,7 +105,7 @@ import SwiftUI
 struct ContentView: View {
     var body: some View {
         // Create a ShowcaseNavigationView with a Chapter and optional icon
-        ShowcaseNavigationView(
+        ShowcaseNavigationStack(
             ShowcaseChapter(
                 "My Chapter", 
                 Chapter("Section 1", .card, .accordion),

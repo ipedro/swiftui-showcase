@@ -57,7 +57,7 @@ Button("I'm a bordered button") {
 struct TopicButton_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            ShowcaseDocument(
+            ShowcaseNavigationStack(
                 .init(
                     "Button",
                     Chapter(

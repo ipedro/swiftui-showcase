@@ -21,40 +21,21 @@
 import Foundation
 import SwiftUI
 
-struct ShowcaseChapter: View {
-    var data: Chapter
+struct SearchableChapters: View {
+    @Binding
+    var searchQuery: String
+    var data: [Chapter]
+
+    private var chapters: [Chapter] {
+        let searchQuery = searchQuery.trimmingCharacters(in: .whitespacesAndNewlines)
+        if searchQuery.isEmpty { return data }
+        let result = data.search(searchQuery)
+        return result
+    }
 
     var body: some View {
-        Section(
-            content: content,
-            header: header,
-            footer: footer
-        )
-    }
-
-    private func label(topic: Topic) -> ShowcaseTopicLabel {
-        ShowcaseTopicLabel(
-            data: topic,
-            fallbackIcon: data.icon ?? data.icon
-        )
-    }
-    
-    private func content() -> some View {
-        OutlineGroup(data.topics, children: \.children) { item in
-            NavigationLink(value: item, label: {
-                label(topic: item)
-            })
-        }
-    }
-
-    private func header() -> some View {
-        Text(data.title)
-    }
-
-    @ViewBuilder
-    private func footer() -> some View {
-        if let footer = data.description {
-            Text(footer)
+        ForEach(chapters) {
+            ShowcaseChapter(data: $0)
         }
     }
 }

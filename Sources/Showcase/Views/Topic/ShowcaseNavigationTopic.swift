@@ -20,27 +20,21 @@
 
 import SwiftUI
 
-/// A type that applies standard interaction behavior and a custom appearance to
-/// all links within a view hierarchy.
-///
-/// To configure the current Showcase style for a view hierarchy, use the
-/// ``ShowcaseDocument/showcaseLinkStyle(_:)`` modifier.
+struct ShowcaseNavigationTopic: View {
+    var data: Topic
 
-// MARK: - View Extension
-
-extension View {
-    /// Sets the style for ``ShowcaseDocument`` within this view to a Showcase style with a
-    /// custom appearance and custom interaction behavior.
-    ///
-    /// Use this modifier to set a specific style for ``ShowcaseDocument`` instances
-    /// within a view:
-    ///
-    ///     ShowcaseNavigationStack()
-    ///         .showcaseLinkStyle(MyCustomStyle())
-    /// 
-    /// - Parameter style: <#style description#>
-    /// - Returns: <#description#>
-    public func showcaseLinkStyle<S: ButtonStyle>(_ style: S) -> some View {
-        environment(\.linkStyle, .init(style))
+    init?(_ data: Topic?) {
+        guard let data else { return nil }
+        self.data = data
+    }
+    var body: some View {
+        ShowcaseTopic(data)
+            .modifier(ScrollViewReaderModifier())
+            .navigationTitle(data.title)
+            .toolbar {
+                ToolbarItem {
+                    ShowcaseIndexMenu(data)
+                }
+            }
     }
 }

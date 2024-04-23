@@ -60,7 +60,7 @@ extension Topic {
 struct TopicAccordion_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            ShowcaseDocument(
+            ShowcaseNavigationStack(
                 .init(
                     "Accordion",
                     Chapter(
