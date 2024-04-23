@@ -170,7 +170,7 @@ extension Topic: Comparable {
     }
     
     public static func == (lhs: Self, rhs: Self) -> Bool {
-        lhs.id == rhs.id && lhs.children?.count == rhs.children?.count
+        lhs.id == rhs.id && lhs.children == rhs.children
     }
 }
 
@@ -185,26 +185,27 @@ extension Topic {
     /// - Parameter query: The text string to search for.
     /// - Returns: `true` if the query matches any part of the topic or its children, `false` otherwise.
     func search(query: String) -> Topic? {
+        var isMatch = false
         // Convert query to lowercase for case-insensitive comparison.
         // Check the topic title, description, and optionally preview title for a match.
         if title.localizedCaseInsensitiveContains(query) ||
             description.localizedCaseInsensitiveContains(query) ||
             previewTitle?.localizedCaseInsensitiveContains(query) == true {
-            return self
+            isMatch = true
         }
 
         // Check code blocks for a match in the raw value or title.
         if codeBlocks.contains(where: { $0.rawValue.localizedCaseInsensitiveContains(query) || $0.title?.localizedCaseInsensitiveContains(query) == true }) {
-            return self
+            isMatch = true
         }
 
         // Check links for a match in the URL or the name of the link.
         if links.contains(where: { $0.url.absoluteString.localizedCaseInsensitiveContains(query) || $0.name.description.localizedCaseInsensitiveContains(query) }) {
-            return self
+            isMatch = true
         }
 
         var copy = self
         copy.children = children?.compactMap { $0.search(query: query) }
-        return copy.children?.isEmpty != false ? nil : copy
+        return (isMatch || copy.children?.isEmpty == false) ? copy : nil
     }
 }

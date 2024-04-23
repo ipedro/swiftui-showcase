@@ -70,7 +70,7 @@ extension Chapter: Comparable {
     }
     
     public static func == (lhs: Self, rhs: Self) -> Bool {
-        lhs.id == rhs.id && lhs.topics.count == rhs.topics.count
+        lhs.id == rhs.id && lhs.topics == rhs.topics
     }
 }
 
@@ -87,19 +87,19 @@ extension Chapter {
     /// - Parameter query: The text string to search for.
     /// - Returns: `true` if the query matches any part of the chapter or its topics, `false` otherwise.
     func search(query: String) -> Chapter? {
+        var isMatch = false
+
         // Convert query to lowercase for case-insensitive comparison.
         let query = query.lowercased()
 
         // Check the chapter title and description for a match.
         if title.localizedCaseInsensitiveContains(query) || description?.localizedCaseInsensitiveContains(query) == true {
-            return self
+            isMatch = true
         }
 
         // Check all topics within the chapter.
-        var copy = self //Chapter(self)
-        copy.topics = topics
-            .compactMap { $0.search(query: query) }
-
-        return copy.topics.isEmpty ? nil : copy
+        var copy = self
+        copy.topics = topics.compactMap { $0.search(query: query) }
+        return (isMatch || !copy.topics.isEmpty) ? copy : nil
     }
 }

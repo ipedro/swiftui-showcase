@@ -37,7 +37,7 @@ public struct ShowcaseDocument: View {
 
     private var chapters: [Chapter] {
         let searchQuery = searchQuery.trimmingCharacters(in: .whitespacesAndNewlines)
-        if searchQuery.count < 3 { return data.chapters }
+        if searchQuery.isEmpty { return data.chapters }
         let result = data.chapters.search(searchQuery)
         return result
     }

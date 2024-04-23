@@ -32,9 +32,15 @@ public struct DefaultShowcaseContentStyle: ShowcaseContentStyle {
     @Environment(\.nodeDepth)
     private var depth
 
+    @Environment(\.titleStyle)
+    private var preferredTitleStyle
+
+    @Environment(\.bodyStyle)
+    private var preferredBodyStyle
+
     public func makeBody(configuration: Configuration) -> some View {
         VStack(alignment: .leading, spacing: 30) {
-            configuration.title.font(.system(titleStyle))
+            configuration.title.font(.system(preferredTitleStyle ?? titleStyle))
 
             if let links = configuration.links {
                 LazyHStack {
@@ -47,6 +53,12 @@ public struct DefaultShowcaseContentStyle: ShowcaseContentStyle {
             configuration.embeds
             configuration.codeBlocks
         }
+        .font({
+            if let preferredBodyStyle {
+                return .system(preferredBodyStyle)
+            }
+            return nil
+        }())
     }
 
     private var titleStyle: SwiftUI.Font.TextStyle {
@@ -58,13 +70,33 @@ public struct DefaultShowcaseContentStyle: ShowcaseContentStyle {
         default: return .headline
         }
     }
+}
 
-    private var bodyStyle: SwiftUI.Font.TextStyle {
-        switch depth {
-        case 2: return .callout
-        case 3: return .footnote
-        default: return .body
-        }
+private struct TitleStyleKey: EnvironmentKey {
+    static var defaultValue: SwiftUI.Font.TextStyle?
+}
+
+private struct BodyStyleKey: EnvironmentKey {
+    static var defaultValue: SwiftUI.Font.TextStyle?
+}
+
+extension EnvironmentValues {
+    var titleStyle: SwiftUI.Font.TextStyle? {
+        get { self[TitleStyleKey.self] }
+        set { self[TitleStyleKey.self] = newValue }
+    }
+    var bodyStyle: SwiftUI.Font.TextStyle? {
+        get { self[BodyStyleKey.self] }
+        set { self[BodyStyleKey.self] = newValue }
+    }
+}
+
+public extension View {
+    func showcaseTitleStyle(_ title: SwiftUI.Font.TextStyle?) -> some View {
+        environment(\.titleStyle, title)
     }
 
+    func showcaseBodyStyle(_ body: SwiftUI.Font.TextStyle?) -> some View {
+        environment(\.bodyStyle, body)
+    }
 }
