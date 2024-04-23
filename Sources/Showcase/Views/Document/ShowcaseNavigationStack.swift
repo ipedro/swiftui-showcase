@@ -75,7 +75,7 @@ struct ShowcaseList_Previews: PreviewProvider {
                 )
             )
         )
-        .showcasePreviewStyle(.groupBoxPage)
+        //.showcasePreviewStyle(.groupBoxPage)
         .showcaseCodeBlockStyle(.wordWrap)
     }
 }

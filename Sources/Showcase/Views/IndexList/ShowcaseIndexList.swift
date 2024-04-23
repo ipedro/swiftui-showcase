@@ -67,8 +67,7 @@ public struct ShowcaseIndexListStyleConfiguration {
             }
 
             ForEach(topics) { topic in
-                ShowcaseIndexList(topic)
-                    .environment(\.nodeDepth, depth + 1)
+                ShowcaseIndexList(topic).environment(\.nodeDepth, depth + 1)
             }
         }
     }
@@ -100,6 +99,13 @@ public struct ShowcaseIndexListStyleConfiguration {
                 }
             }
             .accessibilityAddTraits(.isLink)
+            .buttonStyle(_ButtonStyle())
+        }
+    }
+
+    private struct _ButtonStyle: ButtonStyle {
+        func makeBody(configuration: Configuration) -> some View {
+            configuration.label
         }
     }
 }

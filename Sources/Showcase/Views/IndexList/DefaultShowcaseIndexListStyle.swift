@@ -36,7 +36,7 @@ public struct DefaultShowcaseIndexListStyle<Icon: View>: ShowcaseIndexListStyle 
                 16,
                 icon
                     .foregroundStyle(.tertiary)
-                    .padding(.top, 7)
+                    .padding(.top, 6)
                     .frame(width: 8)
             )
             .padding(.vertical, 2)

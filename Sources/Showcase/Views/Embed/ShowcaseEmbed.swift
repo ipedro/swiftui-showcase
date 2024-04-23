@@ -6,12 +6,17 @@ struct ShowcaseEmbed: View {
     var data: Topic.Embed
 
     var body: some View {
+        #if os(iOS)
         WebView(url: data.url, handler: data.navigationHandler, height: $height)
             .frame(height: max(data.minHeight ?? 0, height))
             .disabled(!data.isInteractionEnabled)
+        #else
+        EmptyView()
+        #endif
     }
 }
 
+#if os(iOS)
 private struct WebView: UIViewRepresentable {
     var url: URL
     var handler: (WKNavigationAction) -> WKNavigationActionPolicy
@@ -60,3 +65,4 @@ private struct WebView: UIViewRepresentable {
         }
     }
 }
+#endif

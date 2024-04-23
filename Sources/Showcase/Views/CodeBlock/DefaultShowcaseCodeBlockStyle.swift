@@ -65,10 +65,10 @@ public struct DefaultShowcaseCodeBlockStyle: ShowcaseCodeBlockStyle {
                     Spacer()
                     configuration.copyToPasteboard
                 }
-                .foregroundStyle(Color(uiColor: configuration.theme.plainTextColor))
+                .foregroundStyle(Color(configuration.theme.plainTextColor))
             }
         )
-        .ios16_backgroundStyle(Color(uiColor: configuration.theme.backgroundColor))
+        .ios16_backgroundStyle(Color(configuration.theme.backgroundColor))
     }
 
     public func resolve(in colorScheme: ColorScheme) -> ShowcaseCodeBlockTheme {

@@ -32,11 +32,12 @@ struct ShowcaseChapter: View {
         )
     }
 
-    private func label(topic: Topic) -> ShowcaseTopicLabel {
+    private func label(topic: Topic) -> some View {
         ShowcaseTopicLabel(
             data: topic,
             fallbackIcon: data.icon ?? data.icon
         )
+        .equatable()
     }
     
     private func content() -> some View {

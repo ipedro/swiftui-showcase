@@ -34,7 +34,7 @@ extension View {
 
     @ViewBuilder
     func ios16_scrollBounceBehaviorBasedOnSize(axes: Axis.Set = [.vertical]) -> some View {
-        if #available(iOS 16.4, *) {
+        if #available(iOS 16.4, macOS 13.3, *) {
             scrollBounceBehavior(.basedOnSize, axes: axes)
         } else {
             // Fallback on earlier versions

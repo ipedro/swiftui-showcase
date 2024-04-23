@@ -19,7 +19,6 @@
 //  SOFTWARE.
 
 import Foundation
-import UIKit
 import Splash
 
 public struct ShowcaseCodeBlockTheme {
@@ -33,12 +32,30 @@ public struct ShowcaseCodeBlockTheme {
     public init(
         plainTextColor: Splash.Color,
         tokenColors: [Splash.TokenType: Splash.Color],
-        backgroundColor: Splash.Color = .systemGroupedBackground
+        backgroundColor: Splash.Color = ._defaultBackground
     ) {
         self.plainTextColor = plainTextColor
         self.tokenColors = tokenColors
         self.backgroundColor = backgroundColor
     }
+}
+
+#if os(iOS)
+import UIKit
+#elseif os(macOS)
+import Cocoa
+#endif
+
+public extension Splash.Color {
+#if os(iOS)
+    static var _defaultBackground: Splash.Color {
+        return .systemGroupedBackground
+    }
+#elseif os(macOS)
+    static var _defaultBackground: Splash.Color {
+        return .windowBackgroundColor
+    }
+#endif
 }
 
 public extension ShowcaseCodeBlockTheme {
@@ -93,7 +110,7 @@ public extension ShowcaseCodeBlockTheme {
                 .dotAccess: Splash.Color(red: 0.4, green: 0.4, blue: 0.6, alpha: 1),
                 .preprocessing: Splash.Color(red: 0.5, green: 0.3, blue: 0.1, alpha: 1)
             ],
-            backgroundColor: .systemGroupedBackground
+            backgroundColor: ._defaultBackground
         )
     }
 
@@ -111,7 +128,7 @@ public extension ShowcaseCodeBlockTheme {
                 .dotAccess: Splash.Color(red: 0.502, green: 0.0, blue: 0.502, alpha: 1),
                 .preprocessing: Splash.Color(red: 0.800, green: 0.0, blue: 0.0, alpha: 1)
             ],
-            backgroundColor: .systemGroupedBackground
+            backgroundColor: ._defaultBackground
         )
     }
 
@@ -147,7 +164,7 @@ public extension ShowcaseCodeBlockTheme {
                 .dotAccess: Splash.Color(red: 0.0, green: 0.0, blue: 0.9, alpha: 1),
                 .preprocessing: Splash.Color(red: 0.9, green: 0.0, blue: 0.0, alpha: 1)
             ],
-            backgroundColor: .systemGroupedBackground
+            backgroundColor: ._defaultBackground
         )
     }
 

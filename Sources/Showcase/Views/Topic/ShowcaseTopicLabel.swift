@@ -21,7 +21,7 @@
 import Foundation
 import SwiftUI
 
-struct ShowcaseTopicLabel: View {
+struct ShowcaseTopicLabel: View, Equatable {
     let data: Topic
     let fallbackIcon: Image?
 

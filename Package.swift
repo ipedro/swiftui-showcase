@@ -6,7 +6,7 @@ let package = Package(
     name: "swiftui-showcase",
     platforms: [
         .iOS(.v16),
-        .macOS(.v11),
+        .macOS(.v13),
     ],
     products: [
         .library(

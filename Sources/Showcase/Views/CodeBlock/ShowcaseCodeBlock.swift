@@ -20,6 +20,9 @@
 
 import SwiftUI
 import Splash
+#if os(iOS)
+import UIKit
+#endif
 
 /// A view that displays code blocks with syntax highlighting and a copy to pasteboard button.
 struct ShowcaseCodeBlock: View {
@@ -77,16 +80,19 @@ public extension ShowcaseCodeBlockStyleConfiguration {
         /// The text to be copied to the pasteboard.
         let rawValue: String
 
+        #if os(iOS)
         private let impact = UIImpactFeedbackGenerator(style: .light)
-
+        #endif
+        
         public var body: some View {
             Button {
+                #if os(iOS)
                 UIPasteboard.general.string = rawValue
                 impact.impactOccurred()
+                #endif
             } label: {
                 Image(systemName: "doc.on.doc")
             }
-            .onAppear(perform: impact.prepare)
         }
     }
 }
