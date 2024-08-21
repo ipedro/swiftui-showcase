@@ -34,7 +34,7 @@ public struct ShowcaseTopic: View {
         ShowcaseLayout(configuration).id(data.id)
     }
 
-    private var contentConfiguration: ShowcaseContentStyleConfiguration {
+    private var contentConfiguration: ShowcaseContentConfiguration {
         .init(
             id: data.id,
             title: depth > 0 ? Text(data.title) : nil,
@@ -45,11 +45,11 @@ public struct ShowcaseTopic: View {
             codeBlocks: ShowcaseCodeBlocks(data: data.codeBlocks))
     }
 
-    private var configuration: ShowcaseLayoutStyleConfiguration {
+    private var configuration: ShowcaseLayoutConfiguration {
         .init(
             children: ShowcaseTopics(data: data.children),
             indexList: depth == 0 && !data.allChildren.isEmpty ? ShowcaseIndexList(data) : nil,
-            content: ShowcaseLayoutStyleConfiguration.Content(configuration: contentConfiguration)
+            content: ShowcaseLayoutConfiguration.Content(configuration: contentConfiguration)
         )
     }
 }

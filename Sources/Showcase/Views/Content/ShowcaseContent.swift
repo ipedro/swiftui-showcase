@@ -21,14 +21,14 @@
 import SwiftUI
 
 struct ShowcaseContent: View, Equatable {
-    typealias Configuration = ShowcaseContentStyleConfiguration
+    typealias Configuration = ShowcaseContentConfiguration
 
     @Environment(\.contentStyle)
     private var style
 
     var configuration: Configuration
 
-    public init(_ configuration: ShowcaseContentStyleConfiguration) {
+    public init(_ configuration: ShowcaseContentConfiguration) {
         self.configuration = configuration
     }
 
@@ -43,7 +43,7 @@ struct ShowcaseContent: View, Equatable {
 
 // MARK: - Configuration
 
-public struct ShowcaseContentStyleConfiguration {
+public struct ShowcaseContentConfiguration {
     public let id: AnyHashable
     public let title: Text?
     public let description: Text?

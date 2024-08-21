@@ -24,9 +24,9 @@ public struct ShowcaseLayout: View {
     @Environment(\.layoutStyle) 
     private var style
 
-    let configuration: ShowcaseLayoutStyleConfiguration
+    let configuration: ShowcaseLayoutConfiguration
 
-    public init(_ configuration: ShowcaseLayoutStyleConfiguration) {
+    public init(_ configuration: ShowcaseLayoutConfiguration) {
         self.configuration = configuration
     }
 
@@ -38,7 +38,7 @@ public struct ShowcaseLayout: View {
 // MARK: - Configuration
 
 /// The configuration for a showcase view.
-public struct ShowcaseLayoutStyleConfiguration {
+public struct ShowcaseLayoutConfiguration {
     /// The children views within the showcase.
     public let children: ShowcaseTopics?
     /// The index view for navigating within the showcase.

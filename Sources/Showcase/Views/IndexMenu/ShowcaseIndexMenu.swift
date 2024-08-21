@@ -24,7 +24,7 @@ public struct ShowcaseIndexMenu: View {
     @Environment(\.indexMenuStyle) 
     private var style
 
-    typealias Configuration = ShowcaseIndexMenuStyleConfiguration
+    typealias Configuration = ShowcaseIndexMenuConfiguration
     private let configuration: Configuration
 
     init?(_ data: Topic) {
@@ -32,7 +32,7 @@ public struct ShowcaseIndexMenu: View {
         configuration = .init(label: .init(data: data))
     }
 
-    public init(_ configuration: ShowcaseIndexMenuStyleConfiguration) {
+    public init(_ configuration: ShowcaseIndexMenuConfiguration) {
         self.configuration = configuration
     }
 
@@ -43,7 +43,7 @@ public struct ShowcaseIndexMenu: View {
 
 // MARK: - Configuration
 
-public struct ShowcaseIndexMenuStyleConfiguration {
+public struct ShowcaseIndexMenuConfiguration {
     public let label: Label?
     
     public struct Label: View {

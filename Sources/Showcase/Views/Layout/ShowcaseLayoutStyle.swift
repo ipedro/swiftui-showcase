@@ -30,7 +30,7 @@ public protocol ShowcaseLayoutStyle: DynamicProperty {
     associatedtype Body: View
 
     /// The properties of a showcase layout.
-    typealias Configuration = ShowcaseLayoutStyleConfiguration
+    typealias Configuration = ShowcaseLayoutConfiguration
 
     /// Creates a view that represents the body of a showcase layout.
     ///
@@ -64,7 +64,7 @@ extension View {
 // MARK: - Dynamic Property
 
 private struct ResolvedShowcaseLayoutStyle<Style: ShowcaseLayoutStyle>: View {
-    let configuration: ShowcaseLayoutStyleConfiguration
+    let configuration: ShowcaseLayoutConfiguration
     let style: Style
 
     var body: some View {

@@ -27,20 +27,20 @@ public struct ShowcasePreview: View {
     private var style
 
     /// The data representing the preview.
-    private let configuration: ShowcasePreviewStyleConfiguration
+    private let configuration: ShowcasePreviewConfiguration
 
     /// Initializes a Preview view with the specified previews data.
     /// - Parameter data: The data representing the previews (optional).
     init?(_ data: Topic) {
         guard let preview = data.previews else { return nil }
-        configuration = ShowcasePreviewStyleConfiguration(
+        configuration = ShowcasePreviewConfiguration(
             title: Text(optional: LocalizedStringKey(optional: data.previewTitle)),
             content: .init(preview)
         )
     }
 
     /// Initializes a Preview view with an existing configuration.
-    public init(_ configuration: ShowcasePreviewStyleConfiguration) {
+    public init(_ configuration: ShowcasePreviewConfiguration) {
         self.configuration = configuration
     }
 
@@ -51,7 +51,7 @@ public struct ShowcasePreview: View {
 
 // MARK: - Configuration
 
-public struct ShowcasePreviewStyleConfiguration {
+public struct ShowcasePreviewConfiguration {
     let title: Text?
 
     public typealias Content = AnyView

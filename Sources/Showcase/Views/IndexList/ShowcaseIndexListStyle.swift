@@ -30,7 +30,7 @@ public protocol ShowcaseIndexListStyle: DynamicProperty {
     associatedtype Body: View
 
     /// The properties of an index list view.
-    typealias Configuration = ShowcaseIndexListStyleConfiguration
+    typealias Configuration = ShowcaseIndexListConfiguration
 
     /// Creates a view that represents the body of an index list view.
     ///
@@ -64,7 +64,7 @@ extension View {
 // MARK: - Dynamic Property
 
 private struct ResolvedShowcaseIndexListStyle<Style: ShowcaseIndexListStyle>: View {
-    let configuration: ShowcaseIndexListStyleConfiguration
+    let configuration: ShowcaseIndexListConfiguration
     let style: Style
 
     var body: some View {

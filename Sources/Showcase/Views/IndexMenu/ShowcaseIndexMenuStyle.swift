@@ -30,7 +30,7 @@ public protocol ShowcaseIndexMenuStyle: DynamicProperty {
     associatedtype Body: View
 
     /// The properties of a Showcase.
-    typealias Configuration = ShowcaseIndexMenuStyleConfiguration
+    typealias Configuration = ShowcaseIndexMenuConfiguration
 
     /// Creates a view that represents the body of a Showcase.
     ///
@@ -63,7 +63,7 @@ extension View {
 // MARK: - Dynamic Property
 
 private struct ResolvedShowcaseIndexMenuStyle<Style: ShowcaseIndexMenuStyle>: View {
-    let configuration: ShowcaseIndexMenuStyleConfiguration
+    let configuration: ShowcaseIndexMenuConfiguration
     let style: Style
 
     var body: some View {

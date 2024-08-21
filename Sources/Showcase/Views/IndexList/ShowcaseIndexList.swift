@@ -24,7 +24,7 @@ public struct ShowcaseIndexList: View {
     @Environment(\.indexListStyle) 
     private var style
 
-    typealias Configuration = ShowcaseIndexListStyleConfiguration
+    typealias Configuration = ShowcaseIndexListConfiguration
     private let configuration: Configuration
 
     init?(_ data: Topic) {
@@ -36,7 +36,7 @@ public struct ShowcaseIndexList: View {
         }
     }
 
-    public init(configuration: ShowcaseIndexListStyleConfiguration) {
+    public init(configuration: ShowcaseIndexListConfiguration) {
         self.configuration = configuration
     }
 
@@ -47,7 +47,7 @@ public struct ShowcaseIndexList: View {
 
 // MARK: - Configuration
 
-public struct ShowcaseIndexListStyleConfiguration {
+public struct ShowcaseIndexListConfiguration {
     public let label: (_ padding: CGFloat, _ icon: any View) -> Label?
     
     public struct Label: View {

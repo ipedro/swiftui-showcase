@@ -26,7 +26,7 @@ import UIKit
 
 /// A view that displays code blocks with syntax highlighting and a copy to pasteboard button.
 struct ShowcaseCodeBlock: View {
-    typealias Configuration = ShowcaseCodeBlockStyleConfiguration
+    typealias Configuration = ShowcaseCodeBlockConfiguration
     @Environment(\.codeBlockStyle)
     private var style
 
@@ -58,7 +58,7 @@ struct ShowcaseCodeBlock: View {
     }
 }
 
-public struct ShowcaseCodeBlockStyleConfiguration {
+public struct ShowcaseCodeBlockConfiguration {
     public let content: Content
     public let copyToPasteboard: CopyToPasteboard
     public let theme: ShowcaseCodeBlockTheme
@@ -74,7 +74,7 @@ public struct ShowcaseCodeBlockStyleConfiguration {
 
 // MARK: - Copy To Pasteboard
 
-public extension ShowcaseCodeBlockStyleConfiguration {
+public extension ShowcaseCodeBlockConfiguration {
     /// A view representing the copy to pasteboard button.
     struct CopyToPasteboard: View {
         /// The text to be copied to the pasteboard.
@@ -99,7 +99,7 @@ public extension ShowcaseCodeBlockStyleConfiguration {
 
 // MARK: - Content
 
-public extension ShowcaseCodeBlockStyleConfiguration {
+public extension ShowcaseCodeBlockConfiguration {
     /// A view representing the content of the code block with syntax highlighting.
     struct Content: View {
         var rawValue: String

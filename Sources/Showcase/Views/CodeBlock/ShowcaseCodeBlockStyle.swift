@@ -31,7 +31,7 @@ public protocol ShowcaseCodeBlockStyle: DynamicProperty {
     associatedtype Body: View
 
     /// The properties of an index list view.
-    typealias Configuration = ShowcaseCodeBlockStyleConfiguration
+    typealias Configuration = ShowcaseCodeBlockConfiguration
 
     /// Creates a view that represents the body of an index list view.
     ///
@@ -66,7 +66,7 @@ extension View {
 // MARK: - Dynamic Property
 
 private struct ResolvedStyle<Style: ShowcaseCodeBlockStyle>: View {
-    let configuration: ShowcaseCodeBlockStyleConfiguration
+    let configuration: ShowcaseCodeBlockConfiguration
     let style: Style
 
     var body: some View {
