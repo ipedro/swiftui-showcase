@@ -37,7 +37,7 @@ public struct ShowcasePreviewGroupBoxStyle<S: GroupBoxStyle>: ShowcasePreviewSty
 
     public func makeBody(configuration: ShowcasePreviewConfiguration) -> some View {
         GroupBox {
-            configuration.previews
+            configuration.content
         } label: {
             configuration.label
         }

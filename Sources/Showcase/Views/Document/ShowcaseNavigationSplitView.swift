@@ -94,7 +94,7 @@ public struct ShowcaseNavigationSplitView<Sidebar: View, ContentToolbar: View, D
     private var list: some View {
         List(selection: $selection) {
             DescriptionView(data.description)
-            SearchableChapters(
+            ShowcaseChapters(
                 searchQuery: $searchQuery,
                 data: data.chapters
             )

@@ -69,7 +69,7 @@ public struct ShowcasePreviewTabStyle<S: TabViewStyle, C: View>: ShowcasePreview
     public func makeBody(configuration: ShowcasePreviewConfiguration) -> some View {
         body(
             configuration.label,
-            TabView { configuration.previews }
+            TabView { configuration.content }
         )
         .frame(
             maxWidth: .infinity,

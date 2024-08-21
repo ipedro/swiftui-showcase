@@ -23,25 +23,23 @@ import SwiftUI
 extension Topic {
     static let mockButton = Topic(
         "Button",
-        description: {
-"""
-A button initiates an instantaneous action.
+        description: """
+        A button initiates an instantaneous action.
 
-A stylized representation of two horizontally aligned buttons. The image is tinted red to subtly reflect the red in the original six-color Apple logo.
-Versatile and highly customizable, buttons give people simple, familiar ways to do tasks in your app.
-"""
-        },
+        A stylized representation of two horizontally aligned buttons. The image is tinted red to subtly reflect the red in the original six-color Apple logo.
+        Versatile and highly customizable, buttons give people simple, familiar ways to do tasks in your app.
+        """,
         links: {
             Topic.Link(" HIG", "https://developer.apple.com/design/human-interface-guidelines/buttons")
         },
         code: {
             Topic.CodeBlock {
-"""
-Button("I'm a bordered button") {
-// do something
-}
-.buttonStyle(.bordered)
-"""
+            """
+            Button("I'm a bordered button") {
+            // do something
+            }
+            .buttonStyle(.bordered)
+            """
             }
         },
 //        children: [.mockAccordion],

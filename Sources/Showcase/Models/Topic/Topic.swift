@@ -40,7 +40,7 @@ public struct Topic: Identifiable {
     public var embeds: [Embed]
     
     /// Previews configuration for the topic.
-    public var previews: () -> AnyView?
+    public var previews: (() -> AnyView)?
 
     /// Optional title of the preview.
     public var previewTitle: String?
@@ -52,14 +52,18 @@ public struct Topic: Identifiable {
     public var title: String
     
     /// Optional child topics.
-    public var children: [Topic]?
-    
+    public var children: [Topic]? { _children }
+
+    private var _children: [Topic]
+
     var allChildren: [Topic] {
         guard let children = children else { return [] }
         return children.flatMap { [$0] + $0.allChildren }
     }
     
-    var isEmpty: Bool {
+    public static func emptyDescription() -> String { "" }
+
+    public var isEmpty: Bool {
         codeBlocks.isEmpty &&
         description.isEmpty &&
         links.isEmpty &&
@@ -76,20 +80,19 @@ public struct Topic: Identifiable {
     ///   - children: Optional child showcase topics (default is nil).
     public init(
         _ title: String,
-        description: () -> String = { "" },
+        description: @autoclosure @escaping () -> String = Self.emptyDescription(),
         @LinkBuilder links: () -> [Link] = { [] },
         @EmbedBuilder embeds: () -> [Embed] = { [] },
         @CodeBlockBuilder code: () -> [CodeBlock] = { [] },
-        children: [Topic]? = nil
+        children: [Topic] = []
     ) {
-        self.icon = { nil }
-        self.children = children
-        self.children = children
+        self.icon = nil
+        self._children = children
         self.codeBlocks = code()
         self.description = description()
         self.links = links()
         self.embeds = embeds()
-        self.previews = { nil }
+        self.previews = nil
         self.previewTitle = nil
         self.title = title
     }
@@ -106,16 +109,16 @@ public struct Topic: Identifiable {
     ///   - previews: Optional previews.
     public init<P: View>(
         _ title: String,
-        description: () -> String = { "" },
+        description: @autoclosure @escaping () -> String = Self.emptyDescription(),
         @LinkBuilder links: () -> [Link] = { [] },
         @EmbedBuilder embeds: () -> [Embed] = { [] },
         @CodeBlockBuilder code: () -> [CodeBlock] = { [] },
-        children: [Topic]? = nil,
+        children: [Topic] = [],
         previewTitle: String? = "Preview",
         @ViewBuilder previews: @escaping () -> P
     ) {
-        self.icon = { nil }
-        self.children = children
+        self.icon = nil
+        self._children = children
         self.codeBlocks = code()
         self.description = description()
         self.links = links()
@@ -128,8 +131,37 @@ public struct Topic: Identifiable {
     /// Initializes a showcase element with the specified parameters.
     /// - Parameters:
     ///   - title: The title of the topic.
-    ///   - description: A closure returning the description of the topic (default is an empty string).
     ///   - icon: A closure returning an optional icon of the preview when shown in a list.
+    ///   - description: A closure returning the description of the topic (default is an empty string).
+    ///   - links: A closure returning external links associated with the topic (default is an empty array).
+    ///   - embeds: A closure returning external contents associated with the topic (default is an empty string).
+    ///   - code: A closure returning code examples (default is an empty array).
+    ///   - children: Optional child showcase topics (default is nil).
+    public init(
+        _ title: String,
+        icon: @autoclosure @escaping () -> Image,
+        description: @autoclosure @escaping () -> String = Self.emptyDescription(),
+        @LinkBuilder links: () -> [Link] = { [] },
+        @EmbedBuilder embeds: () -> [Embed] = { [] },
+        @CodeBlockBuilder code: () -> [CodeBlock] = { [] },
+        children: [Topic] = []
+    ) {
+        self.icon = icon
+        self._children = children
+        self.codeBlocks = code()
+        self.description = description()
+        self.links = links()
+        self.embeds = embeds()
+        self.previews = nil
+        self.previewTitle = nil
+        self.title = title
+    }
+
+    /// Initializes a showcase element with the specified parameters.
+    /// - Parameters:
+    ///   - title: The title of the topic.
+    ///   - icon: A closure returning an optional icon of the preview when shown in a list.
+    ///   - description: A closure returning the description of the topic (default is an empty string).
     ///   - links: A closure returning external links associated with the topic (default is an empty array).
     ///   - embeds: A closure returning external contents associated with the topic (default is an empty string).
     ///   - code: A closure returning code examples (default is an empty array).
@@ -138,17 +170,17 @@ public struct Topic: Identifiable {
     ///   - previews: Optional previews.
     public init<P: View>(
         _ title: String,
-        description: () -> String = { "" },
-        @ViewBuilder icon: @escaping () -> Image,
+        icon: @autoclosure @escaping () -> Image,
+        description: @autoclosure @escaping () -> String = Self.emptyDescription(),
         @LinkBuilder links: () -> [Link] = { [] },
         @EmbedBuilder embeds: () -> [Embed] = { [] },
         @CodeBlockBuilder code: () -> [CodeBlock] = { [] },
-        children: [Topic]? = nil,
+        children: [Topic] = [],
         previewTitle: String? = "Preview",
         @ViewBuilder previews: @escaping () -> P
     ) {
         self.icon = icon
-        self.children = children
+        self._children = children
         self.codeBlocks = code()
         self.description = description()
         self.links = links()
@@ -206,7 +238,57 @@ extension Topic {
         }
 
         var copy = self
-        copy.children = children?.compactMap { $0.search(query: query) }
-        return (isMatch || copy.children?.isEmpty == false) ? copy : nil
+        copy._children = _children.compactMap { $0.search(query: query) }
+        return (isMatch || !copy._children.isEmpty) ? copy : nil
+    }
+}
+
+extension Topic: RandomAccessCollection {
+    public typealias Element = Topic
+    public typealias SubSequence = ArraySlice<Topic>
+    public typealias Indices = Range<Int>
+
+    public subscript(position: Int) -> Topic {
+        _children[position]
+    }
+
+    public subscript(bounds: Range<Int>) -> ArraySlice<Topic> {
+        _children[bounds]
+    }
+
+    public var startIndex: Int {
+        _children.startIndex
+    }
+
+    public var endIndex: Int {
+        _children.endIndex
+    }
+
+    public func index(before i: Int) -> Int {
+        _children.index(before: i)
+    }
+
+    public func formIndex(before i: inout Int) {
+        _children.formIndex(before: &i)
+    }
+
+    public func index(after i: Int) -> Int {
+        _children.index(after: i)
+    }
+
+    public func formIndex(after i: inout Int) {
+        _children.formIndex(after: &i)
+    }
+
+    public func index(_ i: Int, offsetBy distance: Int) -> Int {
+        _children.index(i, offsetBy: distance)
+    }
+
+    public func index(_ i: Int, offsetBy distance: Int, limitedBy limit: Int) -> Int? {
+        _children.index(i, offsetBy: distance, limitedBy: limit)
+    }
+
+    public func distance(from start: Int, to end: Int) -> Int {
+        _children.distance(from: start, to: end)
     }
 }

@@ -40,7 +40,7 @@ public struct ShowcaseNavigationStack: View {
         NavigationStack {
             List {
                 DescriptionView(data.description)
-                SearchableChapters(
+                ShowcaseChapters(
                     searchQuery: $searchQuery,
                     data: data.chapters
                 )

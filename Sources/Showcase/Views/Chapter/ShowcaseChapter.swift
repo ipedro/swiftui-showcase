@@ -22,7 +22,10 @@ import Foundation
 import SwiftUI
 
 struct ShowcaseChapter: View {
-    var data: Chapter
+    var topics: [Topic]
+    var title: String
+    var icon: Image?
+    var description: String?
 
     var body: some View {
         Section(
@@ -33,21 +36,37 @@ struct ShowcaseChapter: View {
     }
     
     private func content() -> some View {
-        OutlineGroup(data.topics, children: \.children) { topic in
-            NavigationLink(value: topic, label: {
-                ShowcaseTopicLabel(data: topic).equatable()
-            })
+        OutlineGroup(topics, children: \.children) { topic in
+            NavigationLink(value: topic) {
+                ShowcaseChapterRow(
+                    title: topic.title,
+                    icon: topic.icon?()
+                ).equatable()
+            }
         }
     }
 
     private func header() -> some View {
-        Text(data.title)
+        Text(title)
     }
 
     @ViewBuilder
     private func footer() -> some View {
-        if let footer = data.description {
+        if let footer = description {
             Text(footer)
+        }
+    }
+}
+
+struct ShowcaseChapterRow: View, Equatable {
+    var title: String
+    var icon: Image?
+
+    var body: some View {
+        Label {
+            Text(title).bold()
+        } icon: {
+            icon
         }
     }
 }

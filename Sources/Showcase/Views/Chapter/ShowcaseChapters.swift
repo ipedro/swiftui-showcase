@@ -21,16 +21,26 @@
 import Foundation
 import SwiftUI
 
-struct ShowcaseTopicLabel: View, Equatable {
-    let data: Topic
-    let fallbackIcon: Image?
+struct ShowcaseChapters: View {
+    @Binding
+    var searchQuery: String
+    var data: [Chapter]
+
+    private var chapters: [Chapter] {
+        let searchQuery = searchQuery.trimmingCharacters(in: .whitespacesAndNewlines)
+        if searchQuery.isEmpty { return data }
+        let result = data.search(searchQuery)
+        return result
+    }
 
     var body: some View {
-        Label {
-            Text(data.title).bold()
-        } icon: {
-            if let icon = data.icon() { icon }
-            else { fallbackIcon }
+        ForEach(chapters) { chapter in
+            ShowcaseChapter(
+                topics: chapter.topics,
+                title: chapter.title,
+                icon: chapter.icon?(),
+                description: chapter.description
+            )
         }
     }
 }

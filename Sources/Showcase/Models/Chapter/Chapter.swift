@@ -29,38 +29,68 @@ public struct Chapter: Identifiable {
     public var title: String
 
     /// Optional icon for the chapter.
-    public var icon: Image?
+    public var icon: (() -> Image)?
 
     /// The optional description of the chapter.
     public var description: String?
     
     /// The showcase topics within the chapter.
     public var topics: [Topic]
-    
+
+    public var children: [Topic]? { topics }
+
     /// Initializes a showcase chapter with the specified title and showcase topics.
     /// - Parameters:
     ///   - title: The title of the chapter.
     ///   - description: The optional description of the chapter.
-    ///   - icon: Optional icon for the chapter.
     ///   - topics: The showcase topics within the chapter.
-    public init(_ title: String, description: String? = nil, icon: Image? = nil, _ topics: [Topic] = []) {
+    public init(_ title: String, description: String? = nil, _ topics: [Topic] = []) {
         self.title = title
         self.description = description
         self.topics = topics.sorted()
-        self.icon = icon
+        self.icon = nil
     }
     
     /// Initializes a showcase chapter with the specified title and showcase topics.
     /// - Parameters:
     ///   - title: The title of the chapter.
     ///   - description: The optional description of the chapter.
-    ///   - icon: Optional icon for the chapter.
     ///   - topics: The showcase topics within the chapter.
-    public init(_ title: String, description: String? = nil, icon: Image? = nil, _ topics: Topic...) {
+    public init(_ title: String, description: String? = nil, _ topics: Topic...) {
+        self.init(title, description: description, topics)
+    }
+
+    /// Initializes a showcase chapter with the specified title and showcase topics.
+    /// - Parameters:
+    ///   - title: The title of the chapter.
+    ///   - icon: Optional icon for the chapter.
+    ///   - description: The optional description of the chapter.
+    ///   - topics: The showcase topics within the chapter.
+    public init(
+        _ title: String,
+        icon: @autoclosure @escaping () -> Image,
+        description: String? = nil,
+        _ topics: [Topic] = []
+    ) {
         self.title = title
         self.description = description
         self.topics = topics.sorted()
         self.icon = icon
+    }
+
+    /// Initializes a showcase chapter with the specified title and showcase topics.
+    /// - Parameters:
+    ///   - title: The title of the chapter.
+    ///   - icon: Optional icon for the chapter.
+    ///   - description: The optional description of the chapter.
+    ///   - topics: The showcase topics within the chapter.
+    public init(
+        _ title: String,
+        icon: @autoclosure @escaping () -> Image,
+        description: String? = nil,
+        _ topics: Topic...
+    ) {
+        self.init(title, icon: icon(), description: description, topics)
     }
 }
 
@@ -83,6 +113,14 @@ extension Collection where Element == Chapter {
 }
 
 extension Chapter {
+    func asTopic() -> Topic {
+        if let icon {
+            Topic(title, icon: icon(), children: topics)
+        } else {
+            Topic(title, children: topics)
+        }
+    }
+
     /// Searches for a query string within the chapter, including the chapter title, description, and all contained topics.
     /// - Parameter query: The text string to search for.
     /// - Returns: `true` if the query matches any part of the chapter or its topics, `false` otherwise.
@@ -101,5 +139,55 @@ extension Chapter {
         var copy = self
         copy.topics = topics.compactMap { $0.search(query: query) }
         return (isMatch || !copy.topics.isEmpty) ? copy : nil
+    }
+}
+
+extension Chapter: RandomAccessCollection {
+    public typealias Element = Topic
+    public typealias SubSequence = ArraySlice<Topic>
+    public typealias Indices = Range<Int>
+
+    public subscript(position: Int) -> Topic {
+        topics[position]
+    }
+
+    public subscript(bounds: Range<Int>) -> ArraySlice<Topic> {
+        topics[bounds]
+    }
+
+    public var startIndex: Int {
+        topics.startIndex
+    }
+
+    public var endIndex: Int {
+        topics.endIndex
+    }
+
+    public func index(before i: Int) -> Int {
+        topics.index(before: i)
+    }
+
+    public func formIndex(before i: inout Int) {
+        topics.formIndex(before: &i)
+    }
+
+    public func index(after i: Int) -> Int {
+        topics.index(after: i)
+    }
+
+    public func formIndex(after i: inout Int) {
+        topics.formIndex(after: &i)
+    }
+
+    public func index(_ i: Int, offsetBy distance: Int) -> Int {
+        topics.index(i, offsetBy: distance)
+    }
+
+    public func index(_ i: Int, offsetBy distance: Int, limitedBy limit: Int) -> Int? {
+        topics.index(i, offsetBy: distance, limitedBy: limit)
+    }
+
+    public func distance(from start: Int, to end: Int) -> Int {
+        topics.distance(from: start, to: end)
     }
 }

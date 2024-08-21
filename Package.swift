@@ -29,7 +29,7 @@ let package = Package(
             dependencies: [
                 "Splash",
                 "Engine",
-                .product(name: "EngineMacros", package: "Engine"), // Optional
+                .product(name: "EngineMacros", package: "Engine")
             ],
             swiftSettings: [
                 .enableExperimentalFeature("AccessLevelOnImport")

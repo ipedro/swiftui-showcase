@@ -43,10 +43,20 @@ public struct ShowcaseTopic: View, Equatable {
             id: data.id,
             title: depth > 0 ? Text(data.title) : nil,
             description: Text(data.description),
-            preview: ShowcasePreview(data),
+            preview: preview(),
             links: ShowcaseLinks(data: data.links),
             embeds: ShowcaseEmbeds(data: data.embeds),
-            codeBlocks: ShowcaseCodeBlocks(data: data.codeBlocks))
+            codeBlocks: ShowcaseCodeBlocks(data: data.codeBlocks)
+        )
+    }
+
+    private func preview() -> ShowcasePreview? {
+        guard let previews = data.previews?() else { return nil }
+        return ShowcasePreview(
+            id: data.id,
+            content: previews,
+            label: Text(optional: data.previewTitle)
+        )
     }
 
     private var configuration: ShowcaseLayoutConfiguration {
