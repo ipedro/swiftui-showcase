@@ -29,6 +29,7 @@ struct ShowcaseNavigationTopic: View {
     }
     var body: some View {
         ShowcaseTopic(data)
+            .equatable()
             .modifier(ScrollViewReaderModifier())
             .navigationTitle(data.title)
             .toolbar {

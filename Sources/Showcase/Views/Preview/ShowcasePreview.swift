@@ -30,12 +30,13 @@ public struct ShowcasePreview: StyledView, Equatable {
     }
     
     public var label: Optional<Text>
-    public var previews: Optional<AnyView>
+    public var previews: AnyView
     public var id: UUID
 
     init?(_ data: Topic) {
+        guard let previews = data.previews() else { return nil }
+        self.previews = previews
         self.label = Text(data.previewTitle ?? "")
-        self.previews = data.previews()
         self.id = data.id
     }
 

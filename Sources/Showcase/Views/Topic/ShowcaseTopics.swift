@@ -26,8 +26,9 @@ public struct ShowcaseTopics: View, Equatable {
         lhs.data == rhs.data
     }
     
-    @Environment(\.nodeDepth) private var depth
-    
+    @Environment(\.nodeDepth) 
+    private var depth
+
     /// The data representing child showcase topics.
     let data: [Topic]
     

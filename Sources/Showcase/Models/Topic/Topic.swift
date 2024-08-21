@@ -66,14 +66,6 @@ public struct Topic: Identifiable {
         children?.isEmpty != false
     }
 
-    private static func emptyIcon() -> Image? {
-        nil
-    }
-
-    private static func emptyPreviews() -> AnyView? {
-        nil
-    }
-
     /// Initializes a showcase element with the specified parameters.
     /// - Parameters:
     ///   - title: The title of the topic.
@@ -90,14 +82,14 @@ public struct Topic: Identifiable {
         @CodeBlockBuilder code: () -> [CodeBlock] = { [] },
         children: [Topic]? = nil
     ) {
-        self.icon = Self.emptyIcon
+        self.icon = { nil }
         self.children = children
         self.children = children
         self.codeBlocks = code()
         self.description = description()
         self.links = links()
         self.embeds = embeds()
-        self.previews = Self.emptyPreviews
+        self.previews = { nil }
         self.previewTitle = nil
         self.title = title
     }
@@ -122,7 +114,7 @@ public struct Topic: Identifiable {
         previewTitle: String? = "Preview",
         @ViewBuilder previews: @escaping () -> P
     ) {
-        self.icon = Self.emptyIcon
+        self.icon = { nil }
         self.children = children
         self.codeBlocks = code()
         self.description = description()

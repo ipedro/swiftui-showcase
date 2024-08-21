@@ -22,7 +22,7 @@ import SwiftUI
 
 public struct ShowcaseTopic: View, Equatable {
     public static func == (lhs: ShowcaseTopic, rhs: ShowcaseTopic) -> Bool {
-        lhs.data == rhs.data
+        lhs.data.id == rhs.data.id
     }
 
     @Environment(\.nodeDepth)
