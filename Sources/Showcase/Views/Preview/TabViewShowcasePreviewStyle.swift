@@ -23,7 +23,7 @@ import SwiftUI
 
 // MARK: - Styles
 
-public typealias PageShowcasePreviewStyle = TabViewShowcasePreviewStyle<PageTabViewStyle, TabView<Int, AnyView>>
+public typealias PageShowcasePreviewStyle = TabViewShowcasePreviewStyle<PageTabViewStyle, TabView<Int, AnyView?>>
 
 public extension ShowcasePreviewStyle where Self == PageShowcasePreviewStyle {
     /// Shows the preview content in a paged scrolling `TabView`.
@@ -34,7 +34,7 @@ public extension ShowcasePreviewStyle where Self == PageShowcasePreviewStyle {
     }
 }
 
-public typealias GroupBoxPageShowcasePreviewStyle = TabViewShowcasePreviewStyle<PageTabViewStyle, GroupBox<Text?, TabView<Int, AnyView>>>
+public typealias GroupBoxPageShowcasePreviewStyle = TabViewShowcasePreviewStyle<PageTabViewStyle, GroupBox<Text?, TabView<Int, AnyView?>>>
 
 public extension ShowcasePreviewStyle where Self == GroupBoxPageShowcasePreviewStyle {
     /// Shows the preview content in a paged scrolling `TabView` inside a group box, with an optional title.
@@ -52,7 +52,7 @@ public extension ShowcasePreviewStyle where Self == TabViewShowcasePreviewStyle<
     /// index display mode.
     static func page<C: View>(
         indexDisplayMode: PageTabViewStyle.IndexDisplayMode = .automatic,
-        @ViewBuilder body: @escaping (_ title: Text?, _ tabView: TabView<Int, AnyView>) -> C
+        @ViewBuilder body: @escaping (_ title: Text?, _ tabView: TabView<Int, AnyView?>) -> C
     ) -> TabViewShowcasePreviewStyle<PageTabViewStyle, C> {
         TabViewShowcasePreviewStyle(
             style: .page(indexDisplayMode: indexDisplayMode),
@@ -64,12 +64,12 @@ public extension ShowcasePreviewStyle where Self == TabViewShowcasePreviewStyle<
 public struct TabViewShowcasePreviewStyle<S: TabViewStyle, C: View>: ShowcasePreviewStyle {
     /// The tab style.
     var style: S
-    var body: (Text?, TabView<Int, AnyView>) -> C
+    var body: (Text?, TabView<Int, AnyView?>) -> C
 
-    public func makeBody(configuration: Configuration) -> some View {
+    public func makeBody(configuration: ShowcasePreviewConfiguration) -> some View {
         body(
-            configuration.title,
-            TabView { configuration.content }
+            configuration.label,
+            TabView { configuration.previews }
         )
         .frame(
             maxWidth: .infinity,

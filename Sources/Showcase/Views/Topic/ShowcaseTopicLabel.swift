@@ -23,12 +23,14 @@ import SwiftUI
 
 struct ShowcaseTopicLabel: View, Equatable {
     let data: Topic
+    let fallbackIcon: Image?
 
     var body: some View {
         Label {
             Text(data.title).bold()
         } icon: {
-            data.icon?()
+            if let icon = data.icon() { icon }
+            else { fallbackIcon }
         }
     }
 }

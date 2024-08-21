@@ -20,7 +20,11 @@
 
 import SwiftUI
 
-public struct ShowcaseTopic: View {
+public struct ShowcaseTopic: View, Equatable {
+    public static func == (lhs: ShowcaseTopic, rhs: ShowcaseTopic) -> Bool {
+        lhs.data == rhs.data
+    }
+
     @Environment(\.nodeDepth)
     private var depth
 
@@ -31,11 +35,11 @@ public struct ShowcaseTopic: View {
     }
     
     public var body: some View {
-        ShowcaseLayout(configuration).id(data.id)
+        _ShowcaseLayout(configuration).id(data.id)
     }
 
     private var contentConfiguration: ShowcaseContentConfiguration {
-        .init(
+        ShowcaseContentConfiguration(
             id: data.id,
             title: depth > 0 ? Text(data.title) : nil,
             description: Text(data.description),
@@ -45,37 +49,11 @@ public struct ShowcaseTopic: View {
             codeBlocks: ShowcaseCodeBlocks(data: data.codeBlocks))
     }
 
-    private var configuration: ShowcaseLayoutConfiguration {
-        .init(
+    private var configuration: _ShowcaseLayoutConfiguration {
+        _ShowcaseLayoutConfiguration(
             children: ShowcaseTopics(data: data.children),
             indexList: depth == 0 && !data.allChildren.isEmpty ? ShowcaseIndexList(data) : nil,
-            content: ShowcaseLayoutConfiguration.Content(configuration: contentConfiguration)
+            content: contentConfiguration
         )
-    }
-}
-
-// MARK: - Previews
-
-struct Showcase_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationView {
-            ShowcaseTopic(
-                Topic("Title", children: [
-                    .mockAccordion,
-                    .mockButton,
-                    .mockCard
-                ])
-            )
-            .modifier(ScrollViewReaderModifier())
-            .toolbar {
-                ShowcaseIndexMenu(.mockAccordion)
-            }
-        }
-    }
-}
-
-struct CustomBox: GroupBoxStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.content
     }
 }

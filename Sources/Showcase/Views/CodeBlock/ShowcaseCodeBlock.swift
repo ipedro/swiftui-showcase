@@ -20,130 +20,229 @@
 
 import SwiftUI
 import Splash
+import Engine
+import EngineMacros
 #if os(iOS)
 import UIKit
 #endif
 
+// MARK: - View Extension
+
+public extension View {
+    /// Sets the style for ``ShowcaseDocument`` within this view to a Showcase style with a
+    /// custom appearance and custom interaction behavior.
+    ///
+    /// Use this modifier to set a specific style for ``ShowcaseDocument`` instances
+    /// within a view:
+    ///
+    ///     ShowcaseNavigationStack()
+    ///         .showcaseCodeBlockStyle(MyCustomStyle())
+    ///
+    func showcaseCodeBlockStyle<S: ShowcaseCodeBlockStyle>(_ style: S) -> some View {
+        styledViewStyle(ShowcaseCodeBlockBody.self, style: style)
+    }
+
+    func showcaseCodeBlockWordWrap(_ enabled: Bool) -> some View {
+        environment(\.codeBlockWordWrap, enabled)
+    }
+
+    func showcaseCodeBlockTheme(_ theme: ShowcaseCodeBlockTheme?) -> some View {
+        environment(\.codeBlockTheme, theme)
+    }
+}
+
 /// A view that displays code blocks with syntax highlighting and a copy to pasteboard button.
-struct ShowcaseCodeBlock: View {
-    typealias Configuration = ShowcaseCodeBlockConfiguration
-    @Environment(\.codeBlockStyle)
-    private var style
+public struct ShowcaseCodeBlock: StyledView, Equatable {
+    public static func == (lhs: ShowcaseCodeBlock, rhs: ShowcaseCodeBlock) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    public let title: Optional<Text>
+    public let sourceCode: String
+    let id: UUID
+
+    @Environment(\.codeBlockWordWrap)
+    private var wordWrap: Bool
 
     @Environment(\.colorScheme)
     private var colorScheme
 
     @Environment(\.codeBlockTheme)
-    private var theme
+    private var _theme
 
-    var data: Topic.CodeBlock
-
+    private var theme: ShowcaseCodeBlockTheme {
+        _theme ?? Self.theme(for: colorScheme)
+    }
     /// Initializes a ShowcaseCodeBlock view with the specified code block data.
     /// - Parameter data: The data representing the code block (optional).
     init?(_ data: Topic.CodeBlock?) {
         guard let data = data else { return nil }
-        self.data = data
+        self.sourceCode = data.rawValue
+        title = Text(optional: LocalizedStringKey(optional: data.title))
+        self.id = data.id
     }
 
-    var configuration: Configuration {
-        Configuration(
-            title: Text(optional: LocalizedStringKey(optional: data.title)),
-            rawValue: data.rawValue,
-            theme: theme ?? style.resolve(in: colorScheme)
+    public init(_ configuration: ShowcaseCodeBlockConfiguration)   {
+        self.title = configuration.title
+        self.sourceCode = configuration.sourceCode
+        self.id = configuration.id
+    }
+
+    public var body: some View {
+        GroupBox(
+            content: {
+                ScrollView(wordWrap ? .vertical : .horizontal) {
+                    ShowcaseCodeBlockContent(rawValue: sourceCode, theme: theme)
+                        .frame(
+                            maxWidth: .infinity,
+                            alignment: .leading
+                        )
+                        .padding(
+                            title == nil ? .bottom : .vertical
+                        )
+                }
+                .fixedSize(horizontal: false, vertical: true)
+                .ios16_scrollBounceBehaviorBasedOnSize(
+                    axes: [.horizontal, .vertical]
+                )
+            },
+            label: {
+                HStack {
+                    title
+                    Spacer()
+                    ShowcaseCodeBlockCopyButton(rawValue: sourceCode)
+                }
+                .foregroundStyle(Color(theme.plainTextColor))
+            }
         )
+        .ios16_backgroundStyle(Color(theme.backgroundColor))
     }
 
-    var body: some View {
-        AnyView(style.resolve(configuration: configuration))
+    static func theme(for colorScheme: ColorScheme) -> ShowcaseCodeBlockTheme {
+        return switch colorScheme {
+        case .dark: .xcodeDark
+        default: .xcodeLight
+        }
+    }
+
+    public var _body: some View {
+        ShowcaseCodeBlockBody(
+            configuration: ShowcaseCodeBlockConfiguration(
+                id: id,
+                title: title,
+                wordWrap: wordWrap,
+                sourceCode: sourceCode,
+                theme: theme
+            )
+        )
+
     }
 }
 
 public struct ShowcaseCodeBlockConfiguration {
-    public let content: Content
-    public let copyToPasteboard: CopyToPasteboard
-    public let theme: ShowcaseCodeBlockTheme
-    public let title: Text?
+    var id: UUID
+    public var title: Optional<Text>
+    public var wordWrap: Bool
+    public var sourceCode: String
+    public var theme: ShowcaseCodeBlockTheme
+}
 
-    init(title: Text?, rawValue: String, theme: ShowcaseCodeBlockTheme) {
-        self.content = Content(rawValue: rawValue, theme: theme)
-        self.copyToPasteboard = CopyToPasteboard(rawValue: rawValue)
-        self.theme = theme
-        self.title = title
+public protocol ShowcaseCodeBlockStyle: ViewStyle where Configuration == ShowcaseCodeBlockConfiguration {
+}
+
+public struct ShowcaseCodeBlockDefaultStyle: ShowcaseCodeBlockStyle {
+    public func makeBody(configuration: ShowcaseCodeBlockConfiguration) -> some View {
+        _DefaultStyledView(ShowcaseCodeBlock(configuration))
+    }
+}
+
+private struct ShowcaseCodeBlockBody: ViewStyledView {
+    var configuration: ShowcaseCodeBlockConfiguration
+
+    static var defaultStyle: ShowcaseCodeBlockDefaultStyle {
+        ShowcaseCodeBlockDefaultStyle()
+    }
+}
+
+public struct ShowcaseCodeBlockStyleModifier<Style: ShowcaseCodeBlockStyle>: ViewModifier {
+    public var style: Style
+
+    public init(_ style: Style) {
+        self.style = style
+    }
+
+    public func body(content: Content) -> some View {
+        content.styledViewStyle(ShowcaseCodeBlockBody.self, style: style)
     }
 }
 
 // MARK: - Copy To Pasteboard
 
-public extension ShowcaseCodeBlockConfiguration {
-    /// A view representing the copy to pasteboard button.
-    struct CopyToPasteboard: View {
-        /// The text to be copied to the pasteboard.
-        let rawValue: String
+struct ShowcaseCodeBlockCopyButton: View {
+    /// The text to be copied to the pasteboard.
+    let rawValue: String
 
-        #if os(iOS)
-        private let impact = UIImpactFeedbackGenerator(style: .light)
-        #endif
-        
-        public var body: some View {
-            Button {
-                #if os(iOS)
-                UIPasteboard.general.string = rawValue
-                impact.impactOccurred()
-                #endif
-            } label: {
-                Image(systemName: "doc.on.doc")
-            }
+#if os(iOS)
+    private let impact = UIImpactFeedbackGenerator(style: .light)
+#endif
+
+    var body: some View {
+        Button {
+#if os(iOS)
+            UIPasteboard.general.string = rawValue
+            impact.impactOccurred()
+#endif
+        } label: {
+            Image(systemName: "doc.on.doc")
         }
     }
 }
 
 // MARK: - Content
 
-public extension ShowcaseCodeBlockConfiguration {
-    /// A view representing the content of the code block with syntax highlighting.
-    struct Content: View {
-        var rawValue: String
-        var theme: ShowcaseCodeBlockTheme
+/// A view representing the content of the code block with syntax highlighting.
+struct ShowcaseCodeBlockContent: View {
+    var rawValue: String
+    var theme: ShowcaseCodeBlockTheme
 
-        @Environment(\.dynamicTypeSize)
-        private var typeSize
+    @Environment(\.dynamicTypeSize)
+    private var typeSize
 
-        public var body: some View {
-            Text(makeAttributed(string: rawValue)).textSelection(.enabled)
-        }
+    var body: some View {
+        Text(makeAttributed(string: rawValue)).textSelection(.enabled)
+    }
 
-        private func makeAttributed(string: String) -> AttributedString {
-            let format = AttributedStringOutputFormat(theme: splashTheme)
-            let highlighter = SyntaxHighlighter(format: format)
-            let attributed = AttributedString(highlighter.highlight(string))
-            return attributed
-        }
+    private func makeAttributed(string: String) -> AttributedString {
+        let format = AttributedStringOutputFormat(theme: splashTheme)
+        let highlighter = SyntaxHighlighter(format: format)
+        let attributed = AttributedString(highlighter.highlight(string))
+        return attributed
+    }
 
-        private var splashTheme: Splash.Theme {
-            Splash.Theme(
-                font: font,
-                plainTextColor: theme.plainTextColor,
-                tokenColors: theme.tokenColors,
-                backgroundColor: theme.backgroundColor
-            )
-        }
+    private var splashTheme: Splash.Theme {
+        Splash.Theme(
+            font: font,
+            plainTextColor: theme.plainTextColor,
+            tokenColors: theme.tokenColors,
+            backgroundColor: theme.backgroundColor
+        )
+    }
 
-        private var font: Splash.Font {
-            switch typeSize {
-            case .xSmall:         Font(size: 9)
-            case .small:          Font(size: 11)
-            case .medium:         Font(size: 13)
-            case .large:          Font(size: 15)
-            case .xLarge:         Font(size: 17)
-            case .xxLarge:        Font(size: 19)
-            case .xxxLarge:       Font(size: 21)
-            case .accessibility1: Font(size: 25)
-            case .accessibility2: Font(size: 29)
-            case .accessibility3: Font(size: 33)
-            case .accessibility4: Font(size: 37)
-            case .accessibility5: Font(size: 41)
-            @unknown default:     Font(size: 17)
-            }
+    private var font: Splash.Font {
+        switch typeSize {
+        case .xSmall:         Font(size: 9)
+        case .small:          Font(size: 11)
+        case .medium:         Font(size: 13)
+        case .large:          Font(size: 15)
+        case .xLarge:         Font(size: 17)
+        case .xxLarge:        Font(size: 19)
+        case .xxxLarge:       Font(size: 21)
+        case .accessibility1: Font(size: 25)
+        case .accessibility2: Font(size: 29)
+        case .accessibility3: Font(size: 33)
+        case .accessibility4: Font(size: 37)
+        case .accessibility5: Font(size: 41)
+        @unknown default:     Font(size: 17)
         }
     }
 }

@@ -70,7 +70,7 @@ extension Chapter: Comparable {
     }
     
     public static func == (lhs: Self, rhs: Self) -> Bool {
-        lhs.id == rhs.id && lhs.topics == rhs.topics
+        lhs.id == rhs.id
     }
 }
 

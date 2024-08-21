@@ -19,16 +19,38 @@
 // SOFTWARE.
 
 import SwiftUI
+import Engine
+import EngineMacros
 
-extension ShowcaseContentStyle where Self == DefaultShowcaseContentStyle {
-    /// A vertical content style.
-    static var automatic: Self {
-        DefaultShowcaseContentStyle()
+public extension View {
+    /// Sets the style for ``ShowcaseDocument`` within this view to a Showcase style with a
+    /// custom appearance and custom interaction behavior.
+    ///
+    /// Use this modifier to set a specific style for ``ShowcaseDocument`` instances
+    /// within a view:
+    ///
+    ///     ShowcaseNavigationStack()
+    ///         .showcaseContentStyle(MyCustomStyle())
+    ///
+    func showcaseContentStyle<S: ShowcaseContentStyle>(_ style: S) -> some View {
+        styledViewStyle(ShowcaseContentBody.self, style: style)
+    }
+
+    func showcaseTitleStyle(_ title: SwiftUI.Font.TextStyle?) -> some View {
+        environment(\.titleStyle, title)
+    }
+
+    func showcaseBodyStyle(_ body: SwiftUI.Font.TextStyle?) -> some View {
+        environment(\.bodyStyle, body)
     }
 }
 
-/// A vertical content style.
-public struct DefaultShowcaseContentStyle: ShowcaseContentStyle {
+@StyledView
+public struct ShowcaseContent: StyledView, Equatable {
+    public static func == (lhs: ShowcaseContent, rhs: ShowcaseContent) -> Bool {
+        lhs.id == rhs.id
+    }
+
     @Environment(\.nodeDepth)
     private var depth
 
@@ -38,20 +60,28 @@ public struct DefaultShowcaseContentStyle: ShowcaseContentStyle {
     @Environment(\.bodyStyle)
     private var preferredBodyStyle
 
-    public func makeBody(configuration: Configuration) -> some View {
-        VStack(alignment: .leading, spacing: 30) {
-            configuration.title.font(.system(preferredTitleStyle ?? titleStyle))
+    public let id: AnyHashable
+    public let title: Optional<Text>
+    public let description: Optional<Text>
+    public let preview: Optional<ShowcasePreview>
+    public let links: Optional<ShowcaseLinks>
+    public let embeds: Optional<ShowcaseEmbeds>
+    public let codeBlocks: Optional<ShowcaseCodeBlocks>
 
-            if let links = configuration.links {
+    public var body: some View {
+        VStack(alignment: .leading, spacing: 30) {
+            title.font(.system(preferredTitleStyle ?? titleStyle))
+
+            if let links = links {
                 LazyHStack {
                     links
                 }
             }
 
-            configuration.description
-            configuration.preview
-            configuration.embeds
-            configuration.codeBlocks
+            description
+            preview?.equatable()
+            embeds?.equatable()
+            codeBlocks?.equatable()
         }
         .font({
             if let preferredBodyStyle {
@@ -88,15 +118,5 @@ extension EnvironmentValues {
     var bodyStyle: SwiftUI.Font.TextStyle? {
         get { self[BodyStyleKey.self] }
         set { self[BodyStyleKey.self] = newValue }
-    }
-}
-
-public extension View {
-    func showcaseTitleStyle(_ title: SwiftUI.Font.TextStyle?) -> some View {
-        environment(\.titleStyle, title)
-    }
-
-    func showcaseBodyStyle(_ body: SwiftUI.Font.TextStyle?) -> some View {
-        environment(\.bodyStyle, body)
     }
 }

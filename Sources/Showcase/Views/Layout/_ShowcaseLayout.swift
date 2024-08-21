@@ -19,61 +19,54 @@
 // SOFTWARE.
 
 import SwiftUI
+import Engine
+import EngineMacros
 
-/// A type that applies standard interaction behavior and a custom appearance to
-/// all Showcases within a view hierarchy.
-///
-/// To configure the current Showcase layout style for a view hierarchy, use the
-/// ``ShowcaseDocument/layoutStyle(_:)`` modifier.
-public protocol ShowcaseLayoutStyle: DynamicProperty {
-    /// A view that represents the body of a showcase layout.
-    associatedtype Body: View
+public typealias ShowcaseLayoutStyle = _ShowcaseLayoutStyle
 
-    /// The properties of a showcase layout.
-    typealias Configuration = ShowcaseLayoutConfiguration
+@StyledView
+public struct _ShowcaseLayout: StyledView {
+    /// The children views within the showcase.
+    public let children: Optional<ShowcaseTopics>
+    /// The index view for navigating within the showcase.
+    public let indexList: Optional<ShowcaseIndexList>
+    /// The content view of the showcase.
+    public let content: ShowcaseContentConfiguration
 
-    /// Creates a view that represents the body of a showcase layout.
-    ///
-    /// The system calls this method for each ``ShowcaseDocument`` instance in a view
-    /// hierarchy where this style is the current Showcase layout style.
-    /// 
-    /// - Parameter configuration: The properties of a showcase layout.
-    /// - Returns: A view that represents the body of a showcase layout.
-    @ViewBuilder func makeBody(configuration: Configuration) -> Body
+    @Environment(\.nodeDepth)
+    public var depth
+
+    public var body: some View {
+        LazyVStack(alignment: .leading) {
+            if depth > 0 {
+                Divider().padding(.bottom)
+            }
+
+            indexList.padding(.bottom, 30)
+            ShowcaseContent(content).equatable()
+            children
+        }
+        .padding(depth == .zero ? .horizontal : [])
+        .padding(depth == .zero ? [] : .vertical)
+        .padding(depth > .zero ? .bottom : [], 20)
+    }
 }
 
 // MARK: - View Extension
 
-extension View {
+public extension View {
     /// Sets the style for Showcase within this view to a showcase layout layout style with a
     /// custom appearance and custom interaction behavior.
-    /// 
+    ///
     /// Use this modifier to set a specific style for Showcase instances
     /// within a view:
-    /// 
+    ///
     ///     Showcase(element)
     ///         .layoutStyle(.standard)
-    /// 
+    ///
     /// - Parameter style: Any showcase layout style.
     /// - Returns: A view that has the showcase layout style set in its environment.
-    public func layoutStyle<S: ShowcaseLayoutStyle>(_ style: S) -> some View {
-        environment(\.layoutStyle, style)
-    }
-}
-
-// MARK: - Dynamic Property
-
-private struct ResolvedShowcaseLayoutStyle<Style: ShowcaseLayoutStyle>: View {
-    let configuration: ShowcaseLayoutConfiguration
-    let style: Style
-
-    var body: some View {
-        style.makeBody(configuration: configuration)
-    }
-}
-
-extension ShowcaseLayoutStyle {
-    func resolve(configuration: Configuration) -> some View {
-        ResolvedShowcaseLayoutStyle(configuration: configuration, style: self)
+    func layoutStyle<S: ShowcaseLayoutStyle>(_ style: S) -> some View {
+        styledViewStyle(_ShowcaseLayoutBody.self, style: style)
     }
 }

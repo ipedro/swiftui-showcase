@@ -19,81 +19,85 @@
 // SOFTWARE.
 
 import SwiftUI
+import Engine
+import EngineMacros
 
-public struct ShowcaseIndexList: View {
-    @Environment(\.indexListStyle) 
-    private var style
-
-    typealias Configuration = ShowcaseIndexListConfiguration
-    private let configuration: Configuration
-
-    init?(_ data: Topic) {
-        configuration = .init { padding, icon in
-            .init(
-                data: data,
-                icon: .init(icon),
-                padding: padding)
-        }
-    }
-
-    public init(configuration: ShowcaseIndexListConfiguration) {
-        self.configuration = configuration
-    }
-
-    public var body: some View {
-        AnyView(style.resolve(configuration: configuration))
+extension View {
+    /// Sets the style for ``ShowcaseDocument`` within this view to a Showcase style with a
+    /// custom appearance and custom interaction behavior.
+    ///
+    /// Use this modifier to set a specific style for ``ShowcaseDocument`` instances
+    /// within a view:
+    ///
+    ///     ShowcaseNavigationStack()
+    ///         .showcaseIndexListStyle(MyCustomStyle())
+    ///
+    /// - Parameter style: Any index list style.
+    /// - Returns: A view that has the index list style set in its environment.
+    public func showcaseIndexListStyle<S: ShowcaseIndexListStyle>(_ style: S) -> some View {
+        styledViewStyle(ShowcaseIndexListBody.self, style: style)
     }
 }
 
-// MARK: - Configuration
+@StyledView
+public struct ShowcaseIndexList: StyledView {
+    init?(_ data: Topic) {
+        label = ShowcaseIndexLabel(data: data, padding: 16)
+    }
 
-public struct ShowcaseIndexListConfiguration {
-    public let label: (_ padding: CGFloat, _ icon: any View) -> Label?
-    
-    public struct Label: View {
-        @Environment(\.nodeDepth) private var depth
-        var depthPadding: CGFloat { CGFloat(depth) * padding }
-        let data: Topic
-        let icon: AnyView
-        let padding: CGFloat
+    public let label: ShowcaseIndexLabel
 
-        private var topics: [Topic] {
-            data.children ?? []
-        }
-
-        public var body: some View {
-            if depth > 0 {
-                Item(data: data, icon: icon).padding(.leading, depthPadding)
-            }
-
-            ForEach(topics) { topic in
-                ShowcaseIndexList(topic).environment(\.nodeDepth, depth + 1)
-            }
+    public var body: some View {
+        VStack(alignment: .leading) {
+            label.padding(.vertical, 2)
         }
     }
-    
+}
+
+public struct ShowcaseIndexLabel: View {
+    @Environment(\.nodeDepth) private var depth
+    var depthPadding: CGFloat { CGFloat(depth) * padding }
+    let data: Topic
+    let padding: CGFloat
+
+    private var topics: [Topic] {
+        data.children ?? []
+    }
+
+    public var body: some View {
+        if depth > 0 {
+            Item(data: data).padding(.leading, depthPadding)
+        }
+
+        ForEach(topics) { topic in
+            ShowcaseIndexList(topic).environment(\.nodeDepth, depth + 1)
+        }
+    }
+
     struct Item: View {
         @Environment(\.scrollView) private var scrollView
-        
-        #if canImport(UIKit)
+
+#if canImport(UIKit)
         let impact = UIImpactFeedbackGenerator(style: .light)
-        #endif
+#endif
 
         var data: Topic
-        let icon: AnyView?
-        
+
         var body: some View {
             Button {
-                #if canImport(UIKit)
+#if canImport(UIKit)
                 impact.impactOccurred()
-                #endif
+#endif
 
                 withAnimation {
                     scrollView?.scrollTo(data.id, anchor: .top)
                 }
             } label: {
                 HStack(alignment: .top) {
-                    icon
+                    Circle()
+                        .foregroundStyle(.tertiary)
+                        .padding(.top, 6)
+                        .frame(width: 8)
                     Text(data.title)
                     Spacer()
                 }
@@ -107,13 +111,5 @@ public struct ShowcaseIndexListConfiguration {
         func makeBody(configuration: Configuration) -> some View {
             configuration.label
         }
-    }
-}
-
-// MARK: - Previews
-
-struct ShowcaseIndexList_Previews: PreviewProvider {
-    static var previews: some View {
-        ShowcaseIndexList(.mockButton)
     }
 }

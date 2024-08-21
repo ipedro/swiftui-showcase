@@ -25,36 +25,6 @@ struct LinkStyleKey: EnvironmentKey {
     static var defaultValue: AnyButtonStyle = .init(.standard)
 }
 
-/// An internal key needed to save style data in the environment
-struct StyleKey: EnvironmentKey {
-    static var defaultValue: any ShowcaseLayoutStyle = .automatic
-}
-
-/// An internal key needed to save style data in the environment
-struct IndexMenuStyleKey: EnvironmentKey {
-    static var defaultValue: any ShowcaseIndexMenuStyle = .menu()
-}
-
-/// An internal key needed to save style data in the environment
-struct IndexListStyleKey: EnvironmentKey {
-    static var defaultValue: any ShowcaseIndexListStyle = .bulletList
-}
-
-/// An internal key needed to save style data in the environment
-struct PreviewStyleKey: EnvironmentKey {
-    static var defaultValue: any ShowcasePreviewStyle = .plain
-}
-
-/// An internal key needed to save style data in the environment
-struct CodeBlockStyleKey: EnvironmentKey {
-    static var defaultValue: any ShowcaseCodeBlockStyle = .automatic
-}
-
-/// An internal key needed to save style data in the environment
-struct ContentStyleKey: EnvironmentKey {
-    static var defaultValue: any ShowcaseContentStyle = .automatic
-}
-
 struct ScrollViewKey: EnvironmentKey {
     static var defaultValue: ScrollViewProxy?
 }
@@ -65,4 +35,8 @@ struct NodeDepthKey: EnvironmentKey {
 
 struct CodeBlockThemeKey: EnvironmentKey {
     static var defaultValue: ShowcaseCodeBlockTheme?
+}
+
+struct CodeBlockWordWrapKey: EnvironmentKey {
+    static var defaultValue: Bool = false
 }

@@ -34,51 +34,19 @@ extension EnvironmentValues {
     }
 
     /// The current Showcase style value.
-    var previewStyle: any ShowcasePreviewStyle {
-        get { self[PreviewStyleKey.self] }
-        set { self[PreviewStyleKey.self] = newValue }
-    }
-
-    /// The current Showcase style value.
-    var codeBlockStyle: any ShowcaseCodeBlockStyle {
-        get { self[CodeBlockStyleKey.self] }
-        set { self[CodeBlockStyleKey.self] = newValue }
-    }
-
-    /// The current Showcase style value.
     var codeBlockTheme: ShowcaseCodeBlockTheme? {
         get { self[CodeBlockThemeKey.self] }
         set { self[CodeBlockThemeKey.self] = newValue }
     }
-
-    /// The current Showcase style value.
-    var contentStyle: any ShowcaseContentStyle {
-        get { self[ContentStyleKey.self] }
-        set { self[ContentStyleKey.self] = newValue }
-    }
-
-    /// The current Showcase style value.
-    var indexListStyle: any ShowcaseIndexListStyle {
-        get { self[IndexListStyleKey.self] }
-        set { self[IndexListStyleKey.self] = newValue }
-    }
-
-    /// The current index menu style value.
-    var indexMenuStyle: any ShowcaseIndexMenuStyle {
-        get { self[IndexMenuStyleKey.self] }
-        set { self[IndexMenuStyleKey.self] = newValue }
-    }
-
-    /// The current Showcase layout style value.
-    var layoutStyle: any ShowcaseLayoutStyle {
-        get { self[StyleKey.self] }
-        set { self[StyleKey.self] = newValue }
-    }
-
+    
     /// The current Showcase style value.
     var linkStyle: AnyButtonStyle {
         get { self[LinkStyleKey.self] }
         set { self[LinkStyleKey.self] = newValue }
     }
 
+    var codeBlockWordWrap: Bool {
+        get { self[CodeBlockWordWrapKey.self] }
+        set { self[CodeBlockWordWrapKey.self] = newValue }
+    }
 }

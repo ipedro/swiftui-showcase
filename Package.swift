@@ -1,4 +1,4 @@
-// swift-tools-version: 5.7
+// swift-tools-version: 5.9
 
 import PackageDescription
 
@@ -21,11 +21,19 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/JohnSundell/Splash", from: "0.16.0"),
+        .package(url: "https://github.com/nathantannar4/Engine", from: "1.8.2"),
     ],
     targets: [
         .target(
             name: "Showcase",
-            dependencies: ["Splash"]
+            dependencies: [
+                "Splash",
+                "Engine",
+                .product(name: "EngineMacros", package: "Engine"), // Optional
+            ],
+            swiftSettings: [
+                .enableExperimentalFeature("AccessLevelOnImport")
+            ]
         ),
         .testTarget(
             name: "ShowcaseTests",

@@ -19,72 +19,102 @@
 // SOFTWARE.
 
 import SwiftUI
+import Engine
+import EngineMacros
 
-public struct ShowcaseIndexMenu: View {
-    @Environment(\.indexMenuStyle) 
-    private var style
+// MARK: - View Extension
 
-    typealias Configuration = ShowcaseIndexMenuConfiguration
-    private let configuration: Configuration
+extension View {
+    /// Sets the style for ``ShowcaseDocument`` within this view to a index menu style with a
+    /// custom appearance and custom interaction behavior.
+    ///
+    /// Use this modifier to set a specific style for ``ShowcaseDocument`` instances
+    /// within a view:
+    ///
+    ///     ShowcaseNavigationStack()
+    ///         .showcaseIndexMenuStyle(MyCustomStyle())
+    ///
+    /// - Parameter style: Any index menu style
+    /// - Returns: A view that has the index menu style set in its environment.
+    public func showcaseIndexMenuStyle<S: ShowcaseIndexMenuStyle>(_ style: S) -> some View {
+        styledViewStyle(ShowcaseIndexMenuBody.self, style: style)
+    }
+}
+
+@StyledView
+public struct ShowcaseIndexMenu: StyledView {
+    public let label: ShowcaseIndexMenuLabel
+    public let icon: ShowcaseIndexMenuIcon
 
     init?(_ data: Topic) {
         if data.allChildren.isEmpty { return nil }
-        configuration = .init(label: .init(data: data))
-    }
-
-    public init(_ configuration: ShowcaseIndexMenuConfiguration) {
-        self.configuration = configuration
+        label = ShowcaseIndexMenuLabel(data: data)
+        icon = ShowcaseIndexMenuIcon()
     }
 
     public var body: some View {
-        AnyView(style.resolve(configuration: configuration))
+        Menu {
+            label.equatable()
+        } label: {
+            icon
+        }
     }
 }
 
 // MARK: - Configuration
 
-public struct ShowcaseIndexMenuConfiguration {
-    public let label: Label?
-    
-    public struct Label: View {
-        @Environment(\.scrollView) 
-        private var scrollView
-        let data: Topic
+public struct ShowcaseIndexMenuLabel: View, Equatable {
+    public static func == (lhs: ShowcaseIndexMenuLabel, rhs: ShowcaseIndexMenuLabel) -> Bool {
+        lhs.data == rhs.data
+    }
 
-        #if canImport(UIKit)
-        let impact = UIImpactFeedbackGenerator(style: .light)
-        #endif
+    @Environment(\.scrollView)
+    private var scrollView
+    let data: Topic
 
-        public var body: some View {
-            button(data)
-            
-            Divider()
-            
-            let children = data.allChildren
-            
-            if !children.isEmpty {
-                ForEach(children, content: button)
-            }
+    #if canImport(UIKit)
+    let impact = UIImpactFeedbackGenerator(style: .light)
+    #endif
+
+    public var body: some View {
+        button(data)
+
+        Divider()
+
+        let children = data.allChildren
+
+        if !children.isEmpty {
+            ForEach(children, content: button)
         }
-        
-        private func button(_ data: Topic) -> some View {
-            Button(data.title) {
-                #if canImport(UIKit)
-                impact.impactOccurred()
-                #endif
-                
-                withAnimation {
-                    scrollView?.scrollTo(data.id, anchor: .top)
-                }
+    }
+
+    private func button(_ data: Topic) -> some View {
+        Button(data.title) {
+            #if canImport(UIKit)
+            impact.impactOccurred()
+            #endif
+
+            withAnimation {
+                scrollView?.scrollTo(data.id, anchor: .top)
             }
         }
     }
 }
 
-// MARK: - Previews
+public struct ShowcaseIndexMenuIcon: View {
+    var systemName: String = "list.bullet"
 
-struct ShowcaseIndexMenu_Previews: PreviewProvider {
-    static var previews: some View {
-        ShowcaseIndexMenu(.mockButton)
+    /// The shape used for the icon.
+    private let shape = RoundedRectangle(
+        cornerRadius: 8,
+        style: .continuous)
+
+    public var body: some View {
+        Image(systemName: systemName)
+            .padding(5)
+            .mask { shape }
+            .background {
+                shape.opacity(0.1)
+            }
     }
 }

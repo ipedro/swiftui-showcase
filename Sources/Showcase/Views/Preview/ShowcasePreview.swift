@@ -19,42 +19,41 @@
 // SOFTWARE.
 
 import SwiftUI
+import Engine
+import EngineMacros
 
 /// A view that displays previews of showcase topics.
-public struct ShowcasePreview: View {
-    /// The style for displaying the preview content.
-    @Environment(\.previewStyle) 
-    private var style
-
-    /// The data representing the preview.
-    private let configuration: ShowcasePreviewConfiguration
-
-    /// Initializes a Preview view with the specified previews data.
-    /// - Parameter data: The data representing the previews (optional).
-    init?(_ data: Topic) {
-        guard let preview = data.previews else { return nil }
-        configuration = ShowcasePreviewConfiguration(
-            title: Text(optional: LocalizedStringKey(optional: data.previewTitle)),
-            content: .init(preview)
-        )
+@StyledView
+public struct ShowcasePreview: StyledView, Equatable {
+    public static func == (lhs: ShowcasePreview, rhs: ShowcasePreview) -> Bool {
+        lhs.id == rhs.id
     }
+    
+    public var label: Optional<Text>
+    public var previews: Optional<AnyView>
+    public var id: UUID
 
-    /// Initializes a Preview view with an existing configuration.
-    public init(_ configuration: ShowcasePreviewConfiguration) {
-        self.configuration = configuration
+    init?(_ data: Topic) {
+        self.label = Text(data.previewTitle ?? "")
+        self.previews = data.previews()
+        self.id = data.id
     }
 
     public var body: some View {
-        AnyView(style.resolve(configuration: configuration))
+        previews
     }
 }
 
-// MARK: - Configuration
-
-public struct ShowcasePreviewConfiguration {
-    let title: Text?
-
-    public typealias Content = AnyView
-    /// The type-erased preview content.
-    public let content: Content
+extension View {
+    /// Sets the style for ``ShowcaseDocument`` within this view to a Showcase style with a
+    /// custom appearance and custom interaction behavior.
+    ///
+    /// Use this modifier to set a specific style for ``ShowcaseDocument`` instances
+    /// within a view:
+    ///
+    ///     ShowcaseNavigationStack().showcasePreviewStyle(MyCustomStyle())
+    ///
+    public func showcasePreviewStyle<S: ShowcasePreviewStyle>(_ style: S) -> some View {
+        styledViewStyle(ShowcasePreviewBody.self, style: style)
+    }
 }

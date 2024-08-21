@@ -22,7 +22,11 @@ import Foundation
 import SwiftUI
 
 /// A view that represents a list of web embeds.
-public struct ShowcaseEmbeds: View {
+public struct ShowcaseEmbeds: View, Equatable {
+    public static func == (lhs: ShowcaseEmbeds, rhs: ShowcaseEmbeds) -> Bool {
+        lhs.data == rhs.data
+    }
+
     let data: [Topic.Embed]
 
     /// Initializes the view with external link data.

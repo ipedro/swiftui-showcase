@@ -24,7 +24,11 @@ import SwiftUI
 // MARK: -  Code Blocks
 
 /// A view that represents a list of code examples.
-public struct ShowcaseCodeBlocks: View {
+public struct ShowcaseCodeBlocks: View, Equatable {
+    public static func == (lhs: ShowcaseCodeBlocks, rhs: ShowcaseCodeBlocks) -> Bool {
+        lhs.data.map(\.id) == rhs.data.map(\.id)
+    }
+    
     let data: [Topic.CodeBlock]
 
     /// Initializes the view with code block data.
@@ -37,8 +41,7 @@ public struct ShowcaseCodeBlocks: View {
     /// The body view for displaying code blocks.
     public var body: some View {
         ForEach(data) {
-            ShowcaseCodeBlock($0)
+            ShowcaseCodeBlock($0).equatable()
         }
-
     }
 }

@@ -40,7 +40,7 @@ public struct Topic: Identifiable {
     public var embeds: [Embed]
     
     /// Previews configuration for the topic.
-    public var previews: AnyView?
+    public var previews: () -> AnyView?
 
     /// Optional title of the preview.
     public var previewTitle: String?
@@ -66,6 +66,14 @@ public struct Topic: Identifiable {
         children?.isEmpty != false
     }
 
+    private static func emptyIcon() -> Image? {
+        nil
+    }
+
+    private static func emptyPreviews() -> AnyView? {
+        nil
+    }
+
     /// Initializes a showcase element with the specified parameters.
     /// - Parameters:
     ///   - title: The title of the topic.
@@ -82,13 +90,14 @@ public struct Topic: Identifiable {
         @CodeBlockBuilder code: () -> [CodeBlock] = { [] },
         children: [Topic]? = nil
     ) {
-        self.icon = nil
+        self.icon = Self.emptyIcon
+        self.children = children
         self.children = children
         self.codeBlocks = code()
         self.description = description()
         self.links = links()
         self.embeds = embeds()
-        self.previews = nil
+        self.previews = Self.emptyPreviews
         self.previewTitle = nil
         self.title = title
     }
@@ -111,15 +120,15 @@ public struct Topic: Identifiable {
         @CodeBlockBuilder code: () -> [CodeBlock] = { [] },
         children: [Topic]? = nil,
         previewTitle: String? = "Preview",
-        @ViewBuilder previews: () -> P
+        @ViewBuilder previews: @escaping () -> P
     ) {
-        self.icon = nil
+        self.icon = Self.emptyIcon
         self.children = children
         self.codeBlocks = code()
         self.description = description()
         self.links = links()
         self.embeds = embeds()
-        self.previews = .init(previews())
+        self.previews = { AnyView(previews()) }
         self.previewTitle = previewTitle
         self.title = title
     }
@@ -144,7 +153,7 @@ public struct Topic: Identifiable {
         @CodeBlockBuilder code: () -> [CodeBlock] = { [] },
         children: [Topic]? = nil,
         previewTitle: String? = "Preview",
-        @ViewBuilder previews: () -> P
+        @ViewBuilder previews: @escaping () -> P
     ) {
         self.icon = icon
         self.children = children
@@ -152,7 +161,7 @@ public struct Topic: Identifiable {
         self.description = description()
         self.links = links()
         self.embeds = embeds()
-        self.previews = .init(previews())
+        self.previews = { AnyView(previews()) }
         self.previewTitle = previewTitle
         self.title = title
     }
@@ -170,7 +179,7 @@ extension Topic: Comparable {
     }
     
     public static func == (lhs: Self, rhs: Self) -> Bool {
-        lhs.id == rhs.id && lhs.children == rhs.children
+        lhs.id == rhs.id
     }
 }
 

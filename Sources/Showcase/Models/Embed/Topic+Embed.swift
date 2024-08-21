@@ -23,7 +23,11 @@ import WebKit
 
 extension Topic {
     /// External content associated with a topic.
-    public struct Embed: Identifiable {
+    public struct Embed: Identifiable, Equatable {
+        public static func == (lhs: Topic.Embed, rhs: Topic.Embed) -> Bool {
+            lhs.id == rhs.id
+        }
+
         public typealias NavigationHandler = (_ action: WKNavigationAction) -> WKNavigationActionPolicy
         public let id = UUID()
         public var url: URL
