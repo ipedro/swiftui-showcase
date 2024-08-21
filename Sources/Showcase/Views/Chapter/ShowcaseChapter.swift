@@ -31,19 +31,11 @@ struct ShowcaseChapter: View {
             footer: footer
         )
     }
-
-    private func label(topic: Topic) -> some View {
-        ShowcaseTopicLabel(
-            data: topic,
-            fallbackIcon: data.icon ?? data.icon
-        )
-        .equatable()
-    }
     
     private func content() -> some View {
-        OutlineGroup(data.topics, children: \.children) { item in
-            NavigationLink(value: item, label: {
-                label(topic: item)
+        OutlineGroup(data.topics, children: \.children) { topic in
+            NavigationLink(value: topic, label: {
+                ShowcaseTopicLabel(data: topic).equatable()
             })
         }
     }

@@ -46,7 +46,7 @@ public struct Topic: Identifiable {
     public var previewTitle: String?
 
     /// Optional icon for the topic.
-    public var icon: AnyView?
+    public var icon: (() -> Image)?
 
     /// Title of the topic.
     public var title: String
@@ -135,10 +135,10 @@ public struct Topic: Identifiable {
     ///   - children: Optional child showcase topics (default is nil).
     ///   - previewTitle: Optional previews title
     ///   - previews: Optional previews.
-    public init<I: View, P: View>(
+    public init<P: View>(
         _ title: String,
         description: () -> String = { "" },
-        @ViewBuilder icon: () -> I,
+        @ViewBuilder icon: @escaping () -> Image,
         @LinkBuilder links: () -> [Link] = { [] },
         @EmbedBuilder embeds: () -> [Embed] = { [] },
         @CodeBlockBuilder code: () -> [CodeBlock] = { [] },
@@ -146,7 +146,7 @@ public struct Topic: Identifiable {
         previewTitle: String? = "Preview",
         @ViewBuilder previews: () -> P
     ) {
-        self.icon = .init(icon())
+        self.icon = icon
         self.children = children
         self.codeBlocks = code()
         self.description = description()
