@@ -52,9 +52,7 @@ public struct Topic: Identifiable {
     public var title: String
     
     /// Optional child topics.
-    public var children: [Topic]? { _children }
-
-    private var _children: [Topic]
+    public var children: [Topic]?
 
     var allChildren: [Topic] {
         guard let children = children else { return [] }
@@ -87,7 +85,7 @@ public struct Topic: Identifiable {
         children: [Topic] = []
     ) {
         self.icon = nil
-        self._children = children
+        self.children = children
         self.codeBlocks = code()
         self.description = description()
         self.links = links()
@@ -118,7 +116,7 @@ public struct Topic: Identifiable {
         @ViewBuilder previews: @escaping () -> P
     ) {
         self.icon = nil
-        self._children = children
+        self.children = children
         self.codeBlocks = code()
         self.description = description()
         self.links = links()
@@ -147,7 +145,7 @@ public struct Topic: Identifiable {
         children: [Topic] = []
     ) {
         self.icon = icon
-        self._children = children
+        self.children = children
         self.codeBlocks = code()
         self.description = description()
         self.links = links()
@@ -180,7 +178,7 @@ public struct Topic: Identifiable {
         @ViewBuilder previews: @escaping () -> P
     ) {
         self.icon = icon
-        self._children = children
+        self.children = children
         self.codeBlocks = code()
         self.description = description()
         self.links = links()
@@ -238,57 +236,7 @@ extension Topic {
         }
 
         var copy = self
-        copy._children = _children.compactMap { $0.search(query: query) }
-        return (isMatch || !copy._children.isEmpty) ? copy : nil
-    }
-}
-
-extension Topic: RandomAccessCollection {
-    public typealias Element = Topic
-    public typealias SubSequence = ArraySlice<Topic>
-    public typealias Indices = Range<Int>
-
-    public subscript(position: Int) -> Topic {
-        _children[position]
-    }
-
-    public subscript(bounds: Range<Int>) -> ArraySlice<Topic> {
-        _children[bounds]
-    }
-
-    public var startIndex: Int {
-        _children.startIndex
-    }
-
-    public var endIndex: Int {
-        _children.endIndex
-    }
-
-    public func index(before i: Int) -> Int {
-        _children.index(before: i)
-    }
-
-    public func formIndex(before i: inout Int) {
-        _children.formIndex(before: &i)
-    }
-
-    public func index(after i: Int) -> Int {
-        _children.index(after: i)
-    }
-
-    public func formIndex(after i: inout Int) {
-        _children.formIndex(after: &i)
-    }
-
-    public func index(_ i: Int, offsetBy distance: Int) -> Int {
-        _children.index(i, offsetBy: distance)
-    }
-
-    public func index(_ i: Int, offsetBy distance: Int, limitedBy limit: Int) -> Int? {
-        _children.index(i, offsetBy: distance, limitedBy: limit)
-    }
-
-    public func distance(from start: Int, to end: Int) -> Int {
-        _children.distance(from: start, to: end)
+        copy.children = children?.compactMap { $0.search(query: query) }
+        return (isMatch || copy.children?.isEmpty == false) ? copy : nil
     }
 }

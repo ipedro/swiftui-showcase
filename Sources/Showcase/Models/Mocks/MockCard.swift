@@ -23,7 +23,7 @@ import SwiftUI
 // MARK: - Card Group
 
 extension Topic {
-    static let mockCard = Self(
+    static let mockCard = Topic(
         "Card",
         description: """
         Cards are surfaces that display content and actions on a single topic.

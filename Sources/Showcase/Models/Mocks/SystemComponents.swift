@@ -21,7 +21,7 @@
 import SwiftUI
 
 extension Document {
-    public static let systemComponents = Self(
+    public static let systemComponents = Document(
         "Components",
         description: "Learn how to use and customize system-defined components to give people a familiar and consistent experience.",
         Chapter(
