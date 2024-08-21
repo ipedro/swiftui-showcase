@@ -40,12 +40,18 @@ extension View {
 }
 
 @StyledView
-public struct ShowcaseIndexList: StyledView {
+public struct ShowcaseIndexList: StyledView, Equatable {
+    public static func == (lhs: ShowcaseIndexList, rhs: ShowcaseIndexList) -> Bool {
+        lhs.id == rhs.id
+    }
+    
     init?(_ data: Topic) {
         label = ShowcaseIndexLabel(data: data, padding: 16)
+        id = data.id
     }
 
     public let label: ShowcaseIndexLabel
+    public let id: UUID
 
     public var body: some View {
         VStack(alignment: .leading) {

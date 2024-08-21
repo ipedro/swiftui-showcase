@@ -35,7 +35,7 @@ public struct ShowcaseTopic: View, Equatable {
     }
     
     public var body: some View {
-        _ShowcaseLayout(configuration).id(data.id)
+        ShowcaseLayout(configuration)
     }
 
     private var contentConfiguration: ShowcaseContentConfiguration {
@@ -49,8 +49,8 @@ public struct ShowcaseTopic: View, Equatable {
             codeBlocks: ShowcaseCodeBlocks(data: data.codeBlocks))
     }
 
-    private var configuration: _ShowcaseLayoutConfiguration {
-        _ShowcaseLayoutConfiguration(
+    private var configuration: ShowcaseLayoutConfiguration {
+        ShowcaseLayoutConfiguration(
             children: ShowcaseTopics(data: data.children),
             indexList: depth == 0 && !data.allChildren.isEmpty ? ShowcaseIndexList(data) : nil,
             content: contentConfiguration

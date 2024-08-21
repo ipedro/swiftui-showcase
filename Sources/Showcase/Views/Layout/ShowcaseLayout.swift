@@ -22,10 +22,8 @@ import SwiftUI
 import Engine
 import EngineMacros
 
-public typealias ShowcaseLayoutStyle = _ShowcaseLayoutStyle
-
 @StyledView
-public struct _ShowcaseLayout: StyledView {
+public struct ShowcaseLayout: StyledView {
     /// The children views within the showcase.
     public let children: Optional<ShowcaseTopics>
     /// The index view for navigating within the showcase.
@@ -42,9 +40,9 @@ public struct _ShowcaseLayout: StyledView {
                 Divider().padding(.bottom)
             }
 
-            indexList.padding(.bottom, 30)
+            indexList?.equatable().padding(.bottom, 30)
             ShowcaseContent(content).equatable()
-            children
+            children?.equatable()
         }
         .padding(depth == .zero ? .horizontal : [])
         .padding(depth == .zero ? [] : .vertical)
@@ -67,6 +65,6 @@ public extension View {
     /// - Parameter style: Any showcase layout style.
     /// - Returns: A view that has the showcase layout style set in its environment.
     func layoutStyle<S: ShowcaseLayoutStyle>(_ style: S) -> some View {
-        styledViewStyle(_ShowcaseLayoutBody.self, style: style)
+        styledViewStyle(ShowcaseLayoutBody.self, style: style)
     }
 }
