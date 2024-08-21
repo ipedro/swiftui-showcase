@@ -23,23 +23,23 @@ import SwiftUI
 
 // MARK: - Styles
 
-public typealias PageShowcasePreviewStyle = TabViewShowcasePreviewStyle<PageTabViewStyle, TabView<Int, AnyView?>>
+public typealias PageShowcasePreviewStyle = ShowcasePreviewTabStyle<PageTabViewStyle, TabView<Int, AnyView?>>
 
 public extension ShowcasePreviewStyle where Self == PageShowcasePreviewStyle {
     /// Shows the preview content in a paged scrolling `TabView`.
     static var page: PageShowcasePreviewStyle {
-        TabViewShowcasePreviewStyle(style: .page) { _, tabView in
+        ShowcasePreviewTabStyle(style: .page) { _, tabView in
             tabView
         }
     }
 }
 
-public typealias GroupBoxPageShowcasePreviewStyle = TabViewShowcasePreviewStyle<PageTabViewStyle, GroupBox<Text?, TabView<Int, AnyView?>>>
+public typealias GroupBoxPageShowcasePreviewStyle = ShowcasePreviewTabStyle<PageTabViewStyle, GroupBox<Text?, TabView<Int, AnyView?>>>
 
 public extension ShowcasePreviewStyle where Self == GroupBoxPageShowcasePreviewStyle {
     /// Shows the preview content in a paged scrolling `TabView` inside a group box, with an optional title.
     static var groupBoxPage: GroupBoxPageShowcasePreviewStyle {
-        TabViewShowcasePreviewStyle(style: .page(indexDisplayMode: .always)) { title, tabView in
+        ShowcasePreviewTabStyle(style: .page(indexDisplayMode: .always)) { title, tabView in
             GroupBox(label: title) {
                 tabView
             }
@@ -47,21 +47,21 @@ public extension ShowcasePreviewStyle where Self == GroupBoxPageShowcasePreviewS
     }
 }
 
-public extension ShowcasePreviewStyle where Self == TabViewShowcasePreviewStyle<DefaultTabViewStyle, AnyView> {
+public extension ShowcasePreviewStyle where Self == ShowcasePreviewTabStyle<DefaultTabViewStyle, AnyView> {
     /// A `TabViewStyle` that implements a paged scrolling `TabView` with an
     /// index display mode.
     static func page<C: View>(
         indexDisplayMode: PageTabViewStyle.IndexDisplayMode = .automatic,
         @ViewBuilder body: @escaping (_ title: Text?, _ tabView: TabView<Int, AnyView?>) -> C
-    ) -> TabViewShowcasePreviewStyle<PageTabViewStyle, C> {
-        TabViewShowcasePreviewStyle(
+    ) -> ShowcasePreviewTabStyle<PageTabViewStyle, C> {
+        ShowcasePreviewTabStyle(
             style: .page(indexDisplayMode: indexDisplayMode),
             body: body
         )
     }
 }
 
-public struct TabViewShowcasePreviewStyle<S: TabViewStyle, C: View>: ShowcasePreviewStyle {
+public struct ShowcasePreviewTabStyle<S: TabViewStyle, C: View>: ShowcasePreviewStyle {
     /// The tab style.
     var style: S
     var body: (Text?, TabView<Int, AnyView?>) -> C

@@ -21,6 +21,25 @@
 import SwiftUI
 import SafariServices
 
+// MARK: - View Extension
+
+extension View {
+    /// Sets the style for ``ShowcaseDocument`` within this view to a Showcase style with a
+    /// custom appearance and custom interaction behavior.
+    ///
+    /// Use this modifier to set a specific style for ``ShowcaseDocument`` instances
+    /// within a view:
+    ///
+    ///     ShowcaseNavigationStack()
+    ///         .showcaseLinkStyle(MyCustomStyle())
+    ///
+    /// - Parameter style: <#style description#>
+    /// - Returns: <#description#>
+    public func showcaseLinkStyle<S: ButtonStyle>(_ style: S) -> some View {
+        environment(\.linkStyle, .init(style))
+    }
+}
+
 /// A view that displays an external link to a website in a Safari view controller.
 struct ShowcaseLink: View {
     /// The style environment variable for displaying external links.

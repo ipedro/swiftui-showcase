@@ -22,6 +22,25 @@ import SwiftUI
 import Engine
 import EngineMacros
 
+// MARK: - View Extension
+
+public extension View {
+    /// Sets the style for Showcase within this view to a showcase layout layout style with a
+    /// custom appearance and custom interaction behavior.
+    ///
+    /// Use this modifier to set a specific style for Showcase instances
+    /// within a view:
+    ///
+    ///     Showcase(element)
+    ///         .layoutStyle(.standard)
+    ///
+    /// - Parameter style: Any showcase layout style.
+    /// - Returns: A view that has the showcase layout style set in its environment.
+    func layoutStyle<S: ShowcaseLayoutStyle>(_ style: S) -> some View {
+        modifier(ShowcaseLayoutStyleModifier(style))
+    }
+}
+
 @StyledView
 public struct ShowcaseLayout: StyledView {
     /// The children views within the showcase.
@@ -47,24 +66,5 @@ public struct ShowcaseLayout: StyledView {
         .padding(depth == .zero ? .horizontal : [])
         .padding(depth == .zero ? [] : .vertical)
         .padding(depth > .zero ? .bottom : [], 20)
-    }
-}
-
-// MARK: - View Extension
-
-public extension View {
-    /// Sets the style for Showcase within this view to a showcase layout layout style with a
-    /// custom appearance and custom interaction behavior.
-    ///
-    /// Use this modifier to set a specific style for Showcase instances
-    /// within a view:
-    ///
-    ///     Showcase(element)
-    ///         .layoutStyle(.standard)
-    ///
-    /// - Parameter style: Any showcase layout style.
-    /// - Returns: A view that has the showcase layout style set in its environment.
-    func layoutStyle<S: ShowcaseLayoutStyle>(_ style: S) -> some View {
-        styledViewStyle(ShowcaseLayoutBody.self, style: style)
     }
 }

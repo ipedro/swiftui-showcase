@@ -35,7 +35,7 @@ extension View {
     /// - Parameter style: Any index list style.
     /// - Returns: A view that has the index list style set in its environment.
     public func showcaseIndexListStyle<S: ShowcaseIndexListStyle>(_ style: S) -> some View {
-        styledViewStyle(ShowcaseIndexListBody.self, style: style)
+        modifier(ShowcaseIndexListStyleModifier(style))
     }
 }
 

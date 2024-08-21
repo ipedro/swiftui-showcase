@@ -20,19 +20,19 @@
 
 import SwiftUI
 
-public extension ShowcasePreviewStyle where Self == GroupBoxShowcasePreviewStyle<DefaultGroupBoxStyle> {
+public extension ShowcasePreviewStyle where Self == ShowcasePreviewGroupBoxStyle<DefaultGroupBoxStyle> {
     /// Shows the preview content inside a group box, with an optional title.
-    static var groupBox: GroupBoxShowcasePreviewStyle<DefaultGroupBoxStyle> {
-        GroupBoxShowcasePreviewStyle(style: .automatic)
+    static var groupBox: ShowcasePreviewGroupBoxStyle<DefaultGroupBoxStyle> {
+        ShowcasePreviewGroupBoxStyle(style: .automatic)
     }
 
     /// Shows the preview content inside a custom group box.
-    static func groupBox<S: GroupBoxStyle>(_ style: S) -> GroupBoxShowcasePreviewStyle<S> {
-        GroupBoxShowcasePreviewStyle(style: style)
+    static func groupBox<S: GroupBoxStyle>(_ style: S) -> ShowcasePreviewGroupBoxStyle<S> {
+        ShowcasePreviewGroupBoxStyle(style: style)
     }
 }
 
-public struct GroupBoxShowcasePreviewStyle<S: GroupBoxStyle>: ShowcasePreviewStyle {
+public struct ShowcasePreviewGroupBoxStyle<S: GroupBoxStyle>: ShowcasePreviewStyle {
     var style: S
 
     public func makeBody(configuration: ShowcasePreviewConfiguration) -> some View {

@@ -54,6 +54,6 @@ extension View {
     ///     ShowcaseNavigationStack().showcasePreviewStyle(MyCustomStyle())
     ///
     public func showcasePreviewStyle<S: ShowcasePreviewStyle>(_ style: S) -> some View {
-        styledViewStyle(ShowcasePreviewBody.self, style: style)
+        modifier(ShowcasePreviewStyleModifier(style))
     }
 }

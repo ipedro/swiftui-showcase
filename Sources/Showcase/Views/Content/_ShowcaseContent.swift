@@ -33,7 +33,7 @@ public extension View {
     ///         .showcaseContentStyle(MyCustomStyle())
     ///
     func showcaseContentStyle<S: ShowcaseContentStyle>(_ style: S) -> some View {
-        styledViewStyle(ShowcaseContentBody.self, style: style)
+        modifier(ShowcaseContentStyleModifier(style))
     }
 
     func showcaseTitleStyle(_ title: SwiftUI.Font.TextStyle?) -> some View {
@@ -81,7 +81,7 @@ public struct ShowcaseContent: StyledView, Equatable {
             description
             preview?.equatable()
             embeds?.equatable()
-            codeBlocks?.equatable()
+            codeBlocks
         }
         .font({
             if let preferredBodyStyle {

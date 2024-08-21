@@ -37,7 +37,7 @@ extension View {
     /// - Parameter style: Any index menu style
     /// - Returns: A view that has the index menu style set in its environment.
     public func showcaseIndexMenuStyle<S: ShowcaseIndexMenuStyle>(_ style: S) -> some View {
-        styledViewStyle(ShowcaseIndexMenuBody.self, style: style)
+        modifier(ShowcaseIndexMenuStyleModifier(style))
     }
 }
 
