@@ -58,7 +58,14 @@ public struct Topic: Identifiable {
         guard let children = children else { return [] }
         return children.flatMap { [$0] + $0.allChildren }
     }
-    
+
+    func withIcon(_ icon: (() -> Image)?) -> Topic {
+        var copy = self
+        copy.icon = copy.icon ?? icon
+        copy.children = copy.children?.map { $0.withIcon(icon) }
+        return copy
+    }
+
     public static func emptyDescription() -> String { "" }
 
     public var isEmpty: Bool {
@@ -82,7 +89,7 @@ public struct Topic: Identifiable {
         @LinkBuilder links: () -> [Link] = { [] },
         @EmbedBuilder embeds: () -> [Embed] = { [] },
         @CodeBlockBuilder code: () -> [CodeBlock] = { [] },
-        children: [Topic] = []
+        children: [Topic]? = nil
     ) {
         self.icon = nil
         self.children = children
@@ -111,7 +118,7 @@ public struct Topic: Identifiable {
         @LinkBuilder links: () -> [Link] = { [] },
         @EmbedBuilder embeds: () -> [Embed] = { [] },
         @CodeBlockBuilder code: () -> [CodeBlock] = { [] },
-        children: [Topic] = [],
+        children: [Topic]? = nil,
         previewTitle: String? = "Preview",
         @ViewBuilder previews: @escaping () -> P
     ) {
@@ -142,7 +149,7 @@ public struct Topic: Identifiable {
         @LinkBuilder links: () -> [Link] = { [] },
         @EmbedBuilder embeds: () -> [Embed] = { [] },
         @CodeBlockBuilder code: () -> [CodeBlock] = { [] },
-        children: [Topic] = []
+        children: [Topic]? = nil
     ) {
         self.icon = icon
         self.children = children
@@ -173,9 +180,9 @@ public struct Topic: Identifiable {
         @LinkBuilder links: () -> [Link] = { [] },
         @EmbedBuilder embeds: () -> [Embed] = { [] },
         @CodeBlockBuilder code: () -> [CodeBlock] = { [] },
-        children: [Topic] = [],
         previewTitle: String? = "Preview",
-        @ViewBuilder previews: @escaping () -> P
+        @ViewBuilder previews: @escaping () -> P,
+        children: [Topic]? = nil
     ) {
         self.icon = icon
         self.children = children

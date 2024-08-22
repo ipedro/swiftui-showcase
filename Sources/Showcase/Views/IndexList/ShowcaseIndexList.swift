@@ -40,77 +40,60 @@ extension View {
 }
 
 @StyledView
-public struct ShowcaseIndexList: StyledView, Equatable {
-    public static func == (lhs: ShowcaseIndexList, rhs: ShowcaseIndexList) -> Bool {
-        lhs.id == rhs.id
-    }
-    
-    init?(_ data: Topic) {
-        label = ShowcaseIndexLabel(data: data, padding: 16)
-        id = data.id
-    }
-
-    public let label: ShowcaseIndexLabel
-    public let id: UUID
-
-    public var body: some View {
-        VStack(alignment: .leading) {
-            label.padding(.vertical, 2)
-        }
-    }
-}
-
-public struct ShowcaseIndexLabel: View {
-    @Environment(\.nodeDepth) private var depth
-    var depthPadding: CGFloat { CGFloat(depth) * padding }
+public struct ShowcaseIndexList: StyledView {
     let data: Topic
-    let padding: CGFloat
+
+    @Environment(\.nodeDepth)
+    private var depth
 
     private var topics: [Topic] {
         data.children ?? []
     }
 
     public var body: some View {
-        if depth > 0 {
-            Item(data: data).padding(.leading, depthPadding)
-        }
-
-        ForEach(topics) { topic in
-            ShowcaseIndexList(topic).environment(\.nodeDepth, depth + 1)
-        }
-    }
-
-    struct Item: View {
-        @Environment(\.scrollView) private var scrollView
-
-#if canImport(UIKit)
-        let impact = UIImpactFeedbackGenerator(style: .light)
-#endif
-
-        var data: Topic
-
-        var body: some View {
-            Button {
-#if canImport(UIKit)
-                impact.impactOccurred()
-#endif
-
-                withAnimation {
-                    scrollView?.scrollTo(data.id, anchor: .top)
-                }
-            } label: {
-                HStack(alignment: .top) {
-                    Circle()
-                        .foregroundStyle(.tertiary)
-                        .padding(.top, 6)
-                        .frame(width: 8)
-                    Text(data.title)
-                    Spacer()
-                }
+        let depthPadding = CGFloat(depth) * 16
+        VStack(alignment: .leading) {
+            if depth > 0 {
+                ShowcaseIndexItem(data: data).padding(.leading, depthPadding)
             }
-            .accessibilityAddTraits(.isLink)
-            .buttonStyle(_ButtonStyle())
+            ForEach(topics) { topic in
+                ShowcaseIndexList(data: topic).environment(\.nodeDepth, depth + 1)
+            }
         }
+        .padding(.vertical, 2)
+    }
+}
+
+struct ShowcaseIndexItem: View {
+    @Environment(\.scrollView)
+    private var scrollView
+
+    #if canImport(UIKit)
+    let impact = UIImpactFeedbackGenerator(style: .light)
+    #endif
+
+    var data: Topic
+
+    var body: some View {
+        Button {
+            #if canImport(UIKit)
+            impact.impactOccurred()
+            #endif
+            withAnimation {
+                scrollView?.scrollTo(data.id, anchor: .top)
+            }
+        } label: {
+            HStack(alignment: .top) {
+                Circle()
+                    .foregroundStyle(.tertiary)
+                    .padding(.top, 6)
+                    .frame(width: 8)
+                Text(data.title)
+                Spacer()
+            }
+        }
+        .accessibilityAddTraits(.isLink)
+        .buttonStyle(_ButtonStyle())
     }
 
     private struct _ButtonStyle: ButtonStyle {

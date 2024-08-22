@@ -74,7 +74,7 @@ public struct Chapter: Identifiable {
     ) {
         self.title = title
         self.description = description
-        self.topics = topics.sorted()
+        self.topics = topics.sorted().map { $0.withIcon(icon) }
         self.icon = icon
     }
 
@@ -113,12 +113,11 @@ extension Collection where Element == Chapter {
 }
 
 extension Chapter {
-    func asTopic() -> Topic {
-        if let icon {
-            Topic(title, icon: icon(), children: topics)
-        } else {
-            Topic(title, children: topics)
-        }
+    func withIcon(_ icon: (() -> Image)?) -> Chapter {
+        var copy = self
+        copy.icon = copy.icon ?? icon
+        copy.topics = copy.topics.map { $0.withIcon(icon) }
+        return copy
     }
 
     /// Searches for a query string within the chapter, including the chapter title, description, and all contained topics.

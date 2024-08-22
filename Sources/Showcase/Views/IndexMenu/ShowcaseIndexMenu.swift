@@ -70,6 +70,7 @@ public struct ShowcaseIndexMenuLabel: View, Equatable {
 
     @Environment(\.scrollView)
     private var scrollView
+
     let data: Topic
 
     #if canImport(UIKit)
@@ -93,7 +94,6 @@ public struct ShowcaseIndexMenuLabel: View, Equatable {
             #if canImport(UIKit)
             impact.impactOccurred()
             #endif
-
             withAnimation {
                 scrollView?.scrollTo(data.id, anchor: .top)
             }

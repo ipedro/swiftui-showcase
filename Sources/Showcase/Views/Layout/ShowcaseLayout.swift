@@ -59,7 +59,7 @@ public struct ShowcaseLayout: StyledView {
                 Divider().padding(.bottom)
             }
 
-            indexList?.equatable().padding(.bottom, 30)
+            indexList?.padding(.bottom, 30)
             ShowcaseContent(content).equatable()
             children?.equatable()
         }

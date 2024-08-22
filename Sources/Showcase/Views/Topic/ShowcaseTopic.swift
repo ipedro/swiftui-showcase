@@ -62,7 +62,7 @@ public struct ShowcaseTopic: View, Equatable {
     private var configuration: ShowcaseLayoutConfiguration {
         ShowcaseLayoutConfiguration(
             children: ShowcaseTopics(data: data.children),
-            indexList: depth == 0 && !data.allChildren.isEmpty ? ShowcaseIndexList(data) : nil,
+            indexList: depth == 0 && !data.allChildren.isEmpty ? ShowcaseIndexList(data: data) : nil,
             content: contentConfiguration
         )
     }

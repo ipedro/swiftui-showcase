@@ -50,7 +50,7 @@ public struct Document: Identifiable {
     ) {
         self.title = title
         self.description = description
-        self.chapters = chapters.sorted()
+        self.chapters = chapters
     }
 
     /// Initializes a showcase document with the specified title, chapters and an optional description.
@@ -67,16 +67,7 @@ public struct Document: Identifiable {
     ) {
         self.title = title
         self.description = description
-        self.chapters = chapters.sorted().map {
-            var chapter = $0
-            chapter.icon = chapter.icon ?? icon
-            chapter.topics = chapter.topics.map {
-                var topic = $0
-                topic.icon = topic.icon ?? icon
-                return topic
-            }
-            return chapter
-        }
+        self.chapters = chapters.map { $0.withIcon(icon) }
         self.icon = icon
     }
 
