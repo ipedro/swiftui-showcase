@@ -113,9 +113,10 @@ extension Collection where Element == Chapter {
 }
 
 extension Chapter {
-    func withIcon(_ icon: (() -> Image)?) -> Chapter {
+    func withIcon(_ proposal: (() -> Image)?) -> Chapter {
         var copy = self
-        copy.icon = copy.icon ?? icon
+        let icon = copy.icon ?? proposal
+        copy.icon = icon
         copy.topics = copy.topics.map { $0.withIcon(icon) }
         return copy
     }

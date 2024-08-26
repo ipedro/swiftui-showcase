@@ -59,9 +59,10 @@ public struct Topic: Identifiable {
         return children.flatMap { [$0] + $0.allChildren }
     }
 
-    func withIcon(_ icon: (() -> Image)?) -> Topic {
+    func withIcon(_ proposal: (() -> Image)?) -> Topic {
         var copy = self
-        copy.icon = copy.icon ?? icon
+        let icon = copy.icon ?? proposal
+        copy.icon = icon
         copy.children = copy.children?.map { $0.withIcon(icon) }
         return copy
     }
