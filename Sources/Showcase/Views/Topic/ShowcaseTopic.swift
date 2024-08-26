@@ -40,9 +40,10 @@ public struct ShowcaseTopic: View, Equatable {
 
     private var contentConfiguration: ShowcaseContentConfiguration {
         ShowcaseContentConfiguration(
-            id: data.id,
+            id: data.id, 
+            isEmpty: data.description.isEmpty,
             title: depth > 0 ? Text(data.title) : nil,
-            description: Text(data.description),
+            description: data.description.isEmpty ? nil : Text(data.description),
             preview: preview(),
             links: ShowcaseLinks(data: data.links),
             embeds: ShowcaseEmbeds(data: data.embeds),
@@ -63,7 +64,7 @@ public struct ShowcaseTopic: View, Equatable {
         ShowcaseLayoutConfiguration(
             children: ShowcaseTopics(data: data.children),
             indexList: depth == 0 && !data.allChildren.isEmpty ? ShowcaseIndexList(data: data) : nil,
-            content: contentConfiguration
+            configuration: contentConfiguration
         )
     }
 }

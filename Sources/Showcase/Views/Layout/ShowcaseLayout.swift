@@ -48,23 +48,23 @@ public struct ShowcaseLayout: StyledView {
     /// The index view for navigating within the showcase.
     public let indexList: Optional<ShowcaseIndexList>
     /// The content view of the showcase.
-    public let content: ShowcaseContentConfiguration
+    public let configuration: ShowcaseContentConfiguration
 
     @Environment(\.nodeDepth)
     public var depth
 
     public var body: some View {
         LazyVStack(alignment: .leading) {
-            if depth > 0 {
+            if depth > 0, !configuration.isEmpty {
                 Divider().padding(.bottom)
             }
 
             indexList?.padding(.bottom, 30)
-            ShowcaseContent(content).equatable()
+            ShowcaseContent(configuration).equatable()
             children?.equatable()
         }
         .padding(depth == .zero ? .horizontal : [])
         .padding(depth == .zero ? [] : .vertical)
-        .padding(.bottom, depth > .zero ? 20 : 60)
+        .padding(configuration.isEmpty ? [] : .bottom, 20)
     }
 }

@@ -61,6 +61,7 @@ public struct ShowcaseContent: StyledView, Equatable {
     private var preferredBodyStyle
 
     public let id: AnyHashable
+    public let isEmpty: Bool
     public let title: Optional<Text>
     public let description: Optional<Text>
     public let preview: Optional<ShowcasePreview>
@@ -83,12 +84,11 @@ public struct ShowcaseContent: StyledView, Equatable {
             embeds?.equatable()
             codeBlocks
         }
-        .font({
+        .transformEnvironment(\.font) { font in
             if let preferredBodyStyle {
-                return .system(preferredBodyStyle)
+                font = .system(preferredBodyStyle)
             }
-            return nil
-        }())
+        }
     }
 
     private var titleStyle: SwiftUI.Font.TextStyle {
