@@ -97,12 +97,7 @@ public struct ShowcaseCodeBlock: StyledView, Equatable {
     }
 
     public var body: some View {
-        ShowcaseCodeBlockRenderer(
-            sourceCode: sourceCode,
-            title: title,
-            wordWrap: wordWrap, 
-            theme: theme
-        )
+        ShowcaseCodeBlockVersionedContainer(sourceCode: sourceCode, title: title)
     }
 
     public var _body: some View {
@@ -175,51 +170,18 @@ struct ShowcaseCodeBlockCopyButton: View {
     }
 }
 
-struct ShowcaseCodeBlockRenderer: VersionedView {
+struct ShowcaseCodeBlockVersionedContainer: VersionedView {
     var sourceCode: String
     var title: Text?
-    var wordWrap: Bool
-    var theme: ShowcaseCodeBlockTheme
 
-    fileprivate func content() -> some View {
-        ScrollView(wordWrap ? .vertical : .horizontal) {
-            ShowcaseCodeBlockContent(rawValue: sourceCode, theme: theme)
-                .frame(
-                    maxWidth: .infinity,
-                    alignment: .leading
-                )
-                .padding(
-                    title == nil ? .bottom : .vertical
-                )
-        }
-        .fixedSize(horizontal: false, vertical: true)
-    }
-    
-    fileprivate func label() -> some View {
-        HStack {
-            title
-            Spacer()
-            ShowcaseCodeBlockCopyButton(rawValue: sourceCode)
-        }
-        .foregroundStyle(Color(theme.plainTextColor))
-    }
-    
     var v1Body: some View {
-        GroupBox(content: content, label: label)
+        ShowcaseCodeBlockContent(sourceCode: sourceCode, title: title)
     }
 
     @available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, visionOS 1.0, *)
     var v5Body: some View {
-        GroupBox(
-            content: {
-                content().scrollBounceBehavior(.basedOnSize, axes: [
-                    .horizontal, 
-                    .vertical
-                ])
-            },
-            label: label
-        )
-        .backgroundStyle(Color(theme.backgroundColor))
+        ShowcaseCodeBlockContent(sourceCode: sourceCode, title: title)
+            .scrollBounceBehavior(.basedOnSize, axes: [.horizontal, .vertical])
     }
 }
 
@@ -227,17 +189,67 @@ struct ShowcaseCodeBlockRenderer: VersionedView {
 
 /// A view representing the content of the code block with syntax highlighting.
 struct ShowcaseCodeBlockContent: View {
-    var rawValue: String
-    var theme: ShowcaseCodeBlockTheme
+    var sourceCode: String
+    var title: Text?
 
     @Environment(\.dynamicTypeSize)
     private var typeSize
 
-    var body: some View {
-        Text(makeAttributed(string: rawValue)).textSelection(.enabled)
+    @Environment(\.codeBlockWordWrap)
+    private var wordWrap: Bool
+
+    @Environment(\.codeBlockTheme)
+    private var _theme
+
+    @Environment(\.colorScheme)
+    private var colorScheme
+
+    private var theme: ShowcaseCodeBlockTheme {
+        _theme ?? Self.theme(for: colorScheme)
     }
 
-    private func makeAttributed(string: String) -> AttributedString {
+    static func theme(for colorScheme: ColorScheme) -> ShowcaseCodeBlockTheme {
+        return switch colorScheme {
+        case .dark: .xcodeDark
+        default: .xcodeLight
+        }
+    }
+
+    @ViewBuilder
+    private func label() -> some View {
+        if let title {
+            HStack {
+                title
+                Spacer()
+                ShowcaseCodeBlockCopyButton(rawValue: sourceCode)
+            }
+            .foregroundStyle(Color(theme.plainTextColor))
+        } else {
+            EmptyView()
+        }
+    }
+
+    private func content() -> some View {
+        ScrollView(wordWrap ? .vertical : .horizontal) {
+            Text(makeAttributed(sourceCode)).textSelection(.enabled)
+                .frame(
+                    maxWidth: .infinity,
+                    alignment: .leading
+                )
+                .padding(
+                    title == nil ? .vertical : .bottom
+                )
+        }
+        .fixedSize(horizontal: false, vertical: true)
+    }
+
+    var body: some View {
+        GroupBox(content: content, label: label).backgroundStyle(
+            Color(theme.backgroundColor)
+        )
+    }
+
+    private func makeAttributed(_ string: String) -> AttributedString {
         let format = AttributedStringOutputFormat(theme: splashTheme)
         let highlighter = SyntaxHighlighter(format: format)
         let attributed = AttributedString(highlighter.highlight(string))
@@ -275,22 +287,22 @@ struct ShowcaseCodeBlockContent: View {
 #Preview {
     ShowcaseCodeBlock(
         Topic.CodeBlock("Example", text: {
-"""
-HStack {
-    Spacer()
-    copyButton
-}
-"""
+        """
+        HStack {
+            Spacer()
+            copyButton
+        }
+        """
         }))
 }
 #Preview {
     ShowcaseCodeBlock(
         Topic.CodeBlock(text: {
-"""
-HStack {
-    Spacer()
-    copyButton
-}
-"""
+        """
+        HStack {
+            Spacer()
+            copyButton
+        }
+        """
         }))
 }

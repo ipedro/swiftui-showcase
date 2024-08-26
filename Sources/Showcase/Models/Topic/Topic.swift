@@ -26,7 +26,8 @@ import SwiftUI
 public struct Topic: Identifiable {
     /// The unique identifier for the topic.
     public let id = UUID()
-    
+    public let scrollID = UUID()
+
     /// Code blocks associated with the topic.
     public var codeBlocks: [CodeBlock]
     

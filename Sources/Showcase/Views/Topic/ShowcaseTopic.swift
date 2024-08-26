@@ -35,7 +35,7 @@ public struct ShowcaseTopic: View, Equatable {
     }
     
     public var body: some View {
-        ShowcaseLayout(configuration)
+        ShowcaseLayout(configuration).id(data.scrollID)
     }
 
     private var contentConfiguration: ShowcaseContentConfiguration {

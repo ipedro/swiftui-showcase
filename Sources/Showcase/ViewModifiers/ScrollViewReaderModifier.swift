@@ -20,18 +20,28 @@
 
 import Foundation
 import SwiftUI
+import Engine
 
-struct ScrollViewReaderModifier: ViewModifier {
-    func body(content: Content) -> some View {
+struct ScrollViewReaderModifier: VersionedViewModifier {
+    func v1Body(content: Content) -> some View {
         ScrollViewReader { scroll in
             ScrollView {
-                Color.clear
-                    .frame(height: .zero)
-                    .id("top")
+                content.safeAreaInset(edge: .top, spacing: 0) {
+                    Color.clear.frame(height: .zero).id("top")
+                }
 
-                content
+                Spacer().frame(height: 40)
             }
             .environment(\.scrollView, scroll)
+            .scrollDismissesKeyboard(.interactively)
         }
     }
+
+//    func v5Body(content: Content) -> V5Body {
+//        ScrollView {
+//            Color.clear.frame(height: .zero).id("top")
+//            content.padding(.bottom, 40).scrollDismissesKeyboard(<#T##mode: ScrollDismissesKeyboardMode##ScrollDismissesKeyboardMode#>)
+//        }
+//        .environment(\.scrollView, scroll)
+//    }
 }
