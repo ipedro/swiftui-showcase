@@ -68,7 +68,18 @@ public struct ShowcaseCodeBlock: StyledView, Equatable {
     private var colorScheme
 
     @Environment(\.codeBlockTheme)
-    private var theme
+    private var _theme
+
+    private var theme: ShowcaseCodeBlockTheme {
+        _theme ?? Self.theme(for: colorScheme)
+    }
+
+    static func theme(for colorScheme: ColorScheme) -> ShowcaseCodeBlockTheme {
+        return switch colorScheme {
+        case .dark: .xcodeDark
+        default: .xcodeLight
+        }
+    }
 
     /// Initializes a ShowcaseCodeBlock view with the specified code block data.
     /// - Parameter data: The data representing the code block (optional).
@@ -89,7 +100,8 @@ public struct ShowcaseCodeBlock: StyledView, Equatable {
         ShowcaseCodeBlockRenderer(
             sourceCode: sourceCode,
             title: title,
-            wordWrap: wordWrap
+            wordWrap: wordWrap, 
+            theme: theme
         )
     }
 
@@ -167,16 +179,7 @@ struct ShowcaseCodeBlockRenderer: VersionedView {
     var sourceCode: String
     var title: Text?
     var wordWrap: Bool
-
-    @Environment(\.colorScheme)
-    private var colorScheme
-
-    @Environment(\.codeBlockTheme)
-    private var _theme
-
-    private var theme: ShowcaseCodeBlockTheme {
-        _theme ?? Self.theme(for: colorScheme)
-    }
+    var theme: ShowcaseCodeBlockTheme
 
     fileprivate func content() -> some View {
         ScrollView(wordWrap ? .vertical : .horizontal) {
@@ -217,13 +220,6 @@ struct ShowcaseCodeBlockRenderer: VersionedView {
             label: label
         )
         .backgroundStyle(Color(theme.backgroundColor))
-    }
-
-    static func theme(for colorScheme: ColorScheme) -> ShowcaseCodeBlockTheme {
-        return switch colorScheme {
-        case .dark: .xcodeDark
-        default: .xcodeLight
-        }
     }
 }
 

@@ -25,6 +25,8 @@ struct ShowcaseChapters: View {
     @Binding
     var searchQuery: String
     var data: [Chapter]
+    @State
+    private var isExpanded = [Chapter.ID: Bool]()
 
     private var chapters: [Chapter] {
         let searchQuery = searchQuery.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -39,7 +41,12 @@ struct ShowcaseChapters: View {
                 topics: chapter.topics,
                 title: chapter.title,
                 icon: chapter.icon?(),
-                description: chapter.description
+                description: chapter.description, 
+                isExpanded: .init(get: {
+                    isExpanded[chapter.id, default: true]
+                }, set: { newValue in
+                    isExpanded[chapter.id] = newValue
+                })
             )
         }
     }

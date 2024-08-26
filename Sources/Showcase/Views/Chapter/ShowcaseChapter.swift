@@ -26,15 +26,28 @@ struct ShowcaseChapter: View {
     var title: String
     var icon: Image?
     var description: String?
+    @Binding var isExpanded: Bool
 
     var body: some View {
-        Section(
-            content: content,
-            header: header,
-            footer: footer
-        )
+        if #available(iOS 17.0, *) {
+            Section(
+                isExpanded: $isExpanded,
+                content: content,
+                header: header
+            )
+            .safeAreaInset(edge: .bottom) {
+                footer().foregroundStyle(.secondary).font(.footnote)
+            }
+        } else {
+            // Fallback on earlier versions
+            Section(
+                content: content,
+                header: header,
+                footer: footer
+            )
+        }
     }
-    
+
     private func content() -> some View {
         OutlineGroup(topics, children: \.children) { topic in
             NavigationLink(value: topic) {
