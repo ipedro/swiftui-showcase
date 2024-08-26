@@ -46,23 +46,21 @@ public struct ShowcaseIndexList: StyledView {
     @Environment(\.nodeDepth)
     private var depth
 
-    private var topics: [Topic] {
-        data.children ?? []
-    }
-
     public var body: some View {
         let depthPadding = CGFloat(depth) * 16
         VStack(alignment: .leading) {
             if depth > 0 {
                 ShowcaseIndexItem(data: data).padding(.leading, depthPadding)
             }
-            ForEach(topics) { topic in
-                ShowcaseIndexList(data: topic).environment(\.nodeDepth, depth + 1)
+            if let topics = data.children {
+                ForEach(topics) { topic in
+                    ShowcaseIndexList(data: topic).environment(\.nodeDepth, depth + 1)
+                }
             }
         }
-        .padding(.vertical, 2)
     }
 }
+
 
 struct ShowcaseIndexItem: View {
     @Environment(\.scrollView)
@@ -80,7 +78,7 @@ struct ShowcaseIndexItem: View {
             impact.impactOccurred()
             #endif
             withAnimation {
-                scrollView?.scrollTo(data.id, anchor: .top)
+                scrollView?.scrollTo(data.scrollID, anchor: .top)
             }
         } label: {
             HStack(alignment: .top) {
