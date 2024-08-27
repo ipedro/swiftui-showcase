@@ -61,26 +61,6 @@ public struct ShowcaseCodeBlock: StyledView, Equatable {
     let sourceCode: String
     let id: UUID
 
-    @Environment(\.codeBlockWordWrap)
-    private var wordWrap: Bool
-
-    @Environment(\.colorScheme)
-    private var colorScheme
-
-    @Environment(\.codeBlockTheme)
-    private var _theme
-
-    private var theme: ShowcaseCodeBlockTheme {
-        _theme ?? Self.theme(for: colorScheme)
-    }
-
-    static func theme(for colorScheme: ColorScheme) -> ShowcaseCodeBlockTheme {
-        return switch colorScheme {
-        case .dark: .xcodeDark
-        default: .xcodeLight
-        }
-    }
-
     /// Initializes a ShowcaseCodeBlock view with the specified code block data.
     /// - Parameter data: The data representing the code block (optional).
     init?(_ data: Topic.CodeBlock?) {
@@ -105,7 +85,6 @@ public struct ShowcaseCodeBlock: StyledView, Equatable {
             configuration: ShowcaseCodeBlockConfiguration(
                 id: id,
                 title: title,
-                wordWrap: wordWrap,
                 sourceCode: sourceCode
             )
         )
@@ -115,7 +94,6 @@ public struct ShowcaseCodeBlock: StyledView, Equatable {
 public struct ShowcaseCodeBlockConfiguration {
     var id: UUID
     public var title: Optional<Text>
-    public var wordWrap: Bool
     public var sourceCode: String
 }
 
