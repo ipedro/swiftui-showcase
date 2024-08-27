@@ -59,8 +59,11 @@ public struct ShowcaseLayout: StyledView {
                 Divider().padding(.bottom)
             }
 
-            indexList?.padding(.bottom, 30)
+            // FIXME: add back after scroll fix
+            // indexList?.padding(.bottom, 30)
+
             ShowcaseContent(configuration).equatable()
+            
             children?.equatable()
         }
         .padding(depth == .zero ? .horizontal : [])

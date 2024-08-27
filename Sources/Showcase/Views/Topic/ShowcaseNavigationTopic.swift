@@ -32,10 +32,11 @@ struct ShowcaseNavigationTopic: View {
             .equatable()
             .navigationTitle(data.title)
             .modifier(ScrollViewReaderModifier())
-            .toolbar {
-                ToolbarItem {
-                    ShowcaseIndexMenu(data)
-                }
-            }
+            // FIXME: add back after scroll fix
+            // .toolbar {
+            //     ToolbarItem {
+            //         ShowcaseIndexMenu(data)
+            //     }
+            // }
     }
 }
