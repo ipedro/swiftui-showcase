@@ -32,6 +32,7 @@ struct ShowcaseNavigationTopic: View {
             .equatable()
             .navigationTitle(data.title)
             .modifier(ScrollViewReaderModifier())
+            .accessibilityElement(children: .contain)
             // FIXME: add back after scroll fix
             // .toolbar {
             //     ToolbarItem {

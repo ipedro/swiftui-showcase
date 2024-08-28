@@ -34,7 +34,7 @@ public struct ShowcasePreview: StyledView, Equatable {
     public var label: Optional<Text>
 
     public var body: some View {
-        content
+        content.accessibilityElement(children: .contain)
     }
 }
 
