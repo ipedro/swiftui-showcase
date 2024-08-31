@@ -40,3 +40,11 @@ struct CodeBlockThemeKey: EnvironmentKey {
 struct CodeBlockWordWrapKey: EnvironmentKey {
     static var defaultValue: Bool = false
 }
+
+struct ContentTitleFontKey: EnvironmentKey {
+    static var defaultValue: Font?
+}
+
+struct ContentBodyFontKey: EnvironmentKey {
+    static var defaultValue: Font?
+}

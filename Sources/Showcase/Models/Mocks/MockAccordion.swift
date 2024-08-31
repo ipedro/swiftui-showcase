@@ -49,7 +49,7 @@ extension Topic {
         }
         """
         },
-        // children: [.mockCard],
+        children: [.mockCard],
         previews: {
             MockPreviews()
         }
@@ -60,7 +60,7 @@ struct TopicAccordion_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
             ShowcaseNavigationStack(
-                .init(
+                Document(
                     "Accordion",
                     Chapter(
                         "Chapter",

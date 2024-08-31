@@ -22,12 +22,6 @@ import SwiftUI
 
 extension EnvironmentValues {
     /// The current topic nesting level of the environment.
-    var scrollView: ScrollViewProxy? {
-        get { self[ScrollViewKey.self] }
-        set { self[ScrollViewKey.self] = newValue }
-    }
-
-    /// The current topic nesting level of the environment.
     var nodeDepth: Int {
         get { self[NodeDepthKey.self] }
         set { self[NodeDepthKey.self] = newValue }
@@ -48,5 +42,14 @@ extension EnvironmentValues {
     var codeBlockWordWrap: Bool {
         get { self[CodeBlockWordWrapKey.self] }
         set { self[CodeBlockWordWrapKey.self] = newValue }
+    }
+
+    var contentTitleFont: Font? {
+        get { self[ContentTitleFontKey.self] }
+        set { self[ContentTitleFontKey.self] = newValue }
+    }
+    var contentBodyFont: Font? {
+        get { self[ContentBodyFontKey.self] }
+        set { self[ContentBodyFontKey.self] = newValue }
     }
 }

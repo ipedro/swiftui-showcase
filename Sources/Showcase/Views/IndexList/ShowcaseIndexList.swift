@@ -61,10 +61,9 @@ public struct ShowcaseIndexList: StyledView {
     }
 }
 
-
 struct ShowcaseIndexItem: View {
-    @Environment(\.scrollView)
-    private var scrollView
+    @Environment(\.scrollViewSelection)
+    private var selection
 
     #if canImport(UIKit)
     let impact = UIImpactFeedbackGenerator(style: .light)
@@ -77,9 +76,7 @@ struct ShowcaseIndexItem: View {
             #if canImport(UIKit)
             impact.impactOccurred()
             #endif
-            withAnimation {
-                scrollView?.scrollTo(data.scrollID, anchor: .top)
-            }
+            selection!.wrappedValue = data.id
         } label: {
             HStack(alignment: .top) {
                 Circle()

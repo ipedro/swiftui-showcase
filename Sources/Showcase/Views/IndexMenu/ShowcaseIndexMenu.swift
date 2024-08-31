@@ -68,8 +68,8 @@ public struct ShowcaseIndexMenuLabel: View, Equatable {
         lhs.data == rhs.data
     }
 
-    @Environment(\.scrollView)
-    private var scrollView
+    @Environment(\.scrollViewSelection)
+    private var selection
 
     let data: Topic
 
@@ -94,9 +94,7 @@ public struct ShowcaseIndexMenuLabel: View, Equatable {
             #if canImport(UIKit)
             impact.impactOccurred()
             #endif
-            withAnimation {
-                scrollView?.scrollTo(data.id, anchor: .top)
-            }
+            selection?.wrappedValue = data.id
         }
     }
 }

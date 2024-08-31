@@ -21,11 +21,7 @@
 import SwiftUI
 
 /// The children views within the showcase.
-public struct ShowcaseTopics: View, Equatable {
-    public static func == (lhs: ShowcaseTopics, rhs: ShowcaseTopics) -> Bool {
-        lhs.data == rhs.data
-    }
-    
+public struct ShowcaseTopics: View {
     @Environment(\.nodeDepth) 
     private var depth
 

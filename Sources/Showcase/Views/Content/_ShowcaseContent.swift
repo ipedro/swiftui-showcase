@@ -36,12 +36,12 @@ public extension View {
         modifier(ShowcaseContentStyleModifier(style))
     }
 
-    func showcaseTitleStyle(_ title: SwiftUI.Font.TextStyle?) -> some View {
-        environment(\.titleStyle, title)
+    func showcaseTitleStyle(_ title: Font? = nil) -> some View {
+        environment(\.contentTitleFont, title)
     }
 
-    func showcaseBodyStyle(_ body: SwiftUI.Font.TextStyle?) -> some View {
-        environment(\.bodyStyle, body)
+    func showcaseBodyStyle(_ body: Font? = nil) -> some View {
+        environment(\.contentBodyFont, body)
     }
 }
 
@@ -54,11 +54,11 @@ public struct ShowcaseContent: StyledView, Equatable {
     @Environment(\.nodeDepth)
     private var depth
 
-    @Environment(\.titleStyle)
-    private var preferredTitleStyle
+    @Environment(\.contentTitleFont)
+    private var preferredTitleFont
 
-    @Environment(\.bodyStyle)
-    private var preferredBodyStyle
+    @Environment(\.contentBodyFont)
+    private var preferredBodyFont
 
     public let id: AnyHashable
     public let isEmpty: Bool
@@ -71,7 +71,7 @@ public struct ShowcaseContent: StyledView, Equatable {
 
     public var body: some View {
         VStack(alignment: .leading, spacing: 30) {
-            title.font(.system(preferredTitleStyle ?? titleStyle))
+            title.font(preferredTitleFont ?? .system(titleStyle))
 
             if let links = links {
                 LazyHStack {
@@ -85,13 +85,13 @@ public struct ShowcaseContent: StyledView, Equatable {
             codeBlocks
         }
         .transformEnvironment(\.font) { font in
-            if let preferredBodyStyle {
-                font = .system(preferredBodyStyle)
+            if let preferredBodyFont {
+                font = preferredBodyFont
             }
         }
     }
 
-    private var titleStyle: SwiftUI.Font.TextStyle {
+    private var titleStyle: Font.TextStyle {
         switch depth {
         case 0: return .largeTitle
         case 1: return .title
@@ -99,24 +99,5 @@ public struct ShowcaseContent: StyledView, Equatable {
         case 3: return .title3
         default: return .headline
         }
-    }
-}
-
-private struct TitleStyleKey: EnvironmentKey {
-    static var defaultValue: SwiftUI.Font.TextStyle?
-}
-
-private struct BodyStyleKey: EnvironmentKey {
-    static var defaultValue: SwiftUI.Font.TextStyle?
-}
-
-extension EnvironmentValues {
-    var titleStyle: SwiftUI.Font.TextStyle? {
-        get { self[TitleStyleKey.self] }
-        set { self[TitleStyleKey.self] = newValue }
-    }
-    var bodyStyle: SwiftUI.Font.TextStyle? {
-        get { self[BodyStyleKey.self] }
-        set { self[BodyStyleKey.self] = newValue }
     }
 }

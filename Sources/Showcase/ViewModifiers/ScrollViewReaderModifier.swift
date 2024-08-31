@@ -20,28 +20,44 @@
 
 import Foundation
 import SwiftUI
-import Engine
 
-struct ScrollViewReaderModifier: VersionedViewModifier {
-    func v1Body(content: Content) -> some View {
-        ScrollViewReader { scroll in
+struct ScrollViewSelectionKey: EnvironmentKey {
+    static var defaultValue: Binding<Topic.ID?>?
+}
+
+extension EnvironmentValues {
+    var scrollViewSelection: Binding<Topic.ID?>? {
+        get { self[ScrollViewSelectionKey.self] }
+        set { self[ScrollViewSelectionKey.self] = newValue }
+    }
+}
+
+struct ShowcaseScrollViewReader: ViewModifier {
+    init() {
+        print(Self.self, "init")
+    }
+    
+    @State private var selection: Topic.ID?
+
+    func body(content: Content) -> some View {
+        ScrollViewReader { scrollView in
             ScrollView {
-                content.safeAreaInset(edge: .top, spacing: 0) {
-                    Color.clear.frame(height: .zero).id("top")
-                }
+                content
+                    .environment(\.scrollViewSelection, $selection)
+                    .safeAreaInset(edge: .top, spacing: 0) {
+                        Color.clear.frame(height: .zero).id("top")
+                    }
+                    .onChange(of: selection) { value in
+                        if let value {
+                            withAnimation(.snappy) {
+                                scrollView.scrollTo(value, anchor: .top)
+                            }
+                        }
+                    }
 
                 Spacer().frame(height: 40)
             }
-            .environment(\.scrollView, scroll)
             .scrollDismissesKeyboard(.interactively)
         }
     }
-
-//    func v5Body(content: Content) -> V5Body {
-//        ScrollView {
-//            Color.clear.frame(height: .zero).id("top")
-//            content.padding(.bottom, 40).scrollDismissesKeyboard(<#T##mode: ScrollDismissesKeyboardMode##ScrollDismissesKeyboardMode#>)
-//        }
-//        .environment(\.scrollView, scroll)
-//    }
 }
