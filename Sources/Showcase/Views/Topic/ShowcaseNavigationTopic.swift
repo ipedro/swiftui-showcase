@@ -31,12 +31,13 @@ struct ShowcaseNavigationTopic: View {
         ShowcaseTopic(data)
             .equatable()
             .navigationTitle(data.title)
-            .modifier(ShowcaseScrollViewReader())
             .accessibilityElement(children: .contain)
             .toolbar {
                 ToolbarItem {
-                    ShowcaseIndexMenu(data)
+                    ShowcaseIndexMenu(data.children)
                 }
             }
+            // must come after toolbar
+            .modifier(ShowcaseScrollViewReader())
     }
 }

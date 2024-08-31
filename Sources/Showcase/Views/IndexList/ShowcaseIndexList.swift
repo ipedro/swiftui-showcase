@@ -41,21 +41,16 @@ extension View {
 
 @StyledView
 public struct ShowcaseIndexList: StyledView {
-    let data: Topic
-
-    @Environment(\.nodeDepth)
-    private var depth
+    let data: Array<Topic>
 
     public var body: some View {
-        let depthPadding = CGFloat(depth) * 16
         VStack(alignment: .leading) {
-            if depth > 0 {
-                ShowcaseIndexItem(data: data).padding(.leading, depthPadding)
-            }
-            if let topics = data.children {
-                ForEach(topics) { topic in
-                    ShowcaseIndexList(data: topic).environment(\.nodeDepth, depth + 1)
-                }
+            ForEach(data) { topic in
+                ShowcaseIndexItem(
+                    id: topic.id,
+                    title: topic.title
+                )
+                .padding(.leading, 16)
             }
         }
     }
@@ -69,21 +64,22 @@ struct ShowcaseIndexItem: View {
     let impact = UIImpactFeedbackGenerator(style: .light)
     #endif
 
-    var data: Topic
+    var id: Topic.ID
+    var title: String
 
     var body: some View {
         Button {
             #if canImport(UIKit)
             impact.impactOccurred()
             #endif
-            selection!.wrappedValue = data.id
+            selection?.wrappedValue = id
         } label: {
             HStack(alignment: .top) {
                 Circle()
                     .foregroundStyle(.tertiary)
                     .padding(.top, 6)
                     .frame(width: 8)
-                Text(data.title)
+                Text(title)
                 Spacer()
             }
         }
@@ -94,6 +90,8 @@ struct ShowcaseIndexItem: View {
     private struct _ButtonStyle: ButtonStyle {
         func makeBody(configuration: Configuration) -> some View {
             configuration.label
+                .opacity(configuration.isPressed ? 0.5 : 1)
+                .animation(.interactiveSpring, value: configuration.isPressed)
         }
     }
 }

@@ -37,27 +37,30 @@ struct ShowcaseScrollViewReader: ViewModifier {
         print(Self.self, "init")
     }
     
-    @State private var selection: Topic.ID?
+    @State 
+    private var selection: Topic.ID?
 
     func body(content: Content) -> some View {
         ScrollViewReader { scrollView in
             ScrollView {
+                Color.clear.frame(height: 0).id(Topic.ID.topAnchor)
                 content
-                    .environment(\.scrollViewSelection, $selection)
-                    .safeAreaInset(edge: .top, spacing: 0) {
-                        Color.clear.frame(height: .zero).id("top")
-                    }
-                    .onChange(of: selection) { value in
-                        if let value {
-                            withAnimation(.snappy) {
-                                scrollView.scrollTo(value, anchor: .top)
-                            }
-                        }
-                    }
 
                 Spacer().frame(height: 40)
+            }
+            .environment(\.scrollViewSelection, $selection)
+            .onChange(of: selection) { value in
+                if let value {
+                    withAnimation(.snappy) {
+                        scrollView.scrollTo(value, anchor: .top)
+                    }
+                }
             }
             .scrollDismissesKeyboard(.interactively)
         }
     }
+}
+
+extension UUID {
+    static let topAnchor = Self()
 }

@@ -46,15 +46,15 @@ public struct ShowcaseIndexMenu: StyledView {
     public let label: ShowcaseIndexMenuLabel
     public let icon: ShowcaseIndexMenuIcon
 
-    init?(_ data: Topic) {
-        if data.allChildren.isEmpty { return nil }
+    init?(_ data: [Topic]?) {
+        guard let data, !data.isEmpty else { return nil }
         label = ShowcaseIndexMenuLabel(data: data)
         icon = ShowcaseIndexMenuIcon()
     }
 
     public var body: some View {
         Menu {
-            label.equatable()
+            label
         } label: {
             icon
         }
@@ -63,38 +63,33 @@ public struct ShowcaseIndexMenu: StyledView {
 
 // MARK: - Configuration
 
-public struct ShowcaseIndexMenuLabel: View, Equatable {
-    public static func == (lhs: ShowcaseIndexMenuLabel, rhs: ShowcaseIndexMenuLabel) -> Bool {
-        lhs.data == rhs.data
-    }
-
+public struct ShowcaseIndexMenuLabel: View {
     @Environment(\.scrollViewSelection)
     private var selection
 
-    let data: Topic
+    let data: [Topic]
 
     #if canImport(UIKit)
     let impact = UIImpactFeedbackGenerator(style: .light)
     #endif
 
     public var body: some View {
-        button(data)
-
-        Divider()
-
-        let children = data.allChildren
-
-        if !children.isEmpty {
-            ForEach(children, content: button)
-        }
-    }
-
-    private func button(_ data: Topic) -> some View {
-        Button(data.title) {
+        Button("Scroll to Top") {
             #if canImport(UIKit)
             impact.impactOccurred()
             #endif
-            selection?.wrappedValue = data.id
+            selection?.wrappedValue = .topAnchor
+        }
+
+        Divider()
+        
+        ForEach(data) { topic in
+            Button(topic.title) {
+                #if canImport(UIKit)
+                impact.impactOccurred()
+                #endif
+                selection?.wrappedValue = topic.id
+            }
         }
     }
 }
