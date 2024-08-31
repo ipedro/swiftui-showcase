@@ -124,7 +124,7 @@ struct ShowcaseScrollTopButton: View {
             #endif
             selection?.wrappedValue = ShowcaseScrollViewTopAnchor.ID
         } label: {
-            Image(systemName: "arrow.up.circle")
+            Image(systemName: "arrow.up.circle.fill")
                 .symbolRenderingMode(.hierarchical)
                 .font(.title3)
                 .foregroundStyle(.secondary)

@@ -49,10 +49,12 @@ struct ShowcaseScrollViewReader: ViewModifier {
 
 struct ShowcaseScrollViewTopAnchor: View {
     static let ID = UUID()
+    @Environment(\.displayScale)
+    private var displayScale
 
     var body: some View {
         VStack {
-            Spacer().frame(height: 1)
+            Spacer().frame(height: 1 / displayScale)
             Color.clear.frame(height: 0).id(Self.ID)
         }
     }

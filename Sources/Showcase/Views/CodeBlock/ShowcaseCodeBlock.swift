@@ -19,12 +19,8 @@
 // SOFTWARE.
 
 import SwiftUI
-import Splash
 import Engine
 import EngineMacros
-#if os(iOS)
-import UIKit
-#endif
 
 // MARK: - View Extension
 
@@ -77,7 +73,7 @@ public struct ShowcaseCodeBlock: StyledView, Equatable {
     }
 
     public var body: some View {
-        ShowcaseCodeBlockVersionedContainer(sourceCode: sourceCode, title: title)
+        ShowcaseCodeBlockContent(sourceCode: sourceCode, title: title)
     }
 
     public var _body: some View {
@@ -97,8 +93,7 @@ public struct ShowcaseCodeBlockConfiguration {
     public var sourceCode: String
 }
 
-public protocol ShowcaseCodeBlockStyle: ViewStyle where Configuration == ShowcaseCodeBlockConfiguration {
-}
+public protocol ShowcaseCodeBlockStyle: ViewStyle where Configuration == ShowcaseCodeBlockConfiguration {}
 
 public struct ShowcaseCodeBlockDefaultStyle: ShowcaseCodeBlockStyle {
     public func makeBody(configuration: ShowcaseCodeBlockConfiguration) -> some View {
@@ -123,193 +118,6 @@ public struct ShowcaseCodeBlockStyleModifier<Style: ShowcaseCodeBlockStyle>: Vie
 
     public func body(content: Content) -> some View {
         content.styledViewStyle(ShowcaseCodeBlockBody.self, style: style)
-    }
-}
-
-// MARK: - Copy To Pasteboard
-
-struct ShowcaseCodeBlockCopyButton: View {
-    /// The text to be copied to the pasteboard.
-    let rawValue: String
-
-    #if os(iOS)
-    private let impact = UISelectionFeedbackGenerator()
-    #endif
-
-    @State
-    private var showtooltip = false
-
-    @State
-    private var isPerformingAction = false
-
-    private let padding: CGFloat = 9
-
-    var body: some View {
-        Button {
-            #if os(iOS)
-            UIPasteboard.general.string = rawValue
-            impact.selectionChanged()
-            #endif
-            if isPerformingAction { return }
-            isPerformingAction = true
-            showtooltip = true
-            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2)) {
-                showtooltip = false
-                isPerformingAction = false
-            }
-        } label: {
-            HStack(spacing: padding) {
-                VStack {
-                    if showtooltip {
-                        Text("Copied Code")
-                            .font(.footnote)
-                            .padding(.leading, padding)
-                            .transition(
-                                .move(edge: .trailing)
-                                .combined(with: .opacity)
-                            )
-                    }
-                }
-                .clipped()
-                
-                Image(systemName: "doc.on.doc\(showtooltip ? ".fill" : "")")
-                    .scaleEffect(showtooltip ? 1.3 : 1)
-                    .foregroundStyle(.primary.opacity(0.5))
-                    .padding(.leading, 2)
-            }
-            .padding(padding)
-            .background {
-                if showtooltip {
-                    Capsule().fill(.bar)
-                }
-            }
-            .animation(.bouncy, value: showtooltip)
-        }
-        .buttonStyle(_ButtonStyle())
-    }
-
-    private struct _ButtonStyle: ButtonStyle {
-        func makeBody(configuration: Configuration) -> some View {
-            configuration.label
-        }
-    }
-}
-
-struct ShowcaseCodeBlockVersionedContainer: VersionedView {
-    var sourceCode: String
-    var title: Text?
-
-    var v1Body: some View {
-        ShowcaseCodeBlockContent(sourceCode: sourceCode, title: title)
-    }
-
-    @available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, visionOS 1.0, *)
-    var v5Body: some View {
-        ShowcaseCodeBlockContent(
-            sourceCode: sourceCode,
-            title: title
-        ).scrollBounceBehavior(.basedOnSize, axes: [
-            .horizontal,
-            .vertical
-        ])
-    }
-}
-
-// MARK: - Content
-
-/// A view representing the content of the code block with syntax highlighting.
-struct ShowcaseCodeBlockContent: View {
-    var sourceCode: String
-    var title: Text?
-
-    @Environment(\.dynamicTypeSize)
-    private var typeSize
-
-    @Environment(\.codeBlockWordWrap)
-    private var wordWrap: Bool
-
-    @Environment(\.codeBlockTheme)
-    private var _theme
-
-    @Environment(\.colorScheme)
-    private var colorScheme
-
-    private var theme: ShowcaseCodeBlockTheme {
-        _theme ?? Self.theme(for: colorScheme)
-    }
-
-    static func theme(for colorScheme: ColorScheme) -> ShowcaseCodeBlockTheme {
-        return switch colorScheme {
-        case .dark: .xcodeDark
-        default: .xcodeLight
-        }
-    }
-
-    private var content: some View {
-        ScrollView(wordWrap ? .vertical : .horizontal) {
-            Text(makeAttributed(sourceCode)).textSelection(.enabled)
-                .frame(
-                    maxWidth: .infinity,
-                    alignment: .leading
-                )
-                .padding(
-                    title == nil ? .vertical : .bottom
-                )
-        }
-        .fixedSize(horizontal: false, vertical: true)
-    }
-
-    private var copyButton: ShowcaseCodeBlockCopyButton {
-        ShowcaseCodeBlockCopyButton(rawValue: sourceCode)
-    }
-
-    var body: some View {
-        ZStack(alignment: .topTrailing) {
-            GroupBox {
-                content
-            } label: {
-                if let title {
-                    title.foregroundStyle(Color(theme.plainTextColor))
-                }
-            }
-            .backgroundStyle(Color(theme.backgroundColor))
-
-            copyButton.padding(5)
-        }
-    }
-
-    private func makeAttributed(_ string: String) -> AttributedString {
-        let format = AttributedStringOutputFormat(theme: splashTheme)
-        let highlighter = SyntaxHighlighter(format: format)
-        let attributed = AttributedString(highlighter.highlight(string))
-        return attributed
-    }
-
-    private var splashTheme: Splash.Theme {
-        Splash.Theme(
-            font: font,
-            plainTextColor: theme.plainTextColor,
-            tokenColors: theme.tokenColors,
-            backgroundColor: theme.backgroundColor
-        )
-    }
-
-    private var font: Splash.Font {
-        switch typeSize {
-        case .xSmall:         Font(size: 9)
-        case .small:          Font(size: 11)
-        case .medium:         Font(size: 13)
-        case .large:          Font(size: 15)
-        case .xLarge:         Font(size: 17)
-        case .xxLarge:        Font(size: 19)
-        case .xxxLarge:       Font(size: 21)
-        case .accessibility1: Font(size: 25)
-        case .accessibility2: Font(size: 29)
-        case .accessibility3: Font(size: 33)
-        case .accessibility4: Font(size: 37)
-        case .accessibility5: Font(size: 41)
-        @unknown default:     Font(size: 17)
-        }
     }
 }
 
