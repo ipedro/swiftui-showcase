@@ -21,32 +21,17 @@
 import Foundation
 import SwiftUI
 
-struct ScrollViewSelectionKey: EnvironmentKey {
-    static var defaultValue: Binding<Topic.ID?>?
-}
-
-extension EnvironmentValues {
-    var scrollViewSelection: Binding<Topic.ID?>? {
-        get { self[ScrollViewSelectionKey.self] }
-        set { self[ScrollViewSelectionKey.self] = newValue }
-    }
-}
-
 struct ShowcaseScrollViewReader: ViewModifier {
-    init() {
-        print(Self.self, "init")
-    }
-    
-    @State 
+    @State
     private var selection: Topic.ID?
 
     func body(content: Content) -> some View {
         ScrollViewReader { scrollView in
             ScrollView {
-                Color.clear.frame(height: 0).id(Topic.ID.topAnchor)
-                content
-
-                Spacer().frame(height: 40)
+                ZStack(alignment: .top) {
+                    ShowcaseScrollViewTopAnchor()
+                    content.padding(.bottom, 30)
+                }
             }
             .environment(\.scrollViewSelection, $selection)
             .onChange(of: selection) { value in
@@ -54,6 +39,7 @@ struct ShowcaseScrollViewReader: ViewModifier {
                     withAnimation(.snappy) {
                         scrollView.scrollTo(value, anchor: .top)
                     }
+                    self.selection = nil
                 }
             }
             .scrollDismissesKeyboard(.interactively)
@@ -61,6 +47,13 @@ struct ShowcaseScrollViewReader: ViewModifier {
     }
 }
 
-extension UUID {
-    static let topAnchor = Self()
+struct ShowcaseScrollViewTopAnchor: View {
+    static let ID = UUID()
+
+    var body: some View {
+        VStack {
+            Spacer().frame(height: 1)
+            Color.clear.frame(height: 0).id(Self.ID)
+        }
+    }
 }

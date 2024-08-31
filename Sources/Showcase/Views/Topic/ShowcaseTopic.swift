@@ -68,6 +68,9 @@ public struct ShowcaseTopic: View, Equatable {
         )
     }
 
+    private var showIndexList: Bool {
+        depth == 0 && data.children != nil
+    }
     private func indexList() -> ShowcaseIndexList? {
         if depth == 0, let children = data.children {
             ShowcaseIndexList(data: children)

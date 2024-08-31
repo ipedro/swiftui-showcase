@@ -48,8 +48,14 @@ extension EnvironmentValues {
         get { self[ContentTitleFontKey.self] }
         set { self[ContentTitleFontKey.self] = newValue }
     }
+
     var contentBodyFont: Font? {
         get { self[ContentBodyFontKey.self] }
         set { self[ContentBodyFontKey.self] = newValue }
+    }
+    
+    var scrollViewSelection: Binding<Topic.ID?>? {
+        get { self[ScrollViewSelectionKey.self] }
+        set { self[ScrollViewSelectionKey.self] = newValue }
     }
 }

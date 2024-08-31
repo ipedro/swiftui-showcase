@@ -59,14 +59,13 @@ public struct ShowcaseLayout: StyledView {
                 Divider().padding(.bottom)
             }
 
-            indexList?.padding(.bottom, 30)
+            indexList.padding(.bottom, 30)
 
             ShowcaseContent(configuration).equatable()
-            
+
             children
         }
         .padding(depth == .zero ? .horizontal : [])
         .padding(depth == .zero ? [] : .vertical)
-        .padding(configuration.isEmpty ? [] : .bottom, 20)
     }
 }

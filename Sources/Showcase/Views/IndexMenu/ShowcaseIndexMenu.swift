@@ -78,11 +78,11 @@ public struct ShowcaseIndexMenuLabel: View {
             #if canImport(UIKit)
             impact.impactOccurred()
             #endif
-            selection?.wrappedValue = .topAnchor
+            selection?.wrappedValue = ShowcaseScrollViewTopAnchor.ID
         }
 
         Divider()
-        
+
         ForEach(data) { topic in
             Button(topic.title) {
                 #if canImport(UIKit)

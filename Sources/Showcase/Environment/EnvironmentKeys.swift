@@ -48,3 +48,7 @@ struct ContentTitleFontKey: EnvironmentKey {
 struct ContentBodyFontKey: EnvironmentKey {
     static var defaultValue: Font?
 }
+
+struct ScrollViewSelectionKey: EnvironmentKey {
+    static var defaultValue: Binding<Topic.ID?>?
+}
