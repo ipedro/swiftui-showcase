@@ -61,7 +61,7 @@ struct ShowcaseIndexItem: View {
     private var selection
 
     #if canImport(UIKit)
-    let impact = UIImpactFeedbackGenerator(style: .light)
+    let impact = UISelectionFeedbackGenerator()
     #endif
 
     var id: Topic.ID
@@ -70,7 +70,7 @@ struct ShowcaseIndexItem: View {
     var body: some View {
         Button {
             #if canImport(UIKit)
-            impact.impactOccurred()
+            impact.selectionChanged()
             #endif
             selection?.wrappedValue = id
         } label: {

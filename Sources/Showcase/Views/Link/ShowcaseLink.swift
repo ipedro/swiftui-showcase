@@ -51,13 +51,13 @@ struct ShowcaseLink: View {
     let data: Topic.Link
 
     #if canImport(UIKit)
-    let impact = UIImpactFeedbackGenerator(style: .light)
+    let impact = UISelectionFeedbackGenerator()
     #endif
 
     var body: some View {
         Button {
             #if canImport(UIKit)
-            impact.impactOccurred()
+            impact.selectionChanged()
 
             // Create a Safari view controller to open the external link.
             let safariController = SFSafariViewController(url: data.url)

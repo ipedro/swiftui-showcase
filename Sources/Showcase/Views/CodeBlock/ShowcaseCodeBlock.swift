@@ -132,18 +132,65 @@ struct ShowcaseCodeBlockCopyButton: View {
     /// The text to be copied to the pasteboard.
     let rawValue: String
 
-#if os(iOS)
-    private let impact = UIImpactFeedbackGenerator(style: .light)
-#endif
+    #if os(iOS)
+    private let impact = UISelectionFeedbackGenerator()
+    #endif
+
+    @State
+    private var showtooltip = false
+
+    @State
+    private var isPerformingAction = false
+
+    private let padding: CGFloat = 9
 
     var body: some View {
         Button {
-#if os(iOS)
+            #if os(iOS)
             UIPasteboard.general.string = rawValue
-            impact.impactOccurred()
-#endif
+            impact.selectionChanged()
+            #endif
+            if isPerformingAction { return }
+            isPerformingAction = true
+            showtooltip = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2)) {
+                showtooltip = false
+                isPerformingAction = false
+            }
         } label: {
-            Image(systemName: "doc.on.doc")
+            HStack(spacing: padding) {
+                VStack {
+                    if showtooltip {
+                        Text("Copied Code")
+                            .font(.footnote)
+                            .padding(.leading, padding)
+                            .transition(
+                                .move(edge: .trailing)
+                                .combined(with: .opacity)
+                            )
+                    }
+                }
+                .clipped()
+                
+                Image(systemName: "doc.on.doc\(showtooltip ? ".fill" : "")")
+                    .scaleEffect(showtooltip ? 1.3 : 1)
+                    .foregroundStyle(.primary.opacity(0.5))
+                    .padding(.leading, 2)
+            }
+            .padding(padding)
+            .background {
+                if showtooltip {
+                    Capsule().fill(.bar)
+                }
+            }
+            .animation(.bouncy, value: showtooltip)
+        }
+        .buttonStyle(_ButtonStyle())
+    }
+
+    private struct _ButtonStyle: ButtonStyle {
+        func makeBody(configuration: Configuration) -> some View {
+            configuration.label
         }
     }
 }
@@ -158,8 +205,13 @@ struct ShowcaseCodeBlockVersionedContainer: VersionedView {
 
     @available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, visionOS 1.0, *)
     var v5Body: some View {
-        ShowcaseCodeBlockContent(sourceCode: sourceCode, title: title)
-            .scrollBounceBehavior(.basedOnSize, axes: [.horizontal, .vertical])
+        ShowcaseCodeBlockContent(
+            sourceCode: sourceCode,
+            title: title
+        ).scrollBounceBehavior(.basedOnSize, axes: [
+            .horizontal,
+            .vertical
+        ])
     }
 }
 
@@ -193,21 +245,7 @@ struct ShowcaseCodeBlockContent: View {
         }
     }
 
-    @ViewBuilder
-    private func label() -> some View {
-        if let title {
-            HStack {
-                title
-                Spacer()
-                ShowcaseCodeBlockCopyButton(rawValue: sourceCode)
-            }
-            .foregroundStyle(Color(theme.plainTextColor))
-        } else {
-            EmptyView()
-        }
-    }
-
-    private func content() -> some View {
+    private var content: some View {
         ScrollView(wordWrap ? .vertical : .horizontal) {
             Text(makeAttributed(sourceCode)).textSelection(.enabled)
                 .frame(
@@ -221,10 +259,23 @@ struct ShowcaseCodeBlockContent: View {
         .fixedSize(horizontal: false, vertical: true)
     }
 
+    private var copyButton: ShowcaseCodeBlockCopyButton {
+        ShowcaseCodeBlockCopyButton(rawValue: sourceCode)
+    }
+
     var body: some View {
-        GroupBox(content: content, label: label).backgroundStyle(
-            Color(theme.backgroundColor)
-        )
+        ZStack(alignment: .topTrailing) {
+            GroupBox {
+                content
+            } label: {
+                if let title {
+                    title.foregroundStyle(Color(theme.plainTextColor))
+                }
+            }
+            .backgroundStyle(Color(theme.backgroundColor))
+
+            copyButton.padding(5)
+        }
     }
 
     private func makeAttributed(_ string: String) -> AttributedString {

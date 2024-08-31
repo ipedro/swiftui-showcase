@@ -46,10 +46,15 @@ public extension View {
 }
 
 @StyledView
-public struct ShowcaseContent: StyledView, Equatable {
-    public static func == (lhs: ShowcaseContent, rhs: ShowcaseContent) -> Bool {
-        lhs.id == rhs.id
-    }
+public struct ShowcaseContent: StyledView {
+    public let id: AnyHashable
+    public let isEmpty: Bool
+    public let title: Optional<Text>
+    public let description: Optional<Text>
+    public let preview: Optional<ShowcasePreview>
+    public let links: Optional<ShowcaseLinks>
+    public let embeds: Optional<ShowcaseEmbeds>
+    public let codeBlocks: Optional<ShowcaseCodeBlocks>
 
     @Environment(\.nodeDepth)
     private var depth
@@ -60,18 +65,14 @@ public struct ShowcaseContent: StyledView, Equatable {
     @Environment(\.contentBodyFont)
     private var preferredBodyFont
 
-    public let id: AnyHashable
-    public let isEmpty: Bool
-    public let title: Optional<Text>
-    public let description: Optional<Text>
-    public let preview: Optional<ShowcasePreview>
-    public let links: Optional<ShowcaseLinks>
-    public let embeds: Optional<ShowcaseEmbeds>
-    public let codeBlocks: Optional<ShowcaseCodeBlocks>
-
     public var body: some View {
         VStack(alignment: .leading, spacing: 30) {
-            title.font(preferredTitleFont ?? .system(titleStyle))
+            HStack(alignment: .firstTextBaseline) {
+                title.font(preferredTitleFont ?? titleStyle(depth: depth))
+                if depth > 0 {
+                    ShowcaseScrollTopButton()
+                }
+            }
 
             if let links = links {
                 LazyHStack {
@@ -91,13 +92,43 @@ public struct ShowcaseContent: StyledView, Equatable {
         }
     }
 
-    private var titleStyle: Font.TextStyle {
+    private func titleStyle(depth: Int) -> Font {
         switch depth {
         case 0: return .largeTitle
         case 1: return .title
         case 2: return .title2
         case 3: return .title3
         default: return .headline
+        }
+    }
+}
+
+extension ShowcaseContent: Equatable {
+    public static func == (lhs: ShowcaseContent, rhs: ShowcaseContent) -> Bool {
+        lhs.id == rhs.id
+    }
+}
+
+struct ShowcaseScrollTopButton: View {
+    @Environment(\.scrollViewSelection)
+    private var selection
+
+    #if canImport(UIKit)
+    let impact = UISelectionFeedbackGenerator()
+    #endif
+
+    var body: some View {
+        Button{
+            #if canImport(UIKit)
+            impact.selectionChanged()
+            #endif
+            selection?.wrappedValue = ShowcaseScrollViewTopAnchor.ID
+        } label: {
+            Image(systemName: "arrow.up.circle")
+                .symbolRenderingMode(.hierarchical)
+                .font(.title3)
+                .foregroundStyle(.secondary)
+                .accessibilityLabel("Scroll to top")
         }
     }
 }

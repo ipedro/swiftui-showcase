@@ -34,7 +34,7 @@ struct ShowcaseNavigationTopic: View {
             .accessibilityElement(children: .contain)
             .toolbar {
                 ToolbarItem {
-                    ShowcaseIndexMenu(data.children)
+                    ShowcaseIndexMenu(data)
                 }
             }
             // must come after toolbar

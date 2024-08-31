@@ -46,9 +46,9 @@ public struct ShowcaseIndexMenu: StyledView {
     public let label: ShowcaseIndexMenuLabel
     public let icon: ShowcaseIndexMenuIcon
 
-    init?(_ data: [Topic]?) {
-        guard let data, !data.isEmpty else { return nil }
-        label = ShowcaseIndexMenuLabel(data: data)
+    init?(_ topic: Topic) {
+        guard let data = topic.children, !data.isEmpty else { return nil }
+        label = ShowcaseIndexMenuLabel(title: topic.title, data: data)
         icon = ShowcaseIndexMenuIcon()
     }
 
@@ -67,16 +67,17 @@ public struct ShowcaseIndexMenuLabel: View {
     @Environment(\.scrollViewSelection)
     private var selection
 
+    let title: String
     let data: [Topic]
 
     #if canImport(UIKit)
-    let impact = UIImpactFeedbackGenerator(style: .light)
+    let impact = UISelectionFeedbackGenerator()
     #endif
 
     public var body: some View {
-        Button("Scroll to Top") {
+        Button(title) {
             #if canImport(UIKit)
-            impact.impactOccurred()
+            impact.selectionChanged()
             #endif
             selection?.wrappedValue = ShowcaseScrollViewTopAnchor.ID
         }
@@ -84,11 +85,13 @@ public struct ShowcaseIndexMenuLabel: View {
         Divider()
 
         ForEach(data) { topic in
-            Button(topic.title) {
+            Button {
                 #if canImport(UIKit)
-                impact.impactOccurred()
+                impact.selectionChanged()
                 #endif
                 selection?.wrappedValue = topic.id
+            } label: {
+                Text("   " + topic.title).accessibilityLabel(Text(topic.title))
             }
         }
     }
