@@ -39,6 +39,15 @@ struct iOS17_ScrollBounceBehaviorModifier: VersionedViewModifier {
         /// The scrollable view bounces when its content is large enough to require
         /// scrolling.
         case basedOnSize
+
+        @available(iOS 16.4, *)
+        var rawValue: ScrollBounceBehavior {
+            switch self {
+            case .automatic: .automatic
+            case .always: .always
+            case .basedOnSize: .basedOnSize
+            }
+        }
     }
 
     var behavior: Behavior
@@ -50,15 +59,6 @@ struct iOS17_ScrollBounceBehaviorModifier: VersionedViewModifier {
 
     @available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, visionOS 1.0, *)
     func v5Body(content: Content) -> some View {
-        content.scrollBounceBehavior({
-            switch behavior {
-            case .automatic: ScrollBounceBehavior.automatic
-            case .always: ScrollBounceBehavior.always
-            case .basedOnSize: ScrollBounceBehavior.basedOnSize
-            }
-        }(), axes: [
-            .horizontal,
-            .vertical
-        ])
+        content.scrollBounceBehavior(behavior.rawValue, axes: axes)
     }
 }

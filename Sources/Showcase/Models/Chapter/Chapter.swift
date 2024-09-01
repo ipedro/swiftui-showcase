@@ -26,14 +26,14 @@ public struct Chapter: Identifiable {
     public let id = UUID()
     
     /// The title of the chapter.
-    public var title: String
+    @Lazy public var title: String
 
     /// Optional icon for the chapter.
-    public var icon: (() -> Image)?
+    @Lazy public var icon: Image?
 
     /// The optional description of the chapter.
-    public var description: String?
-    
+    @Lazy public var description: String
+
     /// The showcase topics within the chapter.
     public var topics: [Topic]
 
@@ -42,40 +42,19 @@ public struct Chapter: Identifiable {
     /// Initializes a showcase chapter with the specified title and showcase topics.
     /// - Parameters:
     ///   - title: The title of the chapter.
-    ///   - description: The optional description of the chapter.
-    ///   - topics: The showcase topics within the chapter.
-    public init(_ title: String, description: String? = nil, _ topics: [Topic] = []) {
-        self.title = title
-        self.description = description
-        self.topics = topics.sorted()
-        self.icon = nil
-    }
-    
-    /// Initializes a showcase chapter with the specified title and showcase topics.
-    /// - Parameters:
-    ///   - title: The title of the chapter.
-    ///   - description: The optional description of the chapter.
-    ///   - topics: The showcase topics within the chapter.
-    public init(_ title: String, description: String? = nil, _ topics: Topic...) {
-        self.init(title, description: description, topics)
-    }
-
-    /// Initializes a showcase chapter with the specified title and showcase topics.
-    /// - Parameters:
-    ///   - title: The title of the chapter.
     ///   - icon: Optional icon for the chapter.
     ///   - description: The optional description of the chapter.
     ///   - topics: The showcase topics within the chapter.
     public init(
         _ title: String,
-        icon: @autoclosure @escaping () -> Image,
-        description: String? = nil,
+        icon: (() -> Image)? = nil,
+        description: @escaping () -> String = EmptyString,
         _ topics: [Topic] = []
     ) {
-        self.title = title
-        self.description = description
-        self.topics = topics.sorted().map { $0.withIcon(icon) }
-        self.icon = icon
+        _title = Lazy(wrappedValue: title)
+        _description = Lazy(wrappedValue: description())
+        _icon = Lazy(wrappedValue: icon?())
+        self.topics = topics.sorted().map { $0.withIcon(icon?()) }
     }
 
     /// Initializes a showcase chapter with the specified title and showcase topics.
@@ -86,11 +65,16 @@ public struct Chapter: Identifiable {
     ///   - topics: The showcase topics within the chapter.
     public init(
         _ title: String,
-        icon: @autoclosure @escaping () -> Image,
-        description: String? = nil,
+        icon: (() -> Image)? = nil,
+        description: @escaping () -> String = EmptyString,
         _ topics: Topic...
     ) {
-        self.init(title, icon: icon(), description: description, topics)
+        self.init(
+            title,
+            icon: icon,
+            description: description,
+            topics
+        )
     }
 }
 
@@ -113,10 +97,10 @@ extension Collection where Element == Chapter {
 }
 
 extension Chapter {
-    func withIcon(_ proposal: (() -> Image)?) -> Chapter {
+    func withIcon(_ proposal: Image?) -> Chapter {
         var copy = self
         let icon = copy.icon ?? proposal
-        copy.icon = icon
+        copy._icon = Lazy(wrappedValue: icon)
         copy.topics = copy.topics.map { $0.withIcon(icon) }
         return copy
     }
@@ -131,7 +115,7 @@ extension Chapter {
         let query = query.lowercased()
 
         // Check the chapter title and description for a match.
-        if title.localizedCaseInsensitiveContains(query) || description?.localizedCaseInsensitiveContains(query) == true {
+        if title.localizedCaseInsensitiveContains(query) || description.localizedCaseInsensitiveContains(query) == true {
             isMatch = true
         }
 
@@ -139,55 +123,5 @@ extension Chapter {
         var copy = self
         copy.topics = topics.compactMap { $0.search(query: query) }
         return (isMatch || !copy.topics.isEmpty) ? copy : nil
-    }
-}
-
-extension Chapter: RandomAccessCollection {
-    public typealias Element = Topic
-    public typealias SubSequence = ArraySlice<Topic>
-    public typealias Indices = Range<Int>
-
-    public subscript(position: Int) -> Topic {
-        topics[position]
-    }
-
-    public subscript(bounds: Range<Int>) -> ArraySlice<Topic> {
-        topics[bounds]
-    }
-
-    public var startIndex: Int {
-        topics.startIndex
-    }
-
-    public var endIndex: Int {
-        topics.endIndex
-    }
-
-    public func index(before i: Int) -> Int {
-        topics.index(before: i)
-    }
-
-    public func formIndex(before i: inout Int) {
-        topics.formIndex(before: &i)
-    }
-
-    public func index(after i: Int) -> Int {
-        topics.index(after: i)
-    }
-
-    public func formIndex(after i: inout Int) {
-        topics.formIndex(after: &i)
-    }
-
-    public func index(_ i: Int, offsetBy distance: Int) -> Int {
-        topics.index(i, offsetBy: distance)
-    }
-
-    public func index(_ i: Int, offsetBy distance: Int, limitedBy limit: Int) -> Int? {
-        topics.index(i, offsetBy: distance, limitedBy: limit)
-    }
-
-    public func distance(from start: Int, to end: Int) -> Int {
-        topics.distance(from: start, to: end)
     }
 }

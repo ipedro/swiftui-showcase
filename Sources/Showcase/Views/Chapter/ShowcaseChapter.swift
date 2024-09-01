@@ -25,7 +25,7 @@ struct ShowcaseChapter: View {
     var topics: [Topic]
     var title: String
     var icon: Image?
-    var description: String?
+    var description: String
     @Binding var isExpanded: Bool
 
     var body: some View {
@@ -53,7 +53,7 @@ struct ShowcaseChapter: View {
             NavigationLink(value: topic) {
                 ShowcaseChapterRow(
                     title: topic.title,
-                    icon: topic.icon?()
+                    icon: topic.icon
                 ).equatable()
             }
         }
@@ -65,8 +65,8 @@ struct ShowcaseChapter: View {
 
     @ViewBuilder
     private func footer() -> some View {
-        if let footer = description {
-            Text(footer)
+        if !description.isEmpty {
+            Text(description)
         }
     }
 }

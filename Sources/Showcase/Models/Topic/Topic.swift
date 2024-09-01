@@ -28,28 +28,25 @@ public struct Topic: Identifiable {
     public let id = UUID()
 
     /// Code blocks associated with the topic.
-    public var codeBlocks: [CodeBlock]
+    @Lazy public var codeBlocks: [CodeBlock]
     
     /// Description of the topic.
-    public var description: String
+    @Lazy public var description: String
     
     /// External links associated with the topic.
-    public var links: [Link]
+    @Lazy public var links: [Link]
     
     /// External contents associated with the topic.
-    public var embeds: [Embed]
+    @Lazy public var embeds: [Embed]
     
     /// Previews configuration for the topic.
-    public var previews: (() -> AnyView)?
-
-    /// Optional title of the preview.
-    public var previewTitle: String?
+    @Lazy public var previews: [Preview]
 
     /// Optional icon for the topic.
-    public var icon: (() -> Image)?
+    @Lazy public var icon: Image?
 
     /// Title of the topic.
-    public var title: String
+    @Lazy public var title: String
     
     /// Optional child topics.
     public var children: [Topic]?
@@ -59,80 +56,22 @@ public struct Topic: Identifiable {
         return children.flatMap { [$0] + $0.allChildren }
     }
 
-    func withIcon(_ proposal: (() -> Image)?) -> Topic {
+    func withIcon(_ proposal: Image?) -> Topic {
         var copy = self
         let icon = copy.icon ?? proposal
-        copy.icon = icon
+        copy._icon = Lazy(wrappedValue: icon)
         copy.children = copy.children?.map { $0.withIcon(icon) }
         return copy
     }
 
-    public static func emptyDescription() -> String { "" }
-
-    public var isEmpty: Bool {
+    var isEmpty: Bool {
         codeBlocks.isEmpty &&
         description.isEmpty &&
         links.isEmpty &&
         children?.isEmpty != false
     }
 
-    /// Initializes a showcase element with the specified parameters.
-    /// - Parameters:
-    ///   - title: The title of the topic.
-    ///   - description: A closure returning the description of the topic (default is an empty string).
-    ///   - links: A closure returning external links associated with the topic (default is an empty array).
-    ///   - embeds: A closure returning external contents associated with the topic (default is an empty string).
-    ///   - code: A closure returning code examples (default is an empty array).
-    ///   - children: Optional child showcase topics (default is nil).
-    public init(
-        _ title: String,
-        description: @autoclosure @escaping () -> String = Self.emptyDescription(),
-        @LinkBuilder links: () -> [Link] = { [] },
-        @EmbedBuilder embeds: () -> [Embed] = { [] },
-        @CodeBlockBuilder code: () -> [CodeBlock] = { [] },
-        children: [Topic]? = nil
-    ) {
-        self.icon = nil
-        self.children = children
-        self.codeBlocks = code()
-        self.description = description()
-        self.links = links()
-        self.embeds = embeds()
-        self.previews = nil
-        self.previewTitle = nil
-        self.title = title
-    }
-
-    /// Initializes a showcase element with the specified parameters.
-    /// - Parameters:
-    ///   - title: The title of the topic.
-    ///   - description: A closure returning the description of the topic (default is an empty string).
-    ///   - links: A closure returning external links associated with the topic (default is an empty array).
-    ///   - embeds: A closure returning external contents associated with the topic (default is an empty string).
-    ///   - code: A closure returning code examples (default is an empty array).
-    ///   - children: Optional child showcase topics (default is nil).
-    ///   - previewTitle: Optional previews title
-    ///   - previews: Optional previews.
-    public init<P: View>(
-        _ title: String,
-        description: @autoclosure @escaping () -> String = Self.emptyDescription(),
-        @LinkBuilder links: () -> [Link] = { [] },
-        @EmbedBuilder embeds: () -> [Embed] = { [] },
-        @CodeBlockBuilder code: () -> [CodeBlock] = { [] },
-        children: [Topic]? = nil,
-        previewTitle: String? = "Preview",
-        @ViewBuilder previews: @escaping () -> P
-    ) {
-        self.icon = nil
-        self.children = children
-        self.codeBlocks = code()
-        self.description = description()
-        self.links = links()
-        self.embeds = embeds()
-        self.previews = { AnyView(previews()) }
-        self.previewTitle = previewTitle
-        self.title = title
-    }
+    // FIXME: Consolidar inits num só. criar equivalente "EmptyView" para os tipos? EmptyCodeblock, EmptyPreview, ..?
 
     /// Initializes a showcase element with the specified parameters.
     /// - Parameters:
@@ -143,24 +82,25 @@ public struct Topic: Identifiable {
     ///   - embeds: A closure returning external contents associated with the topic (default is an empty string).
     ///   - code: A closure returning code examples (default is an empty array).
     ///   - children: Optional child showcase topics (default is nil).
+    ///   - previews: Optional previews.
     public init(
         _ title: String,
-        icon: @autoclosure @escaping () -> Image,
-        description: @autoclosure @escaping () -> String = Self.emptyDescription(),
-        @LinkBuilder links: () -> [Link] = { [] },
-        @EmbedBuilder embeds: () -> [Embed] = { [] },
-        @CodeBlockBuilder code: () -> [CodeBlock] = { [] },
+        icon: (() -> Image)? = nil,
+        description: @escaping () -> String = EmptyString,
+        @LinkBuilder links: @escaping () -> [Link] = EmptyArray,
+        @EmbedBuilder embeds: @escaping () -> [Embed] = EmptyArray,
+        @CodeBlockBuilder code codeBlocks: @escaping () -> [CodeBlock] = EmptyArray,
+        @PreviewBuilder previews: @escaping () -> [Preview] = EmptyArray,
         children: [Topic]? = nil
     ) {
-        self.icon = icon
+        self._codeBlocks = Lazy(wrappedValue: codeBlocks())
+        self._description = Lazy(wrappedValue: description())
+        self._embeds = Lazy(wrappedValue: embeds())
+        self._icon = Lazy(wrappedValue: icon?())
+        self._links = Lazy(wrappedValue: links())
+        self._previews = Lazy(wrappedValue: previews())
+        self._title = Lazy(wrappedValue: title)
         self.children = children
-        self.codeBlocks = code()
-        self.description = description()
-        self.links = links()
-        self.embeds = embeds()
-        self.previews = nil
-        self.previewTitle = nil
-        self.title = title
     }
 
     /// Initializes a showcase element with the specified parameters.
@@ -176,24 +116,25 @@ public struct Topic: Identifiable {
     ///   - previews: Optional previews.
     public init<P: View>(
         _ title: String,
-        icon: @autoclosure @escaping () -> Image,
-        description: @autoclosure @escaping () -> String = Self.emptyDescription(),
-        @LinkBuilder links: () -> [Link] = { [] },
-        @EmbedBuilder embeds: () -> [Embed] = { [] },
-        @CodeBlockBuilder code: () -> [CodeBlock] = { [] },
-        previewTitle: String? = "Preview",
+        icon: (() -> Image)? = nil,
+        description: @escaping () -> String = EmptyString,
+        @LinkBuilder links: @escaping () -> [Link] = EmptyArray,
+        @EmbedBuilder embeds: @escaping () -> [Embed] = EmptyArray,
+        @CodeBlockBuilder code codeBlocks: @escaping () -> [CodeBlock] = EmptyArray,
+        previewTitle: String? = nil,
         @ViewBuilder previews: @escaping () -> P,
         children: [Topic]? = nil
     ) {
-        self.icon = icon
-        self.children = children
-        self.codeBlocks = code()
-        self.description = description()
-        self.links = links()
-        self.embeds = embeds()
-        self.previews = { AnyView(previews()) }
-        self.previewTitle = previewTitle
-        self.title = title
+        self.init(
+            title,
+            icon: icon,
+            description: description,
+            links: links,
+            embeds: embeds,
+            code: codeBlocks,
+            previews: { Preview(previewTitle, preview: previews) },
+            children: children
+        )
     }
 }
 
@@ -227,9 +168,12 @@ extension Topic {
         var isMatch = false
         // Convert query to lowercase for case-insensitive comparison.
         // Check the topic title, description, and optionally preview title for a match.
-        if title.localizedCaseInsensitiveContains(query) ||
-            description.localizedCaseInsensitiveContains(query) ||
-            previewTitle?.localizedCaseInsensitiveContains(query) == true {
+        if title.localizedCaseInsensitiveContains(query) || description.localizedCaseInsensitiveContains(query) {
+            isMatch = true
+        }
+
+        // Check code blocks for a match in the raw value or title.
+        if previews.contains(where: { $0.title?.localizedCaseInsensitiveContains(query) == true }) {
             isMatch = true
         }
 

@@ -47,6 +47,11 @@ public extension View {
     }
 }
 
+public struct ShowcaseCodeBlocks: View {
+    var content: EquatableForEach<[Topic.CodeBlock], ShowcaseCodeBlock>
+    public var body: some View { content }
+}
+
 /// A view that displays code blocks with syntax highlighting and a copy to pasteboard button.
 public struct ShowcaseCodeBlock: StyledView, Equatable {
     public static func == (lhs: ShowcaseCodeBlock, rhs: ShowcaseCodeBlock) -> Bool {
@@ -59,8 +64,7 @@ public struct ShowcaseCodeBlock: StyledView, Equatable {
 
     /// Initializes a ShowcaseCodeBlock view with the specified code block data.
     /// - Parameter data: The data representing the code block (optional).
-    init?(_ data: Topic.CodeBlock?) {
-        guard let data = data else { return nil }
+    init(data: Topic.CodeBlock) {
         self.sourceCode = data.rawValue
         title = Text(optional: LocalizedStringKey(optional: data.title))
         self.id = data.id
@@ -123,7 +127,7 @@ public struct ShowcaseCodeBlockStyleModifier<Style: ShowcaseCodeBlockStyle>: Vie
 
 #Preview {
     ShowcaseCodeBlock(
-        Topic.CodeBlock("Example", text: {
+        data: Topic.CodeBlock("Example", text: {
         """
         HStack {
             Spacer()
@@ -134,7 +138,7 @@ public struct ShowcaseCodeBlockStyleModifier<Style: ShowcaseCodeBlockStyle>: Vie
 }
 #Preview {
     ShowcaseCodeBlock(
-        Topic.CodeBlock(text: {
+        data: Topic.CodeBlock(text: {
         """
         HStack {
             Spacer()

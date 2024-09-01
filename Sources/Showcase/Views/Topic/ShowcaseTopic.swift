@@ -43,21 +43,60 @@ public struct ShowcaseTopic: View, Equatable {
             id: data.id, 
             isEmpty: data.description.isEmpty,
             title: depth > 0 ? Text(data.title) : nil,
-            description: data.description.isEmpty ? nil : Text(data.description),
-            preview: preview(),
-            links: ShowcaseLinks(data: data.links),
-            embeds: ShowcaseEmbeds(data: data.embeds),
-            codeBlocks: ShowcaseCodeBlocks(data: data.codeBlocks)
+            description: description(),
+            previews: previews(),
+            links: links(),
+            embeds: embeds(),
+            codeBlocks: codeBlocks()
         )
     }
 
-    private func preview() -> ShowcasePreview? {
-        guard let previews = data.previews?() else { return nil }
-        return ShowcasePreview(
-            id: data.id,
-            content: previews,
-            label: Text(optional: data.previewTitle)
-        )
+    private func description() -> Text? {
+        data.description.isEmpty ? nil : Text(data.description)
+    }
+
+    private func links() -> ShowcaseLinks? {
+        if let links = EquatableForEach(
+            data: data.links,
+            content: ShowcaseLink.init(data:)
+        ) {
+            ShowcaseLinks(content: links)
+        } else {
+            nil
+        }
+    }
+
+    private func embeds() -> ShowcaseEmbeds? {
+        if let embeds = EquatableForEach(
+            data: data.embeds,
+            content: ShowcaseEmbed.init(data:)
+        ) {
+            ShowcaseEmbeds(content: embeds)
+        } else {
+            nil
+        }
+    }
+
+    private func codeBlocks() -> ShowcaseCodeBlocks? {
+        if let codeBlocks = EquatableForEach(
+            data: data.codeBlocks,
+            content: ShowcaseCodeBlock.init(data:)
+        ) {
+            ShowcaseCodeBlocks(content: codeBlocks)
+        } else {
+            nil
+        }
+    }
+
+    private func previews() -> ShowcasePreviews? {
+        if let previews = EquatableForEach(
+            data: data.previews,
+            content: ShowcasePreview.init(data:)
+        ) {
+            ShowcasePreviews(content: previews)
+        } else {
+            nil
+        }
     }
 
     private var configuration: ShowcaseLayoutConfiguration {

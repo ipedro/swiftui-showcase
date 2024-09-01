@@ -33,15 +33,24 @@ extension View {
     ///     ShowcaseNavigationStack()
     ///         .showcaseLinkStyle(MyCustomStyle())
     ///
-    /// - Parameter style: <#style description#>
-    /// - Returns: <#description#>
+    /// - Parameter style: The link style
+    /// - Returns: A copy of the view with the link style applied.
     public func showcaseLinkStyle<S: ButtonStyle>(_ style: S) -> some View {
         environment(\.linkStyle, .init(style))
     }
 }
 
+public struct ShowcaseLinks: View {
+    var content: EquatableForEach<[Topic.Link], ShowcaseLink>
+    public var body: some View { content }
+}
+
 /// A view that displays an external link to a website in a Safari view controller.
-struct ShowcaseLink: View {
+struct ShowcaseLink: View, Equatable {
+    static func == (lhs: ShowcaseLink, rhs: ShowcaseLink) -> Bool {
+        lhs.data.id == rhs.data.id
+    }
+
     /// The style environment variable for displaying external links.
     @Environment(\.linkStyle) 
     private var style

@@ -1,8 +1,19 @@
 import SwiftUI
 import WebKit
 
-struct ShowcaseEmbed: View {
-    @State private var height: CGFloat = 10 // Initial height, it will be adjusted later
+public struct ShowcaseEmbeds: View {
+    var content: EquatableForEach<[Topic.Embed], ShowcaseEmbed>
+    public var body: some View { content }
+}
+
+struct ShowcaseEmbed: View, Equatable {
+    static func == (lhs: ShowcaseEmbed, rhs: ShowcaseEmbed) -> Bool {
+        lhs.data.id == rhs.data.id
+    }
+
+    @State 
+    private var height: CGFloat = 10 // Initial height, it will be adjusted later
+
     var data: Topic.Embed
 
     var body: some View {

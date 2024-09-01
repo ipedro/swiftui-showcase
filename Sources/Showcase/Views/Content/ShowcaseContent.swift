@@ -51,7 +51,7 @@ public struct ShowcaseContent: StyledView {
     public let isEmpty: Bool
     public let title: Optional<Text>
     public let description: Optional<Text>
-    public let preview: Optional<ShowcasePreview>
+    public let previews: Optional<ShowcasePreviews>
     public let links: Optional<ShowcaseLinks>
     public let embeds: Optional<ShowcaseEmbeds>
     public let codeBlocks: Optional<ShowcaseCodeBlocks>
@@ -81,8 +81,8 @@ public struct ShowcaseContent: StyledView {
             }
 
             description
-            preview?.equatable()
-            embeds?.equatable()
+            previews
+            embeds
             codeBlocks
         }
         .transformEnvironment(\.font) { font in

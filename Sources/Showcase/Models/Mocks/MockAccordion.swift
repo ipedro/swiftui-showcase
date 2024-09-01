@@ -23,11 +23,13 @@ import SwiftUI
 extension Topic {
     static let mockAccordion = Topic(
         "Accordion",
-        description: """
-        Accordions enable users to expand and collapse multiple sections of content.
-
-        An accordion is vertically stacked set of interactive headings that each contain a headline and description representing a section of content.
-        """,
+        description: {
+            """
+            Accordions enable users to expand and collapse multiple sections of content.
+            
+            An accordion is vertically stacked set of interactive headings that each contain a headline and description representing a section of content.
+            """
+        },
         links: {
             Link("Code", "https://google.com")
             Link("Design", "https://zeroheight.com/700c95a05/p/0309e1-accordion/b/45490a")
@@ -49,10 +51,8 @@ extension Topic {
         }
         """
         },
-        children: [.mockCard],
-        previews: {
-            MockPreviews()
-        }
+        previews: MockPreviews.init,
+        children: [.mockCard]
     )
 }
 

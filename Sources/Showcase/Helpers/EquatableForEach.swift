@@ -1,4 +1,4 @@
-// Copyright (c) 2023 Pedro Almeida
+// Copyright (c) 2024 Pedro Almeida
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,20 +20,28 @@
 
 import SwiftUI
 
-struct DescriptionView: View {
-    let content: String
+struct EquatableForEach<Data, Content>: View where Data: RandomAccessCollection, Data.Element: Identifiable, Content: View & Equatable {
+    var data: Data
+    var content: (_ data: Data.Element) -> Content
 
-    init?(_ content: String) {
-        if content.isEmpty { return nil }
+    /// Initializes the view with code block data.
+    /// - Parameter data: The code block data.
+    init?(data: Data, @ViewBuilder content: @escaping (_ data: Data.Element) -> Content) {
+        if data.isEmpty { return nil }
+        self.data = data
         self.content = content
     }
 
+    /// The body view for displaying code blocks.
     var body: some View {
-        Text(content)
-            .font(.headline)
-            .foregroundColor(.secondary)
-            .padding(.top, 5)
-            .listRowBackground(Color.clear)
-            .listRowSeparator(.hidden)
+        ForEach(data) {
+            content($0).equatable()
+        }
     }
 }
+
+/// Returns an empty array.
+public func EmptyArray<T>() -> [T] { [] }
+
+/// Returns an empty string.
+public func EmptyString() -> String { "" }

@@ -26,31 +26,33 @@ public struct Document: Identifiable {
     public let id = UUID()
     
     /// The title of the document.
-    public var title: String
+    @Lazy public var title: String
 
     /// An optional default icon for topics.
-    public var icon: (() -> Image)?
+    @Lazy public var icon: Image?
 
     /// The optional description of the document.
-    public var description: String?
-    
+    @Lazy public var description: String
+
     /// The chapters within the document.
     public var chapters: [Chapter]
 
     /// Initializes a showcase document with the specified title, chapters and an optional description.
     /// - Parameters:
     ///   - title: The title of the document.
-    ///   - description: The optional description of the document.
     ///   - icon: An optional default icon for topics.
+    ///   - description: The optional description of the document.
     ///   - chapters: The chapters within the document.
     public init(
         _ title: String,
-        description: String? = nil,
+        icon: (() -> Image)? = nil,
+        description: @escaping () -> String = EmptyString,
         _ chapters: [Chapter] = []
     ) {
-        self.title = title
-        self.description = description
-        self.chapters = chapters
+        _title = Lazy(wrappedValue: title)
+        _description = Lazy(wrappedValue: description())
+        _icon = Lazy(wrappedValue: icon?())
+        self.chapters = chapters.map { $0.withIcon(icon?()) }
     }
 
     /// Initializes a showcase document with the specified title, chapters and an optional description.
@@ -61,42 +63,11 @@ public struct Document: Identifiable {
     ///   - chapters: The chapters within the document.
     public init(
         _ title: String,
-        icon: @autoclosure @escaping () -> Image,
-        description: String? = nil,
-        _ chapters: [Chapter] = []
-    ) {
-        self.title = title
-        self.description = description
-        self.chapters = chapters.map { $0.withIcon(icon) }
-        self.icon = icon
-    }
-
-    /// Initializes a showcase document with the specified title, chapters and an optional description.
-    /// - Parameters:
-    ///   - title: The title of the document.
-    ///   - description: The optional description of the document.
-    ///   - chapters: The chapters within the document.
-    public init(
-        _ title: String,
-        description: String? = nil,
+        icon: (() -> Image)? = nil,
+        description: @escaping () -> String = EmptyString,
         _ chapters: Chapter...
     ) {
-        self.init(title, description: description, chapters)
-    }
-
-    /// Initializes a showcase document with the specified title, chapters and an optional description.
-    /// - Parameters:
-    ///   - title: The title of the document.
-    ///   - description: The optional description of the document.
-    ///   - icon: An optional default icon for topics.
-    ///   - chapters: The chapters within the document.
-    public init(
-        _ title: String,
-        icon: @autoclosure @escaping () -> Image,
-        description: String? = nil,
-        _ chapters: Chapter...
-    ) {
-        self.init(title, icon: icon(), description: description, chapters)
+        self.init(title, icon: icon, description: description, chapters)
     }
 }
 

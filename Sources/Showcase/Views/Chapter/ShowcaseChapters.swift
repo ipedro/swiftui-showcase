@@ -40,7 +40,7 @@ struct ShowcaseChapters: View {
             ShowcaseChapter(
                 topics: chapter.topics,
                 title: chapter.title,
-                icon: chapter.icon?(),
+                icon: chapter.icon,
                 description: chapter.description, 
                 isExpanded: .init(get: {
                     isExpanded[chapter.id, default: true]

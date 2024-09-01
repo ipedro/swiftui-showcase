@@ -1,4 +1,4 @@
-// Copyright (c) 2023 Pedro Almeida
+// Copyright (c) 2024 Pedro Almeida
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,22 +18,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import SwiftUI
+import Foundation
 
-struct DescriptionView: View {
-    let content: String
+/// A result builder for creating code blocks.
+@resultBuilder public struct TopicBuilder {
+    /// Builds an array of code blocks from individual components.
+    public static func buildBlock() -> [Topic] { [] }
 
-    init?(_ content: String) {
-        if content.isEmpty { return nil }
-        self.content = content
-    }
-
-    var body: some View {
-        Text(content)
-            .font(.headline)
-            .foregroundColor(.secondary)
-            .padding(.top, 5)
-            .listRowBackground(Color.clear)
-            .listRowSeparator(.hidden)
-    }
+    /// Builds an array of code blocks from variadic components.
+    public static func buildBlock(_ components: Topic...) -> [Topic] { components }
 }

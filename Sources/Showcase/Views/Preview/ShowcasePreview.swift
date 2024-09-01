@@ -22,6 +22,11 @@ import SwiftUI
 import Engine
 import EngineMacros
 
+public struct ShowcasePreviews: View {
+    var content: EquatableForEach<[Topic.Preview], ShowcasePreview>
+    public var body: some View { content }
+}
+
 /// A view that displays previews of showcase topics.
 @StyledView
 public struct ShowcasePreview: StyledView, Equatable {
@@ -29,9 +34,15 @@ public struct ShowcasePreview: StyledView, Equatable {
         lhs.id == rhs.id
     }
     
-    public var id: UUID
-    public var content: AnyView
-    public var label: Optional<Text>
+    init(data: Topic.Preview) {
+        id = data.id
+        content = data.content()
+        label = Text(optional: data.title)
+    }
+    
+    var id: UUID
+    var content: AnyView
+    var label: Optional<Text>
 
     public var body: some View {
         content.accessibilityElement(children: .contain)

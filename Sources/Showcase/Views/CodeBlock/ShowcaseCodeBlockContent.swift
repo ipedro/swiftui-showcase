@@ -41,6 +41,7 @@ struct ShowcaseCodeBlockContent: View {
                 )
         }
         .fixedSize(horizontal: false, vertical: true)
+        .scrollBounceBehavior(.basedOnSize, axes: [.horizontal, .vertical])
     }
 
     private var copyButton: ShowcaseCodeBlockCopyButton {
