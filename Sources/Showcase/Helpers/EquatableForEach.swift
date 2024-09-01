@@ -20,21 +20,27 @@
 
 import SwiftUI
 
-struct EquatableForEach<Data, Content>: View where Data: RandomAccessCollection, Data.Element: Identifiable, Content: View & Equatable {
+struct EquatableForEach<Data, ID, Content>: View where Data: RandomAccessCollection, ID: Hashable, Content: View & Equatable {
     var data: Data
+    var id: KeyPath<Data.Element, ID>
     var content: (_ data: Data.Element) -> Content
 
     /// Initializes the view with code block data.
     /// - Parameter data: The code block data.
-    init?(data: Data, @ViewBuilder content: @escaping (_ data: Data.Element) -> Content) {
+    init?(
+        data: Data,
+        id: KeyPath<Data.Element, ID>,
+        @ViewBuilder content: @escaping (_ data: Data.Element) -> Content
+    ) {
         if data.isEmpty { return nil }
         self.data = data
+        self.id = id
         self.content = content
     }
 
     /// The body view for displaying code blocks.
     var body: some View {
-        ForEach(data) {
+        ForEach(data, id: id) {
             content($0).equatable()
         }
     }

@@ -58,6 +58,7 @@ public struct ShowcaseTopic: View, Equatable {
     private func links() -> ShowcaseLinks? {
         if let links = EquatableForEach(
             data: data.links,
+            id: \.id,
             content: ShowcaseLink.init(data:)
         ) {
             ShowcaseLinks(content: links)
@@ -69,6 +70,7 @@ public struct ShowcaseTopic: View, Equatable {
     private func embeds() -> ShowcaseEmbeds? {
         if let embeds = EquatableForEach(
             data: data.embeds,
+            id: \.id,
             content: ShowcaseEmbed.init(data:)
         ) {
             ShowcaseEmbeds(content: embeds)
@@ -80,6 +82,7 @@ public struct ShowcaseTopic: View, Equatable {
     private func codeBlocks() -> ShowcaseCodeBlocks? {
         if let codeBlocks = EquatableForEach(
             data: data.codeBlocks,
+            id: \.id,
             content: ShowcaseCodeBlock.init(data:)
         ) {
             ShowcaseCodeBlocks(content: codeBlocks)
@@ -91,6 +94,7 @@ public struct ShowcaseTopic: View, Equatable {
     private func previews() -> ShowcasePreviews? {
         if let previews = EquatableForEach(
             data: data.previews,
+            id: \.id,
             content: ShowcasePreview.init(data:)
         ) {
             ShowcasePreviews(content: previews)

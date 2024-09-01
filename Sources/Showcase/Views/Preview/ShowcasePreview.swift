@@ -23,7 +23,7 @@ import Engine
 import EngineMacros
 
 public struct ShowcasePreviews: View {
-    var content: EquatableForEach<[Topic.Preview], ShowcasePreview>
+    var content: EquatableForEach<[Topic.Preview], Topic.Preview.ID, ShowcasePreview>
     public var body: some View { content }
 }
 

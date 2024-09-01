@@ -44,19 +44,19 @@ public struct ShowcaseIndexList: StyledView {
     let data: Array<Topic>
 
     public var body: some View {
-        VStack(alignment: .leading) {
-            ForEach(data) { topic in
-                ShowcaseIndexItem(
-                    id: topic.id,
-                    title: topic.title
-                )
-                .padding(.leading, 16)
-            }
-        }
+        EquatableForEach(
+            data: data,
+            id: \.title,
+            content: ShowcaseIndexItem.init(data:)
+        )
     }
 }
 
-struct ShowcaseIndexItem: View {
+struct ShowcaseIndexItem: View, Equatable {
+    static func == (lhs: ShowcaseIndexItem, rhs: ShowcaseIndexItem) -> Bool {
+        lhs.data.id == rhs.data.id
+    }
+    
     @Environment(\.scrollViewSelection)
     private var selection
 
@@ -64,24 +64,24 @@ struct ShowcaseIndexItem: View {
     let impact = UISelectionFeedbackGenerator()
     #endif
 
-    var id: Topic.ID
-    var title: String
+    let data: Topic
 
     var body: some View {
         Button {
             #if canImport(UIKit)
             impact.selectionChanged()
             #endif
-            selection?.wrappedValue = id
+            selection?.wrappedValue = data.id
         } label: {
             HStack(alignment: .top) {
                 Circle()
                     .foregroundStyle(.tertiary)
                     .padding(.top, 6)
                     .frame(width: 8)
-                Text(title)
+                Text(data.title)
                 Spacer()
             }
+            .padding(.leading, 16)
         }
         .accessibilityAddTraits(.isLink)
         .buttonStyle(_ButtonStyle())

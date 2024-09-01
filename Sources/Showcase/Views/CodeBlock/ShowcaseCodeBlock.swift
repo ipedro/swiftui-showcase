@@ -48,7 +48,7 @@ public extension View {
 }
 
 public struct ShowcaseCodeBlocks: View {
-    var content: EquatableForEach<[Topic.CodeBlock], ShowcaseCodeBlock>
+    var content: EquatableForEach<[Topic.CodeBlock], Topic.CodeBlock.ID, ShowcaseCodeBlock>
     public var body: some View { content }
 }
 

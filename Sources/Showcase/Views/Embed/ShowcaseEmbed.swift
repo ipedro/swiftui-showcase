@@ -2,7 +2,7 @@ import SwiftUI
 import WebKit
 
 public struct ShowcaseEmbeds: View {
-    var content: EquatableForEach<[Topic.Embed], ShowcaseEmbed>
+    var content: EquatableForEach<[Topic.Embed], Topic.Embed.ID, ShowcaseEmbed>
     public var body: some View { content }
 }
 
