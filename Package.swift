@@ -6,7 +6,7 @@ let package = Package(
     name: "swiftui-showcase",
     platforms: [
         .iOS(.v16),
-        .macOS(.v13),
+        .macOS(.v13)
     ],
     products: [
         .library(
@@ -17,11 +17,11 @@ let package = Package(
         .library(
             name: "Showcase-auto",
             targets: ["Showcase"]
-        ),
+        )
     ],
     dependencies: [
         .package(url: "https://github.com/JohnSundell/Splash", from: "0.16.0"),
-        .package(url: "https://github.com/nathantannar4/Engine", from: "1.8.2"),
+        .package(url: "https://github.com/nathantannar4/Engine", from: "1.8.8")
     ],
     targets: [
         .target(
@@ -37,7 +37,9 @@ let package = Package(
         ),
         .testTarget(
             name: "ShowcaseTests",
-            dependencies: ["Showcase"]
-        ),
+            dependencies: [
+                "Showcase"
+            ]
+        )
     ]
 )
