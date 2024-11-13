@@ -137,13 +137,10 @@ extension Topic {
     )
 }
 
-struct card_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationStack {
-            ScrollView {
-                ShowcaseTopic(.mockCard)
-                    .showcasePreviewStyle(.page)
-            }
+#Preview {
+    NavigationStack {
+        ScrollView {
+            ShowcaseTopic(.mockCard)
         }
     }
 }
