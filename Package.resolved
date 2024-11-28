@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/nathantannar4/Engine",
       "state" : {
-        "revision" : "284910183884d32f5ed48ebfdae345a3a1a09bcd",
-        "version" : "1.8.8"
+        "revision" : "4170c4d8904bc78b6b8677096ab877dbc6f3e493",
+        "version" : "1.9.1"
       }
     },
     {
@@ -21,7 +21,7 @@
     {
       "identity" : "swift-syntax",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-syntax.git",
+      "location" : "https://github.com/swiftlang/swift-syntax",
       "state" : {
         "revision" : "64889f0c732f210a935a0ad7cda38f77f876262d",
         "version" : "509.1.1"
