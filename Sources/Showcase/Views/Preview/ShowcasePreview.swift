@@ -50,14 +50,11 @@ public struct ShowcasePreview: StyledView, Equatable {
 }
 
 extension View {
-    /// Sets the style for ``ShowcaseDocument`` within this view to a Showcase style with a
+    /// Sets the style for `ShowcaseDocument` within this view to a Showcase style with a
     /// custom appearance and custom interaction behavior.
     ///
-    /// Use this modifier to set a specific style for ``ShowcaseDocument`` instances
+    /// Use this modifier to set a specific style for `ShowcaseDocument` instances
     /// within a view:
-    ///
-    ///     ShowcaseNavigationStack().showcasePreviewStyle(MyCustomStyle())
-    ///
     public func showcasePreviewStyle<S: ShowcasePreviewStyle>(_ style: S) -> some View {
         modifier(ShowcasePreviewStyleModifier(style))
     }
