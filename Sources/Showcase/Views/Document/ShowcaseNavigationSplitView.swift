@@ -106,7 +106,3 @@ public struct ShowcaseNavigationSplitView<Sidebar: View, ContentToolbar: View, D
         })
     }
 }
-
-#Preview {
-    ShowcaseNavigationSplitView(.systemComponents)
-}
