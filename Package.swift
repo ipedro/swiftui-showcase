@@ -21,7 +21,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/JohnSundell/Splash", from: "0.16.0"),
-        .package(url: "https://github.com/nathantannar4/Engine", exact: "1.8.8")
+        .package(url: "https://github.com/nathantannar4/Engine", from: "1.9.2")
     ],
     targets: [
         .target(
