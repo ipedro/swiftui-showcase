@@ -50,7 +50,7 @@ public struct Chapter: Identifiable {
     public init(
         _ title: String,
         icon: (() -> Image)? = nil,
-        description: @escaping () -> String = String.init,
+        description: @escaping @autoclosure () -> String = "",
         _ topics: [Topic] = []
     ) {
         _title = Lazy(wrappedValue: title)
@@ -68,13 +68,13 @@ public struct Chapter: Identifiable {
     public init(
         _ title: String,
         icon: (() -> Image)? = nil,
-        description: @escaping () -> String = String.init,
+        description: @escaping @autoclosure () -> String = "",
         _ topics: Topic...
     ) {
         self.init(
             title,
             icon: icon,
-            description: description,
+            description: description(),
             topics
         )
     }

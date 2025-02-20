@@ -88,7 +88,7 @@ public struct Topic: Identifiable {
     public init(
         _ title: String,
         icon: (() -> Image)? = nil,
-        description: @escaping () -> String = String.init,
+        description: @escaping @autoclosure () -> String = "",
         @LinkBuilder links: @escaping () -> [Link] = Array.init,
         @EmbedBuilder embeds: @escaping () -> [Embed] = Array.init,
         @CodeBlockBuilder code codeBlocks: @escaping () -> [CodeBlock] = Array.init,
@@ -119,7 +119,7 @@ public struct Topic: Identifiable {
     public init<P: View>(
         _ title: String,
         icon: (() -> Image)? = nil,
-        description: @escaping () -> String = String.init,
+        description: @escaping @autoclosure () -> String = "",
         @LinkBuilder links: @escaping () -> [Link] = Array.init,
         @EmbedBuilder embeds: @escaping () -> [Embed] = Array.init,
         @CodeBlockBuilder code codeBlocks: @escaping () -> [CodeBlock] = Array.init,
@@ -130,7 +130,7 @@ public struct Topic: Identifiable {
         self.init(
             title,
             icon: icon,
-            description: description,
+            description: description(),
             links: links,
             embeds: embeds,
             code: codeBlocks,
@@ -156,7 +156,7 @@ extension Topic: Comparable {
     }
 }
 
-extension Array: Identifiable where Element == Topic {
+extension Array: @retroactive Identifiable where Element == Topic {
     public var id: [Element.ID] {
         map(\.id)
     }

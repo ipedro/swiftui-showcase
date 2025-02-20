@@ -26,11 +26,9 @@ import SwiftUI
 extension Topic {
     static let mockCard = Topic(
         "Card",
-        description: {
-            """
-            Cards are surfaces that display content and actions on a single topic.
-            """
-        },
+        description: """
+        Cards are surfaces that display content and actions on a single topic.
+        """,
         children: [
             .staticCard,
             .navigationalCard,
@@ -44,19 +42,17 @@ extension Topic {
 extension Topic {
     static let navigationalCard = Topic(
         "Navigational Card",
-        description: {
-            """
-            The purpose of navigational cards is to provide users access to more detailed information or navigational elements (other pages).
+        description: """
+        The purpose of navigational cards is to provide users access to more detailed information or navigational elements (other pages).
 
-            By clicking anywhere on the card, users can perform the desired action. While navigational cards can include interactive elements for additional calls to action, it is not recommended.
-            """
-        },
+        By clicking anywhere on the card, users can perform the desired action. While navigational cards can include interactive elements for additional calls to action, it is not recommended.
+        """,
         links: {
             Link("Code", .init(string: "NavigationalCard"))
             Link("Design", .init(string: "https://google.com"))
         },
         code: {
-            CodeBlock("elevated") { 
+            CodeBlock("elevated") {
                 """
                 NavigationalCard {
                     // action
@@ -66,7 +62,7 @@ extension Topic {
                 """
             }
             
-            CodeBlock("outlined") { 
+            CodeBlock("outlined") {
                 """
                 NavigationalCard {
                     // action
@@ -87,11 +83,9 @@ extension Topic {
 extension Topic {
     static let selectableCard = Topic(
         "Selectable Card",
-        description: {
-            """
-            Selectable cards serve for selecting an item that is part of a group of options with rich content displayed inside each option, which would be too complex for buttons to contain.
-            """
-        },
+        description: """
+        Selectable cards serve for selecting an item that is part of a group of options with rich content displayed inside each option, which would be too complex for buttons to contain.
+        """,
         links: {
             Link("Code", .init(string: "SelectableCard"))
             Link("Design", .init(string: "https://google.com"))
@@ -114,13 +108,11 @@ extension Topic {
 extension Topic {
     static let staticCard = Topic(
         "Static Card",
-        description: {
-            """
-            A static card can have interactive elements such as a call-to-action button, but it is not intended for navigation or selection.
-
-            The card surface does not have interactive states, meaning it cannot be hovered or selected. However, it does contain other interactive components. An example of a static card is a recipe card.
-            """
-        },
+        description: """
+        A static card can have interactive elements such as a call-to-action button, but it is not intended for navigation or selection.
+        
+        The card surface does not have interactive states, meaning it cannot be hovered or selected. However, it does contain other interactive components. An example of a static card is a recipe card.
+        """,
         links: {
             Link("Code", .init(string: "StaticCard"))
             Link("Design", .init(string: "https://google.com"))
@@ -145,3 +137,4 @@ extension Topic {
         }
     }
 }
+

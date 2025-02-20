@@ -63,17 +63,13 @@ struct ShowcaseList_Previews: PreviewProvider {
         ShowcaseNavigationStack(
             Document(
                 "My Document",
-                description: {
-                    "This document contains one chapter. That chapter has topics that you can find below."
-                },
+                description: "This document contains one chapter. That chapter has topics that you can find below.",
                 Chapter(
                     "Components",
-                    description: {
-                        "This chapter is about example components"
-                    },
-                    Topic("Topic") {
+                    description: "This chapter is about example components",
+                    Topic("Topic", previews: {
                         Button("Topic") {}
-                    }
+                    })
                 )
             )
         )

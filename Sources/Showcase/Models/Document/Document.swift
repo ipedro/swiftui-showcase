@@ -48,7 +48,7 @@ public struct Document: Identifiable {
     public init(
         _ title: String,
         icon: (() -> Image)? = nil,
-        description: @escaping () -> String = String.init,
+        description: @escaping @autoclosure () -> String = "",
         _ chapters: [Chapter] = []
     ) {
         _title = Lazy(wrappedValue: title)
@@ -66,10 +66,10 @@ public struct Document: Identifiable {
     public init(
         _ title: String,
         icon: (() -> Image)? = nil,
-        description: @escaping () -> String = String.init,
+        description: @escaping @autoclosure () -> String = "",
         _ chapters: Chapter...
     ) {
-        self.init(title, icon: icon, description: description, chapters)
+        self.init(title, icon: icon, description: description(), chapters)
     }
 }
 
