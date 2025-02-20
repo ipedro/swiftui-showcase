@@ -2,6 +2,29 @@
 
 import PackageDescription
 
+let isDevelopment = !Context.packageDirectory.contains("/checkouts/")
+
+var dependencies: [Package.Dependency] = [
+    .package(url: "https://github.com/JohnSundell/Splash", from: "0.16.0"),
+    .package(url: "https://github.com/nathantannar4/Engine", from: "1.9.5")
+]
+
+var plugins: [Target.PluginUsage] = []
+
+if isDevelopment {
+    dependencies += [
+        .package(url: "https://github.com/SimplyDanny/SwiftLintPlugins", from: "0.58.0"),
+        .package(url: "https://github.com/nicklockwood/SwiftFormat", from: "0.54.0")
+    ]
+    
+    plugins += [
+        .plugin(
+            name: "SwiftLintBuildToolPlugin",
+            package: "SwiftLintPlugins"
+        )
+    ]
+}
+
 let package = Package(
     name: "swiftui-showcase",
     platforms: [
@@ -19,10 +42,7 @@ let package = Package(
             targets: ["Showcase"]
         )
     ],
-    dependencies: [
-        .package(url: "https://github.com/JohnSundell/Splash", from: "0.16.0"),
-        .package(url: "https://github.com/nathantannar4/Engine", from: "1.9.2")
-    ],
+    dependencies: dependencies,
     targets: [
         .target(
             name: "Showcase",
@@ -33,7 +53,8 @@ let package = Package(
             ],
             swiftSettings: [
                 .enableExperimentalFeature("AccessLevelOnImport")
-            ]
+            ],
+            plugins: plugins
         ),
         .testTarget(
             name: "ShowcaseTests",

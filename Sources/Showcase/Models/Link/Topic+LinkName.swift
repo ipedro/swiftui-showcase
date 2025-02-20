@@ -1,4 +1,6 @@
-// Copyright (c) 2023 Pedro Almeida
+// Topic+LinkName.swift
+// Copyright (c) 2025 Pedro Almeida
+// Created by Pedro Almeida on 12.09.23.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,22 +22,22 @@
 
 import Foundation
 
-extension Topic {
+public extension Topic {
     /// Represents the name of an external link.
-    public struct LinkName: CustomStringConvertible, ExpressibleByStringLiteral {
+    struct LinkName: CustomStringConvertible, ExpressibleByStringLiteral {
         /// The description of the link name.
         public let description: String
-        
+
         /// Initializes a link name with the specified description.
         /// - Parameter description: The description of the link name.
         public init(_ description: String) {
             self.description = description
         }
-        
+
         /// Initializes a link name using a string literal.
         /// - Parameter value: The string literal representing the link name description.
         public init(stringLiteral value: String) {
-            self.description = value
+            description = value
         }
     }
 }

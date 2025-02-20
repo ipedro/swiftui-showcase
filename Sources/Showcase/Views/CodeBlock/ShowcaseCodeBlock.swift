@@ -1,4 +1,6 @@
-// Copyright (c) 2023 Pedro Almeida
+// ShowcaseCodeBlock.swift
+// Copyright (c) 2025 Pedro Almeida
+// Created by Pedro Almeida on 20.04.24.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,9 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import SwiftUI
 import Engine
 import EngineMacros
+import SwiftUI
 
 // MARK: - View Extension
 
@@ -57,7 +59,7 @@ public struct ShowcaseCodeBlock: StyledView, Equatable {
     public static func == (lhs: ShowcaseCodeBlock, rhs: ShowcaseCodeBlock) -> Bool {
         lhs.id == rhs.id
     }
-    
+
     let title: Optional<Text>
     let sourceCode: String
     let id: UUID
@@ -65,15 +67,15 @@ public struct ShowcaseCodeBlock: StyledView, Equatable {
     /// Initializes a ShowcaseCodeBlock view with the specified code block data.
     /// - Parameter data: The data representing the code block (optional).
     init(data: Topic.CodeBlock) {
-        self.sourceCode = data.rawValue
+        sourceCode = data.rawValue
         title = Text(optional: LocalizedStringKey(optional: data.title))
-        self.id = data.id
+        id = data.id
     }
 
-    public init(_ configuration: ShowcaseCodeBlockConfiguration)   {
-        self.title = configuration.title
-        self.sourceCode = configuration.sourceCode
-        self.id = configuration.id
+    public init(_ configuration: ShowcaseCodeBlockConfiguration) {
+        title = configuration.title
+        sourceCode = configuration.sourceCode
+        id = configuration.id
     }
 
     public var body: some View {
@@ -128,22 +130,23 @@ public struct ShowcaseCodeBlockStyleModifier<Style: ShowcaseCodeBlockStyle>: Vie
 #Preview {
     ShowcaseCodeBlock(
         data: Topic.CodeBlock("Example", text: {
-        """
-        HStack {
-            Spacer()
-            copyButton
-        }
-        """
+            """
+            HStack {
+                Spacer()
+                copyButton
+            }
+            """
         }))
 }
+
 #Preview {
     ShowcaseCodeBlock(
         data: Topic.CodeBlock(text: {
-        """
-        HStack {
-            Spacer()
-            copyButton
-        }
-        """
+            """
+            HStack {
+                Spacer()
+                copyButton
+            }
+            """
         }))
 }

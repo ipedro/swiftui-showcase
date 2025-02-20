@@ -1,4 +1,6 @@
-// Copyright (c) 2024 Pedro Almeida
+// ShowcasePreviewGroupBoxStyle.swift
+// Copyright (c) 2025 Pedro Almeida
+// Created by Pedro Almeida on 13.09.23.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal

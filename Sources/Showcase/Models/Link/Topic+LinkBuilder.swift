@@ -1,4 +1,6 @@
-// Copyright (c) 2023 Pedro Almeida
+// Topic+LinkBuilder.swift
+// Copyright (c) 2025 Pedro Almeida
+// Created by Pedro Almeida on 12.09.23.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,15 +22,15 @@
 
 import Foundation
 
-extension Topic {
+public extension Topic {
     /// A result builder for creating external links.
-    @resultBuilder public struct LinkBuilder {
+    @resultBuilder struct LinkBuilder {
         /// Builds an array of external links from individual components.
         public static func buildBlock() -> [Link] { [] }
-        
+
         /// Builds an array of external links from variadic components.
         public static func buildBlock(_ components: Link...) -> [Link] { components }
-        
+
         /// Builds an array of external links from optional components, filtering out nil values.
         public static func buildBlock(_ components: Link?...) -> [Link] { components.compactMap { $0 } }
     }

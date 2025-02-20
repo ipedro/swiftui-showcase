@@ -1,4 +1,6 @@
-// Copyright (c) 2023 Pedro Almeida
+// ShowcaseIndexMenu.swift
+// Copyright (c) 2025 Pedro Almeida
+// Created by Pedro Almeida on 17.09.23.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,13 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import SwiftUI
 import Engine
 import EngineMacros
+import SwiftUI
 
 // MARK: - View Extension
 
-extension View {
+public extension View {
     /// Sets the style for `ShowcaseDocument` within this view to a index menu style with a
     /// custom appearance and custom interaction behavior.
     ///
@@ -36,7 +38,7 @@ extension View {
     ///
     /// - Parameter style: Any index menu style
     /// - Returns: A view that has the index menu style set in its environment.
-    public func showcaseIndexMenuStyle<S: ShowcaseIndexMenuStyle>(_ style: S) -> some View {
+    func showcaseIndexMenuStyle<S: ShowcaseIndexMenuStyle>(_ style: S) -> some View {
         modifier(ShowcaseIndexMenuStyleModifier(style))
     }
 }
@@ -71,13 +73,13 @@ public struct ShowcaseIndexMenuLabel: View {
     let data: [Topic]
 
     #if canImport(UIKit)
-    let impact = UISelectionFeedbackGenerator()
+        let impact = UISelectionFeedbackGenerator()
     #endif
 
     public var body: some View {
         Button(title) {
             #if canImport(UIKit)
-            impact.selectionChanged()
+                impact.selectionChanged()
             #endif
             selection?.wrappedValue = ShowcaseScrollViewTopAnchor.ID
         }
@@ -87,7 +89,7 @@ public struct ShowcaseIndexMenuLabel: View {
         ForEach(data) { topic in
             Button {
                 #if canImport(UIKit)
-                impact.selectionChanged()
+                    impact.selectionChanged()
                 #endif
                 selection?.wrappedValue = topic.id
             } label: {
@@ -103,7 +105,8 @@ public struct ShowcaseIndexMenuIcon: View {
     /// The shape used for the icon.
     private let shape = RoundedRectangle(
         cornerRadius: 8,
-        style: .continuous)
+        style: .continuous
+    )
 
     public var body: some View {
         Image(systemName: systemName)

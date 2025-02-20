@@ -1,4 +1,6 @@
-// Copyright (c) 2023 Pedro Almeida
+// Document.swift
+// Copyright (c) 2025 Pedro Almeida
+// Created by Pedro Almeida on 11.09.23.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +26,7 @@ import SwiftUI
 public struct Document: Identifiable {
     /// The unique identifier for the document.
     public let id = UUID()
-    
+
     /// The title of the document.
     @Lazy public var title: String
 
@@ -46,7 +48,7 @@ public struct Document: Identifiable {
     public init(
         _ title: String,
         icon: (() -> Image)? = nil,
-        description: @escaping () -> String = EmptyString,
+        description: @escaping () -> String = String.init,
         _ chapters: [Chapter] = []
     ) {
         _title = Lazy(wrappedValue: title)
@@ -64,7 +66,7 @@ public struct Document: Identifiable {
     public init(
         _ title: String,
         icon: (() -> Image)? = nil,
-        description: @escaping () -> String = EmptyString,
+        description: @escaping () -> String = String.init,
         _ chapters: Chapter...
     ) {
         self.init(title, icon: icon, description: description, chapters)
@@ -75,7 +77,7 @@ extension Document: Comparable {
     public static func < (lhs: Self, rhs: Self) -> Bool {
         lhs.title.localizedStandardCompare(rhs.title) != .orderedDescending
     }
-    
+
     public static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.id == rhs.id
     }

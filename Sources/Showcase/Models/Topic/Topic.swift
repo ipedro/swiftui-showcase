@@ -1,4 +1,6 @@
-// Copyright (c) 2023 Pedro Almeida
+// Topic.swift
+// Copyright (c) 2025 Pedro Almeida
+// Created by Pedro Almeida on 16.09.23.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -29,16 +31,16 @@ public struct Topic: Identifiable {
 
     /// Code blocks associated with the topic.
     @Lazy public var codeBlocks: [CodeBlock]
-    
+
     /// Description of the topic.
     @Lazy public var description: String
-    
+
     /// External links associated with the topic.
     @Lazy public var links: [Link]
-    
+
     /// External contents associated with the topic.
     @Lazy public var embeds: [Embed]
-    
+
     /// Previews configuration for the topic.
     @Lazy public var previews: [Preview]
 
@@ -47,7 +49,7 @@ public struct Topic: Identifiable {
 
     /// Title of the topic.
     @Lazy public var title: String
-    
+
     /// Optional child topics.
     public var children: [Topic]?
 
@@ -66,9 +68,9 @@ public struct Topic: Identifiable {
 
     var isEmpty: Bool {
         codeBlocks.isEmpty &&
-        description.isEmpty &&
-        links.isEmpty &&
-        children?.isEmpty != false
+            description.isEmpty &&
+            links.isEmpty &&
+            children?.isEmpty != false
     }
 
     // FIXME: Consolidar inits num só. criar equivalente "EmptyView" para os tipos? EmptyCodeblock, EmptyPreview, ..?
@@ -86,20 +88,20 @@ public struct Topic: Identifiable {
     public init(
         _ title: String,
         icon: (() -> Image)? = nil,
-        description: @escaping () -> String = EmptyString,
-        @LinkBuilder links: @escaping () -> [Link] = EmptyArray,
-        @EmbedBuilder embeds: @escaping () -> [Embed] = EmptyArray,
-        @CodeBlockBuilder code codeBlocks: @escaping () -> [CodeBlock] = EmptyArray,
-        @PreviewBuilder previews: @escaping () -> [Preview] = EmptyArray,
+        description: @escaping () -> String = String.init,
+        @LinkBuilder links: @escaping () -> [Link] = Array.init,
+        @EmbedBuilder embeds: @escaping () -> [Embed] = Array.init,
+        @CodeBlockBuilder code codeBlocks: @escaping () -> [CodeBlock] = Array.init,
+        @PreviewBuilder previews: @escaping () -> [Preview] = Array.init,
         children: [Topic]? = nil
     ) {
-        self._codeBlocks = Lazy(wrappedValue: codeBlocks())
-        self._description = Lazy(wrappedValue: description())
-        self._embeds = Lazy(wrappedValue: embeds())
-        self._icon = Lazy(wrappedValue: icon?())
-        self._links = Lazy(wrappedValue: links())
-        self._previews = Lazy(wrappedValue: previews())
-        self._title = Lazy(wrappedValue: title)
+        _codeBlocks = Lazy(wrappedValue: codeBlocks())
+        _description = Lazy(wrappedValue: description())
+        _embeds = Lazy(wrappedValue: embeds())
+        _icon = Lazy(wrappedValue: icon?())
+        _links = Lazy(wrappedValue: links())
+        _previews = Lazy(wrappedValue: previews())
+        _title = Lazy(wrappedValue: title)
         self.children = children
     }
 
@@ -117,10 +119,10 @@ public struct Topic: Identifiable {
     public init<P: View>(
         _ title: String,
         icon: (() -> Image)? = nil,
-        description: @escaping () -> String = EmptyString,
-        @LinkBuilder links: @escaping () -> [Link] = EmptyArray,
-        @EmbedBuilder embeds: @escaping () -> [Embed] = EmptyArray,
-        @CodeBlockBuilder code codeBlocks: @escaping () -> [CodeBlock] = EmptyArray,
+        description: @escaping () -> String = String.init,
+        @LinkBuilder links: @escaping () -> [Link] = Array.init,
+        @EmbedBuilder embeds: @escaping () -> [Embed] = Array.init,
+        @CodeBlockBuilder code codeBlocks: @escaping () -> [CodeBlock] = Array.init,
         previewTitle: String? = nil,
         @ViewBuilder previews: @escaping () -> P,
         children: [Topic]? = nil
@@ -148,7 +150,7 @@ extension Topic: Comparable {
     public static func < (lhs: Self, rhs: Self) -> Bool {
         lhs.title.localizedStandardCompare(rhs.title) != .orderedDescending
     }
-    
+
     public static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.id == rhs.id
     }

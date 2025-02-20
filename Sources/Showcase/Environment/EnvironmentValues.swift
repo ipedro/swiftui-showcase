@@ -1,4 +1,6 @@
-// Copyright (c) 2023 Pedro Almeida
+// EnvironmentValues.swift
+// Copyright (c) 2025 Pedro Almeida
+// Created by Pedro Almeida on 20.04.24.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -32,7 +34,7 @@ extension EnvironmentValues {
         get { self[CodeBlockThemeKey.self] }
         set { self[CodeBlockThemeKey.self] = newValue }
     }
-    
+
     /// The current Showcase style value.
     var linkStyle: AnyButtonStyle {
         get { self[LinkStyleKey.self] }
@@ -53,7 +55,7 @@ extension EnvironmentValues {
         get { self[ContentBodyFontKey.self] }
         set { self[ContentBodyFontKey.self] = newValue }
     }
-    
+
     var scrollViewSelection: Binding<Topic.ID?>? {
         get { self[ScrollViewSelectionKey.self] }
         set { self[ScrollViewSelectionKey.self] = newValue }

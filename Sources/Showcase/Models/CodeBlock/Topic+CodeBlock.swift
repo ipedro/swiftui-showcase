@@ -1,4 +1,6 @@
-// Copyright (c) 2023 Pedro Almeida
+// Topic+CodeBlock.swift
+// Copyright (c) 2025 Pedro Almeida
+// Created by Pedro Almeida on 16.09.23.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,34 +22,34 @@
 
 import Foundation
 
-extension Topic {
+public extension Topic {
     /// Represents a code block associated with a showcase element.
-    public struct CodeBlock: Identifiable, RawRepresentable, ExpressibleByStringLiteral {
+    struct CodeBlock: Identifiable, RawRepresentable, ExpressibleByStringLiteral {
         /// The unique identifier for the code block.
         public let id = UUID()
-        
+
         /// The raw string value of the code block.
         public var rawValue: String
-        
+
         /// Optional title for the code block.
         public var title: String?
-        
+
         /// Initializes a code block from raw text.
         /// - Parameter rawValue: The raw string value of the code block.
         public init?(rawValue: String) {
-            self.title = nil
+            title = nil
             self.rawValue = rawValue
         }
-        
+
         /// Initializes a code block with a title and raw text.
         /// - Parameters:
         ///   - title: Optional title for the code block.
         ///   - text: A closure returning the raw text content of the code block.
         public init(_ title: String? = nil, text: () -> String) {
             self.title = title
-            self.rawValue = text()
+            rawValue = text()
         }
-        
+
         /// Initializes a code block using a string literal.
         /// - Parameter value: The string literal representing the code block's raw content.
         public init(stringLiteral value: String) {

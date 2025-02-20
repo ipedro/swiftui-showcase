@@ -1,4 +1,6 @@
-// Copyright (c) 2023 Pedro Almeida
+// ShowcaseNavigationTopic.swift
+// Copyright (c) 2025 Pedro Almeida
+// Created by Pedro Almeida on 11.09.23.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -27,6 +29,7 @@ struct ShowcaseNavigationTopic: View {
         guard let data else { return nil }
         self.data = data
     }
+
     var body: some View {
         ShowcaseTopic(data)
             .equatable()

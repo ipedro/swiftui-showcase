@@ -1,4 +1,6 @@
-// Copyright (c) 2023 Pedro Almeida
+// Topic+CodeBlockBuilder.swift
+// Copyright (c) 2025 Pedro Almeida
+// Created by Pedro Almeida on 12.09.23.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,15 +22,15 @@
 
 import Foundation
 
-extension Topic {
+public extension Topic {
     /// A result builder for creating code blocks.
-    @resultBuilder public struct CodeBlockBuilder {
+    @resultBuilder struct CodeBlockBuilder {
         /// Builds an array of code blocks from individual components.
         public static func buildBlock() -> [CodeBlock] { [] }
-        
+
         /// Builds an array of code blocks from variadic components.
         public static func buildBlock(_ components: CodeBlock...) -> [CodeBlock] { components }
-        
+
         /// Builds an array of code blocks from variadic string components.
         public static func buildBlock(_ components: String...) -> [CodeBlock] { components.map { .init(stringLiteral: $0) } }
     }

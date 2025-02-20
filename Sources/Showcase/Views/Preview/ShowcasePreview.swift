@@ -1,4 +1,6 @@
-// Copyright (c) 2023 Pedro Almeida
+// ShowcasePreview.swift
+// Copyright (c) 2025 Pedro Almeida
+// Created by Pedro Almeida on 10.09.23.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,9 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import SwiftUI
 import Engine
 import EngineMacros
+import SwiftUI
 
 public struct ShowcasePreviews: View {
     var content: EquatableForEach<[Topic.Preview], Topic.Preview.ID, ShowcasePreview>
@@ -33,13 +35,13 @@ public struct ShowcasePreview: StyledView, Equatable {
     public static func == (lhs: ShowcasePreview, rhs: ShowcasePreview) -> Bool {
         lhs.id == rhs.id
     }
-    
+
     init(data: Topic.Preview) {
         id = data.id
-        content = data.content()
+        content = AnyView(data.content())
         label = Text(optional: data.title)
     }
-    
+
     var id: UUID
     var content: AnyView
     var label: Optional<Text>
@@ -49,13 +51,13 @@ public struct ShowcasePreview: StyledView, Equatable {
     }
 }
 
-extension View {
+public extension View {
     /// Sets the style for `ShowcaseDocument` within this view to a Showcase style with a
     /// custom appearance and custom interaction behavior.
     ///
     /// Use this modifier to set a specific style for `ShowcaseDocument` instances
     /// within a view:
-    public func showcasePreviewStyle<S: ShowcasePreviewStyle>(_ style: S) -> some View {
+    func showcasePreviewStyle<S: ShowcasePreviewStyle>(_ style: S) -> some View {
         modifier(ShowcasePreviewStyleModifier(style))
     }
 }

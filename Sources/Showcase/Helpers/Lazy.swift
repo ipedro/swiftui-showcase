@@ -1,4 +1,6 @@
-// Copyright (c) 2024 Pedro Almeida
+// Lazy.swift
+// Copyright (c) 2025 Pedro Almeida
+// Created by Pedro Almeida on 01.09.24.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -58,7 +60,7 @@ public final class Lazy<Value> {
     /// - Parameter wrappedValue: An autoclosure that computes the value of the property. It is executed only once,
     /// the first time the property is accessed.
     public init(wrappedValue: @escaping @autoclosure () -> Value) {
-        self.closure = wrappedValue
+        closure = wrappedValue
     }
 
     public init(_ other: Lazy<Value>) {

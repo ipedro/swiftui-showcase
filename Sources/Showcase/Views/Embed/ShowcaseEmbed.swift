@@ -1,3 +1,25 @@
+// ShowcaseEmbed.swift
+// Copyright (c) 2025 Pedro Almeida
+// Created by Pedro Almeida on 04.10.23.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+
 import SwiftUI
 import WebKit
 
@@ -11,69 +33,69 @@ struct ShowcaseEmbed: View, Equatable {
         lhs.data.id == rhs.data.id
     }
 
-    @State 
+    @State
     private var height: CGFloat = 10 // Initial height, it will be adjusted later
 
     var data: Topic.Embed
 
     var body: some View {
         #if os(iOS)
-        WebView(url: data.url, handler: data.navigationHandler, height: $height)
-            .frame(height: max(data.minHeight ?? 0, height))
-            .disabled(!data.isInteractionEnabled)
+            WebView(url: data.url, handler: data.navigationHandler, height: $height)
+                .frame(height: max(data.minHeight ?? 0, height))
+                .disabled(!data.isInteractionEnabled)
         #else
-        EmptyView()
+            EmptyView()
         #endif
     }
 }
 
 #if os(iOS)
-private struct WebView: UIViewRepresentable {
-    var url: URL
-    var handler: (WKNavigationAction) -> WKNavigationActionPolicy
-    @Binding var height: CGFloat
-
-    func makeUIView(context: Context) -> WKWebView {
-        let webView = WKWebView()
-        webView.navigationDelegate = context.coordinator
-        webView.scrollView.isScrollEnabled = false  // Disable scrolling of the WKWebView
-        return webView
-    }
-
-    func updateUIView(_ uiView: WKWebView, context: Context) {
-        let request = URLRequest(url: url)
-        uiView.load(request)
-    }
-
-    func makeCoordinator() -> Coordinator {
-        Coordinator(self, handler: handler)
-    }
-
-    class Coordinator: NSObject, WKNavigationDelegate {
-        var parent: WebView
+    private struct WebView: UIViewRepresentable {
+        var url: URL
         var handler: (WKNavigationAction) -> WKNavigationActionPolicy
+        @Binding var height: CGFloat
 
-        init(_ parent: WebView, handler: @escaping (_ navigationAction: WKNavigationAction) -> WKNavigationActionPolicy) {
-            self.parent = parent
-            self.handler = handler
+        func makeUIView(context: Context) -> WKWebView {
+            let webView = WKWebView()
+            webView.navigationDelegate = context.coordinator
+            webView.scrollView.isScrollEnabled = false // Disable scrolling of the WKWebView
+            return webView
         }
 
-        func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-            decisionHandler(handler(navigationAction))
+        func updateUIView(_ uiView: WKWebView, context _: Context) {
+            let request = URLRequest(url: url)
+            uiView.load(request)
         }
 
-        // Add any WKNavigationDelegate methods if needed
-        func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-            webView.evaluateJavaScript("document.documentElement.scrollHeight") { (height, error) in
-                guard let height = height as? CGFloat else { return }
+        func makeCoordinator() -> Coordinator {
+            Coordinator(self, handler: handler)
+        }
 
-                DispatchQueue.main.async {
-                    webView.scrollView.contentSize = CGSize(width: webView.bounds.width, height: height)
-                    webView.setNeedsLayout()
-                    self.parent.height = height
+        class Coordinator: NSObject, WKNavigationDelegate {
+            var parent: WebView
+            var handler: (WKNavigationAction) -> WKNavigationActionPolicy
+
+            init(_ parent: WebView, handler: @escaping (_ navigationAction: WKNavigationAction) -> WKNavigationActionPolicy) {
+                self.parent = parent
+                self.handler = handler
+            }
+
+            func webView(_: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+                decisionHandler(handler(navigationAction))
+            }
+
+            /// Add any WKNavigationDelegate methods if needed
+            func webView(_ webView: WKWebView, didFinish _: WKNavigation!) {
+                webView.evaluateJavaScript("document.documentElement.scrollHeight") { height, _ in
+                    guard let height = height as? CGFloat else { return }
+
+                    DispatchQueue.main.async {
+                        webView.scrollView.contentSize = CGSize(width: webView.bounds.width, height: height)
+                        webView.setNeedsLayout()
+                        self.parent.height = height
+                    }
                 }
             }
         }
     }
-}
 #endif

@@ -1,4 +1,6 @@
-// Copyright (c) 2023 Pedro Almeida
+// ShowcaseTopics.swift
+// Copyright (c) 2025 Pedro Almeida
+// Created by Pedro Almeida on 11.09.23.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,17 +24,17 @@ import SwiftUI
 
 /// The children views within the showcase.
 public struct ShowcaseTopics: View {
-    @Environment(\.nodeDepth) 
+    @Environment(\.nodeDepth)
     private var depth
 
     /// The data representing child showcase topics.
     let data: [Topic]
-    
+
     init?(data: [Topic]?) {
         guard let data = data, !data.isEmpty else { return nil }
         self.data = data
     }
-    
+
     /// The body of the child views within the showcase.
     public var body: some View {
         ForEach(data) { item in

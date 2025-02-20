@@ -1,4 +1,6 @@
-// Copyright (c) 2023 Pedro Almeida
+// EnvironmentKeys.swift
+// Copyright (c) 2025 Pedro Almeida
+// Created by Pedro Almeida on 20.04.24.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal

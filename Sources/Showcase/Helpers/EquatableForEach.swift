@@ -1,4 +1,6 @@
-// Copyright (c) 2024 Pedro Almeida
+// EquatableForEach.swift
+// Copyright (c) 2025 Pedro Almeida
+// Created by Pedro Almeida on 18.09.23.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,10 +22,10 @@
 
 import SwiftUI
 
-struct EquatableForEach<Data, ID, Content>: View where Data: RandomAccessCollection, ID: Hashable, Content: View & Equatable {
-    var data: Data
-    var id: KeyPath<Data.Element, ID>
-    var content: (_ data: Data.Element) -> Content
+struct EquatableForEach<Data: RandomAccessCollection, ID: Hashable, Content: View & Equatable>: View {
+    let data: Data
+    let id: KeyPath<Data.Element, ID>
+    let content: (_ data: Data.Element) -> Content
 
     /// Initializes the view with code block data.
     /// - Parameter data: The code block data.
@@ -45,9 +47,3 @@ struct EquatableForEach<Data, ID, Content>: View where Data: RandomAccessCollect
         }
     }
 }
-
-/// Returns an empty array.
-public func EmptyArray<T>() -> [T] { [] }
-
-/// Returns an empty string.
-public func EmptyString() -> String { "" }

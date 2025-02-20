@@ -1,4 +1,6 @@
-// Copyright (c) 2024 Pedro Almeida
+// Topic+PreviewBuilder.swift
+// Copyright (c) 2025 Pedro Almeida
+// Created by Pedro Almeida on 12.09.23.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,12 +22,12 @@
 
 import SwiftUI
 
-extension Topic {
+public extension Topic {
     /// A result builder for creating code blocks.
-    @resultBuilder public struct PreviewBuilder {
+    @resultBuilder struct PreviewBuilder {
         /// Builds an array of code blocks from individual components.
         public static func buildBlock() -> [Preview] { [] }
-        
+
         /// Builds an array of code blocks from variadic components.
         public static func buildBlock(_ components: Preview...) -> [Preview] { components }
 
@@ -36,17 +38,17 @@ extension Topic {
 
         public static func buildBlock(_ content: AnyView) -> [Preview] {
             [
-                Preview(preview: content)
+                Preview(preview: content),
             ]
         }
 
-        public static func buildBlock<Content>(_ content: Content) -> [Preview] where Content : View {
+        public static func buildBlock<Content>(_ content: Content) -> [Preview] where Content: View {
             [
-                Preview { content }
+                Preview { content },
             ]
         }
 
-        public static func buildBlock<each Content>(_ content: repeat each Content) -> [Preview] where repeat each Content : View {
+        public static func buildBlock<each Content>(_ content: repeat each Content) -> [Preview] where repeat each Content: View {
             var previews = [AnyView]()
             _ = (repeat (each content, previews.append(AnyView(each content))))
             return previews.map { Preview(preview: $0) }

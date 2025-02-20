@@ -1,4 +1,6 @@
-// Copyright (c) 2023 Pedro Almeida
+// ShowcaseTopic.swift
+// Copyright (c) 2025 Pedro Almeida
+// Created by Pedro Almeida on 16.09.23.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -29,18 +31,18 @@ public struct ShowcaseTopic: View, Equatable {
     private var depth
 
     let data: Topic
-    
+
     public init(_ data: Topic) {
         self.data = data
     }
-    
+
     public var body: some View {
         ShowcaseLayout(configuration)
     }
 
     private var contentConfiguration: ShowcaseContentConfiguration {
         ShowcaseContentConfiguration(
-            id: data.id, 
+            id: data.id,
             isEmpty: data.description.isEmpty,
             title: depth > 0 ? Text(data.title) : nil,
             description: description(),
@@ -114,6 +116,7 @@ public struct ShowcaseTopic: View, Equatable {
     private var showIndexList: Bool {
         depth == 0 && data.children != nil
     }
+
     private func indexList() -> ShowcaseIndexList? {
         if depth == 0, let children = data.children {
             ShowcaseIndexList(data: children)

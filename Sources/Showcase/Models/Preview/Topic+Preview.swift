@@ -1,4 +1,6 @@
-// Copyright (c) 2024 Pedro Almeida
+// Topic+Preview.swift
+// Copyright (c) 2025 Pedro Almeida
+// Created by Pedro Almeida on 12.09.23.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,14 +22,14 @@
 
 import SwiftUI
 
-extension Topic {
+public extension Topic {
     /// A view associated with a showcase element.
-    public struct Preview: Identifiable {
+    struct Preview: Identifiable {
         /// The unique identifier for the preview.
         public let id = UUID()
 
         /// Previews configuration for the topic.
-        public var content: () -> AnyView
+        public var content: () -> any View
 
         /// Optional title for the preview.
         public var title: String?
@@ -38,14 +40,14 @@ extension Topic {
         /// - Parameters:
         ///   - title: Optional title for the preview.
         ///   - preview: A content view representing the preview.
-        public init<V>(
+        public init(
             _ title: String? = nil,
             codeBlock: CodeBlock? = nil,
-            @ViewBuilder preview: @escaping () -> V
-        ) where V: View {
+            @ViewBuilder preview: @escaping () -> some View
+        ) {
             self.title = title
             self.codeBlock = codeBlock
-            self.content = { AnyView(preview()) }
+            content = { preview() }
         }
 
         /// Initializes a preview with a title and raw text.
@@ -55,11 +57,11 @@ extension Topic {
         init(
             _ title: String? = nil,
             codeBlock: CodeBlock? = nil,
-            preview: @escaping @autoclosure () -> AnyView
+            preview: @escaping @autoclosure () -> any View
         ) {
             self.title = title
             self.codeBlock = codeBlock
-            self.content = preview
+            content = preview
         }
     }
 }

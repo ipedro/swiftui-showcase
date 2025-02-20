@@ -1,4 +1,6 @@
-// Copyright (c) 2023 Pedro Almeida
+// ShowcaseNavigationSplitView.swift
+// Copyright (c) 2025 Pedro Almeida
+// Created by Pedro Almeida on 23.04.24.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -50,8 +52,8 @@ public struct ShowcaseNavigationSplitView<Sidebar: View, ContentToolbar: View, D
         @ViewBuilder detailToolbar: () -> DetailToolbar = EmptyView.init
     ) {
         self.data = data
-        self._columnVisibility = columnVisibility
-        self._sidebar = sidebar()
+        _columnVisibility = columnVisibility
+        _sidebar = sidebar()
         self.contentToolbar = contentToolbar()
         self.detailToolbar = detailToolbar()
     }

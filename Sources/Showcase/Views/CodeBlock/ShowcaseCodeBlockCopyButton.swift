@@ -1,4 +1,6 @@
-// Copyright (c) 2024 Pedro Almeida
+// ShowcaseCodeBlockCopyButton.swift
+// Copyright (c) 2025 Pedro Almeida
+// Created by Pedro Almeida on 31.08.24.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,7 +22,7 @@
 
 import SwiftUI
 #if os(iOS)
-import UIKit
+    import UIKit
 #endif
 
 // MARK: - Copy To Pasteboard
@@ -30,7 +32,7 @@ struct ShowcaseCodeBlockCopyButton: View {
     let rawValue: String
 
     #if os(iOS)
-    private let impact = UISelectionFeedbackGenerator()
+        private let impact = UISelectionFeedbackGenerator()
     #endif
 
     @State
@@ -41,8 +43,8 @@ struct ShowcaseCodeBlockCopyButton: View {
     var body: some View {
         Button {
             #if os(iOS)
-            UIPasteboard.general.string = rawValue
-            impact.selectionChanged()
+                UIPasteboard.general.string = rawValue
+                impact.selectionChanged()
             #endif
             withAnimation(.bouncy) {
                 isShowingTooltip = true
@@ -60,7 +62,7 @@ struct ShowcaseCodeBlockCopyButton: View {
                             .padding(.leading, padding)
                             .transition(
                                 .move(edge: .trailing)
-                                .combined(with: .opacity)
+                                    .combined(with: .opacity)
                             )
                     }
                 }

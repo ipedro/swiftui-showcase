@@ -1,4 +1,6 @@
-// Copyright (c) 2023 Pedro Almeida
+// Topic+Embed.swift
+// Copyright (c) 2025 Pedro Almeida
+// Created by Pedro Almeida on 12.09.23.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,9 +23,9 @@
 import Foundation
 import WebKit
 
-extension Topic {
+public extension Topic {
     /// External content associated with a topic.
-    public struct Embed: Identifiable, Equatable {
+    struct Embed: Identifiable, Equatable {
         public static func == (lhs: Topic.Embed, rhs: Topic.Embed) -> Bool {
             lhs.id == rhs.id
         }

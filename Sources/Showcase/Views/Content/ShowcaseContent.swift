@@ -1,4 +1,6 @@
-// Copyright (c) 2023 Pedro Almeida
+// ShowcaseContent.swift
+// Copyright (c) 2025 Pedro Almeida
+// Created by Pedro Almeida on 16.09.23.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,9 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import SwiftUI
 import Engine
 import EngineMacros
+import SwiftUI
 
 public extension View {
     /// Sets the style for `ShowcaseDocument` within this view to a Showcase style with a
@@ -114,13 +116,13 @@ struct ShowcaseScrollTopButton: View {
     private var selection
 
     #if canImport(UIKit)
-    let impact = UISelectionFeedbackGenerator()
+        let impact = UISelectionFeedbackGenerator()
     #endif
 
     var body: some View {
-        Button{
+        Button {
             #if canImport(UIKit)
-            impact.selectionChanged()
+                impact.selectionChanged()
             #endif
             selection?.wrappedValue = ShowcaseScrollViewTopAnchor.ID
         } label: {

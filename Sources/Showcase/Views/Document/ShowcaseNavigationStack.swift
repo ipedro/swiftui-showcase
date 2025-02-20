@@ -1,4 +1,6 @@
-// Copyright (c) 2023 Pedro Almeida
+// ShowcaseNavigationStack.swift
+// Copyright (c) 2025 Pedro Almeida
+// Created by Pedro Almeida on 11.09.23.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -33,7 +35,7 @@ public struct ShowcaseNavigationStack: View {
     /// - Parameters:
     ///   - document: The document representing showcase chapters.
     public init(_ document: Document) {
-        self.data = document
+        data = document
     }
 
     public var body: some View {
@@ -75,7 +77,7 @@ struct ShowcaseList_Previews: PreviewProvider {
                 )
             )
         )
-        //.showcasePreviewStyle(.groupBoxPage)
+        // .showcasePreviewStyle(.groupBoxPage)
         .showcaseCodeBlockWordWrap(true)
     }
 }

@@ -1,4 +1,6 @@
-// Copyright (c) 2024 Pedro Almeida
+// VersionedScrollBounceBehavior.swift
+// Copyright (c) 2025 Pedro Almeida
+// Created by Pedro Almeida on 31.08.24.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,20 +20,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import SwiftUI
 import Engine
+import SwiftUI
 
 extension View {
     func scrollBounceBehavior(
-        _ behavior: iOS17_ScrollBounceBehaviorModifier.Behavior,
+        _ behavior: VersionedScrollBounceBehavior.Behavior,
         axes: Axis.Set = [.vertical]
     ) -> some View {
-        modifier(iOS17_ScrollBounceBehaviorModifier(behavior: behavior, axes: axes))
+        modifier(VersionedScrollBounceBehavior(behavior: behavior, axes: axes))
     }
 }
 
-struct iOS17_ScrollBounceBehaviorModifier: VersionedViewModifier {
-    enum Behavior : Sendable {
+struct VersionedScrollBounceBehavior: VersionedViewModifier {
+    enum Behavior: Sendable {
         /// The automatic behavior.
         case automatic
         /// The scrollable view always bounces.

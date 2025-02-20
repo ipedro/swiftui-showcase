@@ -1,4 +1,6 @@
-// Copyright (c) 2023 Pedro Almeida
+// Topic+Link.swift
+// Copyright (c) 2025 Pedro Almeida
+// Created by Pedro Almeida on 12.09.23.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,18 +22,18 @@
 
 import Foundation
 
-extension Topic {
+public extension Topic {
     /// Represents an external link associated with a showcase element.
-    public struct Link: Identifiable {
+    struct Link: Identifiable {
         /// The unique identifier for the external link (based on the URL).
         public let id = UUID()
-        
+
         /// The title of the external link.
         public var name: Topic.LinkName
 
         /// The URL of the external link.
         public var url: URL
-        
+
         /// Initializes an external link with the specified title and URL.
         /// - Parameters:
         ///   - name: The title of the external link.

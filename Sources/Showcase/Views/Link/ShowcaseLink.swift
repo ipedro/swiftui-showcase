@@ -1,4 +1,6 @@
-// Copyright (c) 2023 Pedro Almeida
+// ShowcaseLink.swift
+// Copyright (c) 2025 Pedro Almeida
+// Created by Pedro Almeida on 10.09.23.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,12 +20,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import SwiftUI
 import SafariServices
+import SwiftUI
 
 // MARK: - View Extension
 
-extension View {
+public extension View {
     /// Sets the style for `ShowcaseDocument` within this view to a Showcase style with a
     /// custom appearance and custom interaction behavior.
     ///
@@ -35,7 +37,7 @@ extension View {
     ///
     /// - Parameter style: The link style
     /// - Returns: A copy of the view with the link style applied.
-    public func showcaseLinkStyle<S: ButtonStyle>(_ style: S) -> some View {
+    func showcaseLinkStyle<S: ButtonStyle>(_ style: S) -> some View {
         environment(\.linkStyle, .init(style))
     }
 }
@@ -52,7 +54,7 @@ struct ShowcaseLink: View, Equatable {
     }
 
     /// The style environment variable for displaying external links.
-    @Environment(\.linkStyle) 
+    @Environment(\.linkStyle)
     private var style
     @Environment(\.controlSize) private var controlSize
 
@@ -60,24 +62,24 @@ struct ShowcaseLink: View, Equatable {
     let data: Topic.Link
 
     #if canImport(UIKit)
-    let impact = UISelectionFeedbackGenerator()
+        let impact = UISelectionFeedbackGenerator()
     #endif
 
     var body: some View {
         Button {
             #if canImport(UIKit)
-            impact.selectionChanged()
+                impact.selectionChanged()
 
-            // Create a Safari view controller to open the external link.
-            let safariController = SFSafariViewController(url: data.url)
-            safariController.preferredControlTintColor = .label
+                /// Create a Safari view controller to open the external link.
+                let safariController = SFSafariViewController(url: data.url)
+                safariController.preferredControlTintColor = .label
 
-            // Present the Safari view controller.
-            UIApplication
-                .shared
-                .firstKeyWindow?
-                .rootViewController?
-                .present(safariController, animated: true)
+                // Present the Safari view controller.
+                UIApplication
+                    .shared
+                    .firstKeyWindow?
+                    .rootViewController?
+                    .present(safariController, animated: true)
             #endif
         } label: {
             HStack {
@@ -88,10 +90,9 @@ struct ShowcaseLink: View, Equatable {
         .buttonStyle(style)
         .onAppear {
             #if canImport(UIKit)
-            impact.prepare()
+                impact.prepare()
             #endif
         }
-        
     }
 }
 
@@ -113,28 +114,30 @@ public struct ShowcaseLinkStyleDefault: ButtonStyle {
         .background {
             RoundedRectangle(
                 cornerRadius: 8,
-                style: .continuous)
+                style: .continuous
+            )
             .opacity(0.15)
         }
         .foregroundStyle(.tint)
         .scaleEffect(
             x: configuration.isPressed ? 0.97 : 1,
             y: configuration.isPressed ? 0.97 : 1,
-            anchor: .center)
+            anchor: .center
+        )
         .animation(.interactiveSpring(), value: configuration.isPressed)
     }
 }
 
 #if canImport(UIKit)
-import UIKit
+    import UIKit
 
-private extension UIApplication {
-    var firstKeyWindow: UIWindow? {
-        UIApplication.shared.connectedScenes
-            .compactMap { $0 as? UIWindowScene }
-            .filter { $0.activationState == .foregroundActive }
-            .first?
-            .keyWindow
+    private extension UIApplication {
+        var firstKeyWindow: UIWindow? {
+            UIApplication.shared.connectedScenes
+                .compactMap { $0 as? UIWindowScene }
+                .filter { $0.activationState == .foregroundActive }
+                .first?
+                .keyWindow
+        }
     }
-}
 #endif

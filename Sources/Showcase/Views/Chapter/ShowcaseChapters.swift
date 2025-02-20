@@ -1,4 +1,6 @@
-// Copyright (c) 2024 Pedro Almeida
+// ShowcaseChapters.swift
+// Copyright (c) 2025 Pedro Almeida
+// Created by Pedro Almeida on 12.09.23.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -41,7 +43,7 @@ struct ShowcaseChapters: View {
                 topics: chapter.topics,
                 title: chapter.title,
                 icon: chapter.icon,
-                description: chapter.description, 
+                description: chapter.description,
                 isExpanded: .init(get: {
                     isExpanded[chapter.id, default: true]
                 }, set: { newValue in
