@@ -67,13 +67,8 @@ public struct Topic: Identifiable {
     }
 
     var isEmpty: Bool {
-        codeBlocks.isEmpty &&
-            description.isEmpty &&
-            links.isEmpty &&
-            children?.isEmpty != false
+        codeBlocks.isEmpty && description.isEmpty && links.isEmpty && children?.isEmpty != false
     }
-
-    // FIXME: Consolidar inits num só. criar equivalente "EmptyView" para os tipos? EmptyCodeblock, EmptyPreview, ..?
 
     /// Initializes a showcase element with the specified parameters.
     /// - Parameters:
@@ -87,7 +82,7 @@ public struct Topic: Identifiable {
     ///   - previews: Optional previews.
     public init(
         _ title: String,
-        icon: (() -> Image)? = nil,
+        icon: @escaping @autoclosure () -> Image,
         description: @escaping @autoclosure () -> String = "",
         @LinkBuilder links: @escaping () -> [Link] = Array.init,
         @EmbedBuilder embeds: @escaping () -> [Embed] = Array.init,
@@ -98,7 +93,7 @@ public struct Topic: Identifiable {
         _codeBlocks = Lazy(wrappedValue: codeBlocks())
         _description = Lazy(wrappedValue: description())
         _embeds = Lazy(wrappedValue: embeds())
-        _icon = Lazy(wrappedValue: icon?())
+        _icon = Lazy(wrappedValue: icon())
         _links = Lazy(wrappedValue: links())
         _previews = Lazy(wrappedValue: previews())
         _title = Lazy(wrappedValue: title)
@@ -108,35 +103,29 @@ public struct Topic: Identifiable {
     /// Initializes a showcase element with the specified parameters.
     /// - Parameters:
     ///   - title: The title of the topic.
-    ///   - icon: A closure returning an optional icon of the preview when shown in a list.
     ///   - description: A closure returning the description of the topic (default is an empty string).
     ///   - links: A closure returning external links associated with the topic (default is an empty array).
     ///   - embeds: A closure returning external contents associated with the topic (default is an empty string).
     ///   - code: A closure returning code examples (default is an empty array).
     ///   - children: Optional child showcase topics (default is nil).
-    ///   - previewTitle: Optional previews title
     ///   - previews: Optional previews.
-    public init<P: View>(
+    public init(
         _ title: String,
-        icon: (() -> Image)? = nil,
         description: @escaping @autoclosure () -> String = "",
         @LinkBuilder links: @escaping () -> [Link] = Array.init,
         @EmbedBuilder embeds: @escaping () -> [Embed] = Array.init,
         @CodeBlockBuilder code codeBlocks: @escaping () -> [CodeBlock] = Array.init,
-        previewTitle: String? = nil,
-        @ViewBuilder previews: @escaping () -> P,
+        @PreviewBuilder previews: @escaping () -> [Preview] = Array.init,
         children: [Topic]? = nil
     ) {
-        self.init(
-            title,
-            icon: icon,
-            description: description(),
-            links: links,
-            embeds: embeds,
-            code: codeBlocks,
-            previews: { Preview(previewTitle, preview: previews) },
-            children: children
-        )
+        _codeBlocks = Lazy(wrappedValue: codeBlocks())
+        _description = Lazy(wrappedValue: description())
+        _embeds = Lazy(wrappedValue: embeds())
+        _icon = Lazy(wrappedValue: nil)
+        _links = Lazy(wrappedValue: links())
+        _previews = Lazy(wrappedValue: previews())
+        _title = Lazy(wrappedValue: title)
+        self.children = children
     }
 }
 

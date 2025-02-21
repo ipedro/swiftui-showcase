@@ -43,7 +43,10 @@ public extension View {
 
 @StyledView
 public struct ShowcaseIndexList: StyledView {
+    // swiftformat:disable all
+    // swiftlint:disable:next syntactic_sugar
     let data: Array<Topic>
+    // swiftformat:enable all
 
     public var body: some View {
         EquatableForEach(

@@ -49,14 +49,14 @@ public struct Chapter: Identifiable {
     ///   - topics: The showcase topics within the chapter.
     public init(
         _ title: String,
-        icon: (() -> Image)? = nil,
+        icon: @escaping @autoclosure () -> Image,
         description: @escaping @autoclosure () -> String = "",
         _ topics: [Topic] = []
     ) {
         _title = Lazy(wrappedValue: title)
         _description = Lazy(wrappedValue: description())
-        _icon = Lazy(wrappedValue: icon?())
-        self.topics = topics.sorted().map { $0.withIcon(icon?()) }
+        _icon = Lazy(wrappedValue: icon())
+        self.topics = topics.sortedWithIcon(icon())
     }
 
     /// Initializes a showcase chapter with the specified title and showcase topics.
@@ -67,16 +67,52 @@ public struct Chapter: Identifiable {
     ///   - topics: The showcase topics within the chapter.
     public init(
         _ title: String,
-        icon: (() -> Image)? = nil,
+        icon: @escaping @autoclosure () -> Image,
         description: @escaping @autoclosure () -> String = "",
         _ topics: Topic...
     ) {
-        self.init(
-            title,
-            icon: icon,
-            description: description(),
-            topics
-        )
+        _title = Lazy(wrappedValue: title)
+        _description = Lazy(wrappedValue: description())
+        _icon = Lazy(wrappedValue: icon())
+        self.topics = topics.sortedWithIcon(icon())
+    }
+
+    /// Initializes a showcase chapter with the specified title and showcase topics.
+    /// - Parameters:
+    ///   - title: The title of the chapter.
+    ///   - description: The optional description of the chapter.
+    ///   - topics: The showcase topics within the chapter.
+    public init(
+        _ title: String,
+        description: @escaping @autoclosure () -> String = "",
+        _ topics: [Topic] = []
+    ) {
+        _title = Lazy(wrappedValue: title)
+        _description = Lazy(wrappedValue: description())
+        _icon = Lazy(wrappedValue: nil)
+        self.topics = topics.sorted()
+    }
+
+    /// Initializes a showcase chapter with the specified title and showcase topics.
+    /// - Parameters:
+    ///   - title: The title of the chapter.
+    ///   - description: The optional description of the chapter.
+    ///   - topics: The showcase topics within the chapter.
+    public init(
+        _ title: String,
+        description: @escaping @autoclosure () -> String = "",
+        _ topics: Topic...
+    ) {
+        _title = Lazy(wrappedValue: title)
+        _description = Lazy(wrappedValue: description())
+        _icon = Lazy(wrappedValue: nil)
+        self.topics = topics.sorted()
+    }
+}
+
+private extension [Topic] {
+    func sortedWithIcon(_ icon: Image?) -> [Topic] {
+        sorted().map { $0.withIcon(icon) }
     }
 }
 
@@ -107,9 +143,10 @@ extension Chapter {
         return copy
     }
 
-    /// Searches for a query string within the chapter, including the chapter title, description, and all contained topics.
+    /// Searches for a query string within the chapter, including the chapter
+    /// title, description, and all contained topics.
     /// - Parameter query: The text string to search for.
-    /// - Returns: `true` if the query matches any part of the chapter or its topics, `false` otherwise.
+    /// - Returns: `true` if the query matches any part of the chapter or its topics.
     func search(query: String) -> Chapter? {
         var isMatch = false
 
@@ -117,7 +154,7 @@ extension Chapter {
         let query = query.lowercased()
 
         // Check the chapter title and description for a match.
-        if title.localizedCaseInsensitiveContains(query) || description.localizedCaseInsensitiveContains(query) == true {
+        if title.localizedCaseInsensitiveContains(query) || description.localizedCaseInsensitiveContains(query) {
             isMatch = true
         }
 

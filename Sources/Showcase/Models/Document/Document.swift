@@ -22,7 +22,8 @@
 
 import SwiftUI
 
-/// Represents a document split into chapters, with navigatable chapters that contain code examples, descriptions, and links.
+/// Represents a document split into chapters, with navigatable chapters that
+/// contain code examples, descriptions, and links.
 public struct Document: Identifiable {
     /// The unique identifier for the document.
     public let id = UUID()
@@ -39,7 +40,8 @@ public struct Document: Identifiable {
     /// The chapters within the document.
     public var chapters: [Chapter]
 
-    /// Initializes a showcase document with the specified title, chapters and an optional description.
+    /// Initializes a showcase document with the specified title, chapters and
+    /// an optional description.
     /// - Parameters:
     ///   - title: The title of the document.
     ///   - icon: An optional default icon for topics.
@@ -47,17 +49,18 @@ public struct Document: Identifiable {
     ///   - chapters: The chapters within the document.
     public init(
         _ title: String,
-        icon: (() -> Image)? = nil,
+        icon: @escaping @autoclosure () -> Image,
         description: @escaping @autoclosure () -> String = "",
         _ chapters: [Chapter] = []
     ) {
         _title = Lazy(wrappedValue: title)
         _description = Lazy(wrappedValue: description())
-        _icon = Lazy(wrappedValue: icon?())
-        self.chapters = chapters.map { $0.withIcon(icon?()) }
+        _icon = Lazy(wrappedValue: icon())
+        self.chapters = chapters.sortedWithIcon(icon())
     }
 
-    /// Initializes a showcase document with the specified title, chapters and an optional description.
+    /// Initializes a showcase document with the specified title, chapters and
+    /// an optional description.
     /// - Parameters:
     ///   - title: The title of the document.
     ///   - icon: An optional default icon for topics.
@@ -65,11 +68,54 @@ public struct Document: Identifiable {
     ///   - chapters: The chapters within the document.
     public init(
         _ title: String,
-        icon: (() -> Image)? = nil,
+        icon: @escaping @autoclosure () -> Image,
         description: @escaping @autoclosure () -> String = "",
         _ chapters: Chapter...
     ) {
-        self.init(title, icon: icon, description: description(), chapters)
+        _title = Lazy(wrappedValue: title)
+        _description = Lazy(wrappedValue: description())
+        _icon = Lazy(wrappedValue: icon())
+        self.chapters = chapters.sortedWithIcon(icon())
+    }
+
+    /// Initializes a showcase document with the specified title, chapters and
+    /// an optional description.
+    /// - Parameters:
+    ///   - title: The title of the document.
+    ///   - description: The optional description of the document.
+    ///   - chapters: The chapters within the document.
+    public init(
+        _ title: String,
+        description: @escaping @autoclosure () -> String = "",
+        _ chapters: [Chapter] = []
+    ) {
+        _title = Lazy(wrappedValue: title)
+        _description = Lazy(wrappedValue: description())
+        _icon = Lazy(wrappedValue: nil)
+        self.chapters = chapters.sorted()
+    }
+
+    /// Initializes a showcase document with the specified title, chapters and
+    /// an optional description.
+    /// - Parameters:
+    ///   - title: The title of the document.
+    ///   - description: The optional description of the document.
+    ///   - chapters: The chapters within the document.
+    public init(
+        _ title: String,
+        description: @escaping @autoclosure () -> String = "",
+        _ chapters: Chapter...
+    ) {
+        _title = Lazy(wrappedValue: title)
+        _description = Lazy(wrappedValue: description())
+        _icon = Lazy(wrappedValue: nil)
+        self.chapters = chapters.sorted()
+    }
+}
+
+private extension [Chapter] {
+    func sortedWithIcon(_ icon: Image?) -> [Chapter] {
+        sorted().map { $0.withIcon(icon) }
     }
 }
 
