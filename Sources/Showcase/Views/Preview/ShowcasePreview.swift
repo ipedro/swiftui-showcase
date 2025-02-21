@@ -44,7 +44,9 @@ public struct ShowcasePreview: StyledView, Equatable {
 
     var id: UUID
     var content: AnyView
+    // swiftlint:disable syntactic_sugar
     var label: Optional<Text>
+    // swiftlint:enable syntactic_sugar
 
     public var body: some View {
         content.accessibilityElement(children: .contain)

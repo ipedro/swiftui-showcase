@@ -49,6 +49,7 @@ public extension View {
 
 @StyledView
 public struct ShowcaseContent: StyledView {
+    // swiftlint:disable syntactic_sugar
     public let id: AnyHashable
     public let isEmpty: Bool
     public let title: Optional<Text>
@@ -57,6 +58,7 @@ public struct ShowcaseContent: StyledView {
     public let links: Optional<ShowcaseLinks>
     public let embeds: Optional<ShowcaseEmbeds>
     public let codeBlocks: Optional<ShowcaseCodeBlocks>
+    // swiftlint:enable syntactic_sugar
 
     @Environment(\.nodeDepth)
     private var depth

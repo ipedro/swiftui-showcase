@@ -69,7 +69,7 @@ public struct Topic: Identifiable {
     var isEmpty: Bool {
         codeBlocks.isEmpty && description.isEmpty && links.isEmpty && children?.isEmpty != false
     }
-    
+
     // MARK: - Icon
 
     /// Initializes a showcase element with the specified parameters.
@@ -101,9 +101,9 @@ public struct Topic: Identifiable {
         _title = Lazy(wrappedValue: title)
         self.children = children
     }
-    
+
     // MARK: - Icon & View Builder
-    
+
     /// Initializes a showcase element with the specified parameters.
     /// - Parameters:
     ///   - title: The title of the topic.
@@ -133,7 +133,7 @@ public struct Topic: Identifiable {
         _title = Lazy(wrappedValue: title)
         self.children = children
     }
-    
+
     // MARK: - No Icon
 
     /// Initializes a showcase element with the specified parameters.
@@ -163,9 +163,9 @@ public struct Topic: Identifiable {
         _title = Lazy(wrappedValue: title)
         self.children = children
     }
-    
+
     // MARK: - View Builder
-    
+
     /// Initializes a showcase element with the specified parameters.
     /// - Parameters:
     ///   - title: The title of the topic.

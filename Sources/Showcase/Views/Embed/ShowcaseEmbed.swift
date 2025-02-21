@@ -21,7 +21,11 @@
 // SOFTWARE.
 
 import SwiftUI
-import WebKit
+#if swift(>=5.10)
+    @preconcurrency import WebKit
+#else
+    import WebKit
+#endif
 
 public struct ShowcaseEmbeds: View {
     var content: EquatableForEach<[Topic.Embed], Topic.Embed.ID, ShowcaseEmbed>

@@ -45,10 +45,15 @@ public extension View {
 
 @StyledView
 public struct ShowcaseLayout: StyledView {
+    // swiftlint:disable syntactic_sugar
+
     /// The children views within the showcase.
     public let children: Optional<ShowcaseTopics>
+
     /// The index view for navigating within the showcase.
     public let indexList: Optional<ShowcaseIndexList>
+    // swiftlint:enable syntactic_sugar
+
     /// The content view of the showcase.
     public let configuration: ShowcaseContentConfiguration
 

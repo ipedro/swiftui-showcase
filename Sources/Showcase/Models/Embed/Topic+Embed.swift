@@ -24,16 +24,17 @@ import Foundation
 import WebKit
 
 public extension Topic {
+    typealias EmbedNavigationHandler = (_ action: WKNavigationAction) -> WKNavigationActionPolicy
+
     /// External content associated with a topic.
     struct Embed: Identifiable, Equatable {
         public static func == (lhs: Topic.Embed, rhs: Topic.Embed) -> Bool {
             lhs.id == rhs.id
         }
 
-        public typealias NavigationHandler = (_ action: WKNavigationAction) -> WKNavigationActionPolicy
         public let id = UUID()
         public var url: URL
-        public var navigationHandler: NavigationHandler
+        public var navigationHandler: EmbedNavigationHandler
         public var isInteractionEnabled: Bool
         /// Minimum height of the preview.
         public var minHeight: CGFloat?
@@ -42,7 +43,7 @@ public extension Topic {
             _ url: URL?,
             minHeight: CGFloat? = nil,
             isInteractionEnabled: Bool = true,
-            navigationHandler: @escaping NavigationHandler = { _ in .allow }
+            navigationHandler: @escaping EmbedNavigationHandler = { _ in .allow }
         ) {
             guard let url = url else { return nil }
             self.url = url
