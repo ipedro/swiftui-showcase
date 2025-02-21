@@ -39,11 +39,6 @@ public extension Topic {
         public static func buildBlock(_ content: AnyView) -> [Preview] {
             [Preview(preview: content)]
         }
-        
-        public static func buildBlock(@ViewBuilder _ content: () -> some View) -> [Preview] {
-            let content = content()
-            return [Preview(preview: content)]
-        }
 
         public static func buildBlock<Content>(_ content: Content) -> [Preview] where Content: View {
             [Preview { content }]
