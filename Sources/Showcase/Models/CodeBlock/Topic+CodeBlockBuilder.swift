@@ -29,9 +29,13 @@ public extension Topic {
         public static func buildBlock() -> [CodeBlock] { [] }
 
         /// Builds an array of code blocks from variadic components.
-        public static func buildBlock(_ components: CodeBlock...) -> [CodeBlock] { components }
+        public static func buildBlock(_ components: CodeBlock...) -> [CodeBlock] {
+            components
+        }
 
         /// Builds an array of code blocks from variadic string components.
-        public static func buildBlock(_ components: String...) -> [CodeBlock] { components.map { .init(stringLiteral: $0) } }
+        public static func buildBlock(_ components: String...) -> [CodeBlock] {
+            components.map { .init(stringLiteral: $0) }
+        }
     }
 }
