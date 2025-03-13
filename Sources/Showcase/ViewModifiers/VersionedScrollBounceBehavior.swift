@@ -42,7 +42,7 @@ struct VersionedScrollBounceBehavior: VersionedViewModifier {
         /// scrolling.
         case basedOnSize
 
-        @available(iOS 16.4, macOS 13.3, *)
+        @available(iOS 16.4, macOS 13.3, tvOS 16.4, watchOS 9.4, *)
         var rawValue: ScrollBounceBehavior {
             switch self {
             case .automatic: .automatic

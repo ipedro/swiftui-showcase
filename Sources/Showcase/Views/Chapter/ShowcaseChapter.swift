@@ -22,32 +22,34 @@
 
 import Foundation
 import SwiftUI
+import Engine
 
-struct ShowcaseChapter: View {
+struct ShowcaseChapter: VersionedView {
     var topics: [Topic]
     var title: String
     var icon: Image?
     var description: String
     @Binding var isExpanded: Bool
 
-    var body: some View {
-        if #available(iOS 17.0, macOS 14.0, *) {
-            Section(
-                isExpanded: $isExpanded,
-                content: content,
-                header: header
-            )
-            .safeAreaInset(edge: .bottom) {
-                footer().foregroundStyle(.secondary).font(.footnote)
-            }
-        } else {
-            // Fallback on earlier versions
-            Section(
-                content: content,
-                header: header,
-                footer: footer
-            )
+    @available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, visionOS 1.0, *)
+    var v5Body: some View {
+        Section(
+            isExpanded: $isExpanded,
+            content: content,
+            header: header
+        )
+        .safeAreaInset(edge: .bottom) {
+            footer().foregroundStyle(.secondary).font(.footnote)
         }
+    }
+    
+    var v1Body: some View {
+        Section(
+            content: content,
+            header: header,
+            footer: footer
+        )
+        
     }
 
     private func content() -> some View {
@@ -65,9 +67,10 @@ struct ShowcaseChapter: View {
         Text(title)
     }
 
-    @ViewBuilder
-    private func footer() -> some View {
-        if !description.isEmpty {
+    private func footer() -> Text? {
+        if description.isEmpty {
+            nil
+        } else {
             Text(description)
         }
     }

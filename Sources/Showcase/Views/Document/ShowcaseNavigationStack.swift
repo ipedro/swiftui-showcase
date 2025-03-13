@@ -23,7 +23,7 @@
 import SwiftUI
 
 /// A view that displays a list of showcases organized into chapters.
-@available(iOS 16.0, *)
+@available(iOS 16.0, macOS 13.0, tvOS 16.0, watchOS 9.0, *)
 public struct ShowcaseNavigationStack: View {
     /// The data representing showcase chapters.
     private let data: Document
