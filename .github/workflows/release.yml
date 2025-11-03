@@ -1,0 +1,67 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - '*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history for changelog generation
+      
+      - name: Get previous tag
+        id: previoustag
+        run: |
+          # Get the previous tag (second in the list)
+          PREVIOUS_TAG=$(git tag --sort=-v:refname | sed -n '2p')
+          echo "tag=$PREVIOUS_TAG" >> $GITHUB_OUTPUT
+          echo "Previous tag: $PREVIOUS_TAG"
+      
+      - name: Generate changelog
+        id: changelog
+        run: |
+          PREVIOUS_TAG="${{ steps.previoustag.outputs.tag }}"
+          CURRENT_TAG="${GITHUB_REF#refs/tags/}"
+          
+          echo "Generating changelog from $PREVIOUS_TAG to $CURRENT_TAG"
+          
+          # Generate changelog
+          CHANGELOG=$(git log $PREVIOUS_TAG..$CURRENT_TAG --pretty=format:"- %s (%h)" --no-merges)
+          
+          # Get commit count
+          COMMIT_COUNT=$(git rev-list --count $PREVIOUS_TAG..$CURRENT_TAG)
+          
+          # Create release body
+          cat << EOF > release_notes.md
+          ## What's Changed
+          
+          $CHANGELOG
+          
+          ---
+          
+          **Full Changelog**: https://github.com/${{ github.repository }}/compare/$PREVIOUS_TAG...$CURRENT_TAG
+          
+          **$COMMIT_COUNT commits** in this release
+          EOF
+          
+          # Output for use in next step
+          echo "commit_count=$COMMIT_COUNT" >> $GITHUB_OUTPUT
+      
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          body_path: release_notes.md
+          generate_release_notes: true  # GitHub's auto-generated notes
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
