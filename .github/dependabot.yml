@@ -1,0 +1,48 @@
+version: 2
+
+updates:
+  # GitHub Actions updates
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    labels:
+      - "dependencies"
+      - "github-actions"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "ipedro"
+    
+  # Swift Package Manager updates
+  - package-ecosystem: "swift"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    labels:
+      - "dependencies"
+      - "swift"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "ipedro"
+    # Group updates by dependency type
+    groups:
+      testing-dependencies:
+        patterns:
+          - "*test*"
+          - "*mock*"
+      build-tools:
+        patterns:
+          - "SwiftLint*"
+          - "SwiftFormat*"
+      production-dependencies:
+        patterns:
+          - "Splash"
+          - "Engine*"

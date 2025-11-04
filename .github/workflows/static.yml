@@ -1,10 +1,14 @@
-# Simple workflow for deploying static content to GitHub Pages
-name: Deploy static content to Pages
+# Deploy DocC documentation to GitHub Pages
+name: Deploy Documentation
 
 on:
   # Runs on pushes targeting the default branch
   push:
     branches: ["main"]
+    paths:
+      - 'Sources/**'
+      - 'Package.swift'
+      - '.github/workflows/static.yml'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -29,9 +33,24 @@ jobs:
     runs-on: macos-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+      
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_15.4.app
+      
+      - name: Cache SPM dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            .build
+            ~/Library/Caches/org.swift.swiftpm
+          key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
+          restore-keys: |
+            ${{ runner.os }}-spm-
+      
       - name: Setup Pages
-        uses: actions/configure-pages@v2
+        uses: actions/configure-pages@v5
+      
       - name: Build DocC
         run: |
           xcodebuild docbuild -scheme Showcase \
@@ -39,14 +58,15 @@ jobs:
             -destination 'generic/platform=iOS';
           $(xcrun --find docc) process-archive \
             transform-for-static-hosting /tmp/docbuild/Build/Products/Debug-iphoneos/Showcase.doccarchive \
-            --hosting-base-path Showcase \
+            --hosting-base-path swiftui-showcase \
             --output-path docs;
           echo "<script>window.location.href += \"/documentation/showcase\"</script>" > docs/index.html;
+      
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
+        uses: actions/upload-pages-artifact@v3
         with:
-          # Upload docs folder
           path: 'docs'
+      
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v1
+        uses: actions/deploy-pages@v4
