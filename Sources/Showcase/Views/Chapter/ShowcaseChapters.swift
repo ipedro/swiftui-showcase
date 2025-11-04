@@ -31,10 +31,10 @@ struct ShowcaseChapters: View {
     private var isExpanded = [Chapter.ID: Bool]()
 
     private var chapters: [Chapter] {
-        let searchQuery = searchQuery.trimmingCharacters(in: .whitespacesAndNewlines)
-        if searchQuery.isEmpty { return data }
-        let result = data.search(searchQuery)
-        return result
+        let trimmedQuery = searchQuery.trimmingCharacters(in: .whitespacesAndNewlines)
+        // Early exit for empty search
+        guard !trimmedQuery.isEmpty else { return data }
+        return data.search(trimmedQuery)
     }
 
     var body: some View {

@@ -119,6 +119,12 @@ private extension [Chapter] {
     }
 }
 
+extension Document: Hashable {
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+}
+
 extension Document: Comparable {
     public static func < (lhs: Self, rhs: Self) -> Bool {
         lhs.title.localizedStandardCompare(rhs.title) != .orderedDescending

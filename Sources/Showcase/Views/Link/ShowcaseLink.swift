@@ -75,11 +75,12 @@ struct ShowcaseLink: View, Equatable {
                 safariController.preferredControlTintColor = .label
 
                 // Present the Safari view controller.
-                UIApplication
-                    .shared
-                    .firstKeyWindow?
-                    .rootViewController?
-                    .present(safariController, animated: true)
+                if let rootViewController = UIApplication.shared.firstKeyWindow?.rootViewController {
+                    rootViewController.present(safariController, animated: true)
+                } else {
+                    // Fallback: Open in Safari if no view controller available
+                    UIApplication.shared.open(data.url)
+                }
             #endif
         } label: {
             HStack {

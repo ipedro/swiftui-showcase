@@ -40,10 +40,16 @@ public final class Lazy<Value> {
     /// The closure that computes the value of the property. This closure is executed only once,
     /// the first time the property is accessed.
     private let closure: () -> Value
+    
+    /// Lock to ensure thread-safe access to the cached value.
+    private let lock = NSLock()
 
     /// The property that clients access. It computes the value lazily if it hasn't been computed yet,
     /// otherwise, it returns the cached value.
     public var wrappedValue: Value {
+        lock.lock()
+        defer { lock.unlock() }
+        
         if let cachedValue = cachedValue {
             return cachedValue
         } else {

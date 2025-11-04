@@ -39,6 +39,9 @@ struct ShowcaseCodeBlockContent: View {
 
     @Environment(\.colorScheme)
     private var colorScheme
+    
+    @State
+    private var attributedCode: AttributedString?
 
     private var theme: ShowcaseCodeBlockTheme {
         _theme ?? Self.theme(for: colorScheme)
@@ -53,7 +56,7 @@ struct ShowcaseCodeBlockContent: View {
 
     private var content: some View {
         ScrollView(wordWrap ? .vertical : .horizontal) {
-            Text(makeAttributed(sourceCode)).textSelection(.enabled)
+            Text(attributedCode ?? AttributedString(sourceCode)).textSelection(.enabled)
                 .frame(
                     maxWidth: .infinity,
                     alignment: .leading
@@ -82,6 +85,9 @@ struct ShowcaseCodeBlockContent: View {
             .backgroundStyle(Color(theme.backgroundColor))
 
             copyButton.padding(5)
+        }
+        .task(id: "\(sourceCode)-\(colorScheme)-\(typeSize)") {
+            attributedCode = makeAttributed(sourceCode)
         }
     }
 

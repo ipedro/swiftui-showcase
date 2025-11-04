@@ -75,7 +75,7 @@ struct ShowcaseEmbed: View, Equatable {
             Coordinator(self, handler: handler)
         }
 
-        class Coordinator: NSObject, WKNavigationDelegate {
+        final class Coordinator: NSObject, WKNavigationDelegate {
             var parent: WebView
             var handler: (WKNavigationAction) -> WKNavigationActionPolicy
 
@@ -90,10 +90,11 @@ struct ShowcaseEmbed: View, Equatable {
 
             /// Add any WKNavigationDelegate methods if needed
             func webView(_ webView: WKWebView, didFinish _: WKNavigation!) {
-                webView.evaluateJavaScript("document.documentElement.scrollHeight") { height, _ in
-                    guard let height = height as? CGFloat else { return }
+                webView.evaluateJavaScript("document.documentElement.scrollHeight") { [weak self] height, _ in
+                    guard let self = self, let height = height as? CGFloat else { return }
 
-                    DispatchQueue.main.async {
+                    Task { @MainActor [weak self] in
+                        guard let self = self else { return }
                         webView.scrollView.contentSize = CGSize(width: webView.bounds.width, height: height)
                         webView.setNeedsLayout()
                         self.parent.height = height

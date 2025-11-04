@@ -24,7 +24,7 @@ import SwiftUI
 
 public extension Topic {
     /// A view associated with a showcase element.
-    struct Preview: Identifiable {
+    struct Preview: Identifiable, Hashable, Equatable {
         /// The unique identifier for the preview.
         public let id = UUID()
 
@@ -35,6 +35,14 @@ public extension Topic {
         public var title: String?
 
         public var codeBlock: CodeBlock?
+        
+        public static func == (lhs: Preview, rhs: Preview) -> Bool {
+            lhs.id == rhs.id
+        }
+        
+        public func hash(into hasher: inout Hasher) {
+            hasher.combine(id)
+        }
 
         /// Initializes a preview with a title and raw text.
         /// - Parameters:

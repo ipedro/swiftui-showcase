@@ -66,7 +66,11 @@ struct ShowcaseIndexItem: View, Equatable {
     private var selection
 
     #if canImport(UIKit)
-        let impact = UISelectionFeedbackGenerator()
+        @State private var impact: UISelectionFeedbackGenerator = {
+            let generator = UISelectionFeedbackGenerator()
+            generator.prepare()
+            return generator
+        }()
     #endif
 
     let data: Topic
@@ -74,6 +78,7 @@ struct ShowcaseIndexItem: View, Equatable {
     var body: some View {
         Button {
             #if canImport(UIKit)
+                impact.prepare() // Prepare for next interaction
                 impact.selectionChanged()
             #endif
             selection?.wrappedValue = data.id

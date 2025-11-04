@@ -24,7 +24,7 @@ import Foundation
 
 public extension Topic {
     /// Represents an external link associated with a showcase element.
-    struct Link: Identifiable {
+    struct Link: Identifiable, Hashable, Equatable {
         /// The unique identifier for the external link (based on the URL).
         public let id = UUID()
 
@@ -33,6 +33,14 @@ public extension Topic {
 
         /// The URL of the external link.
         public var url: URL
+        
+        public static func == (lhs: Link, rhs: Link) -> Bool {
+            lhs.id == rhs.id
+        }
+        
+        public func hash(into hasher: inout Hasher) {
+            hasher.combine(id)
+        }
 
         /// Initializes an external link with the specified title and URL.
         /// - Parameters:

@@ -24,7 +24,7 @@ import Foundation
 
 public extension Topic {
     /// Represents a code block associated with a showcase element.
-    struct CodeBlock: Identifiable, RawRepresentable, ExpressibleByStringLiteral {
+    struct CodeBlock: Identifiable, RawRepresentable, ExpressibleByStringLiteral, Hashable, Equatable {
         /// The unique identifier for the code block.
         public let id = UUID()
 
@@ -33,6 +33,14 @@ public extension Topic {
 
         /// Optional title for the code block.
         public var title: String?
+        
+        public static func == (lhs: CodeBlock, rhs: CodeBlock) -> Bool {
+            lhs.id == rhs.id
+        }
+        
+        public func hash(into hasher: inout Hasher) {
+            hasher.combine(id)
+        }
 
         /// Initializes a code block from raw text.
         /// - Parameter rawValue: The raw string value of the code block.

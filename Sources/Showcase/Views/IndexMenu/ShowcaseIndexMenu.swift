@@ -73,12 +73,17 @@ public struct ShowcaseIndexMenuLabel: View {
     let data: [Topic]
 
     #if canImport(UIKit)
-        let impact = UISelectionFeedbackGenerator()
+        @State private var impact: UISelectionFeedbackGenerator = {
+            let generator = UISelectionFeedbackGenerator()
+            generator.prepare()
+            return generator
+        }()
     #endif
 
     public var body: some View {
         Button(title) {
             #if canImport(UIKit)
+                impact.prepare() // Prepare for next interaction
                 impact.selectionChanged()
             #endif
             selection?.wrappedValue = ShowcaseScrollViewTopAnchor.ID
@@ -89,6 +94,7 @@ public struct ShowcaseIndexMenuLabel: View {
         ForEach(data) { topic in
             Button {
                 #if canImport(UIKit)
+                    impact.prepare() // Prepare for next interaction
                     impact.selectionChanged()
                 #endif
                 selection?.wrappedValue = topic.id

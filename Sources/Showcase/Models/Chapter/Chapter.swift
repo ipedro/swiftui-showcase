@@ -39,8 +39,6 @@ public struct Chapter: Identifiable {
     /// The showcase topics within the chapter.
     public var topics: [Topic]
 
-    public var children: [Topic]? { topics }
-
     /// Initializes a showcase chapter with the specified title and showcase topics.
     /// - Parameters:
     ///   - title: The title of the chapter.
@@ -116,6 +114,12 @@ private extension [Topic] {
     }
 }
 
+extension Chapter: Hashable {
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+}
+
 extension Chapter: Comparable {
     public static func < (lhs: Self, rhs: Self) -> Bool {
         lhs.title.localizedStandardCompare(rhs.title) != .orderedDescending
@@ -136,10 +140,17 @@ extension Collection where Element == Chapter {
 
 extension Chapter {
     func withIcon(_ proposal: Image?) -> Chapter {
+        // Early exit if no icon proposal or already has icon
+        guard let proposal = proposal, self.icon == nil else { return self }
+        
         var copy = self
-        let icon = copy.icon ?? proposal
-        copy._icon = Lazy(wrappedValue: icon)
-        copy.topics = copy.topics.map { $0.withIcon(icon) }
+        copy._icon = Lazy(wrappedValue: proposal)
+        
+        // Only process topics if they exist
+        if !copy.topics.isEmpty {
+            copy.topics = copy.topics.map { $0.withIcon(proposal) }
+        }
+        
         return copy
     }
 
@@ -148,15 +159,9 @@ extension Chapter {
     /// - Parameter query: The text string to search for.
     /// - Returns: `true` if the query matches any part of the chapter or its topics.
     func search(query: String) -> Chapter? {
-        var isMatch = false
-
-        // Convert query to lowercase for case-insensitive comparison.
-        let query = query.lowercased()
-
-        // Check the chapter title and description for a match.
-        if title.localizedCaseInsensitiveContains(query) || description.localizedCaseInsensitiveContains(query) {
-            isMatch = true
-        }
+        // Use short-circuit evaluation for early exit
+        let isMatch = title.localizedCaseInsensitiveContains(query) 
+            || description.localizedCaseInsensitiveContains(query)
 
         // Check all topics within the chapter.
         var copy = self
