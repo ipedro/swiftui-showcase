@@ -54,7 +54,26 @@ Views follow a strict naming convention:
 
 ## Development Workflow
 
-### Building & Testing
+### AI-Assisted Development (MCP Integration)
+This project includes `.vscode/mcp.json` configuration for the **xcodebuildmcp2** Model Context Protocol server. AI assistants with MCP support can use this to:
+
+- **Build the package**: Use `mcp_xcodebuildmcp2_swift_package_build` instead of `swift build`
+- **Run tests**: Use `mcp_xcodebuildmcp2_swift_package_test` instead of `swift test`
+- **Discover projects**: Use `mcp_xcodebuildmcp2_discover_projs` to find Xcode projects/workspaces
+- **List schemes**: Use `mcp_xcodebuildmcp2_list_schemes` to enumerate available build schemes
+- **Access build settings**: Use `mcp_xcodebuildmcp2_show_build_settings` for configuration inspection
+
+Benefits:
+- No need to manually run terminal commands
+- Automated test execution with detailed results
+- Direct integration with Xcode tooling
+- AI can verify changes by running tests programmatically
+
+When an AI assistant is available with MCP support, prefer using these tools over terminal commands for Swift Package operations.
+
+**Important**: Only push commits when explicitly requested. Use `git add` and `git commit` freely, but wait for user confirmation before running `git push`.
+
+### Building & Testing (Traditional)
 ```bash
 # Build the package
 swift build
