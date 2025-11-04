@@ -91,7 +91,7 @@ public struct ShowcaseIndexMenuLabel: View {
 
         Divider()
 
-        ForEach(data) { topic in
+        ForEach(data, id: \.id) { topic in
             Button {
                 #if canImport(UIKit)
                     impact.prepare() // Prepare for next interaction

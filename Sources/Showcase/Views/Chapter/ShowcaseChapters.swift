@@ -38,7 +38,7 @@ struct ShowcaseChapters: View {
     }
 
     var body: some View {
-        ForEach(chapters) { chapter in
+        ForEach(chapters, id: \.id) { chapter in
             ShowcaseChapter(
                 topics: chapter.topics,
                 title: chapter.title,

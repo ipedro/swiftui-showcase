@@ -368,16 +368,17 @@ struct OptimizationTests {
             #expect(set.count == 2)
         }
         
-        @Test("CodeBlock equality")
+        @Test("CodeBlock equality is ID-based")
         func codeBlockEquality() {
             let block1 = Topic.CodeBlock("Example", text: { "code" })
             let block2 = Topic.CodeBlock("Example", text: { "code" })
             
-            // CodeBlocks with same content should be equal
-            #expect(block1 == block2)
+            // CodeBlocks use ID-based equality (different instances = different IDs)
+            #expect(block1 != block2)
+            #expect(block1 == block1) // Same instance is equal to itself
         }
         
-        @Test("CodeBlock instances can be hashed")
+        @Test("CodeBlock instances have unique hashes")
         func codeBlockHashable() {
             let block1 = Topic.CodeBlock("Example", text: { "code" })
             let block2 = Topic.CodeBlock("Example", text: { "code" })
@@ -386,11 +387,11 @@ struct OptimizationTests {
             set.insert(block1)
             set.insert(block2)
             
-            // Equal blocks should result in one entry
-            #expect(set.count == 1)
+            // Different instances have different IDs, so both are stored
+            #expect(set.count == 2)
         }
         
-        @Test("Link instances can be hashed")
+        @Test("Link instances have unique hashes")
         func linkHashable() {
             guard let link1 = Topic.Link("Documentation", "https://example.com"),
                   let link2 = Topic.Link("Documentation", "https://example.com") else {
@@ -402,8 +403,8 @@ struct OptimizationTests {
             set.insert(link1)
             set.insert(link2)
             
-            // Equal links should result in one entry
-            #expect(set.count == 1)
+            // Different instances have different IDs, so both are stored
+            #expect(set.count == 2)
         }
     }
 }

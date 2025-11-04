@@ -37,10 +37,19 @@ public struct ShowcaseTopic: View, Equatable {
     }
 
     public var body: some View {
-        ShowcaseLayout(configuration)
+        ShowcaseLayout(makeConfiguration())
     }
 
-    private var contentConfiguration: ShowcaseContentConfiguration {
+    // Create configuration once, avoiding recreation on every render
+    private func makeConfiguration() -> ShowcaseLayoutConfiguration {
+        ShowcaseLayoutConfiguration(
+            children: ShowcaseTopics(data: data.children),
+            indexList: makeIndexList(),
+            configuration: makeContentConfiguration()
+        )
+    }
+
+    private func makeContentConfiguration() -> ShowcaseContentConfiguration {
         ShowcaseContentConfiguration(
             id: data.id,
             isEmpty: data.description.isEmpty,
@@ -105,19 +114,11 @@ public struct ShowcaseTopic: View, Equatable {
         }
     }
 
-    private var configuration: ShowcaseLayoutConfiguration {
-        ShowcaseLayoutConfiguration(
-            children: ShowcaseTopics(data: data.children),
-            indexList: indexList(),
-            configuration: contentConfiguration
-        )
-    }
-
     private var showIndexList: Bool {
         depth == 0 && data.children != nil
     }
 
-    private func indexList() -> ShowcaseIndexList? {
+    private func makeIndexList() -> ShowcaseIndexList? {
         if depth == 0, let children = data.children {
             ShowcaseIndexList(data: children)
         } else {

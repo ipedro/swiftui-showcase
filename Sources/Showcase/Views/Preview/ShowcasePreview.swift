@@ -38,11 +38,13 @@ public struct ShowcasePreview: StyledView, Equatable {
 
     init(data: Topic.Preview) {
         id = data.id
+        // Create AnyView once during init - identity is stable via Equatable/id
         content = AnyView(data.content())
         label = Text(optional: data.title)
     }
 
     var id: UUID
+    // AnyView is fine here because Equatable checks id, preventing unnecessary re-init
     var content: AnyView
     // swiftlint:disable syntactic_sugar
     var label: Optional<Text>

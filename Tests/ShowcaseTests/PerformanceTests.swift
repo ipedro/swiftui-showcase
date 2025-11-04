@@ -111,18 +111,23 @@ struct PerformanceTests {
         let averageTime = totalTime / Double(iterations)
         let passed = averageTime <= targetSeconds
         
-        Issue.record(
-            Comment(rawValue: """
-                Performance: \(String(format: "%.6f", averageTime))s (target: \(String(format: "%.6f", targetSeconds))s) \
-                [\(passed ? "✓" : "✗")]
-                """),
-            sourceLocation: SourceLocation(
-                fileID: file.description,
-                filePath: file.description,
-                line: line,
-                column: 0
+        // Only record as issue if performance target not met
+        if !passed {
+            Issue.record(
+                Comment(rawValue: """
+                    Performance FAILED: \(String(format: "%.6f", averageTime))s (target: \(String(format: "%.6f", targetSeconds))s)
+                    """),
+                sourceLocation: SourceLocation(
+                    fileID: file.description,
+                    filePath: file.description,
+                    line: line,
+                    column: 0
+                )
             )
-        )
+        }
+        
+        // Print performance metrics for passing tests too (visible in verbose output)
+        print("⏱️  Performance: \(String(format: "%.6f", averageTime))s (target: \(String(format: "%.6f", targetSeconds))s) [\(passed ? "✓" : "✗")]")
         
         return result
     }
