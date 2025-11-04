@@ -1,0 +1,13 @@
+{
+  "servers": {
+    "xcodebuildmcp": {
+      "command": "npx",
+      "args": ["-y", "xcodebuildmcp@latest"],
+      "env": {
+        "WORKSPACE_ROOT": "${workspaceFolder}",
+        "PROJECT_PATH": "${workspaceFolder}/Package.swift",
+        "SCHEME": "Showcase"
+      }
+    }
+  }
+}
