@@ -23,8 +23,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       
-      - name: Select Xcode
-        run: sudo xcode-select -s /Applications/Xcode_15.4.app
+      - name: Set up Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '15.4'
+      
+      - name: Cache SwiftPM
+        uses: actions/cache@v4
+        with:
+          path: |
+            .build
+            ~/Library/Developer/Xcode/DerivedData
+          key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
+          restore-keys: |
+            ${{ runner.os }}-spm-
       
       - name: Run Tests
         run: swift test --parallel
@@ -60,7 +72,11 @@ jobs:
           # Get the previous tag (second in the list)
           PREVIOUS_TAG=$(git tag --sort=-v:refname | sed -n '2p')
           echo "tag=$PREVIOUS_TAG" >> $GITHUB_OUTPUT
-          echo "Previous tag: $PREVIOUS_TAG"
+          if [ -z "$PREVIOUS_TAG" ]; then
+            echo "No previous tag found - this is the first release"
+          else
+            echo "Previous tag: $PREVIOUS_TAG"
+          fi
       
       - name: Generate changelog
         id: changelog
@@ -71,13 +87,27 @@ jobs:
           echo "Generating changelog from $PREVIOUS_TAG to $CURRENT_TAG"
           
           # Generate changelog
-          CHANGELOG=$(git log $PREVIOUS_TAG..$CURRENT_TAG --pretty=format:"- %s (%h)" --no-merges)
-          
-          # Get commit count
-          COMMIT_COUNT=$(git rev-list --count $PREVIOUS_TAG..$CURRENT_TAG)
+          if [ -z "$PREVIOUS_TAG" ]; then
+            CHANGELOG="Initial release"
+            COMMIT_COUNT=$(git rev-list --count HEAD)
+          else
+            CHANGELOG=$(git log $PREVIOUS_TAG..$CURRENT_TAG --pretty=format:"- %s (%h)" --no-merges)
+            COMMIT_COUNT=$(git rev-list --count $PREVIOUS_TAG..$CURRENT_TAG)
+          fi
           
           # Create release body
-          cat << EOF > release_notes.md
+          if [ -z "$PREVIOUS_TAG" ]; then
+            cat << EOF > release_notes.md
+          ## What's Changed
+          
+          $CHANGELOG
+          
+          ---
+          
+          **$COMMIT_COUNT commits** in this release
+          EOF
+          else
+            cat << EOF > release_notes.md
           ## What's Changed
           
           $CHANGELOG
@@ -88,6 +118,7 @@ jobs:
           
           **$COMMIT_COUNT commits** in this release
           EOF
+          fi
           
           # Output for use in next step
           echo "commit_count=$COMMIT_COUNT" >> $GITHUB_OUTPUT
