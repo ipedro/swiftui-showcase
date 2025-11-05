@@ -55,7 +55,7 @@ Views follow a strict naming convention:
 ## Development Workflow
 
 ### AI-Assisted Development (MCP Integration)
-This project includes `.vscode/mcp.json` configuration for the **xcodebuildmcp2** Model Context Protocol server. AI assistants with MCP support can use this to:
+This project includes `.vscode/mcp.json` configuration for MCP servers, including the **xcodebuildmcp2** Model Context Protocol server. AI assistants with MCP support can use this to (and more):
 
 - **Build the package**: Use `mcp_xcodebuildmcp2_swift_package_build` instead of `swift build`
 - **Run tests**: Use `mcp_xcodebuildmcp2_swift_package_test` instead of `swift test`
