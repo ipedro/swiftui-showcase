@@ -80,7 +80,6 @@ jobs:
             xcodebuild build \
               -scheme Showcase \
               -destination 'platform=iOS Simulator,name=iPhone 15 Pro,OS=17.5' \
-              -enableCodeCoverage YES \
               CODE_SIGN_IDENTITY="" \
               CODE_SIGNING_REQUIRED=NO
           else
@@ -90,7 +89,7 @@ jobs:
           fi
       
       - name: Run Tests
-        run: swift test --parallel
+        run: swift test --parallel --enable-code-coverage
       
       - name: Performance Tests Summary
         if: success()
