@@ -35,8 +35,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
       
-      - name: Select Xcode
-        run: sudo xcode-select -s /Applications/Xcode_15.4.app
+      - name: Set up Xcode
+        uses: apple-actions/setup-xcode@v2
+        with:
+          xcode-version: 'latest'
       
       - name: Cache SPM dependencies
         uses: actions/cache@v4
