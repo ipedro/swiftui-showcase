@@ -39,12 +39,51 @@ public struct Chapter: Identifiable {
     /// The showcase topics within the chapter.
     public var topics: [Topic]
 
+    /// Initializes a showcase chapter using a ``ChapterContentBuilder``
+    /// closure to describe its description and topics while preserving the
+    /// existing API surface.
+    /// - Parameters:
+    ///   - title: The title of the chapter.
+    ///   - icon: Optional icon for the chapter.
+    ///   - content: A builder closure that produces the chapter description and topics.
+    public init(
+        _ title: String,
+        icon: @escaping @autoclosure () -> Image,
+        @ChapterContentBuilder _ content: () -> Content
+    ) {
+        let icon = icon()
+        let content = content()
+
+        _title = Lazy(wrappedValue: title)
+        _description = Lazy(wrappedValue: content.description ?? "")
+        _icon = Lazy(wrappedValue: icon)
+        topics = content.topics.sortedWithIcon(icon)
+    }
+
+    /// Initializes a showcase chapter using a ``ChapterContentBuilder`` closure
+    /// to describe its description and topics without providing an explicit icon.
+    /// - Parameters:
+    ///   - title: The title of the chapter.
+    ///   - content: A builder closure that produces the chapter description and topics.
+    public init(
+        _ title: String,
+        @ChapterContentBuilder _ content: () -> Content
+    ) {
+        let content = content()
+
+        _title = Lazy(wrappedValue: title)
+        _description = Lazy(wrappedValue: content.description ?? "")
+        _icon = Lazy(wrappedValue: nil)
+        topics = content.topics.sorted()
+    }
+
     /// Initializes a showcase chapter with the specified title and showcase topics.
     /// - Parameters:
     ///   - title: The title of the chapter.
     ///   - icon: Optional icon for the chapter.
     ///   - description: The optional description of the chapter.
     ///   - topics: The showcase topics within the chapter.
+    @available(*, deprecated, message: "Use init(_:icon:_:) with ChapterContentBuilder instead.")
     public init(
         _ title: String,
         icon: @escaping @autoclosure () -> Image,
@@ -57,12 +96,35 @@ public struct Chapter: Identifiable {
         self.topics = topics.sortedWithIcon(icon())
     }
 
+    /// Initializes a showcase chapter using a ``TopicBuilder`` closure to
+    /// compose its topics while keeping the existing API surface intact.
+    /// - Parameters:
+    ///   - title: The title of the chapter.
+    ///   - icon: Optional icon for the chapter.
+    ///   - description: The optional description of the chapter.
+    ///   - topics: A builder closure that produces the topics contained in the
+    ///     chapter.
+    @available(*, deprecated, message: "Use init(_:icon:_:) with ChapterContentBuilder instead.")
+    public init(
+        _ title: String,
+        icon: @escaping @autoclosure () -> Image,
+        description: @escaping @autoclosure () -> String = "",
+        @TopicBuilder _ topics: () -> [Topic]
+    ) {
+        let icon = icon()
+        _title = Lazy(wrappedValue: title)
+        _description = Lazy(wrappedValue: description())
+        _icon = Lazy(wrappedValue: icon)
+        self.topics = topics().sortedWithIcon(icon)
+    }
+
     /// Initializes a showcase chapter with the specified title and showcase topics.
     /// - Parameters:
     ///   - title: The title of the chapter.
     ///   - icon: Optional icon for the chapter.
     ///   - description: The optional description of the chapter.
     ///   - topics: The showcase topics within the chapter.
+    @available(*, deprecated, message: "Use init(_:icon:_:) with ChapterContentBuilder instead.")
     public init(
         _ title: String,
         icon: @escaping @autoclosure () -> Image,
@@ -80,6 +142,7 @@ public struct Chapter: Identifiable {
     ///   - title: The title of the chapter.
     ///   - description: The optional description of the chapter.
     ///   - topics: The showcase topics within the chapter.
+    @available(*, deprecated, message: "Use init(_:_: ) that accepts a ChapterContentBuilder closure instead.")
     public init(
         _ title: String,
         description: @escaping @autoclosure () -> String = "",
@@ -91,11 +154,31 @@ public struct Chapter: Identifiable {
         self.topics = topics.sorted()
     }
 
+    /// Initializes a showcase chapter using a ``TopicBuilder`` closure to
+    /// compose its topics without providing an explicit icon.
+    /// - Parameters:
+    ///   - title: The title of the chapter.
+    ///   - description: The optional description of the chapter.
+    ///   - topics: A builder closure that produces the topics contained in the
+    ///     chapter.
+    @available(*, deprecated, message: "Use init(_:_: ) that accepts a ChapterContentBuilder closure instead.")
+    public init(
+        _ title: String,
+        description: @escaping @autoclosure () -> String = "",
+        @TopicBuilder _ topics: () -> [Topic]
+    ) {
+        _title = Lazy(wrappedValue: title)
+        _description = Lazy(wrappedValue: description())
+        _icon = Lazy(wrappedValue: nil)
+        self.topics = topics().sorted()
+    }
+
     /// Initializes a showcase chapter with the specified title and showcase topics.
     /// - Parameters:
     ///   - title: The title of the chapter.
     ///   - description: The optional description of the chapter.
     ///   - topics: The showcase topics within the chapter.
+    @available(*, deprecated, message: "Use init(_:_: ) that accepts a ChapterContentBuilder closure instead.")
     public init(
         _ title: String,
         description: @escaping @autoclosure () -> String = "",

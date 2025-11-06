@@ -47,6 +47,7 @@ public struct Document: Identifiable {
     ///   - icon: An optional default icon for topics.
     ///   - description: The optional description of the document.
     ///   - chapters: The chapters within the document.
+    @available(*, deprecated, message: "Use init(_:icon:description:_:) that accepts a ChapterBuilder closure instead.")
     public init(
         _ title: String,
         icon: @escaping @autoclosure () -> Image,
@@ -59,6 +60,28 @@ public struct Document: Identifiable {
         self.chapters = chapters.sortedWithIcon(icon())
     }
 
+    /// Initializes a showcase document using a ``ChapterBuilder`` closure to
+    /// compose its chapters while keeping support for the existing API
+    /// surface.
+    /// - Parameters:
+    ///   - title: The title of the document.
+    ///   - icon: An optional default icon for topics.
+    ///   - description: The optional description of the document.
+    ///   - content: A builder closure that produces the chapters contained in
+    ///     the document.
+    public init(
+        _ title: String,
+        icon: @escaping @autoclosure () -> Image,
+        description: @escaping @autoclosure () -> String = "",
+        @ChapterBuilder _ content: () -> [Chapter]
+    ) {
+        let icon = icon()
+        _title = Lazy(wrappedValue: title)
+        _description = Lazy(wrappedValue: description())
+        _icon = Lazy(wrappedValue: icon)
+        chapters = content().sortedWithIcon(icon)
+    }
+
     /// Initializes a showcase document with the specified title, chapters and
     /// an optional description.
     /// - Parameters:
@@ -66,6 +89,7 @@ public struct Document: Identifiable {
     ///   - icon: An optional default icon for topics.
     ///   - description: The optional description of the document.
     ///   - chapters: The chapters within the document.
+    @available(*, deprecated, message: "Use init(_:icon:description:_:) that accepts a ChapterBuilder closure instead.")
     public init(
         _ title: String,
         icon: @escaping @autoclosure () -> Image,
@@ -84,6 +108,7 @@ public struct Document: Identifiable {
     ///   - title: The title of the document.
     ///   - description: The optional description of the document.
     ///   - chapters: The chapters within the document.
+    @available(*, deprecated, message: "Use init(_:description:_:) that accepts a ChapterBuilder closure instead.")
     public init(
         _ title: String,
         description: @escaping @autoclosure () -> String = "",
@@ -95,12 +120,31 @@ public struct Document: Identifiable {
         self.chapters = chapters.sorted()
     }
 
+    /// Initializes a showcase document using a ``ChapterBuilder`` closure to
+    /// compose its chapters without providing a default icon.
+    /// - Parameters:
+    ///   - title: The title of the document.
+    ///   - description: The optional description of the document.
+    ///   - content: A builder closure that produces the chapters contained in
+    ///     the document.
+    public init(
+        _ title: String,
+        description: @escaping @autoclosure () -> String = "",
+        @ChapterBuilder _ content: () -> [Chapter]
+    ) {
+        _title = Lazy(wrappedValue: title)
+        _description = Lazy(wrappedValue: description())
+        _icon = Lazy(wrappedValue: nil)
+        chapters = content().sorted()
+    }
+
     /// Initializes a showcase document with the specified title, chapters and
     /// an optional description.
     /// - Parameters:
     ///   - title: The title of the document.
     ///   - description: The optional description of the document.
     ///   - chapters: The chapters within the document.
+    @available(*, deprecated, message: "Use init(_:description:_:) that accepts a ChapterBuilder closure instead.")
     public init(
         _ title: String,
         description: @escaping @autoclosure () -> String = "",

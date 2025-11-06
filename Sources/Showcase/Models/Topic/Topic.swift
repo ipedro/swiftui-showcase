@@ -64,6 +64,51 @@ public struct Topic: Identifiable {
         return result
     }
 
+    /// Initializes a showcase element using a ``TopicContentBuilder`` closure
+    /// to describe all of its data while preserving the existing API surface.
+    /// - Parameters:
+    ///   - title: The title of the topic.
+    ///   - icon: A closure returning an optional icon of the preview when shown in a list.
+    ///   - content: A builder closure that produces the content associated with the topic.
+    public init(
+        _ title: String,
+        icon: @escaping @autoclosure () -> Image,
+        @TopicContentBuilder _ content: () -> Content
+    ) {
+        let icon = icon()
+        let content = content()
+
+        _codeBlocks = Lazy(wrappedValue: content.codeBlocks)
+        _description = Lazy(wrappedValue: content.description ?? "")
+        _embeds = Lazy(wrappedValue: content.embeds)
+        _icon = Lazy(wrappedValue: icon)
+        _links = Lazy(wrappedValue: content.links)
+        _previews = Lazy(wrappedValue: content.previews)
+        _title = Lazy(wrappedValue: title)
+        children = content.children.isEmpty ? nil : content.children
+    }
+
+    /// Initializes a showcase element using a ``TopicContentBuilder`` closure
+    /// to describe all of its data without providing an explicit icon.
+    /// - Parameters:
+    ///   - title: The title of the topic.
+    ///   - content: A builder closure that produces the content associated with the topic.
+    public init(
+        _ title: String,
+        @TopicContentBuilder _ content: () -> Content
+    ) {
+        let content = content()
+
+        _codeBlocks = Lazy(wrappedValue: content.codeBlocks)
+        _description = Lazy(wrappedValue: content.description ?? "")
+        _embeds = Lazy(wrappedValue: content.embeds)
+        _icon = Lazy(wrappedValue: nil)
+        _links = Lazy(wrappedValue: content.links)
+        _previews = Lazy(wrappedValue: content.previews)
+        _title = Lazy(wrappedValue: title)
+        children = content.children.isEmpty ? nil : content.children
+    }
+
     func withIcon(_ proposal: Image?) -> Topic {
         // Early exit if no icon proposal or already has icon
         guard let proposal = proposal, self.icon == nil else { return self }
@@ -101,6 +146,7 @@ public struct Topic: Identifiable {
     ///   - code: A closure returning code examples (default is an empty array).
     ///   - children: Optional child showcase topics (default is nil).
     ///   - previews: Optional previews.
+    @available(*, deprecated, message: "Use init(_:icon:_:) with TopicContentBuilder instead.")
     public init(
         _ title: String,
         icon: @escaping @autoclosure () -> Image,
@@ -119,6 +165,31 @@ public struct Topic: Identifiable {
         _previews = Lazy(wrappedValue: previews())
         _title = Lazy(wrappedValue: title)
         self.children = children
+    }
+
+    /// Initializes a showcase element with the specified parameters using a
+    /// ``TopicBuilder`` closure for composing child topics.
+    /// - Parameters mirror ``Topic/init(_:icon:description:links:embeds:code:previews:children:)``.
+    @available(*, deprecated, message: "Use init(_:icon:_:) with TopicContentBuilder instead.")
+    public init(
+        _ title: String,
+        icon: @escaping @autoclosure () -> Image,
+        description: @escaping @autoclosure () -> String = "",
+        @LinkBuilder links: @escaping () -> [Link] = Array.init,
+        @EmbedBuilder embeds: @escaping () -> [Embed] = Array.init,
+        @CodeBlockBuilder code codeBlocks: @escaping () -> [CodeBlock] = Array.init,
+        @PreviewBuilder previews: @escaping () -> [Preview] = Array.init,
+        @TopicBuilder _ children: () -> [Topic]
+    ) {
+        let children = children()
+        _codeBlocks = Lazy(wrappedValue: codeBlocks())
+        _description = Lazy(wrappedValue: description())
+        _embeds = Lazy(wrappedValue: embeds())
+        _icon = Lazy(wrappedValue: icon())
+        _links = Lazy(wrappedValue: links())
+        _previews = Lazy(wrappedValue: previews())
+        _title = Lazy(wrappedValue: title)
+        self.children = children.isEmpty ? nil : children
     }
 
     // MARK: - Icon & View Builder
@@ -133,6 +204,7 @@ public struct Topic: Identifiable {
     ///   - code: A closure returning code examples (default is an empty array).
     ///   - children: Optional child showcase topics (default is nil).
     ///   - previews: Optional previews.
+    @available(*, deprecated, message: "Use init(_:icon:_:) with TopicContentBuilder instead.")
     public init(
         _ title: String,
         icon: @escaping @autoclosure () -> Image,
@@ -153,6 +225,31 @@ public struct Topic: Identifiable {
         self.children = children
     }
 
+    /// Initializes a showcase element with the specified parameters using a
+    /// ``TopicBuilder`` closure for composing child topics.
+    /// - Parameters mirror ``Topic/init(_:icon:description:links:embeds:code:previews:children:)``.
+    @available(*, deprecated, message: "Use init(_:icon:_:) with TopicContentBuilder instead.")
+    public init(
+        _ title: String,
+        icon: @escaping @autoclosure () -> Image,
+        description: @escaping @autoclosure () -> String = "",
+        @LinkBuilder links: @escaping () -> [Link] = Array.init,
+        @EmbedBuilder embeds: @escaping () -> [Embed] = Array.init,
+        @CodeBlockBuilder code codeBlocks: @escaping () -> [CodeBlock] = Array.init,
+        @ViewBuilder previews: @escaping () -> some View,
+        @TopicBuilder _ children: () -> [Topic]
+    ) {
+        let children = children()
+        _codeBlocks = Lazy(wrappedValue: codeBlocks())
+        _description = Lazy(wrappedValue: description())
+        _embeds = Lazy(wrappedValue: embeds())
+        _icon = Lazy(wrappedValue: icon())
+        _links = Lazy(wrappedValue: links())
+        _previews = Lazy(wrappedValue: [Preview(preview: previews())])
+        _title = Lazy(wrappedValue: title)
+        self.children = children.isEmpty ? nil : children
+    }
+
     // MARK: - No Icon
 
     /// Initializes a showcase element with the specified parameters.
@@ -164,6 +261,7 @@ public struct Topic: Identifiable {
     ///   - code: A closure returning code examples (default is an empty array).
     ///   - children: Optional child showcase topics (default is nil).
     ///   - previews: Optional previews.
+    @available(*, deprecated, message: "Use init(_:_: ) that accepts a TopicContentBuilder closure instead.")
     public init(
         _ title: String,
         description: @escaping @autoclosure () -> String = "",
@@ -183,6 +281,30 @@ public struct Topic: Identifiable {
         self.children = children
     }
 
+    /// Initializes a showcase element with the specified parameters using a
+    /// ``TopicBuilder`` closure for composing child topics.
+    /// - Parameters mirror ``Topic/init(_:description:links:embeds:code:previews:children:)``.
+    @available(*, deprecated, message: "Use init(_:_: ) that accepts a TopicContentBuilder closure instead.")
+    public init(
+        _ title: String,
+        description: @escaping @autoclosure () -> String = "",
+        @LinkBuilder links: @escaping () -> [Link] = Array.init,
+        @EmbedBuilder embeds: @escaping () -> [Embed] = Array.init,
+        @CodeBlockBuilder code codeBlocks: @escaping () -> [CodeBlock] = Array.init,
+        @PreviewBuilder previews: @escaping () -> [Preview] = Array.init,
+        @TopicBuilder _ children: () -> [Topic]
+    ) {
+        let children = children()
+        _codeBlocks = Lazy(wrappedValue: codeBlocks())
+        _description = Lazy(wrappedValue: description())
+        _embeds = Lazy(wrappedValue: embeds())
+        _icon = Lazy(wrappedValue: nil)
+        _links = Lazy(wrappedValue: links())
+        _previews = Lazy(wrappedValue: previews())
+        _title = Lazy(wrappedValue: title)
+        self.children = children.isEmpty ? nil : children
+    }
+
     // MARK: - View Builder
 
     /// Initializes a showcase element with the specified parameters.
@@ -194,6 +316,7 @@ public struct Topic: Identifiable {
     ///   - code: A closure returning code examples (default is an empty array).
     ///   - children: Optional child showcase topics (default is nil).
     ///   - previews: Optional previews.
+    @available(*, deprecated, message: "Use init(_:_: ) that accepts a TopicContentBuilder closure instead.")
     public init(
         _ title: String,
         description: @escaping @autoclosure () -> String = "",
@@ -211,6 +334,30 @@ public struct Topic: Identifiable {
         _previews = Lazy(wrappedValue: [Preview(preview: previews())])
         _title = Lazy(wrappedValue: title)
         self.children = children
+    }
+
+    /// Initializes a showcase element with the specified parameters using a
+    /// ``TopicBuilder`` closure for composing child topics.
+    /// - Parameters mirror ``Topic/init(_:description:links:embeds:code:previews:children:)``.
+    @available(*, deprecated, message: "Use init(_:_: ) that accepts a TopicContentBuilder closure instead.")
+    public init(
+        _ title: String,
+        description: @escaping @autoclosure () -> String = "",
+        @LinkBuilder links: @escaping () -> [Link] = Array.init,
+        @EmbedBuilder embeds: @escaping () -> [Embed] = Array.init,
+        @CodeBlockBuilder code codeBlocks: @escaping () -> [CodeBlock] = Array.init,
+        @ViewBuilder previews: @escaping () -> some View,
+        @TopicBuilder _ children: () -> [Topic]
+    ) {
+        let children = children()
+        _codeBlocks = Lazy(wrappedValue: codeBlocks())
+        _description = Lazy(wrappedValue: description())
+        _embeds = Lazy(wrappedValue: embeds())
+        _icon = Lazy(wrappedValue: nil)
+        _links = Lazy(wrappedValue: links())
+        _previews = Lazy(wrappedValue: [Preview(preview: previews())])
+        _title = Lazy(wrappedValue: title)
+        self.children = children.isEmpty ? nil : children
     }
 }
 
