@@ -21,7 +21,7 @@ jobs:
         uses: actions/checkout@v5
       
       - name: Set up Xcode
-        uses: apple-actions/setup-xcode@v2
+        uses: maxim-lobanov/setup-xcode@v1.6.0
         with:
           xcode-version: 'latest'
       
@@ -64,7 +64,7 @@ jobs:
         uses: actions/checkout@v5
       
       - name: Set up Xcode
-        uses: apple-actions/setup-xcode@v2
+        uses: maxim-lobanov/setup-xcode@v1.6.0
         with:
           xcode-version: 'latest'
       
@@ -116,7 +116,7 @@ jobs:
         uses: actions/checkout@v5
       
       - name: Set up Xcode
-        uses: apple-actions/setup-xcode@v2
+        uses: maxim-lobanov/setup-xcode@v1.6.0
         with:
           xcode-version: 'latest'
       
@@ -142,7 +142,7 @@ jobs:
           fetch-depth: 0  # Need history for comparison
       
       - name: Set up Xcode
-        uses: apple-actions/setup-xcode@v2
+        uses: maxim-lobanov/setup-xcode@v1.6.0
         with:
           xcode-version: 'latest'
       
@@ -182,7 +182,7 @@ jobs:
         uses: actions/checkout@v5
       
       - name: Set up Xcode
-        uses: apple-actions/setup-xcode@v2
+        uses: maxim-lobanov/setup-xcode@v1.6.0
         with:
           xcode-version: 'latest'
       
