@@ -176,7 +176,7 @@ jobs:
           grep "⏱️" performance.log >> $GITHUB_STEP_SUMMARY || echo "No performance metrics found"
       
       - name: Upload Performance Results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: performance-results
           path: performance.log
