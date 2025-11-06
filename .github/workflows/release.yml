@@ -124,7 +124,7 @@ jobs:
           echo "commit_count=$COMMIT_COUNT" >> $GITHUB_OUTPUT
       
       - name: Create Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           body_path: release_notes.md
           generate_release_notes: true  # GitHub's auto-generated notes
