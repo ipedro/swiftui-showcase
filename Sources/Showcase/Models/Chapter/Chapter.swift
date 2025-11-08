@@ -225,15 +225,15 @@ extension Chapter {
     func withIcon(_ proposal: Image?) -> Chapter {
         // Early exit if no icon proposal or already has icon
         guard let proposal = proposal, self.icon == nil else { return self }
-        
+
         var copy = self
         copy._icon = Lazy(wrappedValue: proposal)
-        
+
         // Only process topics if they exist
         if !copy.topics.isEmpty {
             copy.topics = copy.topics.map { $0.withIcon(proposal) }
         }
-        
+
         return copy
     }
 
@@ -243,7 +243,7 @@ extension Chapter {
     /// - Returns: `true` if the query matches any part of the chapter or its topics.
     func search(query: String) -> Chapter? {
         // Use short-circuit evaluation for early exit
-        let isMatch = title.localizedCaseInsensitiveContains(query) 
+        let isMatch = title.localizedCaseInsensitiveContains(query)
             || description.localizedCaseInsensitiveContains(query)
 
         // Check all topics within the chapter.

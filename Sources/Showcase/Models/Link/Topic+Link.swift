@@ -33,11 +33,11 @@ public extension Topic {
 
         /// The URL of the external link.
         public var url: URL
-        
+
         public static func == (lhs: Link, rhs: Link) -> Bool {
             lhs.id == rhs.id
         }
-        
+
         public func hash(into hasher: inout Hasher) {
             hasher.combine(id)
         }

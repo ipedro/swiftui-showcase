@@ -42,14 +42,14 @@ struct ShowcaseChapter: VersionedView {
             footer().foregroundStyle(.secondary).font(.footnote)
         }
     }
-    
+
     var v1Body: some View {
         Section(
             content: content,
             header: header,
             footer: footer
         )
-        
+
     }
 
     private func content() -> some View {
