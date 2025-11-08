@@ -105,7 +105,7 @@ jobs:
         if: matrix.run-package-tests
         run: |
           # Find the test binary (architecture-specific location)
-          TEST_BINARY=$(find .build -name "*showcasePackageTests" -type f | grep -v ".dSYM" | head -1)
+          TEST_BINARY=$(find .build -name "ShowcasePackageTests.xctest" -o -name "*PackageTests.xctest" | grep -v ".dSYM" | head -1)
           
           if [ -z "$TEST_BINARY" ]; then
             echo "Error: Could not find test binary"
