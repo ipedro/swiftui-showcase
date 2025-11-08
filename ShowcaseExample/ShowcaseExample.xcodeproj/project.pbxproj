@@ -376,14 +376,14 @@
 /* Begin XCLocalSwiftPackageReference section */
 		EBA50C3E2CF80D24000FB649 /* XCLocalSwiftPackageReference ".." */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = "..";
+			relativePath = ..;
 		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
 		EB7EB9A82CF919D200366932 /* Showcase */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = EBA50C3E2CF80D24000FB649 /* XCLocalSwiftPackageReference "../../swiftui-showcase" */;
+			package = EBA50C3E2CF80D24000FB649 /* XCLocalSwiftPackageReference ".." */;
 			productName = Showcase;
 		};
 /* End XCSwiftPackageProductDependency section */

@@ -22,10 +22,11 @@ import Showcase
 import SwiftUI
 
 extension Document {
-    public static let systemComponents = Document(
-        "Components",
-        description: "Learn how to use and customize system-defined components to give people a familiar and consistent experience."
-    ) {
+    public static let systemComponents = Document("Components") {
+        Description {
+            "Learn how to use and customize system-defined components to give people a familiar and consistent experience."
+        }
+        
         Chapter("Content") {
             Description {
                 "Learn how to use and customize system-defined components to give people a familiar and consistent experience."

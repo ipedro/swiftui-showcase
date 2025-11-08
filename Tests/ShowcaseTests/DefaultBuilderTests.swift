@@ -59,7 +59,9 @@ struct DefaultBuilderTests {
     @Test("Chapter with icon and no content closure")
     func chapterWithIconWithoutBraces() {
         let icon = Image(systemName: "book")
-        let chapter = Chapter("Test Chapter", icon: icon)
+        let chapter = Chapter("Test Chapter") {
+            Icon(icon)
+        }
 
         #expect(chapter.title == "Test Chapter")
         #expect(chapter.icon != nil)
@@ -78,7 +80,9 @@ struct DefaultBuilderTests {
 
     @Test("Document with description and no content closure")
     func documentWithDescriptionWithoutBraces() {
-        let document = Document("Test Document", description: "A test") {}
+        let document = Document("Test Document") {
+            Description("A test")
+        }
 
         #expect(document.title == "Test Document")
         #expect(document.description == "A test")
@@ -88,7 +92,9 @@ struct DefaultBuilderTests {
     @Test("Document with icon and no content closure")
     func documentWithIconWithoutBraces() {
         let icon = Image(systemName: "doc")
-        let document = Document("Test Document", icon: icon) {}
+        let document = Document("Test Document") {
+            Icon(icon)
+        }
 
         #expect(document.title == "Test Document")
         #expect(document.icon != nil)
