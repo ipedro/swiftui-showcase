@@ -14,23 +14,26 @@
    - ✅ Created `Models/Link/Link+Builder.swift` with `Link.Builder`
    - ✅ Updated `LinksImpl` to be internal in `TopicContentBuilder.swift`
    - ✅ Updated `Links()` function to return opaque `some TopicContentConvertible`
+
+2. **Link → ExternalLink Rename** (Phase 1.5)
+   - ✅ Renamed `Link` struct to `ExternalLink`
+   - ✅ Renamed `Link.Name` to `ExternalLink.Name`
+   - ✅ Renamed `Link.Builder` to `ExternalLink.Builder`
+   - ✅ Moved `Models/Link/` to `Models/ExternalLink/`
+   - ✅ Updated all files (11 modified files)
+   - ✅ All 55 tests passing
+   - ✅ ShowcaseExample builds and runs
    
-2. **Ordered Content Feature** (Bonus Work)
+3. **Ordered Content Feature** (Bonus Work)
    - ✅ Implemented `TopicContentItem` enum for heterogeneous content
    - ✅ Updated view layer to render items in declaration order
    - ✅ Created comprehensive tests (55 tests passing)
    - ✅ Created PR #12 on clean branch `feature/ordered-content-rendering`
 
 ### 🚧 In Progress
-- Updating all `Link` references throughout codebase
-- Example app fixes for `Showcase.Link` qualified names
+- None currently
 
 ### ⏳ Remaining
-- [ ] **Rename `Link` → `ExternalLink`** (Phase 1.5 - avoid SwiftUI collision)
-  - [ ] Rename type, nested types, builders
-  - [ ] Rename files and directory
-  - [ ] Update function name `Links()` → `ExternalLinks()` (or keep as `Links()`?)
-  - [ ] Update all references
 - [ ] Extract `CodeBlock`, `Preview`, `Embed` types (Phase 1)
 - [ ] Make remaining wrappers internal (Phase 2)
 - [ ] **Move icons & descriptions to DSL** (Phase 2.5 - NEW)
