@@ -55,63 +55,12 @@ public struct ShowcaseTopic: View, Equatable {
             isEmpty: data.description.isEmpty,
             title: depth > 0 ? Text(data.title) : nil,
             description: description(),
-            previews: previews(),
-            links: links(),
-            embeds: embeds(),
-            codeBlocks: codeBlocks()
+            orderedItems: OrderedItems(data.items)
         )
     }
 
     private func description() -> Text? {
         data.description.isEmpty ? nil : Text(data.description)
-    }
-
-    private func links() -> ShowcaseLinks? {
-        if let links = EquatableForEach(
-            data: data.links,
-            id: \.id,
-            content: ShowcaseLink.init(data:)
-        ) {
-            ShowcaseLinks(content: links)
-        } else {
-            nil
-        }
-    }
-
-    private func embeds() -> ShowcaseEmbeds? {
-        if let embeds = EquatableForEach(
-            data: data.embeds,
-            id: \.id,
-            content: ShowcaseEmbed.init(data:)
-        ) {
-            ShowcaseEmbeds(content: embeds)
-        } else {
-            nil
-        }
-    }
-
-    private func codeBlocks() -> ShowcaseCodeBlocks? {
-        if let codeBlocks = EquatableForEach(
-            data: data.codeBlocks,
-            id: \.id,
-            content: ShowcaseCodeBlock.init(data:)
-        ) {
-            ShowcaseCodeBlocks(content: codeBlocks)
-        } else {
-            nil
-        }
-    }
-
-    private func previews() -> ShowcasePreviews? {
-        if let previews = EquatableForEach(
-            data: data.previews,
-            id: \.id,
-            content: ShowcasePreview.init(data:)
-        ) {
-            ShowcasePreviews(content: previews)
-        } else {
-            nil
-        }
     }
 
     private var showIndexList: Bool {

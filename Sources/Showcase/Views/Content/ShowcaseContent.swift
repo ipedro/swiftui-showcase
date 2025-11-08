@@ -47,6 +47,15 @@ public extension View {
     }
 }
 
+/// Wrapper for ordered content items to work with @StyledView macro
+public struct OrderedItems {
+    public let items: [TopicContentItem]
+    
+    public init(_ items: [TopicContentItem]) {
+        self.items = items
+    }
+}
+
 @StyledView
 public struct ShowcaseContent: StyledView {
     // swiftlint:disable syntactic_sugar
@@ -54,10 +63,7 @@ public struct ShowcaseContent: StyledView {
     public let isEmpty: Bool
     public let title: Optional<Text>
     public let description: Optional<Text>
-    public let previews: Optional<ShowcasePreviews>
-    public let links: Optional<ShowcaseLinks>
-    public let embeds: Optional<ShowcaseEmbeds>
-    public let codeBlocks: Optional<ShowcaseCodeBlocks>
+    public let orderedItems: OrderedItems
     // swiftlint:enable syntactic_sugar
 
     @Environment(\.nodeDepth)
@@ -78,16 +84,21 @@ public struct ShowcaseContent: StyledView {
                 }
             }
 
-            if let links = links {
-                LazyHStack {
-                    links
+            description
+            
+            // Render content items in declaration order
+            ForEach(orderedItems.items) { item in
+                switch item {
+                case .link(let link):
+                    ShowcaseLink(data: link)
+                case .codeBlock(let codeBlock):
+                    ShowcaseCodeBlock(data: codeBlock)
+                case .preview(let preview):
+                    ShowcasePreview(data: preview)
+                case .embed(let embed):
+                    ShowcaseEmbed(data: embed)
                 }
             }
-
-            description
-            previews
-            embeds
-            codeBlocks
         }
         .transformEnvironment(\.font) { font in
             if let preferredBodyFont {
