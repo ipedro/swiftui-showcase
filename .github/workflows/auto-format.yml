@@ -30,6 +30,9 @@ jobs:
           # For pushes to main, omit DIFF_BASE to lint all files
           DIFF_BASE: ${{ github.event_name == 'pull_request' && github.base_ref || '' }}
 
+      - name: Install SwiftFormat
+        run: brew install swiftformat
+      
       - name: Apply SwiftFormat
         run: |
           swiftformat Sources/ Tests/
