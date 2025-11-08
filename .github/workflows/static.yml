@@ -38,7 +38,7 @@ jobs:
       - name: Set up Xcode
         uses: maxim-lobanov/setup-xcode@v1.6.0
         with:
-          xcode-version: 'latest'
+          xcode-version: 'latest-stable'
       
       - name: Cache SPM dependencies
         uses: actions/cache@v4
@@ -57,11 +57,11 @@ jobs:
         run: |
           xcodebuild docbuild -scheme Showcase \
             -derivedDataPath /tmp/docbuild \
-            -destination 'generic/platform=iOS' \
+            -destination 'platform=macOS' \
             -skipPackagePluginValidation \
             -skipMacroValidation;
           $(xcrun --find docc) process-archive \
-            transform-for-static-hosting /tmp/docbuild/Build/Products/Debug-iphoneos/Showcase.doccarchive \
+            transform-for-static-hosting /tmp/docbuild/Build/Products/Debug/Showcase.doccarchive \
             --hosting-base-path swiftui-showcase \
             --output-path docs;
           echo "<script>window.location.href += \"/documentation/showcase\"</script>" > docs/index.html;
