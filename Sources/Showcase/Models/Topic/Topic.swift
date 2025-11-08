@@ -73,7 +73,7 @@ public struct Topic: Identifiable {
     public init(
         _ title: String,
         icon: @escaping @autoclosure () -> Image,
-        @TopicContentBuilder _ content: () -> Content
+        @TopicContentBuilder _ content: () -> Content = { Content() }
     ) {
         let icon = icon()
         let content = content()
@@ -95,7 +95,7 @@ public struct Topic: Identifiable {
     ///   - content: A builder closure that produces the content associated with the topic.
     public init(
         _ title: String,
-        @TopicContentBuilder _ content: () -> Content
+        @TopicContentBuilder _ content: () -> Content = { Content() }
     ) {
         let content = content()
 

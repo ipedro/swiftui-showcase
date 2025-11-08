@@ -62,59 +62,59 @@ extension Document {
                 }
             }
 
-            Topic("Text views") { }
-            Topic("Web views") { }
+            Topic("Text views")
+            Topic("Web views")
         }
 
         Chapter("Layout and organization") {
-            Topic("Boxes") { }
-            Topic("Collections") { }
-            Topic("Column views") { }
-            Topic("Disclosure controls") { }
-            Topic("Labels") { }
-            Topic("Lists and tables") { }
-            Topic("Lockups") { }
-            Topic("Outline views") { }
-            Topic("Split views") { }
-            Topic("Tab views") { }
+            Topic("Boxes")
+            Topic("Collections")
+            Topic("Column views")
+            Topic("Disclosure controls")
+            Topic("Labels")
+            Topic("Lists and tables")
+            Topic("Lockups")
+            Topic("Outline views")
+            Topic("Split views")
+            Topic("Tab views")
         }
 
         Chapter("Menus and actions") {
-            Topic("Activity views") { }
-            Topic("Buttons") { }
-            Topic("Context menus") { }
-            Topic("Dock menus") { }
-            Topic("Edit menus") { }
-            Topic("Menus") { }
-            Topic("Ornaments") { }
-            Topic("Pop-up buttons") { }
-            Topic("Pull-down buttons") { }
-            Topic("Toolbars") { }
+            Topic("Activity views")
+            Topic("Buttons")
+            Topic("Context menus")
+            Topic("Dock menus")
+            Topic("Edit menus")
+            Topic("Menus")
+            Topic("Ornaments")
+            Topic("Pop-up buttons")
+            Topic("Pull-down buttons")
+            Topic("Toolbars")
         }
 
         Chapter("Navigation and search") {
-            Topic("Navigation bars") { }
-            Topic("Path controls") { }
-            Topic("Search fields") { }
-            Topic("Sidebars") { }
-            Topic("Tab bars") { }
-            Topic("Token fields") { }
+            Topic("Navigation bars")
+            Topic("Path controls")
+            Topic("Search fields")
+            Topic("Sidebars")
+            Topic("Tab bars")
+            Topic("Token fields")
         }
 
         Chapter("Presentation") {
-            Topic("Action sheets") { }
-            Topic("Alerts") { }
-            Topic("Page controls") { }
-            Topic("Panels") { }
-            Topic("Popovers") { }
-            Topic("Scroll views") { }
-            Topic("Sheets") { }
-            Topic("Windows") { }
+            Topic("Action sheets")
+            Topic("Alerts")
+            Topic("Page controls")
+            Topic("Panels")
+            Topic("Popovers")
+            Topic("Scroll views")
+            Topic("Sheets")
+            Topic("Windows")
         }
 
-        Chapter("Selection and input") { }
-        Chapter("Status") { }
-        Chapter("System experiences") { }
+        Chapter("Selection and input")
+        Chapter("Status")
+        Chapter("System experiences")
     }
 }
 

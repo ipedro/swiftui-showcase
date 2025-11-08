@@ -96,7 +96,9 @@ struct OptimizationTests {
 
         @Test("Early exit when proposal is nil")
         func earlyExitWithNilProposal() {
-            let original = Topic("Test", description: "Original")
+            let original = Topic("Test") {
+                Description("Original")
+            }
             let result = original.withIcon(nil)
 
             // Should return the same instance (identity equality)
@@ -108,7 +110,9 @@ struct OptimizationTests {
             let icon1 = Image(systemName: "star")
             let icon2 = Image(systemName: "circle")
 
-            let topicWithIcon = Topic("Test", icon: icon1, description: "Has icon")
+            let topicWithIcon = Topic("Test", icon: icon1) {
+                Description("Has icon")
+            }
             let result = topicWithIcon.withIcon(icon2)
 
             // Should return self without modification
@@ -120,7 +124,9 @@ struct OptimizationTests {
         @Test("Applies icon when topic has no icon")
         func appliesWhenNoIcon() {
             let icon = Image(systemName: "star")
-            let topic = Topic("Test", description: "No icon")
+            let topic = Topic("Test") {
+                Description("No icon")
+            }
 
             #expect(topic.icon == nil)
 
@@ -133,7 +139,9 @@ struct OptimizationTests {
         func propagationToChildren() {
             let icon = Image(systemName: "star")
             let child = Topic("Child")
-            let parent = Topic("Parent", children: [child])
+            let parent = Topic("Parent") {
+                child
+            }
 
             let result = parent.withIcon(icon)
 
@@ -146,7 +154,9 @@ struct OptimizationTests {
             let icon1 = Image(systemName: "star")
             let icon2 = Image(systemName: "circle")
 
-            let chapterWithIcon = Chapter("Test", icon: icon1, [Topic("Topic1")])
+            let chapterWithIcon = Chapter("Test", icon: icon1) {
+                Topic("Topic1")
+            }
             let result = chapterWithIcon.withIcon(icon2)
 
             // Should preserve original icon
@@ -168,8 +178,12 @@ struct OptimizationTests {
         @Test("Flattens hierarchy correctly")
         func flattensHierarchy() {
             let grandchild = Topic("Grandchild")
-            let child = Topic("Child", children: [grandchild])
-            let root = Topic("Root", children: [child])
+            let child = Topic("Child") {
+                grandchild
+            }
+            let root = Topic("Root") {
+                child
+            }
 
             let allChildren = root.allChildren
 
@@ -182,9 +196,9 @@ struct OptimizationTests {
         func deepHierarchy() {
             // Create a deep hierarchy: Root -> L1 -> L2 -> L3
             let l3 = Topic("Level3")
-            let l2 = Topic("Level2", children: [l3])
-            let l1 = Topic("Level1", children: [l2])
-            let root = Topic("Root", children: [l1])
+            let l2 = Topic("Level2") { l3 }
+            let l1 = Topic("Level1") { l2 }
+            let root = Topic("Root") { l1 }
 
             let allChildren = root.allChildren
 
@@ -206,45 +220,53 @@ struct OptimizationTests {
 
         @Test("Not empty with description")
         func notEmptyWithDescription() {
-            let topic = Topic("Test", description: "Has content")
+            let topic = Topic("Test") {
+                Description("Has content")
+            }
             #expect(!topic.isEmpty)
         }
 
         @Test("Not empty with code blocks")
         func notEmptyWithCodeBlocks() {
-            let topic = Topic("Test", code: {
+            let topic = Topic("Test") {
                 Topic.CodeBlock("Example")
-            })
+            }
             #expect(!topic.isEmpty)
         }
 
         @Test("Not empty with previews")
         func notEmptyWithPreviews() {
-            let topic = Topic("Test", previews: {
+            let topic = Topic("Test") {
                 Topic.Preview { Text("Preview") }
-            })
+            }
             #expect(!topic.isEmpty)
         }
 
         @Test("Not empty with children")
         func notEmptyWithChildren() {
-            let topic = Topic("Test", children: [Topic("Child")])
+            let topic = Topic("Test") {
+                Topic("Child")
+            }
             #expect(!topic.isEmpty)
         }
 
         @Test("Not empty with links")
         func notEmptyWithLinks() {
-            let topic = Topic("Test", links: {
+            let topic = Topic("Test") {
                 Topic.Link("Documentation", "https://example.com")
-            })
+            }
             #expect(!topic.isEmpty)
         }
 
         @Test("Not empty with embeds")
         func notEmptyWithEmbeds() {
-            let topic = Topic("Test", embeds: {
-                Topic.Embed(URL(string: "https://example.com")!)
-            })
+            guard let embed = Topic.Embed(URL(string: "https://example.com")!) else {
+                Issue.record("Failed to create embed")
+                return
+            }
+            let topic = Topic("Test") {
+                embed
+            }
             #expect(!topic.isEmpty)
         }
     }
@@ -256,10 +278,9 @@ struct OptimizationTests {
 
         @Test("Short-circuits on title match")
         func shortCircuitsOnTitleMatch() {
-            let topic = Topic(
-                "MatchThis",
-                description: "Description"
-            )
+            let topic = Topic("MatchThis") {
+                Description("Description")
+            }
 
             let result = topic.search(query: "MatchThis")
 
@@ -269,7 +290,9 @@ struct OptimizationTests {
 
         @Test("Returns nil when no match")
         func returnsNilWhenNoMatch() {
-            let topic = Topic("Test", description: "Content")
+            let topic = Topic("Test") {
+                Description("Content")
+            }
 
             let result = topic.search(query: "NotFound")
 
@@ -278,9 +301,9 @@ struct OptimizationTests {
 
         @Test("Matches in code blocks")
         func matchesInCodeBlocks() {
-            let topic = Topic("Test", code: {
+            let topic = Topic("Test") {
                 Topic.CodeBlock("Example", text: { "func hello() {}" })
-            })
+            }
 
             let result = topic.search(query: "hello")
 
@@ -289,9 +312,9 @@ struct OptimizationTests {
 
         @Test("Matches in links")
         func matchesInLinks() {
-            let topic = Topic("Test", links: {
+            let topic = Topic("Test") {
                 Topic.Link("Documentation", "https://example.com/special")
-            })
+            }
 
             let result = topic.search(query: "special")
 
@@ -300,10 +323,20 @@ struct OptimizationTests {
 
         @Test("Chapter search returns matching topics")
         func chapterSearchReturnsMatchingTopics() {
-            let topic1 = Topic("Match1", description: "first")
-            let topic2 = Topic("Different", description: "second")
-            let topic3 = Topic("Match2", description: "third")
-            let chapter = Chapter("Test", [topic1, topic2, topic3])
+            let topic1 = Topic("Match1") {
+                Description("first")
+            }
+            let topic2 = Topic("Different") {
+                Description("second")
+            }
+            let topic3 = Topic("Match2") {
+                Description("third")
+            }
+            let chapter = Chapter("Test") {
+                topic1
+                topic2
+                topic3
+            }
 
             let result = chapter.search(query: "atch")
 
@@ -340,8 +373,12 @@ struct OptimizationTests {
 
         @Test("Chapter instances have unique hashes")
         func chapterHashable() {
-            let chapter1 = Chapter("Test", [Topic("Topic1")])
-            let chapter2 = Chapter("Test", [Topic("Topic1")])
+            let chapter1 = Chapter("Test") {
+                Topic("Topic1")
+            }
+            let chapter2 = Chapter("Test") {
+                Topic("Topic1")
+            }
 
             // Different instances should have different hashes
             #expect(chapter1.hashValue != chapter2.hashValue)
@@ -355,8 +392,16 @@ struct OptimizationTests {
 
         @Test("Document instances have unique hashes")
         func documentHashable() {
-            let doc1 = Document("Doc1", [Chapter("Ch1", [Topic("T1")])])
-            let doc2 = Document("Doc2", [Chapter("Ch1", [Topic("T1")])])
+            let doc1 = Document("Doc1") {
+                Chapter("Ch1") {
+                    Topic("T1")
+                }
+            }
+            let doc2 = Document("Doc2") {
+                Chapter("Ch1") {
+                    Topic("T1")
+                }
+            }
 
             // Different instances should have different hashes
             #expect(doc1.hashValue != doc2.hashValue)

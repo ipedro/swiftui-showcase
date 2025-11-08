@@ -82,10 +82,18 @@ struct PerformanceTests {
                     }
                 )
             }
-            return Chapter("Chapter \(chapterIndex)", topics)
+            return Chapter("Chapter \(chapterIndex)") {
+                for topic in topics {
+                    topic
+                }
+            }
         }
 
-        return Document("Performance Test Document", chapters)
+        return Document("Performance Test Document") {
+            for chapter in chapters {
+                chapter
+            }
+        }
     }
 
     // MARK: - Performance Helper
@@ -182,15 +190,16 @@ struct PerformanceTests {
     @Test("Chapter search performance")
     func chapterSearchPerformance() {
         let topics = (0..<100).map { i in
-            Topic(
-                "Topic \(i)",
-                description: "Description for topic \(i)",
-                code: {
-                    Topic.CodeBlock(text: { "func example\(i)() {}" })
-                }
-            )
+            Topic("Topic \(i)") {
+                Description("Description for topic \(i)")
+                Topic.CodeBlock(text: { "func example\(i)() {}" })
+            }
         }
-        let chapter = Chapter("Test Chapter", topics)
+        let chapter = Chapter("Test Chapter") {
+            for topic in topics {
+                topic
+            }
+        }
         let query = "Topic 50"
 
         // Target: < 0.03 seconds for 100 topics
@@ -209,14 +218,18 @@ struct PerformanceTests {
     @Test("isEmpty check performance")
     func isEmptyPerformance() {
         let topics = [
-            Topic("Empty", description: ""),
-            Topic("With Description", description: "Some content"),
-            Topic("With Code", code: {
+            Topic("Empty"),
+            Topic("With Description") {
+                Description("Some content")
+            },
+            Topic("With Code") {
                 Topic.CodeBlock(text: { "func test() {}" })
-            }),
-            Topic("With Children", children: [
-                Topic("Child", description: "Child content")
-            ])
+            },
+            Topic("With Children") {
+                Topic("Child") {
+                    Description("Child content")
+                }
+            }
         ]
 
         // Target: < 0.001 seconds (should short-circuit quickly)
@@ -251,17 +264,14 @@ struct PerformanceTests {
 
     @Test("Lazy property caching performance")
     func lazyPropertyPerformance() {
-        let topic = Topic(
-            "Test",
-            description: "A very long description " + String(repeating: "that repeats ", count: 100),
-            code: {
-                Topic.CodeBlock(text: { String(repeating: "Line 0\n", count: 50) })
-                Topic.CodeBlock(text: { String(repeating: "Line 1\n", count: 50) })
-                Topic.CodeBlock(text: { String(repeating: "Line 2\n", count: 50) })
-                Topic.CodeBlock(text: { String(repeating: "Line 3\n", count: 50) })
-                Topic.CodeBlock(text: { String(repeating: "Line 4\n", count: 50) })
-            }
-        )
+        let topic = Topic("Test") {
+            Description("A very long description " + String(repeating: "that repeats ", count: 100))
+            Topic.CodeBlock(text: { String(repeating: "Line 0\n", count: 50) })
+            Topic.CodeBlock(text: { String(repeating: "Line 1\n", count: 50) })
+            Topic.CodeBlock(text: { String(repeating: "Line 2\n", count: 50) })
+            Topic.CodeBlock(text: { String(repeating: "Line 3\n", count: 50) })
+            Topic.CodeBlock(text: { String(repeating: "Line 4\n", count: 50) })
+        }
 
         // Target: < 0.001 seconds (properties should only init once)
         _ = Self.measurePerformance({
