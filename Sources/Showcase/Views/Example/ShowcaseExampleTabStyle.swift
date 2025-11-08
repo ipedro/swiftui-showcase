@@ -1,4 +1,4 @@
-// ShowcasePreviewTabStyle.swift
+// ShowcaseExampleTabStyle.swift
 // Copyright (c) 2025 Pedro Almeida
 // Created by Pedro Almeida on 11/8/25.
 //
@@ -26,23 +26,23 @@ import SwiftUI
 
     // MARK: - Styles
 
-    public typealias PageShowcasePreviewStyle = ShowcasePreviewTabStyle<PageTabViewStyle, TabView<Int, AnyView?>>
+    public typealias PageShowcaseExampleStyle = ShowcaseExampleTabStyle<PageTabViewStyle, TabView<Int, AnyView?>>
 
-    public extension ShowcasePreviewStyle where Self == PageShowcasePreviewStyle {
+    public extension ShowcaseExampleStyle where Self == PageShowcaseExampleStyle {
         /// Shows the preview content in a paged scrolling `TabView`.
-        static var page: PageShowcasePreviewStyle {
-            ShowcasePreviewTabStyle(style: .page) { _, tabView in
+        static var page: PageShowcaseExampleStyle {
+            ShowcaseExampleTabStyle(style: .page) { _, tabView in
                 tabView
             }
         }
     }
 
-    public typealias GroupBoxPageShowcasePreviewStyle = ShowcasePreviewTabStyle<PageTabViewStyle, GroupBox<Text?, TabView<Int, AnyView?>>>
+    public typealias GroupBoxPageShowcaseExampleStyle = ShowcaseExampleTabStyle<PageTabViewStyle, GroupBox<Text?, TabView<Int, AnyView?>>>
 
-    public extension ShowcasePreviewStyle where Self == GroupBoxPageShowcasePreviewStyle {
+    public extension ShowcaseExampleStyle where Self == GroupBoxPageShowcaseExampleStyle {
         /// Shows the preview content in a paged scrolling `TabView` inside a group box, with an optional title.
-        static var groupBoxPage: GroupBoxPageShowcasePreviewStyle {
-            ShowcasePreviewTabStyle(style: .page(indexDisplayMode: .always)) { title, tabView in
+        static var groupBoxPage: GroupBoxPageShowcaseExampleStyle {
+            ShowcaseExampleTabStyle(style: .page(indexDisplayMode: .always)) { title, tabView in
                 GroupBox(label: title) {
                     tabView
                 }
@@ -50,26 +50,26 @@ import SwiftUI
         }
     }
 
-    public extension ShowcasePreviewStyle where Self == ShowcasePreviewTabStyle<DefaultTabViewStyle, AnyView> {
+    public extension ShowcaseExampleStyle where Self == ShowcaseExampleTabStyle<DefaultTabViewStyle, AnyView> {
         /// A `TabViewStyle` that implements a paged scrolling `TabView` with an
         /// index display mode.
         static func page<C: View>(
             indexDisplayMode: PageTabViewStyle.IndexDisplayMode = .automatic,
             @ViewBuilder body: @escaping (_ title: Text?, _ tabView: TabView<Int, AnyView?>) -> C
-        ) -> ShowcasePreviewTabStyle<PageTabViewStyle, C> {
-            ShowcasePreviewTabStyle(
+        ) -> ShowcaseExampleTabStyle<PageTabViewStyle, C> {
+            ShowcaseExampleTabStyle(
                 style: .page(indexDisplayMode: indexDisplayMode),
                 body: body
             )
         }
     }
 
-    public struct ShowcasePreviewTabStyle<S: TabViewStyle, C: View>: ShowcasePreviewStyle {
+    public struct ShowcaseExampleTabStyle<S: TabViewStyle, C: View>: ShowcaseExampleStyle {
         /// The tab style.
         var style: S
         var body: (Text?, TabView<Int, AnyView?>) -> C
 
-        public func makeBody(configuration: ShowcasePreviewConfiguration) -> some View {
+        public func makeBody(configuration: ShowcaseExampleConfiguration) -> some View {
             body(
                 configuration.label,
                 TabView { configuration.content }

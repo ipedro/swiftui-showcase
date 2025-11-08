@@ -50,7 +50,7 @@ public extension View {
 }
 
 public struct ShowcaseCodeBlocks: View {
-    var content: EquatableForEach<[Topic.CodeBlock], Topic.CodeBlock.ID, ShowcaseCodeBlock>
+    var content: EquatableForEach<[CodeBlock], CodeBlock.ID, ShowcaseCodeBlock>
     public var body: some View { content }
 }
 
@@ -67,7 +67,7 @@ public struct ShowcaseCodeBlock: StyledView, Equatable {
 
     /// Initializes a ShowcaseCodeBlock view with the specified code block data.
     /// - Parameter data: The data representing the code block (optional).
-    init(data: Topic.CodeBlock) {
+    init(data: CodeBlock) {
         sourceCode = data.rawValue
         title = Text(optional: LocalizedStringKey(optional: data.title))
         id = data.id
@@ -131,7 +131,7 @@ public struct ShowcaseCodeBlockStyleModifier<Style: ShowcaseCodeBlockStyle>: Vie
 
 #Preview {
     ShowcaseCodeBlock(
-        data: Topic.CodeBlock("Example", text: {
+        data: CodeBlock("Example", text: {
             """
             HStack {
                 Spacer()
@@ -143,7 +143,7 @@ public struct ShowcaseCodeBlockStyleModifier<Style: ShowcaseCodeBlockStyle>: Vie
 
 #Preview {
     ShowcaseCodeBlock(
-        data: Topic.CodeBlock(text: {
+        data: CodeBlock(text: {
             """
             HStack {
                 Spacer()

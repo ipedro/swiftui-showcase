@@ -27,12 +27,16 @@ extension Document {
         description: "Learn how to use and customize system-defined components to give people a familiar and consistent experience."
     ) {
         Chapter("Content") {
-            Description("Learn how to use and customize system-defined components to give people a familiar and consistent experience.")
+            Description {
+                "Learn how to use and customize system-defined components to give people a familiar and consistent experience."
+            }
 
             Topic.imageViews
 
             Topic("Charts") {
-                Description("Organize data in a chart to communicate information with clarity and visual appeal.")
+                Description {
+                    "Organize data in a chart to communicate information with clarity and visual appeal."
+                }
 
                 Preview {
                     Group {
@@ -120,14 +124,55 @@ extension Document {
 
 extension Topic {
     static let imageViews = Topic("Image views") {
-        Description("An image view displays a single image — or in some cases, an animated sequence of images — on a transparent or opaque background.")
-
-        Links {
-            Topic.Link(.docs, .imageViewsDocs)
+        Description {
+            "An image view displays a single image — or in some cases, an animated sequence of images — on a transparent or opaque background."
         }
 
-        Topic.image
-        Topic.asyncImage
+        ExternalLink(.docs, .imageViewsDocs)
+
+        Topic("Image") {
+            Description("Use an Image instance when you want to add images to your SwiftUI app.")
+
+            CodeBlock {
+                """
+                Image(systemName: "swift")
+                
+                // or
+                
+                Image("your-asset-name")
+                """
+            }
+
+            Preview {
+                Image(systemName: "star")
+                    .imageScale(.large)
+            }
+        }
+
+        Topic("AsyncImage") {
+            Description {
+                """
+                This view uses the shared URLSession instance to load an image from the specified URL, and then display it. 
+                For example, you can display an icon that’s stored on a server:
+                """
+            }
+
+            CodeBlock {
+            """
+            AsyncImage(
+                url: .init(
+                    string: "https://docs-assets.developer.apple.com/published/b38ef3054b1d61b2a8f936cd81814d10/components-image-view-intro@2x.png")
+            """
+            }
+
+            Preview {
+                AsyncImage(url: .imageViewsPreview) { image in
+                    image.resizable()
+                } placeholder: {
+                    ProgressView()
+                }
+            }
+        }
     }
 }
 
@@ -135,16 +180,14 @@ extension Topic {
     static let image = Topic("Image") {
         Description("Use an Image instance when you want to add images to your SwiftUI app.")
 
-        Code {
-            Topic.CodeBlock {
-                """
-                Image(systemName: "swift")
+        CodeBlock {
+            """
+            Image(systemName: "swift")
 
-                // or
+            // or
 
-                Image("your-asset-name")
-                """
-            }
+            Image("your-asset-name")
+            """
         }
 
         Preview {
@@ -156,18 +199,21 @@ extension Topic {
 
 extension Topic {
     static let asyncImage = Topic("AsyncImage") {
-        Description("This view uses the shared URLSession instance to load an image from the specified URL, and then display it. For example, you can display an icon that’s stored on a server:")
-
-        Code {
-            Topic.CodeBlock {
-                """
-                AsyncImage(
-                    url: .init(
-                        string: "https://docs-assets.developer.apple.com/published/b38ef3054b1d61b2a8f936cd81814d10/components-image-view-intro@2x.png")
-                """
-            }
+        Description {
+            """
+            This view uses the shared URLSession instance to load an image from the specified URL, and then display it. 
+            For example, you can display an icon that’s stored on a server:
+            """
         }
 
+        CodeBlock {
+            """
+            AsyncImage(
+                url: .init(
+                    string: "https://docs-assets.developer.apple.com/published/b38ef3054b1d61b2a8f936cd81814d10/components-image-view-intro@2x.png")
+            """
+        }
+        
         Preview {
             AsyncImage(url: .imageViewsPreview) { image in
                 image.resizable()
@@ -178,7 +224,7 @@ extension Topic {
     }
 }
 
-private extension Topic.LinkName {
+private extension ExternalLink.Name {
     static let docs: Self = "Documentation"
 }
 

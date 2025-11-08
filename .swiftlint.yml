@@ -24,3 +24,4 @@ type_body_length:
   error: 350
 disabled_rules:
   - trailing_comma
+  - trailing_whitespace

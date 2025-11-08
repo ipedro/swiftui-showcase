@@ -1,4 +1,4 @@
-// Topic+CodeBlockBuilder.swift
+// ExternalLink+Name.swift
 // Copyright (c) 2025 Pedro Almeida
 // Created by Pedro Almeida on 11/8/25.
 //
@@ -22,20 +22,22 @@
 
 import Foundation
 
-public extension Topic {
-    /// A result builder for creating code blocks.
-    @resultBuilder struct CodeBlockBuilder {
-        /// Builds an array of code blocks from individual components.
-        public static func buildBlock() -> [CodeBlock] { [] }
+public extension ExternalLink {
+    /// Represents the name of an external link.
+    struct Name: CustomStringConvertible, ExpressibleByStringLiteral {
+        /// The description of the link name.
+        public let description: String
 
-        /// Builds an array of code blocks from variadic components.
-        public static func buildBlock(_ components: CodeBlock...) -> [CodeBlock] {
-            components
+        /// Initializes a link name with the specified description.
+        /// - Parameter description: The description of the link name.
+        public init(_ description: String) {
+            self.description = description
         }
 
-        /// Builds an array of code blocks from variadic string components.
-        public static func buildBlock(_ components: String...) -> [CodeBlock] {
-            components.map { .init(stringLiteral: $0) }
+        /// Initializes a link name using a string literal.
+        /// - Parameter value: The string literal representing the link name description.
+        public init(stringLiteral value: String) {
+            description = value
         }
     }
 }

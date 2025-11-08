@@ -33,11 +33,11 @@ extension Topic {
         }
 
         Links {
-            Topic.Link(" HIG", "https://developer.apple.com/design/human-interface-guidelines/buttons")
+            ExternalLink(" HIG", "https://developer.apple.com/design/human-interface-guidelines/buttons")
         }
 
         Code {
-            Topic.CodeBlock {
+            CodeBlock {
                 """
                 Button("I'm a bordered button") {
                     // do something

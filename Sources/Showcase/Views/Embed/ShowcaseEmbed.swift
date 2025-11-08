@@ -28,7 +28,7 @@ import SwiftUI
 #endif
 
 public struct ShowcaseEmbeds: View {
-    var content: EquatableForEach<[Topic.Embed], Topic.Embed.ID, ShowcaseEmbed>
+    var content: EquatableForEach<[Embed], Embed.ID, ShowcaseEmbed>
     public var body: some View { content }
 }
 
@@ -40,7 +40,7 @@ struct ShowcaseEmbed: View, Equatable {
     @State
     private var height: CGFloat = 10 // Initial height, it will be adjusted later
 
-    var data: Topic.Embed
+    var data: Embed
 
     var body: some View {
         #if os(iOS)

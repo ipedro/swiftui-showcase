@@ -50,12 +50,12 @@ extension Topic {
         }
 
         Links {
-            Topic.Link("Code", .init(string: "NavigationalCard"))
-            Topic.Link("Design", .init(string: "https://google.com"))
+            ExternalLink("Code", .init(string: "NavigationalCard"))
+            ExternalLink("Design", .init(string: "https://google.com"))
         }
 
         Code {
-            Topic.CodeBlock("elevated") {
+            CodeBlock("elevated") {
                 """
                 NavigationalCard {
                     // action
@@ -65,7 +65,7 @@ extension Topic {
                 """
             }
 
-            Topic.CodeBlock("outlined") {
+            CodeBlock("outlined") {
                 """
                 NavigationalCard {
                     // action
@@ -93,12 +93,12 @@ extension Topic {
         }
 
         Links {
-            Topic.Link("Code", .init(string: "SelectableCard"))
-            Topic.Link("Design", .init(string: "https://google.com"))
+            ExternalLink("Code", .init(string: "SelectableCard"))
+            ExternalLink("Design", .init(string: "https://google.com"))
         }
 
         Code {
-            Topic.CodeBlock {
+            CodeBlock {
                 """
                 SelectableCard(isOn: $isOn) {
                     Text("I'm content")
@@ -128,12 +128,12 @@ extension Topic {
         }
 
         Links {
-            Topic.Link("Code", .init(string: "StaticCard"))
-            Topic.Link("Design", .init(string: "https://google.com"))
+            ExternalLink("Code", .init(string: "StaticCard"))
+            ExternalLink("Design", .init(string: "https://google.com"))
         }
 
         Code {
-            Topic.CodeBlock {
+            CodeBlock {
                 """
                 StaticCard {
                     Text("I'm content")

@@ -33,54 +33,59 @@ struct PerformanceTests {
         func createChildren(currentDepth: Int) -> [Topic]? {
             guard currentDepth < depth else { return nil }
             return (0 ..< childrenPerLevel).map { index in
-                Topic(
-                    "Child \(currentDepth)-\(index)",
-                    description: "Description for child \(currentDepth)-\(index) with some content",
-                    code: {
-                        Topic.CodeBlock("Example \(index)", text: {
-                            """
-                            import SwiftUI
+                Topic("Child \(currentDepth)-\(index)") {
+                    Description("Description for child \(currentDepth)-\(index) with some content")
+                    
+                    CodeBlock("Example \(index)", text: {
+                        """
+                        import SwiftUI
 
-                            struct ExampleView\(index): View {
-                                var body: some View {
-                                    Text("Example \(index)")
-                                }
+                        struct ExampleView\(index): View {
+                            var body: some View {
+                                Text("Example \(index)")
                             }
-                            """
-                        })
-                    },
-                    children: createChildren(currentDepth: currentDepth + 1)
-                )
+                        }
+                        """
+                    })
+                    
+                    if let children = createChildren(currentDepth: currentDepth + 1) {
+                        for child in children {
+                            child
+                        }
+                    }
+                }
             }
         }
 
-        return Topic(
-            "Root Topic",
-            description: "Root topic with nested children",
-            children: createChildren(currentDepth: 0)
-        )
+        return Topic("Root Topic") {
+            Description("Root topic with nested children")
+            
+            if let children = createChildren(currentDepth: 0) {
+                for child in children {
+                    child
+                }
+            }
+        }
     }
 
     static func createLargeDocument(chapterCount: Int = 10, topicsPerChapter: Int = 10) -> Document {
         let chapters = (0 ..< chapterCount).map { chapterIndex in
             let topics = (0 ..< topicsPerChapter).map { topicIndex in
-                Topic(
-                    "Topic \(chapterIndex)-\(topicIndex)",
-                    description: "Description for topic \(chapterIndex)-\(topicIndex)",
-                    code: {
-                        Topic.CodeBlock(text: {
-                            """
-                            import SwiftUI
+                Topic("Topic \(chapterIndex)-\(topicIndex)") {
+                    Description("Description for topic \(chapterIndex)-\(topicIndex)")
+                    
+                    CodeBlock(text: {
+                        """
+                        import SwiftUI
 
-                            struct View\(chapterIndex)_\(topicIndex): View {
-                                var body: some View {
-                                    Text("Content")
-                                }
+                        struct View\(chapterIndex)_\(topicIndex): View {
+                            var body: some View {
+                                Text("Content")
                             }
-                            """
-                        })
-                    }
-                )
+                        }
+                        """
+                    })
+                }
             }
             return Chapter("Chapter \(chapterIndex)") {
                 for topic in topics {
@@ -192,7 +197,7 @@ struct PerformanceTests {
         let topics = (0 ..< 100).map { index in
             Topic("Topic \(index)") {
                 Description("Description for topic \(index)")
-                Topic.CodeBlock(text: { "func example\(index)() {}" })
+                CodeBlock(text: { "func example\(index)() {}" })
             }
         }
         let chapter = Chapter("Test Chapter") {
@@ -223,7 +228,7 @@ struct PerformanceTests {
                 Description("Some content")
             },
             Topic("With Code") {
-                Topic.CodeBlock(text: { "func test() {}" })
+                CodeBlock(text: { "func test() {}" })
             },
             Topic("With Children") {
                 Topic("Child") {
@@ -266,11 +271,11 @@ struct PerformanceTests {
     func lazyPropertyPerformance() {
         let topic = Topic("Test") {
             Description("A very long description " + String(repeating: "that repeats ", count: 100))
-            Topic.CodeBlock(text: { String(repeating: "Line 0\n", count: 50) })
-            Topic.CodeBlock(text: { String(repeating: "Line 1\n", count: 50) })
-            Topic.CodeBlock(text: { String(repeating: "Line 2\n", count: 50) })
-            Topic.CodeBlock(text: { String(repeating: "Line 3\n", count: 50) })
-            Topic.CodeBlock(text: { String(repeating: "Line 4\n", count: 50) })
+            CodeBlock(text: { String(repeating: "Line 0\n", count: 50) })
+            CodeBlock(text: { String(repeating: "Line 1\n", count: 50) })
+            CodeBlock(text: { String(repeating: "Line 2\n", count: 50) })
+            CodeBlock(text: { String(repeating: "Line 3\n", count: 50) })
+            CodeBlock(text: { String(repeating: "Line 4\n", count: 50) })
         }
 
         // Target: < 0.001 seconds (properties should only init once)

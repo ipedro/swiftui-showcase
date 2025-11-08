@@ -35,7 +35,7 @@ struct DefaultBuilderTests {
         #expect(topic.codeBlocks.isEmpty)
         #expect(topic.links.isEmpty)
         #expect(topic.embeds.isEmpty)
-        #expect(topic.previews.isEmpty)
+        #expect(topic.examples.isEmpty)
         #expect(topic.children == nil)
     }
 

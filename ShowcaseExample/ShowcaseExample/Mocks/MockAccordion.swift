@@ -32,12 +32,12 @@ extension Topic {
         }
 
         Links {
-            Topic.Link("Code", "https://google.com")
-            Topic.Link("Design", "https://zeroheight.com/700c95a05/p/0309e1-accordion/b/45490a")
+            ExternalLink("Code", "https://google.com")
+            ExternalLink("Design", "https://zeroheight.com/700c95a05/p/0309e1-accordion/b/45490a")
         }
 
         Code {
-            Topic.CodeBlock {
+            CodeBlock {
                 """
                 Accordion(data, selection: $selectedRow) { item in
                     Text(item.title).bold()
@@ -47,7 +47,7 @@ extension Topic {
                 """
             }
 
-            Topic.CodeBlock {
+            CodeBlock {
                 """
                 Accordion(data, selection: $selectedRow) { item in
                     Text(item.title).bold()

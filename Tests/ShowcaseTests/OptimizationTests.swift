@@ -225,7 +225,7 @@ struct OptimizationTests {
         @Test("Not empty with code blocks")
         func notEmptyWithCodeBlocks() {
             let topic = Topic("Test") {
-                Topic.CodeBlock("Example")
+                CodeBlock("Example")
             }
             #expect(!topic.isEmpty)
         }
@@ -233,7 +233,7 @@ struct OptimizationTests {
         @Test("Not empty with previews")
         func notEmptyWithPreviews() {
             let topic = Topic("Test") {
-                Topic.Preview { Text("Preview") }
+                Example { Text("Preview") }
             }
             #expect(!topic.isEmpty)
         }
@@ -249,14 +249,14 @@ struct OptimizationTests {
         @Test("Not empty with links")
         func notEmptyWithLinks() {
             let topic = Topic("Test") {
-                Topic.Link("Documentation", "https://example.com")
+                ExternalLink("Documentation", "https://example.com")
             }
             #expect(!topic.isEmpty)
         }
 
         @Test("Not empty with embeds")
         func notEmptyWithEmbeds() {
-            guard let embed = Topic.Embed(URL(string: "https://example.com")!) else {
+            guard let embed = Embed(URL(string: "https://example.com")!) else {
                 Issue.record("Failed to create embed")
                 return
             }
@@ -297,7 +297,7 @@ struct OptimizationTests {
         @Test("Matches in code blocks")
         func matchesInCodeBlocks() {
             let topic = Topic("Test") {
-                Topic.CodeBlock("Example", text: { "func hello() {}" })
+                CodeBlock("Example", text: { "func hello() {}" })
             }
 
             let result = topic.search(query: "hello")
@@ -308,7 +308,7 @@ struct OptimizationTests {
         @Test("Matches in links")
         func matchesInLinks() {
             let topic = Topic("Test") {
-                Topic.Link("Documentation", "https://example.com/special")
+                ExternalLink("Documentation", "https://example.com/special")
             }
 
             let result = topic.search(query: "special")
@@ -409,8 +409,8 @@ struct OptimizationTests {
 
         @Test("CodeBlock equality is ID-based")
         func codeBlockEquality() {
-            let block1 = Topic.CodeBlock("Example", text: { "code" })
-            let block2 = Topic.CodeBlock("Example", text: { "code" })
+            let block1 = CodeBlock("Example", text: { "code" })
+            let block2 = CodeBlock("Example", text: { "code" })
 
             // CodeBlocks use ID-based equality (different instances = different IDs)
             #expect(block1 != block2)
@@ -419,10 +419,10 @@ struct OptimizationTests {
 
         @Test("CodeBlock instances have unique hashes")
         func codeBlockHashable() {
-            let block1 = Topic.CodeBlock("Example", text: { "code" })
-            let block2 = Topic.CodeBlock("Example", text: { "code" })
+            let block1 = CodeBlock("Example", text: { "code" })
+            let block2 = CodeBlock("Example", text: { "code" })
 
-            var set = Set<Topic.CodeBlock>()
+            var set = Set<CodeBlock>()
             set.insert(block1)
             set.insert(block2)
 
@@ -432,14 +432,14 @@ struct OptimizationTests {
 
         @Test("Link instances have unique hashes")
         func linkHashable() {
-            guard let link1 = Topic.Link("Documentation", "https://example.com"),
-                  let link2 = Topic.Link("Documentation", "https://example.com")
+            guard let link1 = ExternalLink("Documentation", "https://example.com"),
+                  let link2 = ExternalLink("Documentation", "https://example.com")
             else {
                 Issue.record("Failed to create links")
                 return
             }
 
-            var set = Set<Topic.Link>()
+            var set = Set<ExternalLink>()
             set.insert(link1)
             set.insert(link2)
 

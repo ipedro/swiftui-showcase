@@ -1,4 +1,4 @@
-// ShowcasePreviewGroupBoxStyle.swift
+// Topic+Embed.swift
 // Copyright (c) 2025 Pedro Almeida
 // Created by Pedro Almeida on 11/8/25.
 //
@@ -20,29 +20,34 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import SwiftUI
+import Foundation
+import WebKit
 
-public extension ShowcasePreviewStyle where Self == ShowcasePreviewGroupBoxStyle<DefaultGroupBoxStyle> {
-    /// Shows the preview content inside a group box, with an optional title.
-    static var groupBox: ShowcasePreviewGroupBoxStyle<DefaultGroupBoxStyle> {
-        ShowcasePreviewGroupBoxStyle(style: .automatic)
+public typealias EmbedNavigationHandler = (_ action: WKNavigationAction) -> WKNavigationActionPolicy
+
+/// External content associated with a topic.
+public struct Embed: Identifiable, Equatable {
+    public static func == (lhs: Embed, rhs: Embed) -> Bool {
+        lhs.id == rhs.id
     }
 
-    /// Shows the preview content inside a custom group box.
-    static func groupBox<S: GroupBoxStyle>(_ style: S) -> ShowcasePreviewGroupBoxStyle<S> {
-        ShowcasePreviewGroupBoxStyle(style: style)
-    }
-}
+    public let id = UUID()
+    public var url: URL
+    public var navigationHandler: EmbedNavigationHandler
+    public var isInteractionEnabled: Bool
+    /// Minimum height of the preview.
+    public var minHeight: CGFloat?
 
-public struct ShowcasePreviewGroupBoxStyle<S: GroupBoxStyle>: ShowcasePreviewStyle {
-    var style: S
-
-    public func makeBody(configuration: ShowcasePreviewConfiguration) -> some View {
-        GroupBox {
-            configuration.content
-        } label: {
-            configuration.label
-        }
-        .groupBoxStyle(style)
+    public init?(
+        _ url: URL?,
+        minHeight: CGFloat? = nil,
+        isInteractionEnabled: Bool = true,
+        navigationHandler: @escaping EmbedNavigationHandler = { _ in .allow }
+    ) {
+        guard let url = url else { return nil }
+        self.url = url
+        self.minHeight = minHeight
+        self.isInteractionEnabled = isInteractionEnabled
+        self.navigationHandler = navigationHandler
     }
 }
