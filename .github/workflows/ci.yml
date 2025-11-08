@@ -102,15 +102,26 @@ jobs:
       - name: Generate Coverage Report
         if: matrix.run-package-tests
         run: |
-          # Find the test binary (architecture-specific location)
-          TEST_BINARY=$(find .build -name "ShowcasePackageTests.xctest" -o -name "*PackageTests.xctest" | grep -v ".dSYM" | head -1)
+          # Find the test binary inside the .xctest bundle
+          # The .xctest is a directory/bundle, binary is at Contents/MacOS/
+          TEST_BUNDLE=$(find .build -name "ShowcasePackageTests.xctest" -o -name "*PackageTests.xctest" | grep -v ".dSYM" | head -1)
           
-          if [ -z "$TEST_BINARY" ]; then
-            echo "Error: Could not find test binary"
+          if [ -z "$TEST_BUNDLE" ]; then
+            echo "Error: Could not find test bundle"
             exit 1
           fi
           
-          echo "Found test binary: $TEST_BINARY"
+          echo "Found test bundle: $TEST_BUNDLE"
+          
+          # The actual binary is inside the bundle
+          TEST_BINARY="$TEST_BUNDLE/Contents/MacOS/$(basename $TEST_BUNDLE .xctest)"
+          
+          if [ ! -f "$TEST_BINARY" ]; then
+            echo "Error: Binary not found at $TEST_BINARY"
+            exit 1
+          fi
+          
+          echo "Using test binary: $TEST_BINARY"
           
           # Convert profdata to lcov format for Codecov
           xcrun llvm-cov export -format="lcov" \
