@@ -22,7 +22,7 @@
 import SwiftUI
 
 /// Describes a piece of textual content that can be attached to topics or chapters.
-public struct DescriptiveText {
+public struct Description {
     public let value: String
 
     @inlinable
@@ -36,18 +36,6 @@ public struct DescriptiveText {
     public init(_ builder: () -> String) {
         self.value = builder()
     }
-}
-
-/// Convenience helper for attaching descriptions within DSL builders.
-@inlinable
-public func Description(_ text: String) -> DescriptiveText {
-    DescriptiveText(text)
-}
-
-/// Convenience helper for attaching descriptions built from a closure.
-@inlinable
-public func Description(_ builder: () -> String) -> DescriptiveText {
-    DescriptiveText(builder)
 }
 
 /// A type-erased component that can contribute to a topic's content when
@@ -165,7 +153,7 @@ extension Topic.Content: TopicContentConvertible {
     }
 }
 
-extension DescriptiveText: TopicContentConvertible {
+extension Description: TopicContentConvertible {
     public func merge(into content: inout Topic.Content) {
         content.description = value
     }

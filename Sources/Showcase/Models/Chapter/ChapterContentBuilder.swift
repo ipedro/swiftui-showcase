@@ -61,7 +61,7 @@ public enum ChapterContentBuilder {
     }
 
     public static func buildOptional(_ component: Chapter.Content?) -> Chapter.Content {
-        component ?? Chapter.Content()
+        component ?? .init()
     }
 
     public static func buildEither(first component: Chapter.Content) -> Chapter.Content {
@@ -105,7 +105,7 @@ extension Chapter.Content: ChapterContentConvertible {
     }
 }
 
-extension DescriptiveText: ChapterContentConvertible {
+extension Description: ChapterContentConvertible {
     public func merge(into content: inout Chapter.Content) {
         content.description = value
     }
