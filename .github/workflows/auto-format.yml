@@ -24,7 +24,7 @@ jobs:
       - name: Apply SwiftLint
         run: |
           brew install swiftlint
-          swiftlint Sources/ Tests/
+          swiftlint --fix Sources/ Tests/
           echo "SwiftLint applied successfully"
           
       - name: Apply SwiftFormat
