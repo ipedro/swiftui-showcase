@@ -23,7 +23,7 @@ import SwiftUI
 
 /// Describes a piece of textual content that can be attached to topics or chapters.
 public struct DescriptiveText {
-    let value: String
+    public let value: String
 
     @inlinable
     public init(_ value: String) {
@@ -201,35 +201,9 @@ extension Topic: TopicContentConvertible {
     }
 }
 
-extension Array: TopicContentConvertible where Element == Topic {
-    public func merge(into content: inout Topic.Content) {
-        content.children.append(contentsOf: self)
-    }
-}
-
-extension Array: TopicContentConvertible where Element == Topic.Preview {
-    public func merge(into content: inout Topic.Content) {
-        content.previews.append(contentsOf: self)
-    }
-}
-
-extension Array: TopicContentConvertible where Element == Topic.CodeBlock {
-    public func merge(into content: inout Topic.Content) {
-        content.codeBlocks.append(contentsOf: self)
-    }
-}
-
-extension Array: TopicContentConvertible where Element == Topic.Link {
-    public func merge(into content: inout Topic.Content) {
-        content.links.append(contentsOf: self)
-    }
-}
-
-extension Array: TopicContentConvertible where Element == Topic.Embed {
-    public func merge(into content: inout Topic.Content) {
-        content.embeds.append(contentsOf: self)
-    }
-}
+// Note: Swift doesn't allow multiple conditional Array conformances to the same protocol.
+// Individual element types (Topic, Preview, CodeBlock, Link, Embed) conform directly,
+// and the result builder handles arrays automatically.
 
 /// Collects links produced by a ``Topic.LinkBuilder`` into the topic content DSL.
 public struct TopicLinks: TopicContentConvertible {
@@ -246,11 +220,11 @@ public struct TopicLinks: TopicContentConvertible {
     }
 }
 
-/// Collects embeds produced by an ``EmbedBuilder`` into the topic content DSL.
+/// Collects embeds produced by an ``Topic/EmbedBuilder`` into the topic content DSL.
 public struct TopicEmbeds: TopicContentConvertible {
     private let builder: () -> [Topic.Embed]
 
-    public init(@EmbedBuilder _ builder: @escaping () -> [Topic.Embed]) {
+    public init(@Topic.EmbedBuilder _ builder: @escaping () -> [Topic.Embed]) {
         self.builder = builder
     }
 
@@ -276,11 +250,11 @@ public struct TopicCodeBlocks: TopicContentConvertible {
     }
 }
 
-/// Collects previews produced by a ``Topic.PreviewBuilder`` into the topic content DSL.
+/// Collects previews produced by a ``Topic/PreviewBuilder`` into the topic content DSL.
 public struct TopicPreviews: TopicContentConvertible {
     private let builder: () -> [Topic.Preview]
 
-    public init(@PreviewBuilder _ builder: @escaping () -> [Topic.Preview]) {
+    public init(@Topic.PreviewBuilder _ builder: @escaping () -> [Topic.Preview]) {
         self.builder = builder
     }
 
@@ -308,7 +282,7 @@ public struct TopicChildren: TopicContentConvertible {
 
 /// Convenience helper mirroring ``TopicPreviews`` while avoiding explicit type names in the DSL.
 @inlinable
-public func Previews(@PreviewBuilder _ builder: @escaping () -> [Topic.Preview]) -> TopicPreviews {
+public func Previews(@Topic.PreviewBuilder _ builder: @escaping () -> [Topic.Preview]) -> TopicPreviews {
     TopicPreviews(builder)
 }
 
@@ -326,7 +300,7 @@ public func Links(@Topic.LinkBuilder _ builder: @escaping () -> [Topic.Link]) ->
 
 /// Convenience helper mirroring ``TopicEmbeds`` while avoiding explicit type names in the DSL.
 @inlinable
-public func Embeds(@EmbedBuilder _ builder: @escaping () -> [Topic.Embed]) -> TopicEmbeds {
+public func Embeds(@Topic.EmbedBuilder _ builder: @escaping () -> [Topic.Embed]) -> TopicEmbeds {
     TopicEmbeds(builder)
 }
 

@@ -112,26 +112,26 @@ public struct Topic: Identifiable {
     func withIcon(_ proposal: Image?) -> Topic {
         // Early exit if no icon proposal or already has icon
         guard let proposal = proposal, self.icon == nil else { return self }
-        
+
         var copy = self
         copy._icon = Lazy(wrappedValue: proposal)
-        
+
         // Only process children if they exist
         if let children = copy.children, !children.isEmpty {
             copy.children = children.map { $0.withIcon(proposal) }
         }
-        
+
         return copy
     }
 
     var isEmpty: Bool {
         // Use short-circuit evaluation for early exit
-        description.isEmpty 
-            && codeBlocks.isEmpty 
-            && links.isEmpty 
-            && embeds.isEmpty
-            && previews.isEmpty
-            && (children?.isEmpty ?? true)
+        description.isEmpty
+        && codeBlocks.isEmpty
+        && links.isEmpty
+        && embeds.isEmpty
+        && previews.isEmpty
+        && (children?.isEmpty ?? true)
     }
 
     // MARK: - Icon
@@ -389,17 +389,17 @@ extension Topic {
     /// - Returns: `true` if the query matches any part of the topic or its children, `false` otherwise.
     func search(query: String) -> Topic? {
         // Early exit: Use short-circuit evaluation to avoid unnecessary checks
-        let isMatch = title.localizedCaseInsensitiveContains(query) 
-            || description.localizedCaseInsensitiveContains(query)
-            || previews.contains(where: { $0.title?.localizedCaseInsensitiveContains(query) == true })
-            || codeBlocks.contains(where: { 
-                $0.rawValue.localizedCaseInsensitiveContains(query) 
-                || $0.title?.localizedCaseInsensitiveContains(query) == true 
-            })
-            || links.contains(where: { 
-                $0.url.absoluteString.localizedCaseInsensitiveContains(query) 
-                || $0.name.description.localizedCaseInsensitiveContains(query) 
-            })
+        let isMatch = title.localizedCaseInsensitiveContains(query)
+        || description.localizedCaseInsensitiveContains(query)
+        || previews.contains(where: { $0.title?.localizedCaseInsensitiveContains(query) == true })
+        || codeBlocks.contains(where: {
+            $0.rawValue.localizedCaseInsensitiveContains(query)
+            || $0.title?.localizedCaseInsensitiveContains(query) == true
+        })
+        || links.contains(where: {
+            $0.url.absoluteString.localizedCaseInsensitiveContains(query)
+            || $0.name.description.localizedCaseInsensitiveContains(query)
+        })
 
         var copy = self
         copy.children = children?.compactMap { $0.search(query: query) }

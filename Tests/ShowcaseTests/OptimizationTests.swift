@@ -56,7 +56,7 @@ struct OptimizationTests {
     }
     
     // Helper class for thread-safe counting
-    private final class CallCounter: Sendable {
+    private final class CallCounter: @unchecked Sendable {
         private let lock = NSLock()
         private var _count = 0
         

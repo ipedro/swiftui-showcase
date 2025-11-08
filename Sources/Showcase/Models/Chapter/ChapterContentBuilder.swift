@@ -125,19 +125,18 @@ extension Array: ChapterContentConvertible where Element == Topic {
 
 /// Convenience helper mirroring ``Array`` conformances while allowing readers to
 /// convey intent explicitly in the DSL.
-@inlinable
-public func Topics(@TopicBuilder _ builder: @escaping () -> [Topic]) -> ChapterContentConvertible {
+public func Topics(@TopicBuilder _ builder: @escaping () -> [Topic]) -> some ChapterContentConvertible {
     TopicsWrapper(builder)
 }
 
-private struct TopicsWrapper: ChapterContentConvertible {
+public struct TopicsWrapper: ChapterContentConvertible {
     let builder: () -> [Topic]
 
-    init(_ builder: @escaping () -> [Topic]) {
+    public init(_ builder: @escaping () -> [Topic]) {
         self.builder = builder
     }
 
-    func merge(into content: inout Chapter.Content) {
+    public func merge(into content: inout Chapter.Content) {
         let topics = builder()
         guard !topics.isEmpty else { return }
         content.topics.append(contentsOf: topics)
