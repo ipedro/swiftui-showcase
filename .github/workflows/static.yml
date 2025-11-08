@@ -47,7 +47,7 @@ jobs:
         run: |
           xcodebuild docbuild -scheme Showcase \
             -derivedDataPath /tmp/docbuild \
-            -destination 'platform=macOS,name=Any Mac' \
+            -destination 'platform=macOS' \
             -skipPackagePluginValidation \
             -skipMacroValidation;
           $(xcrun --find docc) process-archive \
