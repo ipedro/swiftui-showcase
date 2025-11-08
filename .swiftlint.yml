@@ -22,3 +22,5 @@ file_length:
 type_body_length:
   warning: 250
   error: 350
+disabled_rules:
+  - trailing_comma
