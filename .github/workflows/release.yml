@@ -42,7 +42,7 @@ jobs:
         run: swift test --parallel
       
       - name: Build Package
-        run: swift build --configuration release
+        run: swift build --configuration release -Xswiftc -skipMacroValidation
       
       - name: Verify Version
         run: |
