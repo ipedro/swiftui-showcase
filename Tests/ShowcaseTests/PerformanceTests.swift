@@ -32,7 +32,7 @@ struct PerformanceTests {
     static func createLargeTopic(depth: Int = 3, childrenPerLevel: Int = 5) -> Topic {
         func createChildren(currentDepth: Int) -> [Topic]? {
             guard currentDepth < depth else { return nil }
-            return (0..<childrenPerLevel).map { index in
+            return (0 ..< childrenPerLevel).map { index in
                 Topic(
                     "Child \(currentDepth)-\(index)",
                     description: "Description for child \(currentDepth)-\(index) with some content",
@@ -189,7 +189,7 @@ struct PerformanceTests {
 
     @Test("Chapter search performance")
     func chapterSearchPerformance() {
-        let topics = (0..<100).map { index in
+        let topics = (0 ..< 100).map { index in
             Topic("Topic \(index)") {
                 Description("Description for topic \(index)")
                 Topic.CodeBlock(text: { "func example\(index)() {}" })
@@ -229,7 +229,7 @@ struct PerformanceTests {
                 Topic("Child") {
                     Description("Child content")
                 }
-            }
+            },
         ]
 
         // Target: < 0.001 seconds (should short-circuit quickly)
@@ -238,7 +238,7 @@ struct PerformanceTests {
 
     @Test("Topic sorting performance")
     func topicSortingPerformance() {
-        let topics = (0..<1000).shuffled().map { index in
+        let topics = (0 ..< 1000).shuffled().map { index in
             Topic("Topic \(String(format: "%04d", index))")
         }
 
@@ -248,7 +248,7 @@ struct PerformanceTests {
 
     @Test("Hashable operations performance")
     func hashablePerformance() {
-        let topics = (0..<1000).map { index in
+        let topics = (0 ..< 1000).map { index in
             Topic("Topic \(index)")
         }
 
