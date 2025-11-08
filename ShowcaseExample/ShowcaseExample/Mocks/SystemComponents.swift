@@ -29,7 +29,7 @@ extension Document {
         Chapter("Content") {
             Description("Learn how to use and customize system-defined components to give people a familiar and consistent experience.")
 
-            .imageViews
+            Topic.imageViews
 
             Topic("Charts") {
                 Description("Organize data in a chart to communicate information with clarity and visual appeal.")
@@ -126,8 +126,8 @@ extension Topic {
             Topic.Link(.docs, .imageViewsDocs)
         }
 
-        .image
-        .asyncImage
+        Topic.image
+        Topic.asyncImage
     }
 }
 

@@ -31,9 +31,9 @@ extension Topic {
             """
         }
 
-        .staticCard
-        .navigationalCard
-        .selectableCard
+        Topic.staticCard
+        Topic.navigationalCard
+        Topic.selectableCard
     }
 }
 

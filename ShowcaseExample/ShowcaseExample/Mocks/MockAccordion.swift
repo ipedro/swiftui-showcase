@@ -62,7 +62,7 @@ extension Topic {
             MockPreviews()
         }
 
-        .mockCard
+        Topic.mockCard
     }
 }
 
@@ -72,7 +72,7 @@ struct TopicAccordion_Previews: PreviewProvider {
             ShowcaseNavigationStack(
                 Document("Accordion") {
                     Chapter("Chapter") {
-                        .mockAccordion
+                        Topic.mockAccordion
                     }
                 }
             )

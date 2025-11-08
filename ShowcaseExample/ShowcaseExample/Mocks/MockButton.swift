@@ -62,7 +62,7 @@ struct TopicButton_Previews: PreviewProvider {
             ShowcaseNavigationStack(
                 Document("Button") {
                     Chapter("Chapter") {
-                        .mockButton
+                        Topic.mockButton
                     }
                 }
             )
