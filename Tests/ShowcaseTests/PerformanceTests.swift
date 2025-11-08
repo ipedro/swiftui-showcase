@@ -229,7 +229,7 @@ struct PerformanceTests {
                 Topic("Child") {
                     Description("Child content")
                 }
-            },
+            }
         ]
 
         // Target: < 0.001 seconds (should short-circuit quickly)
