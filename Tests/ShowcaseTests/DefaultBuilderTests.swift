@@ -25,11 +25,11 @@ import SwiftUI
 
 @Suite("Default Builder Parameter Tests")
 struct DefaultBuilderTests {
-    
+
     @Test("Topic with no content closure")
     func topicWithoutBraces() {
         let topic = Topic("Test Topic")
-        
+
         #expect(topic.title == "Test Topic")
         #expect(topic.description == "")
         #expect(topic.codeBlocks.isEmpty)
@@ -38,61 +38,61 @@ struct DefaultBuilderTests {
         #expect(topic.previews.isEmpty)
         #expect(topic.children == nil)
     }
-    
+
     @Test("Topic with icon and no content closure")
     func topicWithIconWithoutBraces() {
         let icon = Image(systemName: "star")
         let topic = Topic("Test Topic", icon: icon)
-        
+
         #expect(topic.title == "Test Topic")
         #expect(topic.icon != nil)
         #expect(topic.description == "")
         #expect(topic.codeBlocks.isEmpty)
     }
-    
+
     @Test("Chapter with no content closure")
     func chapterWithoutBraces() {
         let chapter = Chapter("Test Chapter")
-        
+
         #expect(chapter.title == "Test Chapter")
         #expect(chapter.description == "")
         #expect(chapter.topics.isEmpty)
     }
-    
+
     @Test("Chapter with icon and no content closure")
     func chapterWithIconWithoutBraces() {
         let icon = Image(systemName: "book")
         let chapter = Chapter("Test Chapter", icon: icon)
-        
+
         #expect(chapter.title == "Test Chapter")
         #expect(chapter.icon != nil)
         #expect(chapter.description == "")
         #expect(chapter.topics.isEmpty)
     }
-    
+
     @Test("Document with no content closure")
     func documentWithoutBraces() {
         let document = Document("Test Document") {}
-        
+
         #expect(document.title == "Test Document")
         #expect(document.description == "")
         #expect(document.chapters.isEmpty)
     }
-    
+
     @Test("Document with description and no content closure")
     func documentWithDescriptionWithoutBraces() {
         let document = Document("Test Document", description: "A test") {}
-        
+
         #expect(document.title == "Test Document")
         #expect(document.description == "A test")
         #expect(document.chapters.isEmpty)
     }
-    
+
     @Test("Document with icon and no content closure")
     func documentWithIconWithoutBraces() {
         let icon = Image(systemName: "doc")
         let document = Document("Test Document", icon: icon) {}
-        
+
         #expect(document.title == "Test Document")
         #expect(document.icon != nil)
         #expect(document.chapters.isEmpty)

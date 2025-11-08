@@ -119,9 +119,11 @@ extension Topic {
     static let staticCard = Topic("Static Card") {
         Description {
             """
-            A static card can have interactive elements such as a call-to-action button, but it is not intended for navigation or selection.
+            A static card can have interactive elements such as a call-to-action button, but it is not intended \
+            for navigation or selection.
 
-            The card surface does not have interactive states, meaning it cannot be hovered or selected. However, it does contain other interactive components. An example of a static card is a recipe card.
+            The card surface does not have interactive states, meaning it cannot be hovered or selected. \
+            However, it does contain other interactive components. An example of a static card is a recipe card.
             """
         }
 
@@ -153,4 +155,3 @@ extension Topic {
         }
     }
 }
-

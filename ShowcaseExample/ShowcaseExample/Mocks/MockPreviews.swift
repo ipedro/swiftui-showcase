@@ -30,7 +30,7 @@ struct MockPreviews: View {
         .green,
         .mint
     ]
-    
+
     var body: some View {
         ForEach(colors, id: \.self) { color in
             VStack {

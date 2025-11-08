@@ -184,7 +184,7 @@ private extension Topic.LinkName {
 
 private extension URL {
     static let imageViewsPreview = Self.init(string: "https://docs-assets.developer.apple.com/published/b38ef3054b1d61b2a8f936cd81814d10/components-image-view-intro@2x.png")
-    
+
     static let imageViewsDocs = Self.init(string: "https://developer.apple.com/design/human-interface-guidelines/image-views")
 }
 
@@ -199,4 +199,3 @@ struct SystemLibrary_Previews: PreviewProvider {
         }
     }
 }
-
