@@ -15,7 +15,7 @@ jobs:
   # Linting and formatting check
   lint:
     name: SwiftLint & SwiftFormat
-    runs-on: macos-14
+    runs-on: macos-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -51,7 +51,7 @@ jobs:
   # Build and test on multiple platforms
   test:
     name: Test on ${{ matrix.platform }}
-    runs-on: macos-14
+    runs-on: macos-latest
     strategy:
       fail-fast: false
       matrix:
@@ -109,7 +109,7 @@ jobs:
   # Code coverage reporting
   coverage:
     name: Code Coverage
-    runs-on: macos-14
+    runs-on: macos-latest
     needs: test
     steps:
       - name: Checkout
@@ -133,7 +133,7 @@ jobs:
   # Performance regression detection
   performance:
     name: Performance Benchmarks
-    runs-on: macos-14
+    runs-on: macos-latest
     needs: test
     steps:
       - name: Checkout
@@ -176,7 +176,7 @@ jobs:
   # Build documentation
   docs:
     name: Build Documentation
-    runs-on: macos-14
+    runs-on: macos-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -201,8 +201,9 @@ jobs:
           xcodebuild docbuild -scheme Showcase \
             -derivedDataPath /tmp/docbuild \
             -destination 'generic/platform=iOS' \
-            -skipPackagePluginValidation
-      
+            -skipPackagePluginValidation \
+            -skipMacroValidation
+
       - name: Verify DocC Archive
         run: |
           if [ -d "/tmp/docbuild/Build/Products/Debug-iphoneos/Showcase.doccarchive" ]; then
