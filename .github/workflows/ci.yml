@@ -63,20 +63,16 @@ jobs:
         run: xcrun simctl list devices available
       
       - name: Build for ${{ matrix.platform }}
+        if: matrix.platform == 'iOS'
         run: |
-          if [ "${{ matrix.platform }}" == "iOS" ]; then
-            xcodebuild build \
-              -scheme swiftui-showcase-Package \
-              -destination 'platform=iOS Simulator,name=iPhone 16' \
-              -skipPackagePluginValidation \
-              -skipMacroValidation \
-              CODE_SIGN_IDENTITY="" \
-              CODE_SIGNING_REQUIRED=NO
-          else
-            swift build \
-              --configuration debug \
-              -Xswiftc -enable-testing
-          fi
+          xcodebuild build \
+            -project ShowcaseExample/ShowcaseExample.xcodeproj \
+            -scheme ShowcaseExample \
+            -destination 'platform=iOS Simulator,name=iPhone 16' \
+            -skipPackagePluginValidation \
+            -skipMacroValidation \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO
       
       - name: Run Tests
         run: swift test --parallel --enable-code-coverage
