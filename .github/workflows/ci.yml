@@ -12,30 +12,41 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # SwiftLint check with PR annotations
+  # SwiftLint check
   swiftlint:
     name: SwiftLint
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: write
-      checks: write
     steps:
       - name: Checkout
         uses: actions/checkout@v5
         with:
           fetch-depth: 0
       
-      # Fix git safe.directory issue in Docker container
-      - name: Configure Git Safe Directory
-        run: git config --global --add safe.directory /github/workspace
+      - name: Install SwiftLint
+        run: |
+          # Install SwiftLint binary
+          curl -Lo /tmp/swiftlint.zip https://github.com/realm/SwiftLint/releases/download/0.57.1/swiftlint_linux.zip
+          unzip /tmp/swiftlint.zip -d /tmp
+          sudo install /tmp/swiftlint /usr/local/bin/swiftlint
+          swiftlint version
       
-      - name: Run SwiftLint with PR annotations
-        uses: norio-nomura/action-swiftlint@3.2.1
-        with:
-          args: --strict
-        env:
-          DIFF_BASE: ${{ github.base_ref }}
+      - name: Run SwiftLint
+        run: |
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            # For PRs, lint only changed files
+            git fetch origin ${{ github.base_ref }}
+            CHANGED_FILES=$(git diff --name-only --diff-filter=d origin/${{ github.base_ref }}...HEAD -- '*.swift' || echo "")
+            if [ -n "$CHANGED_FILES" ]; then
+              echo "Linting changed files:"
+              echo "$CHANGED_FILES"
+              echo "$CHANGED_FILES" | xargs swiftlint lint --strict --quiet
+            else
+              echo "No Swift files changed"
+            fi
+          else
+            # For pushes to main, lint everything
+            swiftlint lint --strict --quiet
+          fi
 
   # Build and test on multiple platforms
   test:
