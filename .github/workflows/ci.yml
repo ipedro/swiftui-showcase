@@ -79,15 +79,15 @@ jobs:
           if [ "${{ matrix.platform }}" == "iOS" ]; then
             xcodebuild build \
               -scheme Showcase \
-              -destination 'platform=iOS Simulator,name=iPhone 15 Pro,OS=17.5' \
+              -destination 'platform=iOS Simulator,name=iPhone 16' \
               -skipPackagePluginValidation \
+              -skipMacroValidation \
               CODE_SIGN_IDENTITY="" \
               CODE_SIGNING_REQUIRED=NO
           else
             swift build \
               --configuration debug \
-              -Xswiftc -enable-testing \
-              -Xswiftc -skipMacroValidation
+              -Xswiftc -enable-testing
           fi
       
       - name: Run Tests

@@ -56,7 +56,8 @@ jobs:
           xcodebuild docbuild -scheme Showcase \
             -derivedDataPath /tmp/docbuild \
             -destination 'generic/platform=iOS' \
-            -skipPackagePluginValidation;
+            -skipPackagePluginValidation \
+            -skipMacroValidation;
           $(xcrun --find docc) process-archive \
             transform-for-static-hosting /tmp/docbuild/Build/Products/Debug-iphoneos/Showcase.doccarchive \
             --hosting-base-path swiftui-showcase \
