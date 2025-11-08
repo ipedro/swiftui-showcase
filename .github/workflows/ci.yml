@@ -23,7 +23,7 @@ jobs:
       - name: Set up Xcode
         uses: maxim-lobanov/setup-xcode@v1.6.0
         with:
-          xcode-version: 'latest-stable'
+          xcode-version: '26.0'
       
       - name: Run SwiftLint
         run: |
@@ -56,7 +56,7 @@ jobs:
       - name: Set up Xcode
         uses: maxim-lobanov/setup-xcode@v1.6.0
         with:
-          xcode-version: 'latest-stable'
+          xcode-version: '26.0'
       
       - name: List available simulators
         if: matrix.platform == 'iOS'
@@ -113,7 +113,7 @@ jobs:
       - name: Set up Xcode
         uses: maxim-lobanov/setup-xcode@v1.6.0
         with:
-          xcode-version: 'latest-stable'
+          xcode-version: '26.0'
 
   # Performance regression detection
   performance:
@@ -129,7 +129,7 @@ jobs:
       - name: Set up Xcode
         uses: maxim-lobanov/setup-xcode@v1.6.0
         with:
-          xcode-version: 'latest-stable'
+          xcode-version: '26.0'
       
       - name: Run Performance Tests
         run: |
@@ -159,7 +159,7 @@ jobs:
       - name: Set up Xcode
         uses: maxim-lobanov/setup-xcode@v1.6.0
         with:
-          xcode-version: 'latest-stable'
+          xcode-version: '26.0'
       
       - name: Build DocC
         run: |
