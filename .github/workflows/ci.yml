@@ -173,13 +173,13 @@ jobs:
         run: |
           xcodebuild docbuild -scheme Showcase \
             -derivedDataPath /tmp/docbuild \
-            -destination 'platform=macOS,name=Any Mac' \
+            -destination 'platform=macOS' \
             -skipPackagePluginValidation \
             -skipMacroValidation
 
       - name: Verify DocC Archive
         run: |
-          if [ -d "/tmp/docbuild/Build/Products/Debug-iphoneos/Showcase.doccarchive" ]; then
+          if [ -d "/tmp/docbuild/Build/Products/Debug/Showcase.doccarchive" ]; then
             echo "✓ DocC archive generated successfully"
           else
             echo "✗ DocC archive not found"
