@@ -237,7 +237,7 @@ public struct TopicEmbeds: TopicContentConvertible {
     private let builder: () -> [Topic.Embed]
 
     public init(@Topic.EmbedBuilder _ builder: @escaping () -> [Topic.Embed]) {
-        builder = builder
+        self.builder = builder
     }
 
     public func merge(into content: inout Topic.Content) {
@@ -252,7 +252,7 @@ public struct TopicCodeBlocks: TopicContentConvertible {
     private let builder: () -> [Topic.CodeBlock]
 
     public init(@Topic.CodeBlockBuilder _ builder: @escaping () -> [Topic.CodeBlock]) {
-        builder = builder
+        self.builder = builder
     }
 
     public func merge(into content: inout Topic.Content) {
@@ -267,7 +267,7 @@ public struct TopicPreviews: TopicContentConvertible {
     private let builder: () -> [Topic.Preview]
 
     public init(@Topic.PreviewBuilder _ builder: @escaping () -> [Topic.Preview]) {
-        builder = builder
+        self.builder = builder
     }
 
     public func merge(into content: inout Topic.Content) {
