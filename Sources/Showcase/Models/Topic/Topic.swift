@@ -28,7 +28,7 @@ import SwiftUI
 public struct Topic: Identifiable {
     /// The unique identifier for the topic.
     public let id = UUID()
-    
+
     /// Ordered content items that preserve declaration order.
     ///
     /// This array contains all content items (links, code blocks, previews, embeds)
@@ -169,7 +169,7 @@ public struct Topic: Identifiable {
         let embedsArray = embeds()
         let codeBlocksArray = codeBlocks()
         let previewsArray = previews()
-        
+
         // Build items array preserving original order (links, embeds, code, previews)
         var itemsArray: [TopicContentItem] = []
         itemsArray.reserveCapacity(linksArray.count + embedsArray.count + codeBlocksArray.count + previewsArray.count)
@@ -177,7 +177,7 @@ public struct Topic: Identifiable {
         itemsArray.append(contentsOf: embedsArray.map { .embed($0) })
         itemsArray.append(contentsOf: codeBlocksArray.map { .codeBlock($0) })
         itemsArray.append(contentsOf: previewsArray.map { .preview($0) })
-        
+
         _items = Lazy(wrappedValue: itemsArray)
         _items = Lazy(wrappedValue: itemsArray)
 _items = Lazy(wrappedValue: [])
@@ -210,14 +210,14 @@ _items = Lazy(wrappedValue: [])
         let embedsArray = embeds()
         let codeBlocksArray = codeBlocks()
         let previewsArray = previews()
-        
+
         var itemsArray: [TopicContentItem] = []
         itemsArray.reserveCapacity(linksArray.count + embedsArray.count + codeBlocksArray.count + previewsArray.count)
         itemsArray.append(contentsOf: linksArray.map { .link($0) })
         itemsArray.append(contentsOf: embedsArray.map { .embed($0) })
         itemsArray.append(contentsOf: codeBlocksArray.map { .codeBlock($0) })
         itemsArray.append(contentsOf: previewsArray.map { .preview($0) })
-        
+
         _items = Lazy(wrappedValue: itemsArray)
 _items = Lazy(wrappedValue: [])
         _codeBlocks = Lazy(wrappedValue: codeBlocksArray)

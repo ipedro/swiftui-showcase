@@ -43,16 +43,16 @@ import Foundation
 public enum TopicContentItem: Identifiable {
     /// An external link to web content.
     case link(Link)
-    
+
     /// A syntax-highlighted code block.
     case codeBlock(Topic.CodeBlock)
-    
+
     /// An embedded web view or external content.
     case embed(Topic.Embed)
-    
+
     /// A live preview of a SwiftUI view.
     case preview(Topic.Preview)
-    
+
     /// The unique identifier for this content item.
     ///
     /// Returns the underlying content type's identifier, ensuring stable
