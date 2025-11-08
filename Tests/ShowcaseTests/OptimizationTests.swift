@@ -25,7 +25,6 @@ import SwiftUI
 import Testing
 
 // Disambiguate Showcase.Link from SwiftUI.Link
-typealias ShowcaseLink = Showcase.Link
 
 /// Unit tests validating the behavior of performance optimizations.
 @Suite("Optimization Tests")
@@ -442,7 +441,7 @@ struct OptimizationTests {
                 return
             }
 
-            var set = Set<ShowcaseLink>()
+            var set = Set<Showcase.Link>()
             set.insert(link1)
             set.insert(link2)
 
