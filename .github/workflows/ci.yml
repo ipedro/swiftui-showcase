@@ -28,9 +28,9 @@ jobs:
       - name: Run SwiftLint with PR annotations
         uses: norio-nomura/action-swiftlint@3.2.1
         with:
-          args: --strict --reporter github-actions-logging
+          args: --strict
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DIFF_BASE: ${{ github.base_ref }}
 
   # SwiftFormat check
   swiftformat:
@@ -48,7 +48,7 @@ jobs:
       - name: Check SwiftFormat
         run: |
           # Run SwiftFormat check (lint mode - doesn't modify files)
-          swift package plugin swiftformat --lint
+          swift package plugin --allow-writing-to-package-directory swiftformat --lint
 
   # Build and test on multiple platforms
   test:
