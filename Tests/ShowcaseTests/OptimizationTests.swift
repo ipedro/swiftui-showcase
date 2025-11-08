@@ -1,5 +1,6 @@
 // OptimizationTests.swift
 // Copyright (c) 2025 Pedro Almeida
+// Created by Pedro Almeida on 11/8/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -19,19 +20,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import Testing
-import SwiftUI
 @testable import Showcase
+import SwiftUI
+import Testing
 
 /// Unit tests validating the behavior of performance optimizations.
 @Suite("Optimization Tests")
 struct OptimizationTests {
-
     // MARK: - Lazy Property Wrapper Tests
 
     @Suite("Lazy Property Wrapper")
     struct LazyPropertyTests {
-
         @Test("Thread safety with concurrent access")
         func threadSafety() async {
             let callCounter = CallCounter()
@@ -42,7 +41,7 @@ struct OptimizationTests {
 
             // Simulate concurrent access
             await withTaskGroup(of: Void.self) { group in
-                for _ in 0..<100 {
+                for _ in 0 ..< 100 {
                     group.addTask {
                         _ = lazy.wrappedValue
                     }
@@ -93,7 +92,6 @@ struct OptimizationTests {
 
     @Suite("withIcon Early Exit Optimization")
     struct WithIconTests {
-
         @Test("Early exit when proposal is nil")
         func earlyExitWithNilProposal() {
             let original = Topic("Test") {
@@ -168,7 +166,6 @@ struct OptimizationTests {
 
     @Suite("allChildren Flattening")
     struct AllChildrenTests {
-
         @Test("Empty when no children")
         func emptyWhenNoChildren() {
             let topic = Topic("Root")
@@ -211,7 +208,6 @@ struct OptimizationTests {
 
     @Suite("isEmpty Short-Circuit Checks")
     struct IsEmptyTests {
-
         @Test("Empty with no content")
         func emptyWithNoContent() {
             let topic = Topic("Test")
@@ -275,7 +271,6 @@ struct OptimizationTests {
 
     @Suite("Search Short-Circuit")
     struct SearchTests {
-
         @Test("Short-circuits on title match")
         func shortCircuitsOnTitleMatch() {
             let topic = Topic("MatchThis") {
@@ -350,7 +345,6 @@ struct OptimizationTests {
 
     @Suite("Hashable Protocol Conformance")
     struct HashableTests {
-
         @Test("Topic instances have unique hashes")
         func topicHashable() {
             let topic1 = Topic("Test")
@@ -439,7 +433,8 @@ struct OptimizationTests {
         @Test("Link instances have unique hashes")
         func linkHashable() {
             guard let link1 = Topic.Link("Documentation", "https://example.com"),
-                  let link2 = Topic.Link("Documentation", "https://example.com") else {
+                  let link2 = Topic.Link("Documentation", "https://example.com")
+            else {
                 Issue.record("Failed to create links")
                 return
             }

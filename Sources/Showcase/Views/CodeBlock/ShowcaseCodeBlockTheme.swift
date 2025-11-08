@@ -1,6 +1,6 @@
 // ShowcaseCodeBlockTheme.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 21.04.24.
+// Created by Pedro Almeida on 11/8/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -74,7 +74,7 @@ public extension ShowcaseCodeBlockTheme {
                 .comment: Splash.Color(red: 0.482, green: 0.561, blue: 0.607, alpha: 1),
                 .property: Splash.Color(red: 0.678, green: 0.749, blue: 0.854, alpha: 1),
                 .dotAccess: Splash.Color(red: 0.678, green: 0.749, blue: 0.854, alpha: 1),
-                .preprocessing: Splash.Color(red: 0.854, green: 0.439, blue: 0.839, alpha: 1)
+                .preprocessing: Splash.Color(red: 0.854, green: 0.439, blue: 0.839, alpha: 1),
             ],
             backgroundColor: Splash.Color(red: 0.152, green: 0.168, blue: 0.202, alpha: 1)
         )
@@ -92,7 +92,7 @@ public extension ShowcaseCodeBlockTheme {
                 .comment: Splash.Color(red: 0.576, green: 0.631, blue: 0.631, alpha: 1),
                 .property: Splash.Color(red: 0.694, green: 0.627, blue: 0.847, alpha: 1),
                 .dotAccess: Splash.Color(red: 0.694, green: 0.627, blue: 0.847, alpha: 1),
-                .preprocessing: Splash.Color(red: 0.992, green: 0.357, blue: 0.486, alpha: 1)
+                .preprocessing: Splash.Color(red: 0.992, green: 0.357, blue: 0.486, alpha: 1),
             ],
             backgroundColor: Splash.Color(red: 0.149, green: 0.149, blue: 0.149, alpha: 1)
         )
@@ -110,7 +110,7 @@ public extension ShowcaseCodeBlockTheme {
                 .comment: Splash.Color(red: 0.4, green: 0.4, blue: 0.4, alpha: 1),
                 .property: Splash.Color(red: 0.2, green: 0.2, blue: 0.7, alpha: 1),
                 .dotAccess: Splash.Color(red: 0.4, green: 0.4, blue: 0.6, alpha: 1),
-                .preprocessing: Splash.Color(red: 0.5, green: 0.3, blue: 0.1, alpha: 1)
+                .preprocessing: Splash.Color(red: 0.5, green: 0.3, blue: 0.1, alpha: 1),
             ],
             backgroundColor: ._defaultBackground
         )
@@ -128,7 +128,7 @@ public extension ShowcaseCodeBlockTheme {
                 .comment: Splash.Color(red: 0.437, green: 0.531, blue: 0.567, alpha: 1),
                 .property: Splash.Color(red: 0.651, green: 0.192, blue: 0.657, alpha: 1),
                 .dotAccess: Splash.Color(red: 0.502, green: 0.0, blue: 0.502, alpha: 1),
-                .preprocessing: Splash.Color(red: 0.800, green: 0.0, blue: 0.0, alpha: 1)
+                .preprocessing: Splash.Color(red: 0.800, green: 0.0, blue: 0.0, alpha: 1),
             ],
             backgroundColor: ._defaultBackground
         )
@@ -146,7 +146,7 @@ public extension ShowcaseCodeBlockTheme {
                 .comment: Splash.Color(red: 0.537, green: 0.631, blue: 0.667, alpha: 1),
                 .property: Splash.Color(red: 0.562, green: 0.454, blue: 0.886, alpha: 1),
                 .dotAccess: Splash.Color(red: 0.562, green: 0.454, blue: 0.886, alpha: 1),
-                .preprocessing: Splash.Color(red: 0.886, green: 0.348, blue: 0.536, alpha: 1)
+                .preprocessing: Splash.Color(red: 0.886, green: 0.348, blue: 0.536, alpha: 1),
             ],
             backgroundColor: Splash.Color(red: 0.098, green: 0.118, blue: 0.137, alpha: 1)
         )
@@ -164,7 +164,7 @@ public extension ShowcaseCodeBlockTheme {
                 .comment: Splash.Color(red: 0.433, green: 0.433, blue: 0.433, alpha: 1),
                 .property: Splash.Color(red: 0.0, green: 0.0, blue: 0.9, alpha: 1),
                 .dotAccess: Splash.Color(red: 0.0, green: 0.0, blue: 0.9, alpha: 1),
-                .preprocessing: Splash.Color(red: 0.9, green: 0.0, blue: 0.0, alpha: 1)
+                .preprocessing: Splash.Color(red: 0.9, green: 0.0, blue: 0.0, alpha: 1),
             ],
             backgroundColor: ._defaultBackground
         )
@@ -182,7 +182,7 @@ public extension ShowcaseCodeBlockTheme {
                 .comment: Splash.Color(red: 0.498, green: 0.498, blue: 0.498, alpha: 1),
                 .property: Splash.Color(red: 0.678, green: 0.196, blue: 0.698, alpha: 1),
                 .dotAccess: Splash.Color(red: 0.678, green: 0.196, blue: 0.698, alpha: 1),
-                .preprocessing: Splash.Color(red: 0.796, green: 0.196, blue: 0.196, alpha: 1)
+                .preprocessing: Splash.Color(red: 0.796, green: 0.196, blue: 0.196, alpha: 1),
             ],
             backgroundColor: Splash.Color(red: 0.1, green: 0.11, blue: 0.12, alpha: 1)
         )

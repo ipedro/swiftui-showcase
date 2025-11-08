@@ -1,6 +1,6 @@
 // ShowcaseChapter.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 12.09.23.
+// Created by Pedro Almeida on 11/8/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,9 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+import Engine
 import Foundation
 import SwiftUI
-import Engine
 
 struct ShowcaseChapter: VersionedView {
     var topics: [Topic]
@@ -49,7 +49,6 @@ struct ShowcaseChapter: VersionedView {
             header: header,
             footer: footer
         )
-
     }
 
     private func content() -> some View {

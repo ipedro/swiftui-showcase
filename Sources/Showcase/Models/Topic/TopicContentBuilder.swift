@@ -1,5 +1,6 @@
 // TopicContentBuilder.swift
 // Copyright (c) 2025 Pedro Almeida
+// Created by Pedro Almeida on 11/8/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -34,7 +35,7 @@ public struct Description {
     /// multi-line string literals built with trailing-closure syntax.
     @inlinable
     public init(_ builder: () -> String) {
-        self.value = builder()
+        value = builder()
     }
 }
 
@@ -198,7 +199,7 @@ public struct TopicLinks: TopicContentConvertible {
     private let builder: () -> [Topic.Link]
 
     public init(@Topic.LinkBuilder _ builder: @escaping () -> [Topic.Link]) {
-        self.builder = builder
+        builder = builder
     }
 
     public func merge(into content: inout Topic.Content) {
@@ -213,7 +214,7 @@ public struct TopicEmbeds: TopicContentConvertible {
     private let builder: () -> [Topic.Embed]
 
     public init(@Topic.EmbedBuilder _ builder: @escaping () -> [Topic.Embed]) {
-        self.builder = builder
+        builder = builder
     }
 
     public func merge(into content: inout Topic.Content) {
@@ -228,7 +229,7 @@ public struct TopicCodeBlocks: TopicContentConvertible {
     private let builder: () -> [Topic.CodeBlock]
 
     public init(@Topic.CodeBlockBuilder _ builder: @escaping () -> [Topic.CodeBlock]) {
-        self.builder = builder
+        builder = builder
     }
 
     public func merge(into content: inout Topic.Content) {
@@ -243,7 +244,7 @@ public struct TopicPreviews: TopicContentConvertible {
     private let builder: () -> [Topic.Preview]
 
     public init(@Topic.PreviewBuilder _ builder: @escaping () -> [Topic.Preview]) {
-        self.builder = builder
+        builder = builder
     }
 
     public func merge(into content: inout Topic.Content) {

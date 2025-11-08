@@ -1,5 +1,6 @@
 // PerformanceTests.swift
 // Copyright (c) 2025 Pedro Almeida
+// Created by Pedro Almeida on 11/8/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -19,20 +20,19 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import Testing
-import SwiftUI
 @testable import Showcase
+import SwiftUI
+import Testing
 
 /// Performance benchmarks to track optimization improvements and detect regressions.
 @Suite("Performance Benchmarks", .timeLimit(.minutes(5)))
 struct PerformanceTests {
-
     // MARK: - Test Data Generation
 
     static func createLargeTopic(depth: Int = 3, childrenPerLevel: Int = 5) -> Topic {
         func createChildren(currentDepth: Int) -> [Topic]? {
             guard currentDepth < depth else { return nil }
-            return (0..<childrenPerLevel).map { i in
+            return (0 ..< childrenPerLevel).map { i in
                 Topic(
                     "Child \(currentDepth)-\(i)",
                     description: "Description for child \(currentDepth)-\(i) with some content",
@@ -62,8 +62,8 @@ struct PerformanceTests {
     }
 
     static func createLargeDocument(chapterCount: Int = 10, topicsPerChapter: Int = 10) -> Document {
-        let chapters = (0..<chapterCount).map { chapterIndex in
-            let topics = (0..<topicsPerChapter).map { topicIndex in
+        let chapters = (0 ..< chapterCount).map { chapterIndex in
+            let topics = (0 ..< topicsPerChapter).map { topicIndex in
                 Topic(
                     "Topic \(chapterIndex)-\(topicIndex)",
                     description: "Description for topic \(chapterIndex)-\(topicIndex)",
@@ -109,7 +109,7 @@ struct PerformanceTests {
         var result: T!
         var totalTime: Double = 0
 
-        for _ in 0..<iterations {
+        for _ in 0 ..< iterations {
             let start = CFAbsoluteTimeGetCurrent()
             result = operation()
             let end = CFAbsoluteTimeGetCurrent()
@@ -123,8 +123,8 @@ struct PerformanceTests {
         if !passed {
             Issue.record(
                 Comment(rawValue: """
-                    Performance FAILED: \(String(format: "%.6f", averageTime))s (target: \(String(format: "%.6f", targetSeconds))s)
-                    """),
+                Performance FAILED: \(String(format: "%.6f", averageTime))s (target: \(String(format: "%.6f", targetSeconds))s)
+                """),
                 sourceLocation: SourceLocation(
                     fileID: file.description,
                     filePath: file.description,
@@ -189,7 +189,7 @@ struct PerformanceTests {
 
     @Test("Chapter search performance")
     func chapterSearchPerformance() {
-        let topics = (0..<100).map { i in
+        let topics = (0 ..< 100).map { i in
             Topic("Topic \(i)") {
                 Description("Description for topic \(i)")
                 Topic.CodeBlock(text: { "func example\(i)() {}" })
@@ -229,7 +229,7 @@ struct PerformanceTests {
                 Topic("Child") {
                     Description("Child content")
                 }
-            }
+            },
         ]
 
         // Target: < 0.001 seconds (should short-circuit quickly)
@@ -238,7 +238,7 @@ struct PerformanceTests {
 
     @Test("Topic sorting performance")
     func topicSortingPerformance() {
-        let topics = (0..<1000).shuffled().map { i in
+        let topics = (0 ..< 1000).shuffled().map { i in
             Topic("Topic \(String(format: "%04d", i))")
         }
 
@@ -248,7 +248,7 @@ struct PerformanceTests {
 
     @Test("Hashable operations performance")
     func hashablePerformance() {
-        let topics = (0..<1000).map { i in
+        let topics = (0 ..< 1000).map { i in
             Topic("Topic \(i)")
         }
 
@@ -276,7 +276,7 @@ struct PerformanceTests {
         // Target: < 0.001 seconds (properties should only init once)
         _ = Self.measurePerformance({
             // Access properties multiple times - should be cached
-            for _ in 0..<100 {
+            for _ in 0 ..< 100 {
                 _ = topic.description
                 _ = topic.codeBlocks
             }

@@ -1,6 +1,6 @@
 // AnyButtonStyle.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 13.09.23.
+// Created by Pedro Almeida on 11/8/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -29,11 +29,11 @@ struct AnyButtonStyle: ButtonStyle {
 
     /// Creates a type erased Showcase style.
     /// - Parameter style: some showcase style.
-    public init<S: ButtonStyle>(_ style: S) {
+    init<S: ButtonStyle>(_ style: S) {
         self.style = style
     }
 
-    public func makeBody(configuration: Configuration) -> some View {
+    func makeBody(configuration: Configuration) -> some View {
         AnyView(style.makeBody(configuration: configuration))
     }
 }
