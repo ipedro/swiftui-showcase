@@ -14,7 +14,7 @@ permissions:
 jobs:
   format:
     name: Format and Lint
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v5
