@@ -1,4 +1,4 @@
-// DefaultBuilderTest.swift
+// DefaultBuilderTests.swift
 // Copyright (c) 2025 Pedro Almeida
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
