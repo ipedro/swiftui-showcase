@@ -23,12 +23,12 @@ jobs:
       
       - name: Apply SwiftLint
         run: |
-          swift package plugin --allow-writing-to-package-directory swiftlint --fix Sources/ Tests/
+          swiftlint --fix Sources/ Tests/
           echo "SwiftLint applied successfully"
 
       - name: Apply SwiftFormat
         run: |
-          swift package plugin --allow-writing-to-package-directory swiftformat
+          swiftformat
           echo "SwiftFormat applied successfully"
       
       - name: Check for changes
