@@ -37,7 +37,7 @@ struct PerformanceTests {
                     "Child \(currentDepth)-\(index)",
                     description: "Description for child \(currentDepth)-\(index) with some content",
                     code: {
-                        Topic.CodeBlock("Example \(index)", text: {
+                        CodeBlock("Example \(index)", text: {
                             """
                             import SwiftUI
 
@@ -68,7 +68,7 @@ struct PerformanceTests {
                     "Topic \(chapterIndex)-\(topicIndex)",
                     description: "Description for topic \(chapterIndex)-\(topicIndex)",
                     code: {
-                        Topic.CodeBlock(text: {
+                        CodeBlock(text: {
                             """
                             import SwiftUI
 
@@ -192,7 +192,7 @@ struct PerformanceTests {
         let topics = (0 ..< 100).map { index in
             Topic("Topic \(index)") {
                 Description("Description for topic \(index)")
-                Topic.CodeBlock(text: { "func example\(index)() {}" })
+                CodeBlock(text: { "func example\(index)() {}" })
             }
         }
         let chapter = Chapter("Test Chapter") {
@@ -223,7 +223,7 @@ struct PerformanceTests {
                 Description("Some content")
             },
             Topic("With Code") {
-                Topic.CodeBlock(text: { "func test() {}" })
+                CodeBlock(text: { "func test() {}" })
             },
             Topic("With Children") {
                 Topic("Child") {
@@ -266,11 +266,11 @@ struct PerformanceTests {
     func lazyPropertyPerformance() {
         let topic = Topic("Test") {
             Description("A very long description " + String(repeating: "that repeats ", count: 100))
-            Topic.CodeBlock(text: { String(repeating: "Line 0\n", count: 50) })
-            Topic.CodeBlock(text: { String(repeating: "Line 1\n", count: 50) })
-            Topic.CodeBlock(text: { String(repeating: "Line 2\n", count: 50) })
-            Topic.CodeBlock(text: { String(repeating: "Line 3\n", count: 50) })
-            Topic.CodeBlock(text: { String(repeating: "Line 4\n", count: 50) })
+            CodeBlock(text: { String(repeating: "Line 0\n", count: 50) })
+            CodeBlock(text: { String(repeating: "Line 1\n", count: 50) })
+            CodeBlock(text: { String(repeating: "Line 2\n", count: 50) })
+            CodeBlock(text: { String(repeating: "Line 3\n", count: 50) })
+            CodeBlock(text: { String(repeating: "Line 4\n", count: 50) })
         }
 
         // Target: < 0.001 seconds (properties should only init once)

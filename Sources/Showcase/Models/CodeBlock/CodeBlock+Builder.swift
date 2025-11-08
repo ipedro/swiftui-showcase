@@ -1,4 +1,4 @@
-// Topic+CodeBlockBuilder.swift
+// CodeBlock+Builder.swift
 // Copyright (c) 2025 Pedro Almeida
 // Created by Pedro Almeida on 11/8/25.
 //
@@ -22,9 +22,9 @@
 
 import Foundation
 
-public extension Topic {
+public extension CodeBlock {
     /// A result builder for creating code blocks.
-    @resultBuilder struct CodeBlockBuilder {
+    @resultBuilder struct Builder {
         /// Builds an array of code blocks from individual components.
         public static func buildBlock() -> [CodeBlock] { [] }
 

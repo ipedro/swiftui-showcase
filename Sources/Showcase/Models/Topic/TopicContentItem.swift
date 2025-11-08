@@ -45,7 +45,7 @@ public enum TopicContentItem: Identifiable {
     case link(ExternalLink)
 
     /// A syntax-highlighted code block.
-    case codeBlock(Topic.CodeBlock)
+    case codeBlock(CodeBlock)
 
     /// An embedded web view or external content.
     case embed(Topic.Embed)

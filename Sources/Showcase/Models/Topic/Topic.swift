@@ -161,7 +161,7 @@ public struct Topic: Identifiable {
         description: @escaping @autoclosure () -> String = "",
         @ExternalLink.Builder links: @escaping () -> [ExternalLink] = Array.init,
         @EmbedBuilder embeds: @escaping () -> [Embed] = Array.init,
-        @CodeBlockBuilder code codeBlocks: @escaping () -> [CodeBlock] = Array.init,
+        @CodeBlock.Builder code codeBlocks: @escaping () -> [CodeBlock] = Array.init,
         @PreviewBuilder previews: @escaping () -> [Preview] = Array.init,
         children: [Topic]? = nil
     ) {
@@ -201,7 +201,7 @@ _items = Lazy(wrappedValue: [])
         description: @escaping @autoclosure () -> String = "",
         @ExternalLink.Builder links: @escaping () -> [ExternalLink] = Array.init,
         @EmbedBuilder embeds: @escaping () -> [Embed] = Array.init,
-        @CodeBlockBuilder code codeBlocks: @escaping () -> [CodeBlock] = Array.init,
+        @CodeBlock.Builder code codeBlocks: @escaping () -> [CodeBlock] = Array.init,
         @PreviewBuilder previews: @escaping () -> [Preview] = Array.init,
         @TopicBuilder _ children: () -> [Topic]
     ) {
@@ -249,7 +249,7 @@ _items = Lazy(wrappedValue: [])
         description: @escaping @autoclosure () -> String = "",
         @ExternalLink.Builder links: @escaping () -> [ExternalLink] = Array.init,
         @EmbedBuilder embeds: @escaping () -> [Embed] = Array.init,
-        @CodeBlockBuilder code codeBlocks: @escaping () -> [CodeBlock] = Array.init,
+        @CodeBlock.Builder code codeBlocks: @escaping () -> [CodeBlock] = Array.init,
         @ViewBuilder previews: @escaping () -> some View,
         children: [Topic]? = nil
     ) {
@@ -274,7 +274,7 @@ _items = Lazy(wrappedValue: [])
         description: @escaping @autoclosure () -> String = "",
         @ExternalLink.Builder links: @escaping () -> [ExternalLink] = Array.init,
         @EmbedBuilder embeds: @escaping () -> [Embed] = Array.init,
-        @CodeBlockBuilder code codeBlocks: @escaping () -> [CodeBlock] = Array.init,
+        @CodeBlock.Builder code codeBlocks: @escaping () -> [CodeBlock] = Array.init,
         @ViewBuilder previews: @escaping () -> some View,
         @TopicBuilder _ children: () -> [Topic]
     ) {
@@ -307,7 +307,7 @@ _items = Lazy(wrappedValue: [])
         description: @escaping @autoclosure () -> String = "",
         @ExternalLink.Builder links: @escaping () -> [ExternalLink] = Array.init,
         @EmbedBuilder embeds: @escaping () -> [Embed] = Array.init,
-        @CodeBlockBuilder code codeBlocks: @escaping () -> [CodeBlock] = Array.init,
+        @CodeBlock.Builder code codeBlocks: @escaping () -> [CodeBlock] = Array.init,
         @PreviewBuilder previews: @escaping () -> [Preview] = Array.init,
         children: [Topic]? = nil
     ) {
@@ -331,7 +331,7 @@ _items = Lazy(wrappedValue: [])
         description: @escaping @autoclosure () -> String = "",
         @ExternalLink.Builder links: @escaping () -> [ExternalLink] = Array.init,
         @EmbedBuilder embeds: @escaping () -> [Embed] = Array.init,
-        @CodeBlockBuilder code codeBlocks: @escaping () -> [CodeBlock] = Array.init,
+        @CodeBlock.Builder code codeBlocks: @escaping () -> [CodeBlock] = Array.init,
         @PreviewBuilder previews: @escaping () -> [Preview] = Array.init,
         @TopicBuilder _ children: () -> [Topic]
     ) {
@@ -364,7 +364,7 @@ _items = Lazy(wrappedValue: [])
         description: @escaping @autoclosure () -> String = "",
         @ExternalLink.Builder links: @escaping () -> [ExternalLink] = Array.init,
         @EmbedBuilder embeds: @escaping () -> [Embed] = Array.init,
-        @CodeBlockBuilder code codeBlocks: @escaping () -> [CodeBlock] = Array.init,
+        @CodeBlock.Builder code codeBlocks: @escaping () -> [CodeBlock] = Array.init,
         @ViewBuilder previews: @escaping () -> some View,
         children: [Topic]? = nil
     ) {
@@ -388,7 +388,7 @@ _items = Lazy(wrappedValue: [])
         description: @escaping @autoclosure () -> String = "",
         @ExternalLink.Builder links: @escaping () -> [ExternalLink] = Array.init,
         @EmbedBuilder embeds: @escaping () -> [Embed] = Array.init,
-        @CodeBlockBuilder code codeBlocks: @escaping () -> [CodeBlock] = Array.init,
+        @CodeBlock.Builder code codeBlocks: @escaping () -> [CodeBlock] = Array.init,
         @ViewBuilder previews: @escaping () -> some View,
         @TopicBuilder _ children: () -> [Topic]
     ) {

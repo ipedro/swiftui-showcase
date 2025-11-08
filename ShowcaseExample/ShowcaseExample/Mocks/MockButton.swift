@@ -37,7 +37,7 @@ extension Topic {
         }
 
         Code {
-            Topic.CodeBlock {
+            CodeBlock {
                 """
                 Button("I'm a bordered button") {
                     // do something

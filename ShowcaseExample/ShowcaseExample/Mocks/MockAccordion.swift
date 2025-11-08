@@ -37,7 +37,7 @@ extension Topic {
         }
 
         Code {
-            Topic.CodeBlock {
+            CodeBlock {
                 """
                 Accordion(data, selection: $selectedRow) { item in
                     Text(item.title).bold()
@@ -47,7 +47,7 @@ extension Topic {
                 """
             }
 
-            Topic.CodeBlock {
+            CodeBlock {
                 """
                 Accordion(data, selection: $selectedRow) { item in
                     Text(item.title).bold()

@@ -133,7 +133,7 @@ extension Topic {
         Topic("Image") {
             Description("Use an Image instance when you want to add images to your SwiftUI app.")
 
-            Topic.CodeBlock {
+            CodeBlock {
                 """
                 Image(systemName: "swift")
                 
@@ -157,7 +157,7 @@ extension Topic {
                 """
             }
 
-            Topic.CodeBlock {
+            CodeBlock {
             """
             AsyncImage(
                 url: .init(
@@ -180,7 +180,7 @@ extension Topic {
     static let image = Topic("Image") {
         Description("Use an Image instance when you want to add images to your SwiftUI app.")
 
-        Topic.CodeBlock {
+        CodeBlock {
             """
             Image(systemName: "swift")
 
@@ -206,7 +206,7 @@ extension Topic {
             """
         }
 
-        Topic.CodeBlock {
+        CodeBlock {
             """
             AsyncImage(
                 url: .init(

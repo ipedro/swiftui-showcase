@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   format:
-    name: Apply SwiftFormat
+    name: Format and Lint
     runs-on: macos-latest
     steps:
       - name: Checkout
@@ -21,16 +21,14 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
       
-      - name: Set up Xcode
-        uses: maxim-lobanov/setup-xcode@v1.6.0
-        with:
-          xcode-version: '26.0'
-      
+      - name: Apply SwiftLint
+        run: |
+          swift package plugin --allow-writing-to-package-directory swiftlint --fix Sources/ Tests/
+          echo "SwiftLint applied successfully"
+
       - name: Apply SwiftFormat
         run: |
-          # Run SwiftFormat to auto-fix formatting issues
           swift package plugin --allow-writing-to-package-directory swiftformat
-          
           echo "SwiftFormat applied successfully"
       
       - name: Check for changes

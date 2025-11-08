@@ -182,7 +182,7 @@ extension Topic.Preview: TopicContentConvertible {
     }
 }
 
-extension Topic.CodeBlock: TopicContentConvertible {
+extension CodeBlock: TopicContentConvertible {
     public func merge(into content: inout Topic.Content) {
         content.items.append(.codeBlock(self))
         content.codeBlocks.append(self)
@@ -256,11 +256,11 @@ public struct TopicEmbeds: TopicContentConvertible {
     }
 }
 
-/// Collects code blocks produced by a ``Topic.CodeBlockBuilder`` into the topic content DSL.
+/// Collects code blocks produced by a ``CodeBlockBuilder`` into the topic content DSL.
 public struct TopicCodeBlocks: TopicContentConvertible {
-    private let builder: () -> [Topic.CodeBlock]
+    private let builder: () -> [CodeBlock]
 
-    public init(@Topic.CodeBlockBuilder _ builder: @escaping () -> [Topic.CodeBlock]) {
+    public init(@CodeBlock.Builder _ builder: @escaping () -> [CodeBlock]) {
         self.builder = builder
     }
 
@@ -309,7 +309,7 @@ public func Previews(@Topic.PreviewBuilder _ builder: @escaping () -> [Topic.Pre
 
 /// Convenience helper mirroring ``CodeBlocksImpl`` while avoiding explicit type names in the DSL.
 @inlinable
-public func Code(@Topic.CodeBlockBuilder _ builder: @escaping () -> [Topic.CodeBlock]) -> TopicCodeBlocks {
+public func Code(@CodeBlock.Builder _ builder: @escaping () -> [CodeBlock]) -> TopicCodeBlocks {
     TopicCodeBlocks(builder)
 }
 
@@ -335,7 +335,7 @@ public func Children(@TopicBuilder _ builder: @escaping () -> [Topic]) -> TopicC
 @inlinable
 public func Preview(
     _ title: String? = nil,
-    codeBlock: Topic.CodeBlock? = nil,
+    codeBlock: CodeBlock? = nil,
     @ViewBuilder preview: @escaping () -> some View
 ) -> Topic.Preview {
     Topic.Preview(title, codeBlock: codeBlock, preview: preview)

@@ -55,7 +55,7 @@ extension Topic {
         }
 
         Code {
-            Topic.CodeBlock("elevated") {
+            CodeBlock("elevated") {
                 """
                 NavigationalCard {
                     // action
@@ -65,7 +65,7 @@ extension Topic {
                 """
             }
 
-            Topic.CodeBlock("outlined") {
+            CodeBlock("outlined") {
                 """
                 NavigationalCard {
                     // action
@@ -98,7 +98,7 @@ extension Topic {
         }
 
         Code {
-            Topic.CodeBlock {
+            CodeBlock {
                 """
                 SelectableCard(isOn: $isOn) {
                     Text("I'm content")
@@ -133,7 +133,7 @@ extension Topic {
         }
 
         Code {
-            Topic.CodeBlock {
+            CodeBlock {
                 """
                 StaticCard {
                     Text("I'm content")

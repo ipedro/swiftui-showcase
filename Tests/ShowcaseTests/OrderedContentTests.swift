@@ -31,7 +31,7 @@ struct OrderedContentTests {
         let topic = Topic("Test") {
             ExternalLink("Apple", URL(string: "https://example.com/1")!)!
             
-            Topic.CodeBlock {
+            CodeBlock {
                 "let x = 1"
             }
             
@@ -79,7 +79,7 @@ struct OrderedContentTests {
         let topic = Topic("Mixed") {
             Topic.Embed(URL(string: "https://example.com")!)!
             ExternalLink("Apple", URL(string: "https://example.com")!)!
-            Topic.CodeBlock { "code" }
+            CodeBlock { "code" }
             Topic.Preview("Preview") { Text("Demo") }
         }
         
@@ -118,7 +118,7 @@ struct OrderedContentTests {
         let topic = Topic("Backward Compat") {
             ExternalLink("Apple", URL(string: "https://example.com/1")!)!
             ExternalLink("GitHub", URL(string: "https://example.com/2")!)!
-            Topic.CodeBlock { "code" }
+            CodeBlock { "code" }
             Topic.Preview("Preview") { Text("Demo") }
         }
         
@@ -135,9 +135,9 @@ struct OrderedContentTests {
     @Test("Multiple items of same type maintain order")
     func multipleItemsOfSameTypeMaintainOrder() {
         let topic = Topic("Same Type") {
-            Topic.CodeBlock { "first" }
-            Topic.CodeBlock { "second" }
-            Topic.CodeBlock { "third" }
+            CodeBlock { "first" }
+            CodeBlock { "second" }
+            CodeBlock { "third" }
         }
         
         #expect(topic.items.count == 3)

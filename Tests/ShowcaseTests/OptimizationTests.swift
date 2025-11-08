@@ -225,7 +225,7 @@ struct OptimizationTests {
         @Test("Not empty with code blocks")
         func notEmptyWithCodeBlocks() {
             let topic = Topic("Test") {
-                Topic.CodeBlock("Example")
+                CodeBlock("Example")
             }
             #expect(!topic.isEmpty)
         }
@@ -297,7 +297,7 @@ struct OptimizationTests {
         @Test("Matches in code blocks")
         func matchesInCodeBlocks() {
             let topic = Topic("Test") {
-                Topic.CodeBlock("Example", text: { "func hello() {}" })
+                CodeBlock("Example", text: { "func hello() {}" })
             }
 
             let result = topic.search(query: "hello")
@@ -409,8 +409,8 @@ struct OptimizationTests {
 
         @Test("CodeBlock equality is ID-based")
         func codeBlockEquality() {
-            let block1 = Topic.CodeBlock("Example", text: { "code" })
-            let block2 = Topic.CodeBlock("Example", text: { "code" })
+            let block1 = CodeBlock("Example", text: { "code" })
+            let block2 = CodeBlock("Example", text: { "code" })
 
             // CodeBlocks use ID-based equality (different instances = different IDs)
             #expect(block1 != block2)
@@ -419,10 +419,10 @@ struct OptimizationTests {
 
         @Test("CodeBlock instances have unique hashes")
         func codeBlockHashable() {
-            let block1 = Topic.CodeBlock("Example", text: { "code" })
-            let block2 = Topic.CodeBlock("Example", text: { "code" })
+            let block1 = CodeBlock("Example", text: { "code" })
+            let block2 = CodeBlock("Example", text: { "code" })
 
-            var set = Set<Topic.CodeBlock>()
+            var set = Set<CodeBlock>()
             set.insert(block1)
             set.insert(block2)
 
