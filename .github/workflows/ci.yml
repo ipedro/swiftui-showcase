@@ -85,9 +85,10 @@ jobs:
       - name: Build for ${{ matrix.platform }}
         run: |
           if [ "${{ matrix.platform }}" == "iOS" ]; then
+            SIMULATOR=$(xcrun simctl list devices available | grep -m1 "iPhone" | awk -F '[()]' '{print $2}')
             xcodebuild build \
               -scheme Showcase \
-              -destination 'platform=iOS Simulator,OS=18.4,name=iPhone 16' \
+              -destination "id=$SIMULATOR" \
               -skipPackagePluginValidation \
               -skipMacroValidation \
               CODE_SIGN_IDENTITY="" \
