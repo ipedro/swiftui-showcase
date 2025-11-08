@@ -48,7 +48,7 @@ public protocol TopicContentConvertible {
 public extension Topic {
     /// Aggregates the pieces declared inside a ``TopicContentBuilder`` into a
     /// single structure consumed by the topic initializers.
-    struct Content {
+    struct Content: AdditiveArithmetic {
         public var description: String?
         
         /// Ordered heterogeneous content items that preserve declaration order.
@@ -83,34 +83,49 @@ public extension Topic {
             self.children = children
         }
 
-        mutating func merge(_ other: Self) {
-            if let description = other.description {
-                self.description = description
+        // MARK: - AdditiveArithmetic
+        
+        public static var zero: Topic.Content {
+            Topic.Content()
+        }
+        
+        public static func + (lhs: Topic.Content, rhs: Topic.Content) -> Topic.Content {
+            var result = lhs
+            
+            if let description = rhs.description {
+                result.description = description
             }
             
-            if !other.items.isEmpty {
-                items.append(contentsOf: other.items)
+            if !rhs.items.isEmpty {
+                result.items.append(contentsOf: rhs.items)
             }
 
-            if !other.links.isEmpty {
-                links.append(contentsOf: other.links)
+            if !rhs.links.isEmpty {
+                result.links.append(contentsOf: rhs.links)
             }
 
-            if !other.embeds.isEmpty {
-                embeds.append(contentsOf: other.embeds)
+            if !rhs.embeds.isEmpty {
+                result.embeds.append(contentsOf: rhs.embeds)
             }
 
-            if !other.codeBlocks.isEmpty {
-                codeBlocks.append(contentsOf: other.codeBlocks)
+            if !rhs.codeBlocks.isEmpty {
+                result.codeBlocks.append(contentsOf: rhs.codeBlocks)
             }
 
-            if !other.examples.isEmpty {
-                examples.append(contentsOf: other.examples)
+            if !rhs.examples.isEmpty {
+                result.examples.append(contentsOf: rhs.examples)
             }
 
-            if !other.children.isEmpty {
-                children.append(contentsOf: other.children)
+            if !rhs.children.isEmpty {
+                result.children.append(contentsOf: rhs.children)
             }
+            
+            return result
+        }
+        
+        public static func - (lhs: Topic.Content, rhs: Topic.Content) -> Topic.Content {
+            // Subtraction doesn't make semantic sense for content, so just return lhs
+            lhs
         }
     }
 }
@@ -119,13 +134,11 @@ public extension Topic {
 @resultBuilder
 public enum TopicContentBuilder {
     public static func buildBlock(_ components: Topic.Content...) -> Topic.Content {
-        components.reduce(into: Topic.Content()) { partialResult, component in
-            partialResult.merge(component)
-        }
+        components.reduce(.zero, +)
     }
 
     public static func buildOptional(_ component: Topic.Content?) -> Topic.Content {
-        component ?? Topic.Content()
+        component ?? .zero
     }
 
     public static func buildEither(first component: Topic.Content) -> Topic.Content {
@@ -137,9 +150,7 @@ public enum TopicContentBuilder {
     }
 
     public static func buildArray(_ components: [Topic.Content]) -> Topic.Content {
-        components.reduce(into: Topic.Content()) { partialResult, component in
-            partialResult.merge(component)
-        }
+        components.reduce(.zero, +)
     }
 
     public static func buildExpression(_ expression: Topic.Content) -> Topic.Content {
@@ -152,6 +163,14 @@ public enum TopicContentBuilder {
         return content
     }
 
+    public static func buildExpression<V: View>(@ViewBuilder content: @escaping () -> V) -> Topic.Content {
+        var result = Topic.Content()
+        let example = Example(example: content)
+        result.items.append(.example(example))
+        result.examples.append(example)
+        return result
+    }
+
     public static func buildExpression(_ expression: [TopicContentConvertible]) -> Topic.Content {
         expression.reduce(into: Topic.Content()) { partialResult, element in
             element.merge(into: &partialResult)
@@ -160,12 +179,6 @@ public enum TopicContentBuilder {
 
     public static func buildLimitedAvailability(_ component: Topic.Content) -> Topic.Content {
         component
-    }
-}
-
-extension Topic.Content: TopicContentConvertible {
-    public func merge(into content: inout Topic.Content) {
-        content.merge(self)
     }
 }
 
@@ -205,7 +218,7 @@ extension Optional: TopicContentConvertible where Wrapped: TopicContentConvertib
     }
 }
 
-extension Topic.Embed: TopicContentConvertible {
+extension Embed: TopicContentConvertible {
     public func merge(into content: inout Topic.Content) {
         content.items.append(.embed(self))
         content.embeds.append(self)
@@ -216,127 +229,4 @@ extension Topic: TopicContentConvertible {
     public func merge(into content: inout Topic.Content) {
         content.children.append(self)
     }
-}
-
-// Note: Swift doesn't allow multiple conditional Array conformances to the same protocol.
-// Individual element types (Topic, Preview, CodeBlock, ExternalLink, Embed) conform directly,
-// and the result builder handles arrays automatically.
-
-/// Internal implementation for collecting links in topic content.
-@usableFromInline
-internal struct LinksImpl: TopicContentConvertible {
-    @usableFromInline
-    let builder: () -> [ExternalLink]
-
-    @usableFromInline
-    init(_ builder: @escaping () -> [ExternalLink]) {
-        self.builder = builder
-    }
-
-    @usableFromInline
-    func merge(into content: inout Topic.Content) {
-        let links = builder()
-        guard !links.isEmpty else { return }
-        content.links.append(contentsOf: links)
-    }
-}
-
-/// Collects embeds produced by an ``Embed/Builder`` into the topic content DSL.
-public struct TopicEmbeds: TopicContentConvertible {
-    private let builder: () -> [Topic.Embed]
-
-    public init(@Topic.EmbedBuilder _ builder: @escaping () -> [Topic.Embed]) {
-        self.builder = builder
-    }
-
-    public func merge(into content: inout Topic.Content) {
-        let embeds = builder()
-        guard !embeds.isEmpty else { return }
-        content.embeds.append(contentsOf: embeds)
-    }
-}
-
-/// Collects code blocks produced by a ``CodeBlockBuilder`` into the topic content DSL.
-public struct TopicCodeBlocks: TopicContentConvertible {
-    private let builder: () -> [CodeBlock]
-
-    public init(@CodeBlock.Builder _ builder: @escaping () -> [CodeBlock]) {
-        self.builder = builder
-    }
-
-    public func merge(into content: inout Topic.Content) {
-        let codeBlocks = builder()
-        guard !codeBlocks.isEmpty else { return }
-        content.codeBlocks.append(contentsOf: codeBlocks)
-    }
-}
-
-/// Collects previews produced by a ``Topic/PreviewBuilder`` into the topic content DSL.
-public struct TopicExamples: TopicContentConvertible {
-    private let builder: () -> [Example]
-
-    public init(@Example.Builder _ builder: @escaping () -> [Example]) {
-        self.builder = builder
-    }
-
-    public func merge(into content: inout Topic.Content) {
-        let previews = builder()
-        guard !previews.isEmpty else { return }
-        content.examples.append(contentsOf: previews)
-    }
-}
-
-/// Collects child topics produced by a ``TopicBuilder`` into the topic content DSL.
-public struct TopicChildren: TopicContentConvertible {
-    private let builder: () -> [Topic]
-
-    public init(@TopicBuilder _ builder: @escaping () -> [Topic]) {
-        self.builder = builder
-    }
-
-    public func merge(into content: inout Topic.Content) {
-        let children = builder()
-        guard !children.isEmpty else { return }
-        content.children.append(contentsOf: children)
-    }
-}
-
-/// Convenience helper mirroring ``PreviewsImpl`` while avoiding explicit type names in the DSL.
-@inlinable
-public func Previews(@Example.Builder _ builder: @escaping () -> [Example]) -> TopicExamples {
-    TopicExamples(builder)
-}
-
-/// Convenience helper mirroring ``CodeBlocksImpl`` while avoiding explicit type names in the DSL.
-@inlinable
-public func Code(@CodeBlock.Builder _ builder: @escaping () -> [CodeBlock]) -> TopicCodeBlocks {
-    TopicCodeBlocks(builder)
-}
-
-/// Convenience helper mirroring ``LinksImpl`` while avoiding explicit type names in the DSL.
-@inlinable
-public func Links(@ExternalLink.Builder _ builder: @escaping () -> [ExternalLink]) -> some TopicContentConvertible {
-    LinksImpl(builder)
-}
-
-/// Convenience helper mirroring ``EmbedsImpl`` while avoiding explicit type names in the DSL.
-@inlinable
-public func Embeds(@Topic.EmbedBuilder _ builder: @escaping () -> [Topic.Embed]) -> TopicEmbeds {
-    TopicEmbeds(builder)
-}
-
-/// Convenience helper mirroring ``TopicChildren`` while avoiding explicit type names in the DSL.
-@inlinable
-public func Children(@TopicBuilder _ builder: @escaping () -> [Topic]) -> TopicChildren {
-    TopicChildren(builder)
-}
-
-/// Convenience helper matching the DSL style for constructing previews inline.
-@inlinable
-public func Preview(
-    _ title: String? = nil,
-    codeBlock: CodeBlock? = nil,
-    @ViewBuilder example: @escaping () -> some View
-) -> Example {
-    Example(title, codeBlock: codeBlock, example: example)
 }

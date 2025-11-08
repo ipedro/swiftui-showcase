@@ -33,54 +33,59 @@ struct PerformanceTests {
         func createChildren(currentDepth: Int) -> [Topic]? {
             guard currentDepth < depth else { return nil }
             return (0 ..< childrenPerLevel).map { index in
-                Topic(
-                    "Child \(currentDepth)-\(index)",
-                    description: "Description for child \(currentDepth)-\(index) with some content",
-                    code: {
-                        CodeBlock("Example \(index)", text: {
-                            """
-                            import SwiftUI
+                Topic("Child \(currentDepth)-\(index)") {
+                    Description("Description for child \(currentDepth)-\(index) with some content")
+                    
+                    CodeBlock("Example \(index)", text: {
+                        """
+                        import SwiftUI
 
-                            struct ExampleView\(index): View {
-                                var body: some View {
-                                    Text("Example \(index)")
-                                }
+                        struct ExampleView\(index): View {
+                            var body: some View {
+                                Text("Example \(index)")
                             }
-                            """
-                        })
-                    },
-                    children: createChildren(currentDepth: currentDepth + 1)
-                )
+                        }
+                        """
+                    })
+                    
+                    if let children = createChildren(currentDepth: currentDepth + 1) {
+                        for child in children {
+                            child
+                        }
+                    }
+                }
             }
         }
 
-        return Topic(
-            "Root Topic",
-            description: "Root topic with nested children",
-            children: createChildren(currentDepth: 0)
-        )
+        return Topic("Root Topic") {
+            Description("Root topic with nested children")
+            
+            if let children = createChildren(currentDepth: 0) {
+                for child in children {
+                    child
+                }
+            }
+        }
     }
 
     static func createLargeDocument(chapterCount: Int = 10, topicsPerChapter: Int = 10) -> Document {
         let chapters = (0 ..< chapterCount).map { chapterIndex in
             let topics = (0 ..< topicsPerChapter).map { topicIndex in
-                Topic(
-                    "Topic \(chapterIndex)-\(topicIndex)",
-                    description: "Description for topic \(chapterIndex)-\(topicIndex)",
-                    code: {
-                        CodeBlock(text: {
-                            """
-                            import SwiftUI
+                Topic("Topic \(chapterIndex)-\(topicIndex)") {
+                    Description("Description for topic \(chapterIndex)-\(topicIndex)")
+                    
+                    CodeBlock(text: {
+                        """
+                        import SwiftUI
 
-                            struct View\(chapterIndex)_\(topicIndex): View {
-                                var body: some View {
-                                    Text("Content")
-                                }
+                        struct View\(chapterIndex)_\(topicIndex): View {
+                            var body: some View {
+                                Text("Content")
                             }
-                            """
-                        })
-                    }
-                )
+                        }
+                        """
+                    })
+                }
             }
             return Chapter("Chapter \(chapterIndex)") {
                 for topic in topics {

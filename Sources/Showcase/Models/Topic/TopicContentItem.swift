@@ -40,7 +40,7 @@ import Foundation
 ///
 /// The content items are stored as `[TopicContentItem]` in declaration order,
 /// enabling views to render them exactly as specified in the builder DSL.
-public enum TopicContentItem: Identifiable {
+public enum TopicContentItem: Identifiable, Equatable {
     /// An external link to web content.
     case link(ExternalLink)
 
@@ -48,7 +48,7 @@ public enum TopicContentItem: Identifiable {
     case codeBlock(CodeBlock)
 
     /// An embedded web view or external content.
-    case embed(Topic.Embed)
+    case embed(Embed)
 
     /// A live example of a SwiftUI view.
     case example(Example)
@@ -68,5 +68,11 @@ public enum TopicContentItem: Identifiable {
         case .example(let example):
             example.id
         }
+    }
+    
+    // MARK: - Equatable
+    
+    public static func == (lhs: TopicContentItem, rhs: TopicContentItem) -> Bool {
+        lhs.id == rhs.id
     }
 }

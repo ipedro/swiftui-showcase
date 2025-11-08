@@ -256,7 +256,7 @@ struct OptimizationTests {
 
         @Test("Not empty with embeds")
         func notEmptyWithEmbeds() {
-            guard let embed = Topic.Embed(URL(string: "https://example.com")!) else {
+            guard let embed = Embed(URL(string: "https://example.com")!) else {
                 Issue.record("Failed to create embed")
                 return
             }

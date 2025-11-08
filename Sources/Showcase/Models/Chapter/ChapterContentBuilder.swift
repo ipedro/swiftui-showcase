@@ -31,7 +31,7 @@ public protocol ChapterContentConvertible {
 public extension Chapter {
     /// Aggregates the pieces declared inside a ``ChapterContentBuilder`` into a
     /// structure consumed by the chapter initializers.
-    struct Content {
+    struct Content: AdditiveArithmetic {
         public var description: String?
         public var topics: [Topic]
 
@@ -40,14 +40,29 @@ public extension Chapter {
             self.topics = topics
         }
 
-        mutating func merge(_ other: Self) {
-            if let description = other.description {
-                self.description = description
+        // MARK: - AdditiveArithmetic
+        
+        public static var zero: Chapter.Content {
+            Chapter.Content()
+        }
+        
+        public static func + (lhs: Chapter.Content, rhs: Chapter.Content) -> Chapter.Content {
+            var result = lhs
+            
+            if let description = rhs.description {
+                result.description = description
             }
 
-            if !other.topics.isEmpty {
-                topics.append(contentsOf: other.topics)
+            if !rhs.topics.isEmpty {
+                result.topics.append(contentsOf: rhs.topics)
             }
+            
+            return result
+        }
+        
+        public static func - (lhs: Chapter.Content, rhs: Chapter.Content) -> Chapter.Content {
+            // Subtraction doesn't make semantic sense for content, so just return lhs
+            lhs
         }
     }
 }
@@ -56,13 +71,11 @@ public extension Chapter {
 @resultBuilder
 public enum ChapterContentBuilder {
     public static func buildBlock(_ components: Chapter.Content...) -> Chapter.Content {
-        components.reduce(into: Chapter.Content()) { partialResult, component in
-            partialResult.merge(component)
-        }
+        components.reduce(.zero, +)
     }
 
     public static func buildOptional(_ component: Chapter.Content?) -> Chapter.Content {
-        component ?? .init()
+        component ?? .zero
     }
 
     public static func buildEither(first component: Chapter.Content) -> Chapter.Content {
@@ -74,9 +87,7 @@ public enum ChapterContentBuilder {
     }
 
     public static func buildArray(_ components: [Chapter.Content]) -> Chapter.Content {
-        components.reduce(into: Chapter.Content()) { partialResult, component in
-            partialResult.merge(component)
-        }
+        components.reduce(.zero, +)
     }
 
     public static func buildExpression(_ expression: Chapter.Content) -> Chapter.Content {
@@ -97,12 +108,6 @@ public enum ChapterContentBuilder {
 
     public static func buildLimitedAvailability(_ component: Chapter.Content) -> Chapter.Content {
         component
-    }
-}
-
-extension Chapter.Content: ChapterContentConvertible {
-    public func merge(into content: inout Chapter.Content) {
-        content.merge(self)
     }
 }
 

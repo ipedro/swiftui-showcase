@@ -23,33 +23,31 @@
 import Foundation
 import WebKit
 
-public extension Topic {
-    typealias EmbedNavigationHandler = (_ action: WKNavigationAction) -> WKNavigationActionPolicy
+public typealias EmbedNavigationHandler = (_ action: WKNavigationAction) -> WKNavigationActionPolicy
 
-    /// External content associated with a topic.
-    struct Embed: Identifiable, Equatable {
-        public static func == (lhs: Topic.Embed, rhs: Topic.Embed) -> Bool {
-            lhs.id == rhs.id
-        }
+/// External content associated with a topic.
+public struct Embed: Identifiable, Equatable {
+    public static func == (lhs: Embed, rhs: Embed) -> Bool {
+        lhs.id == rhs.id
+    }
 
-        public let id = UUID()
-        public var url: URL
-        public var navigationHandler: EmbedNavigationHandler
-        public var isInteractionEnabled: Bool
-        /// Minimum height of the preview.
-        public var minHeight: CGFloat?
+    public let id = UUID()
+    public var url: URL
+    public var navigationHandler: EmbedNavigationHandler
+    public var isInteractionEnabled: Bool
+    /// Minimum height of the preview.
+    public var minHeight: CGFloat?
 
-        public init?(
-            _ url: URL?,
-            minHeight: CGFloat? = nil,
-            isInteractionEnabled: Bool = true,
-            navigationHandler: @escaping EmbedNavigationHandler = { _ in .allow }
-        ) {
-            guard let url = url else { return nil }
-            self.url = url
-            self.minHeight = minHeight
-            self.isInteractionEnabled = isInteractionEnabled
-            self.navigationHandler = navigationHandler
-        }
+    public init?(
+        _ url: URL?,
+        minHeight: CGFloat? = nil,
+        isInteractionEnabled: Bool = true,
+        navigationHandler: @escaping EmbedNavigationHandler = { _ in .allow }
+    ) {
+        guard let url = url else { return nil }
+        self.url = url
+        self.minHeight = minHeight
+        self.isInteractionEnabled = isInteractionEnabled
+        self.navigationHandler = navigationHandler
     }
 }

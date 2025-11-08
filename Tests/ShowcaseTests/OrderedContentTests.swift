@@ -39,7 +39,7 @@ struct OrderedContentTests {
                 Text("Demo")
             }
             
-            Topic.Embed(URL(string: "https://example.com/embed")!)!
+            Embed(URL(string: "https://example.com/embed")!)!
             
             ExternalLink("GitHub", URL(string: "https://example.com/2")!)!
         }
@@ -77,7 +77,7 @@ struct OrderedContentTests {
     @Test("Mixed content types preserve order")
     func mixedContentPreservesOrder() {
         let topic = Topic("Mixed") {
-            Topic.Embed(URL(string: "https://example.com")!)!
+            Embed(URL(string: "https://example.com")!)!
             ExternalLink("Apple", URL(string: "https://example.com")!)!
             CodeBlock { "code" }
             Example("Preview") { Text("Demo") }
