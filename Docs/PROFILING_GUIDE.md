@@ -183,10 +183,8 @@ let document = Document("Large Test") {
         Chapter("Chapter \(i)") {
             for j in 0..<10 {
                 Topic("Topic \(j)") {
-                    Code {
-                        Topic.CodeBlock(text: {
-                            "func example\(i)_\(j)() {}"
-                        })
+                    CodeBlock {
+                        "func example\(i)_\(j)() {}"
                     }
                 }
             }
