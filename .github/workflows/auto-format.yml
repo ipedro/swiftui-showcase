@@ -22,13 +22,20 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
       
       - name: Apply SwiftLint
-        run: |
-          swiftlint --fix Sources/ Tests/
-          echo "SwiftLint applied successfully"
+        uses: ipedro/action-swiftlint@v3.2.2
+        with:
+          args: --fix
+        env:
+          # Only set DIFF_BASE for PRs (lints changed files only)
+          # For pushes to main, omit DIFF_BASE to lint all files
+          DIFF_BASE: ${{ github.event_name == 'pull_request' && github.base_ref || '' }}
 
+      - name: Install SwiftFormat
+        run: brew install swiftformat
+      
       - name: Apply SwiftFormat
         run: |
-          swiftformat
+          swiftformat Sources/ Tests/
           echo "SwiftFormat applied successfully"
       
       - name: Check for changes
