@@ -12,10 +12,10 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # Linting and formatting check
-  lint:
-    name: SwiftLint & SwiftFormat
-    runs-on: macos-latest
+  # SwiftLint check with PR annotations
+  swiftlint:
+    name: SwiftLint
+    runs-on: ubuntu-latest
     permissions:
       contents: read
       pull-requests: write
@@ -25,17 +25,25 @@ jobs:
         with:
           fetch-depth: 0
       
-      - name: Set up Xcode
-        uses: maxim-lobanov/setup-xcode@v1.6.0
-        with:
-          xcode-version: '26.0'
-      
       - name: Run SwiftLint with PR annotations
         uses: norio-nomura/action-swiftlint@3.2.1
         with:
           args: --strict --reporter github-actions-logging
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # SwiftFormat check
+  swiftformat:
+    name: SwiftFormat
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+      
+      - name: Set up Xcode
+        uses: maxim-lobanov/setup-xcode@v1.6.0
+        with:
+          xcode-version: '26.0'
       
       - name: Check SwiftFormat
         run: |
@@ -179,14 +187,15 @@ jobs:
   ci-success:
     name: CI Success
     runs-on: ubuntu-latest
-    needs: [lint, test, docs]
+    needs: [swiftlint, swiftformat, test, docs]
     if: success()
     steps:
       - name: Success Summary
         run: |
           echo "## ✅ All CI Checks Passed!" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "- ✅ Linting" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ SwiftLint" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ SwiftFormat" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ Tests & Example Apps (iOS & macOS)" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ Code Coverage" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ Documentation Build" >> $GITHUB_STEP_SUMMARY
