@@ -75,16 +75,31 @@ jobs:
             CODE_SIGNING_REQUIRED=NO
       
       - name: Run Tests
-        run: swift test --parallel --enable-code-coverage
-      
-      - name: Performance Tests Summary
-        if: success()
         run: |
-          echo "## ⏱️ Performance Test Results" >> $GITHUB_STEP_SUMMARY
+          swift test --parallel --enable-code-coverage 2>&1 | tee test-output.log
+          
+          # Extract test counts from output
+          TOTAL_TESTS=$(grep -E "Test Suite.*passed" test-output.log | tail -1 | grep -oE '[0-9]+ passed' | grep -oE '[0-9]+' || echo "0")
+          TOTAL_SUITES=$(grep -E "Test Suite.*passed" test-output.log | grep -oE 'Executed [0-9]+ tests' | grep -oE '[0-9]+' || echo "0")
+          
+          echo "test_count=$TOTAL_TESTS" >> $GITHUB_OUTPUT
+          echo "suite_count=$TOTAL_SUITES" >> $GITHUB_OUTPUT
+        id: test
+      
+      - name: Test Summary
+        if: success() && matrix.platform == 'macOS'
+        run: |
+          echo "## ✅ Test Results" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "All performance benchmarks passed within target thresholds!" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Test Suite:** 42 tests in 10 suites" >> $GITHUB_STEP_SUMMARY
+          echo "**Tests Passed:** ${{ steps.test.outputs.test_count }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Test Suites:** ${{ steps.test.outputs.suite_count }}" >> $GITHUB_STEP_SUMMARY
+      
+      - name: Upload Coverage to Codecov
+        if: matrix.platform == 'macOS'
+        uses: codecov/codecov-action@v4
+        with:
+          fail_ci_if_error: false
+          verbose: true
 
   # Code coverage reporting
   coverage:
