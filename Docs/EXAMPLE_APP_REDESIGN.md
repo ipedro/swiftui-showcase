@@ -6,11 +6,18 @@ Redesign the ShowcaseExample app to be a professional, feature-complete demonstr
 ## Current State Issues
 - ❌ SystemComponents.swift has many empty placeholder topics
 - ❌ Mock files (Button, Card, Accordion) aren't integrated into main app
-- ❌ **No Topic.Embed demonstrations** (feature exists but never shown!)
+- ❌ **No Embed demonstrations** (feature exists but never shown!)
 - ❌ **Ordered content feature not showcased** (the new capability)
 - ❌ Looks skeletal rather than a real app
 - ❌ Code examples don't show variety (languages, styles)
 - ❌ Links are minimal and generic
+
+## Recent API Updates (Completed)
+- ✅ `Link` renamed to `ExternalLink`
+- ✅ `Preview` renamed to `Example`
+- ✅ Wrapper functions removed (`Links {}`, `Code {}`, `Preview {}`)
+- ✅ Ordered content rendering implemented (items array preserves declaration order)
+- ✅ All backward compatibility code removed
 
 ## New Approach: "Showcase Framework Guide"
 **Concept**: Meta-documentation app that demonstrates Showcase by documenting itself
@@ -41,12 +48,12 @@ Description: "A declarative SwiftUI framework for creating rich component docume
 │     └─ Demonstrates: Overview of Link, Code, Preview, Embed
 │
 ├─ 📝 Chapter: "Content Types"
-│  ├─ Topic: "Links"
+│  ├─ Topic: "External Links"
 │  │  └─ Demonstrates: Multiple links, link styling
 │  ├─ Topic: "Code Blocks"
 │  │  └─ Demonstrates: Multiple languages, syntax highlighting
-│  ├─ Topic: "Previews"
-│  │  └─ Demonstrates: Live SwiftUI views, multiple previews
+│  ├─ Topic: "Examples"
+│  │  └─ Demonstrates: Live SwiftUI views, multiple examples
 │  └─ Topic: "Embeds"
 │     └─ Demonstrates: External content embedding (CURRENTLY NOT SHOWN!)
 │
@@ -78,54 +85,57 @@ Topic("Ordered Content Rendering") {
         """
     }
     
-    // Show old rigid pattern
-    Topic.CodeBlock("Before: Fixed Order") {
+    // Show old rigid pattern (before ordered content)
+    CodeBlock("Before: Fixed Order") {
         """
         Topic("Example") {
-            Description("...")  // Always first
-            Links { ... }       // Then links  
-            Code { ... }        // Then code
-            Preview { ... }     // Finally preview
+            Description("...")      // Always first
+            ExternalLink(...)       // Then links (grouped)
+            ExternalLink(...)
+            CodeBlock { ... }       // Then code (grouped)
+            Example { ... }         // Finally examples (grouped)
         }
+        // Rendered: Description → Links → Examples → Code (fixed order)
         """
     }
     
-    // Show new flexible pattern
-    Topic.CodeBlock("After: Your Order") {
+    // Show new flexible pattern (with ordered content)
+    CodeBlock("After: Your Order") {
         """
         Topic("Example") {
-            Code { ... }        // Code first!
-            Description("...")  // Then explain
-            Preview { ... }     // Show result
-            Link("...", ...)    // Reference
-            Embed(...)          // External content
+            CodeBlock { ... }       // Code first!
+            Description("...")      // Then explain
+            Example { ... }         // Show result
+            ExternalLink(...)       // Reference
+            Embed(...)              // External content
         }
+        // Renders in DECLARATION ORDER! 🎉
         """
     }
     
-    // Live preview showing flexible ordering
-    Topic.Preview("Flexible Layout") {
+    // Live example showing flexible ordering
+    Example {
         VStack(alignment: .leading, spacing: 16) {
-            Text("1. Code Block")
-            Text("2. Description") 
-            Text("3. Preview")
-            Text("4. Link")
-            Text("5. Embed")
+            Label("1. Code Block", systemImage: "curlybraces")
+            Label("2. Description", systemImage: "text.alignleft")
+            Label("3. Example", systemImage: "play.rectangle")
+            Label("4. External Link", systemImage: "link")
+            Label("5. Embed", systemImage: "globe")
         }
+        .font(.subheadline)
         .padding()
+        .background(Color.secondary.opacity(0.1))
+        .cornerRadius(8)
     }
     
-    // Link to the actual PR
-    Showcase.Link(
-        "View Implementation (PR #12)",
-        URL(string: "https://github.com/ipedro/swiftui-showcase/pull/12")!
-    )!
+    // Link to implementation details
+    ExternalLink("View Implementation Details", URL(string: "https://github.com/ipedro/swiftui-showcase")!)
 }
 ```
 
 ### 2. "Embeds" Topic (Currently Missing!) 🆕
 
-**Purpose**: Demonstrate Topic.Embed which exists but is never shown
+**Purpose**: Demonstrate Embed which exists but is never shown
 
 ```swift
 Topic("External Embeds") {
@@ -136,21 +146,19 @@ Topic("External Embeds") {
         """
     }
     
-    // Show the Showcase repository
-    Showcase.Link(
-        "Showcase Repository",
-        URL(string: "https://github.com/ipedro/swiftui-showcase")!
-    )!
+    // Link to the Showcase repository
+    ExternalLink("Showcase Repository", URL(string: "https://github.com/ipedro/swiftui-showcase")!)
     
-    Topic.Embed(URL(string: "https://github.com/ipedro/swiftui-showcase")!)!
+    // Embed the repository page
+    Embed(URL(string: "https://github.com/ipedro/swiftui-showcase")!)
     
-    Topic.CodeBlock("Usage") {
+    CodeBlock("Usage") {
         """
-        Topic.Embed(URL(string: "https://example.com")!)!
+        Embed(URL(string: "https://example.com")!)
         """
     }
     
-    Topic.Preview("Embed Component") {
+    Example {
         VStack {
             Image(systemName: "network")
                 .font(.system(size: 48))
@@ -174,28 +182,28 @@ Topic("External Embeds") {
 
 ```swift
 Topic("Quick Start") {
-    // CODE FIRST! (showing flexibility)
-    Topic.CodeBlock("Basic Example") {
+    // CODE FIRST! (showing flexibility with ordered content)
+    CodeBlock("Basic Example") {
         """
         import Showcase
         
-        Document("My App") {
-            Chapter("Components") {
-                Topic("Button") {
-                    Description("A tappable control")
-                    
-                    Code {
-                        Topic.CodeBlock {
+        ShowcaseNavigationStack(
+            Document("My App") {
+                Chapter("Components") {
+                    Topic("Button") {
+                        Description("A tappable control")
+                        
+                        CodeBlock {
                             "Button(\\"Tap Me\\") { }"
                         }
-                    }
-                    
-                    Preview {
-                        Button("Tap Me") { }
+                        
+                        Example {
+                            Button("Tap Me") { }
+                        }
                     }
                 }
             }
-        }
+        )
         """
     }
     
@@ -209,7 +217,7 @@ Topic("Quick Start") {
     }
     
     // Show the result
-    Topic.Preview("Result") {
+    Example {
         VStack(alignment: .leading, spacing: 8) {
             Text("📱 Document: My App")
                 .font(.headline)
@@ -222,10 +230,7 @@ Topic("Quick Start") {
     }
     
     // Link to full docs
-    Showcase.Link(
-        "Full Documentation",
-        URL(string: "https://github.com/ipedro/swiftui-showcase#readme")!
-    )!
+    ExternalLink("Full Documentation", URL(string: "https://github.com/ipedro/swiftui-showcase#readme")!)
 }
 ```
 
@@ -237,7 +242,7 @@ Topic("Quick Start") {
 Topic("Code Blocks") {
     Description("Display syntax-highlighted code examples in multiple languages")
     
-    Topic.CodeBlock("Swift") {
+    CodeBlock("Swift") {
         """
         struct ContentView: View {
             var body: some View {
@@ -247,7 +252,7 @@ Topic("Code Blocks") {
         """
     }
     
-    Topic.CodeBlock("JSON") {
+    CodeBlock("JSON") {
         """
         {
             "name": "Showcase",
@@ -257,7 +262,7 @@ Topic("Code Blocks") {
         """
     }
     
-    Topic.CodeBlock("Markdown") {
+    CodeBlock("Markdown") {
         """
         # Showcase Framework
         
@@ -265,7 +270,7 @@ Topic("Code Blocks") {
         """
     }
     
-    Topic.Preview("Syntax Highlighting") {
+    Example {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Image(systemName: "swift")
@@ -300,7 +305,7 @@ Topic("Custom Styles") {
     }
     
     // Example: Custom link style
-    Topic.CodeBlock("Custom Link Style") {
+    CodeBlock("Custom Link Style") {
         """
         struct BrandedLinkStyle: ButtonStyle {
             func makeBody(configuration: Configuration) -> some View {
@@ -324,7 +329,7 @@ Topic("Custom Styles") {
     }
     
     // Show how to apply custom styles
-    Topic.CodeBlock("Applying Styles") {
+    CodeBlock("Applying Styles") {
         """
         ShowcaseNavigationStack(myDocument)
             .environment(\\.linkButtonStyle, BrandedLinkStyle())
@@ -333,8 +338,8 @@ Topic("Custom Styles") {
         """
     }
     
-    // Preview showing before/after
-    Topic.Preview("Default vs Custom") {
+    // Example showing before/after
+    Example {
         HStack(spacing: 20) {
             VStack {
                 Text("Default")
@@ -367,7 +372,7 @@ Topic("Custom Styles") {
     }
     
     // More advanced: Custom code block theme
-    Topic.CodeBlock("Custom Code Theme") {
+    CodeBlock("Custom Code Theme") {
         """
         // Define your own syntax highlighting colors
         extension CodeBlockTheme {
@@ -383,16 +388,13 @@ Topic("Custom Styles") {
     }
     
     // Link to customization guide
-    Showcase.Link(
-        "Customization Guide",
-        URL(string: "https://github.com/ipedro/swiftui-showcase#customization")!
-    )!
+    ExternalLink("Customization Guide", URL(string: "https://github.com/ipedro/swiftui-showcase#customization")!)
     
     // Nested topic for specific components
     Topic("Code Block Styles") {
         Description("Customize syntax highlighting themes for code blocks")
         
-        Topic.CodeBlock("Available Themes") {
+        CodeBlock("Available Themes") {
             """
             .environment(\\.codeBlockTheme, .xcode)      // Light theme
             .environment(\\.codeBlockTheme, .dracula)    // Dark theme
@@ -401,7 +403,7 @@ Topic("Custom Styles") {
             """
         }
         
-        Topic.Preview("Theme Comparison") {
+        Example {
             VStack(alignment: .leading, spacing: 16) {
                 ForEach(["Xcode", "Dracula", "Solarized", "Custom"], id: \\.self) { theme in
                     HStack {
