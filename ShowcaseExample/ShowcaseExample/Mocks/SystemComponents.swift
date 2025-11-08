@@ -123,7 +123,7 @@ extension Topic {
         Description("An image view displays a single image — or in some cases, an animated sequence of images — on a transparent or opaque background.")
 
         Links {
-            Topic.Link(.docs, .imageViewsDocs)
+            Link(.docs, .imageViewsDocs)
         }
 
         Topic.image
@@ -178,7 +178,7 @@ extension Topic {
     }
 }
 
-private extension Topic.LinkName {
+private extension LinkName {
     static let docs: Self = "Documentation"
 }
 

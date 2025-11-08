@@ -28,6 +28,12 @@ import SwiftUI
 public struct Topic: Identifiable {
     /// The unique identifier for the topic.
     public let id = UUID()
+    
+    /// Ordered content items that preserve declaration order.
+    ///
+    /// This array contains all content items (links, code blocks, previews, embeds)
+    /// in the exact order they were declared in the builder DSL.
+    @Lazy public var items: [TopicContentItem]
 
     /// Code blocks associated with the topic.
     @Lazy public var codeBlocks: [CodeBlock]
@@ -78,6 +84,7 @@ public struct Topic: Identifiable {
         let icon = icon()
         let content = content()
 
+        _items = Lazy(wrappedValue: content.items)
         _codeBlocks = Lazy(wrappedValue: content.codeBlocks)
         _description = Lazy(wrappedValue: content.description ?? "")
         _embeds = Lazy(wrappedValue: content.embeds)
@@ -99,6 +106,7 @@ public struct Topic: Identifiable {
     ) {
         let content = content()
 
+        _items = Lazy(wrappedValue: content.items)
         _codeBlocks = Lazy(wrappedValue: content.codeBlocks)
         _description = Lazy(wrappedValue: content.description ?? "")
         _embeds = Lazy(wrappedValue: content.embeds)
@@ -151,18 +159,34 @@ public struct Topic: Identifiable {
         _ title: String,
         icon: @escaping @autoclosure () -> Image,
         description: @escaping @autoclosure () -> String = "",
-        @LinkBuilder links: @escaping () -> [Link] = Array.init,
+        @Link.Builder links: @escaping () -> [Link] = Array.init,
         @EmbedBuilder embeds: @escaping () -> [Embed] = Array.init,
         @CodeBlockBuilder code codeBlocks: @escaping () -> [CodeBlock] = Array.init,
         @PreviewBuilder previews: @escaping () -> [Preview] = Array.init,
         children: [Topic]? = nil
     ) {
-        _codeBlocks = Lazy(wrappedValue: codeBlocks())
+        let linksArray = links()
+        let embedsArray = embeds()
+        let codeBlocksArray = codeBlocks()
+        let previewsArray = previews()
+        
+        // Build items array preserving original order (links, embeds, code, previews)
+        var itemsArray: [TopicContentItem] = []
+        itemsArray.reserveCapacity(linksArray.count + embedsArray.count + codeBlocksArray.count + previewsArray.count)
+        itemsArray.append(contentsOf: linksArray.map { .link($0) })
+        itemsArray.append(contentsOf: embedsArray.map { .embed($0) })
+        itemsArray.append(contentsOf: codeBlocksArray.map { .codeBlock($0) })
+        itemsArray.append(contentsOf: previewsArray.map { .preview($0) })
+        
+        _items = Lazy(wrappedValue: itemsArray)
+        _items = Lazy(wrappedValue: itemsArray)
+_items = Lazy(wrappedValue: [])
+        _codeBlocks = Lazy(wrappedValue: codeBlocksArray)
         _description = Lazy(wrappedValue: description())
-        _embeds = Lazy(wrappedValue: embeds())
+        _embeds = Lazy(wrappedValue: embedsArray)
         _icon = Lazy(wrappedValue: icon())
-        _links = Lazy(wrappedValue: links())
-        _previews = Lazy(wrappedValue: previews())
+        _links = Lazy(wrappedValue: linksArray)
+        _previews = Lazy(wrappedValue: previewsArray)
         _title = Lazy(wrappedValue: title)
         self.children = children
     }
@@ -175,19 +199,33 @@ public struct Topic: Identifiable {
         _ title: String,
         icon: @escaping @autoclosure () -> Image,
         description: @escaping @autoclosure () -> String = "",
-        @LinkBuilder links: @escaping () -> [Link] = Array.init,
+        @Link.Builder links: @escaping () -> [Link] = Array.init,
         @EmbedBuilder embeds: @escaping () -> [Embed] = Array.init,
         @CodeBlockBuilder code codeBlocks: @escaping () -> [CodeBlock] = Array.init,
         @PreviewBuilder previews: @escaping () -> [Preview] = Array.init,
         @TopicBuilder _ children: () -> [Topic]
     ) {
         let children = children()
-        _codeBlocks = Lazy(wrappedValue: codeBlocks())
+        let linksArray = links()
+        let embedsArray = embeds()
+        let codeBlocksArray = codeBlocks()
+        let previewsArray = previews()
+        
+        var itemsArray: [TopicContentItem] = []
+        itemsArray.reserveCapacity(linksArray.count + embedsArray.count + codeBlocksArray.count + previewsArray.count)
+        itemsArray.append(contentsOf: linksArray.map { .link($0) })
+        itemsArray.append(contentsOf: embedsArray.map { .embed($0) })
+        itemsArray.append(contentsOf: codeBlocksArray.map { .codeBlock($0) })
+        itemsArray.append(contentsOf: previewsArray.map { .preview($0) })
+        
+        _items = Lazy(wrappedValue: itemsArray)
+_items = Lazy(wrappedValue: [])
+        _codeBlocks = Lazy(wrappedValue: codeBlocksArray)
         _description = Lazy(wrappedValue: description())
-        _embeds = Lazy(wrappedValue: embeds())
+        _embeds = Lazy(wrappedValue: embedsArray)
         _icon = Lazy(wrappedValue: icon())
-        _links = Lazy(wrappedValue: links())
-        _previews = Lazy(wrappedValue: previews())
+        _links = Lazy(wrappedValue: linksArray)
+        _previews = Lazy(wrappedValue: previewsArray)
         _title = Lazy(wrappedValue: title)
         self.children = children.isEmpty ? nil : children
     }
@@ -209,12 +247,13 @@ public struct Topic: Identifiable {
         _ title: String,
         icon: @escaping @autoclosure () -> Image,
         description: @escaping @autoclosure () -> String = "",
-        @LinkBuilder links: @escaping () -> [Link] = Array.init,
+        @Link.Builder links: @escaping () -> [Link] = Array.init,
         @EmbedBuilder embeds: @escaping () -> [Embed] = Array.init,
         @CodeBlockBuilder code codeBlocks: @escaping () -> [CodeBlock] = Array.init,
         @ViewBuilder previews: @escaping () -> some View,
         children: [Topic]? = nil
     ) {
+_items = Lazy(wrappedValue: [])
         _codeBlocks = Lazy(wrappedValue: codeBlocks())
         _description = Lazy(wrappedValue: description())
         _embeds = Lazy(wrappedValue: embeds())
@@ -233,13 +272,14 @@ public struct Topic: Identifiable {
         _ title: String,
         icon: @escaping @autoclosure () -> Image,
         description: @escaping @autoclosure () -> String = "",
-        @LinkBuilder links: @escaping () -> [Link] = Array.init,
+        @Link.Builder links: @escaping () -> [Link] = Array.init,
         @EmbedBuilder embeds: @escaping () -> [Embed] = Array.init,
         @CodeBlockBuilder code codeBlocks: @escaping () -> [CodeBlock] = Array.init,
         @ViewBuilder previews: @escaping () -> some View,
         @TopicBuilder _ children: () -> [Topic]
     ) {
         let children = children()
+_items = Lazy(wrappedValue: [])
         _codeBlocks = Lazy(wrappedValue: codeBlocks())
         _description = Lazy(wrappedValue: description())
         _embeds = Lazy(wrappedValue: embeds())
@@ -265,12 +305,13 @@ public struct Topic: Identifiable {
     public init(
         _ title: String,
         description: @escaping @autoclosure () -> String = "",
-        @LinkBuilder links: @escaping () -> [Link] = Array.init,
+        @Link.Builder links: @escaping () -> [Link] = Array.init,
         @EmbedBuilder embeds: @escaping () -> [Embed] = Array.init,
         @CodeBlockBuilder code codeBlocks: @escaping () -> [CodeBlock] = Array.init,
         @PreviewBuilder previews: @escaping () -> [Preview] = Array.init,
         children: [Topic]? = nil
     ) {
+_items = Lazy(wrappedValue: [])
         _codeBlocks = Lazy(wrappedValue: codeBlocks())
         _description = Lazy(wrappedValue: description())
         _embeds = Lazy(wrappedValue: embeds())
@@ -288,13 +329,14 @@ public struct Topic: Identifiable {
     public init(
         _ title: String,
         description: @escaping @autoclosure () -> String = "",
-        @LinkBuilder links: @escaping () -> [Link] = Array.init,
+        @Link.Builder links: @escaping () -> [Link] = Array.init,
         @EmbedBuilder embeds: @escaping () -> [Embed] = Array.init,
         @CodeBlockBuilder code codeBlocks: @escaping () -> [CodeBlock] = Array.init,
         @PreviewBuilder previews: @escaping () -> [Preview] = Array.init,
         @TopicBuilder _ children: () -> [Topic]
     ) {
         let children = children()
+_items = Lazy(wrappedValue: [])
         _codeBlocks = Lazy(wrappedValue: codeBlocks())
         _description = Lazy(wrappedValue: description())
         _embeds = Lazy(wrappedValue: embeds())
@@ -320,12 +362,13 @@ public struct Topic: Identifiable {
     public init(
         _ title: String,
         description: @escaping @autoclosure () -> String = "",
-        @LinkBuilder links: @escaping () -> [Link] = Array.init,
+        @Link.Builder links: @escaping () -> [Link] = Array.init,
         @EmbedBuilder embeds: @escaping () -> [Embed] = Array.init,
         @CodeBlockBuilder code codeBlocks: @escaping () -> [CodeBlock] = Array.init,
         @ViewBuilder previews: @escaping () -> some View,
         children: [Topic]? = nil
     ) {
+_items = Lazy(wrappedValue: [])
         _codeBlocks = Lazy(wrappedValue: codeBlocks())
         _description = Lazy(wrappedValue: description())
         _embeds = Lazy(wrappedValue: embeds())
@@ -343,13 +386,14 @@ public struct Topic: Identifiable {
     public init(
         _ title: String,
         description: @escaping @autoclosure () -> String = "",
-        @LinkBuilder links: @escaping () -> [Link] = Array.init,
+        @Link.Builder links: @escaping () -> [Link] = Array.init,
         @EmbedBuilder embeds: @escaping () -> [Embed] = Array.init,
         @CodeBlockBuilder code codeBlocks: @escaping () -> [CodeBlock] = Array.init,
         @ViewBuilder previews: @escaping () -> some View,
         @TopicBuilder _ children: () -> [Topic]
     ) {
         let children = children()
+_items = Lazy(wrappedValue: [])
         _codeBlocks = Lazy(wrappedValue: codeBlocks())
         _description = Lazy(wrappedValue: description())
         _embeds = Lazy(wrappedValue: embeds())

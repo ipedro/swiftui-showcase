@@ -43,7 +43,7 @@ public extension View {
 }
 
 public struct ShowcaseLinks: View {
-    var content: EquatableForEach<[Topic.Link], Topic.Link.ID, ShowcaseLink>
+    var content: EquatableForEach<[Link], Link.ID, ShowcaseLink>
     public var body: some View { content }
 }
 
@@ -59,7 +59,7 @@ struct ShowcaseLink: View, Equatable {
     @Environment(\.controlSize) private var controlSize
 
     /// The data representing the external link.
-    let data: Topic.Link
+    let data: Link
 
     #if canImport(UIKit)
         let impact = UISelectionFeedbackGenerator()

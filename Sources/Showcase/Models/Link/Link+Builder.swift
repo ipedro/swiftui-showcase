@@ -1,4 +1,4 @@
-// Topic+LinkName.swift
+// Link+Builder.swift
 // Copyright (c) 2025 Pedro Almeida
 // Created by Pedro Almeida on 11/8/25.
 //
@@ -22,22 +22,16 @@
 
 import Foundation
 
-public extension Topic {
-    /// Represents the name of an external link.
-    struct LinkName: CustomStringConvertible, ExpressibleByStringLiteral {
-        /// The description of the link name.
-        public let description: String
+public extension Link {
+    /// A result builder for creating external links.
+    @resultBuilder struct Builder {
+        /// Builds an array of external links from individual components.
+        public static func buildBlock() -> [Link] { [] }
 
-        /// Initializes a link name with the specified description.
-        /// - Parameter description: The description of the link name.
-        public init(_ description: String) {
-            self.description = description
-        }
+        /// Builds an array of external links from variadic components.
+        public static func buildBlock(_ components: Link...) -> [Link] { components }
 
-        /// Initializes a link name using a string literal.
-        /// - Parameter value: The string literal representing the link name description.
-        public init(stringLiteral value: String) {
-            description = value
-        }
+        /// Builds an array of external links from optional components, filtering out nil values.
+        public static func buildBlock(_ components: Link?...) -> [Link] { components.compactMap { $0 } }
     }
 }

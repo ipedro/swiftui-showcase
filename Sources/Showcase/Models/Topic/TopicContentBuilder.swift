@@ -50,6 +50,15 @@ public extension Topic {
     /// single structure consumed by the topic initializers.
     struct Content {
         public var description: String?
+        
+        /// Ordered heterogeneous content items that preserve declaration order.
+        ///
+        /// This array stores all content items (links, code blocks, previews, embeds)
+        /// in the exact order they were declared in the builder DSL, enabling
+        /// flexible content composition and rendering.
+        public var items: [TopicContentItem]
+        
+        // Backward compatibility: separate arrays computed from items
         public var links: [Link]
         public var embeds: [Embed]
         public var codeBlocks: [CodeBlock]
@@ -58,6 +67,7 @@ public extension Topic {
 
         public init(
             description: String? = nil,
+            items: [TopicContentItem] = [],
             links: [Link] = [],
             embeds: [Embed] = [],
             codeBlocks: [CodeBlock] = [],
@@ -65,6 +75,7 @@ public extension Topic {
             children: [Topic] = []
         ) {
             self.description = description
+            self.items = items
             self.links = links
             self.embeds = embeds
             self.codeBlocks = codeBlocks
@@ -75,6 +86,10 @@ public extension Topic {
         mutating func merge(_ other: Self) {
             if let description = other.description {
                 self.description = description
+            }
+            
+            if !other.items.isEmpty {
+                items.append(contentsOf: other.items)
             }
 
             if !other.links.isEmpty {
@@ -162,24 +177,28 @@ extension Description: TopicContentConvertible {
 
 extension Topic.Preview: TopicContentConvertible {
     public func merge(into content: inout Topic.Content) {
+        content.items.append(.preview(self))
         content.previews.append(self)
     }
 }
 
 extension Topic.CodeBlock: TopicContentConvertible {
     public func merge(into content: inout Topic.Content) {
+        content.items.append(.codeBlock(self))
         content.codeBlocks.append(self)
     }
 }
 
-extension Topic.Link: TopicContentConvertible {
+extension Link: TopicContentConvertible {
     public func merge(into content: inout Topic.Content) {
+        content.items.append(.link(self))
         content.links.append(self)
     }
 }
 
 extension Topic.Embed: TopicContentConvertible {
     public func merge(into content: inout Topic.Content) {
+        content.items.append(.embed(self))
         content.embeds.append(self)
     }
 }
@@ -194,22 +213,26 @@ extension Topic: TopicContentConvertible {
 // Individual element types (Topic, Preview, CodeBlock, Link, Embed) conform directly,
 // and the result builder handles arrays automatically.
 
-/// Collects links produced by a ``Topic.LinkBuilder`` into the topic content DSL.
-public struct TopicLinks: TopicContentConvertible {
-    private let builder: () -> [Topic.Link]
+/// Internal implementation for collecting links in topic content.
+@usableFromInline
+internal struct LinksImpl: TopicContentConvertible {
+    @usableFromInline
+    let builder: () -> [Link]
 
-    public init(@Topic.LinkBuilder _ builder: @escaping () -> [Topic.Link]) {
-        builder = builder
+    @usableFromInline
+    init(_ builder: @escaping () -> [Link]) {
+        self.builder = builder
     }
 
-    public func merge(into content: inout Topic.Content) {
+    @usableFromInline
+    func merge(into content: inout Topic.Content) {
         let links = builder()
         guard !links.isEmpty else { return }
         content.links.append(contentsOf: links)
     }
 }
 
-/// Collects embeds produced by an ``Topic/EmbedBuilder`` into the topic content DSL.
+/// Collects embeds produced by an ``Embed/Builder`` into the topic content DSL.
 public struct TopicEmbeds: TopicContentConvertible {
     private let builder: () -> [Topic.Embed]
 
@@ -269,25 +292,25 @@ public struct TopicChildren: TopicContentConvertible {
     }
 }
 
-/// Convenience helper mirroring ``TopicPreviews`` while avoiding explicit type names in the DSL.
+/// Convenience helper mirroring ``PreviewsImpl`` while avoiding explicit type names in the DSL.
 @inlinable
 public func Previews(@Topic.PreviewBuilder _ builder: @escaping () -> [Topic.Preview]) -> TopicPreviews {
     TopicPreviews(builder)
 }
 
-/// Convenience helper mirroring ``TopicCodeBlocks`` while avoiding explicit type names in the DSL.
+/// Convenience helper mirroring ``CodeBlocksImpl`` while avoiding explicit type names in the DSL.
 @inlinable
 public func Code(@Topic.CodeBlockBuilder _ builder: @escaping () -> [Topic.CodeBlock]) -> TopicCodeBlocks {
     TopicCodeBlocks(builder)
 }
 
-/// Convenience helper mirroring ``TopicLinks`` while avoiding explicit type names in the DSL.
+/// Convenience helper mirroring ``LinksImpl`` while avoiding explicit type names in the DSL.
 @inlinable
-public func Links(@Topic.LinkBuilder _ builder: @escaping () -> [Topic.Link]) -> TopicLinks {
-    TopicLinks(builder)
+public func Links(@Link.Builder _ builder: @escaping () -> [Link]) -> some TopicContentConvertible {
+    LinksImpl(builder)
 }
 
-/// Convenience helper mirroring ``TopicEmbeds`` while avoiding explicit type names in the DSL.
+/// Convenience helper mirroring ``EmbedsImpl`` while avoiding explicit type names in the DSL.
 @inlinable
 public func Embeds(@Topic.EmbedBuilder _ builder: @escaping () -> [Topic.Embed]) -> TopicEmbeds {
     TopicEmbeds(builder)

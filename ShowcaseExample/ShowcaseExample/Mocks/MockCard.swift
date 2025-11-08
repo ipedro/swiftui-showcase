@@ -50,8 +50,8 @@ extension Topic {
         }
 
         Links {
-            Topic.Link("Code", .init(string: "NavigationalCard"))
-            Topic.Link("Design", .init(string: "https://google.com"))
+            Link("Code", .init(string: "NavigationalCard"))
+            Link("Design", .init(string: "https://google.com"))
         }
 
         Code {
@@ -93,8 +93,8 @@ extension Topic {
         }
 
         Links {
-            Topic.Link("Code", .init(string: "SelectableCard"))
-            Topic.Link("Design", .init(string: "https://google.com"))
+            Link("Code", .init(string: "SelectableCard"))
+            Link("Design", .init(string: "https://google.com"))
         }
 
         Code {
@@ -128,8 +128,8 @@ extension Topic {
         }
 
         Links {
-            Topic.Link("Code", .init(string: "StaticCard"))
-            Topic.Link("Design", .init(string: "https://google.com"))
+            Link("Code", .init(string: "StaticCard"))
+            Link("Design", .init(string: "https://google.com"))
         }
 
         Code {

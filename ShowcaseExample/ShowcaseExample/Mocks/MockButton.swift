@@ -33,7 +33,7 @@ extension Topic {
         }
 
         Links {
-            Topic.Link(" HIG", "https://developer.apple.com/design/human-interface-guidelines/buttons")
+            Link(" HIG", "https://developer.apple.com/design/human-interface-guidelines/buttons")
         }
 
         Code {
