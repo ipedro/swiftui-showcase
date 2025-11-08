@@ -62,17 +62,25 @@ jobs:
         if: matrix.platform == 'iOS'
         run: xcrun simctl list devices available
       
-      - name: Build for ${{ matrix.platform }}
-        if: matrix.platform == 'iOS'
+      - name: Build ShowcaseExample for ${{ matrix.platform }}
         run: |
-          xcodebuild build \
-            -project ShowcaseExample/ShowcaseExample.xcodeproj \
-            -scheme ShowcaseExample \
-            -destination 'platform=iOS Simulator,name=iPhone 16' \
-            -skipPackagePluginValidation \
-            -skipMacroValidation \
-            CODE_SIGN_IDENTITY="" \
-            CODE_SIGNING_REQUIRED=NO
+          if [ "${{ matrix.platform }}" == "iOS" ]; then
+            xcodebuild build \
+              -project ShowcaseExample/ShowcaseExample.xcodeproj \
+              -scheme ShowcaseExample \
+              -destination 'platform=iOS Simulator,name=iPhone 16' \
+              -skipPackagePluginValidation \
+              -skipMacroValidation \
+              CODE_SIGN_IDENTITY="" \
+              CODE_SIGNING_REQUIRED=NO
+          else
+            xcodebuild build \
+              -project ShowcaseExample/ShowcaseExample.xcodeproj \
+              -scheme ShowcaseExample \
+              -destination 'platform=macOS' \
+              -skipPackagePluginValidation \
+              -skipMacroValidation
+          fi
       
       - name: Run Tests
         run: |

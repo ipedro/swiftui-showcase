@@ -53,7 +53,7 @@ public struct Document: Identifiable {
         _ title: String,
         icon: @escaping @autoclosure () -> Image,
         description: @escaping @autoclosure () -> String = "",
-        @ChapterBuilder _ content: () -> [Chapter] = { [] }
+        @ChapterBuilder _ content: () -> [Chapter]
     ) {
         let icon = icon()
         _title = Lazy(wrappedValue: title)
@@ -72,7 +72,7 @@ public struct Document: Identifiable {
     public init(
         _ title: String,
         description: @escaping @autoclosure () -> String = "",
-        @ChapterBuilder _ content: () -> [Chapter] = { [] }
+        @ChapterBuilder _ content: () -> [Chapter]
     ) {
         _title = Lazy(wrappedValue: title)
         _description = Lazy(wrappedValue: description())

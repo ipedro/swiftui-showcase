@@ -24,11 +24,9 @@ import Foundation
 
 /// A result builder for creating code blocks.
 @resultBuilder public struct TopicBuilder {
-    public static func buildBlock() -> [Topic] { [] }
-
-    public static func buildBlock(_ components: Topic...) -> [Topic] { components }
-
-    public static func buildBlock(_ components: [Topic]) -> [Topic] { components }
+    public static func buildBlock(_ components: [Topic]...) -> [Topic] {
+        components.flatMap { $0 }
+    }
 
     public static func buildOptional(_ component: [Topic]?) -> [Topic] {
         component ?? []

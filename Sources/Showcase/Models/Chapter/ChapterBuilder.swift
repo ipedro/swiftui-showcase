@@ -24,11 +24,9 @@ import Foundation
 
 /// A result builder that produces an array of ``Chapter`` values.
 @resultBuilder public struct ChapterBuilder {
-    public static func buildBlock() -> [Chapter] { [] }
-
-    public static func buildBlock(_ components: [Chapter]) -> [Chapter] { components }
-
-    public static func buildBlock(_ components: Chapter...) -> [Chapter] { components }
+    public static func buildBlock(_ components: [Chapter]...) -> [Chapter] {
+        components.flatMap { $0 }
+    }
 
     public static func buildOptional(_ component: [Chapter]?) -> [Chapter] {
         component ?? []
@@ -54,6 +52,7 @@ import Foundation
         [expression]
     }
 
+    @_disfavoredOverload
     public static func buildExpression(_ expression: [Chapter]) -> [Chapter] {
         expression
     }

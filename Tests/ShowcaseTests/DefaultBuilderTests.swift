@@ -72,7 +72,7 @@ struct DefaultBuilderTests {
     
     @Test("Document with no content closure")
     func documentWithoutBraces() {
-        let document = Document("Test Document")
+        let document = Document("Test Document") {}
         
         #expect(document.title == "Test Document")
         #expect(document.description == "")
@@ -81,7 +81,7 @@ struct DefaultBuilderTests {
     
     @Test("Document with description and no content closure")
     func documentWithDescriptionWithoutBraces() {
-        let document = Document("Test Document", description: "A test")
+        let document = Document("Test Document", description: "A test") {}
         
         #expect(document.title == "Test Document")
         #expect(document.description == "A test")
@@ -91,7 +91,7 @@ struct DefaultBuilderTests {
     @Test("Document with icon and no content closure")
     func documentWithIconWithoutBraces() {
         let icon = Image(systemName: "doc")
-        let document = Document("Test Document", icon: icon)
+        let document = Document("Test Document", icon: icon) {}
         
         #expect(document.title == "Test Document")
         #expect(document.icon != nil)
