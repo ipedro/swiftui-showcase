@@ -27,7 +27,7 @@ jobs:
           fetch-depth: 0
       
       - name: Run SwiftLint with PR annotations
-        uses: ipedro/action-swiftlint@d157a5192dc55379b6ee5322ce5b6d926074a526
+        uses: ipedro/action-swiftlint@eb3484d9c7779a16f46b08a6fe30e9bc77ad1ebe
         with:
           args: --strict
         env:
