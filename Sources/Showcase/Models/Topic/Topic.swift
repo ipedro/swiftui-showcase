@@ -42,7 +42,7 @@ public struct Topic: Identifiable {
     @Lazy public var description: String
 
     /// External links associated with the topic.
-    @Lazy public var links: [Link]
+    @Lazy public var links: [ExternalLink]
 
     /// External contents associated with the topic.
     @Lazy public var embeds: [Embed]
@@ -159,7 +159,7 @@ public struct Topic: Identifiable {
         _ title: String,
         icon: @escaping @autoclosure () -> Image,
         description: @escaping @autoclosure () -> String = "",
-        @Link.Builder links: @escaping () -> [Link] = Array.init,
+        @ExternalLink.Builder links: @escaping () -> [ExternalLink] = Array.init,
         @EmbedBuilder embeds: @escaping () -> [Embed] = Array.init,
         @CodeBlockBuilder code codeBlocks: @escaping () -> [CodeBlock] = Array.init,
         @PreviewBuilder previews: @escaping () -> [Preview] = Array.init,
@@ -199,7 +199,7 @@ _items = Lazy(wrappedValue: [])
         _ title: String,
         icon: @escaping @autoclosure () -> Image,
         description: @escaping @autoclosure () -> String = "",
-        @Link.Builder links: @escaping () -> [Link] = Array.init,
+        @ExternalLink.Builder links: @escaping () -> [ExternalLink] = Array.init,
         @EmbedBuilder embeds: @escaping () -> [Embed] = Array.init,
         @CodeBlockBuilder code codeBlocks: @escaping () -> [CodeBlock] = Array.init,
         @PreviewBuilder previews: @escaping () -> [Preview] = Array.init,
@@ -247,7 +247,7 @@ _items = Lazy(wrappedValue: [])
         _ title: String,
         icon: @escaping @autoclosure () -> Image,
         description: @escaping @autoclosure () -> String = "",
-        @Link.Builder links: @escaping () -> [Link] = Array.init,
+        @ExternalLink.Builder links: @escaping () -> [ExternalLink] = Array.init,
         @EmbedBuilder embeds: @escaping () -> [Embed] = Array.init,
         @CodeBlockBuilder code codeBlocks: @escaping () -> [CodeBlock] = Array.init,
         @ViewBuilder previews: @escaping () -> some View,
@@ -272,7 +272,7 @@ _items = Lazy(wrappedValue: [])
         _ title: String,
         icon: @escaping @autoclosure () -> Image,
         description: @escaping @autoclosure () -> String = "",
-        @Link.Builder links: @escaping () -> [Link] = Array.init,
+        @ExternalLink.Builder links: @escaping () -> [ExternalLink] = Array.init,
         @EmbedBuilder embeds: @escaping () -> [Embed] = Array.init,
         @CodeBlockBuilder code codeBlocks: @escaping () -> [CodeBlock] = Array.init,
         @ViewBuilder previews: @escaping () -> some View,
@@ -305,7 +305,7 @@ _items = Lazy(wrappedValue: [])
     public init(
         _ title: String,
         description: @escaping @autoclosure () -> String = "",
-        @Link.Builder links: @escaping () -> [Link] = Array.init,
+        @ExternalLink.Builder links: @escaping () -> [ExternalLink] = Array.init,
         @EmbedBuilder embeds: @escaping () -> [Embed] = Array.init,
         @CodeBlockBuilder code codeBlocks: @escaping () -> [CodeBlock] = Array.init,
         @PreviewBuilder previews: @escaping () -> [Preview] = Array.init,
@@ -329,7 +329,7 @@ _items = Lazy(wrappedValue: [])
     public init(
         _ title: String,
         description: @escaping @autoclosure () -> String = "",
-        @Link.Builder links: @escaping () -> [Link] = Array.init,
+        @ExternalLink.Builder links: @escaping () -> [ExternalLink] = Array.init,
         @EmbedBuilder embeds: @escaping () -> [Embed] = Array.init,
         @CodeBlockBuilder code codeBlocks: @escaping () -> [CodeBlock] = Array.init,
         @PreviewBuilder previews: @escaping () -> [Preview] = Array.init,
@@ -362,7 +362,7 @@ _items = Lazy(wrappedValue: [])
     public init(
         _ title: String,
         description: @escaping @autoclosure () -> String = "",
-        @Link.Builder links: @escaping () -> [Link] = Array.init,
+        @ExternalLink.Builder links: @escaping () -> [ExternalLink] = Array.init,
         @EmbedBuilder embeds: @escaping () -> [Embed] = Array.init,
         @CodeBlockBuilder code codeBlocks: @escaping () -> [CodeBlock] = Array.init,
         @ViewBuilder previews: @escaping () -> some View,
@@ -386,7 +386,7 @@ _items = Lazy(wrappedValue: [])
     public init(
         _ title: String,
         description: @escaping @autoclosure () -> String = "",
-        @Link.Builder links: @escaping () -> [Link] = Array.init,
+        @ExternalLink.Builder links: @escaping () -> [ExternalLink] = Array.init,
         @EmbedBuilder embeds: @escaping () -> [Embed] = Array.init,
         @CodeBlockBuilder code codeBlocks: @escaping () -> [CodeBlock] = Array.init,
         @ViewBuilder previews: @escaping () -> some View,

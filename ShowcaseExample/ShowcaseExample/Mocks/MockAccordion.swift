@@ -32,8 +32,8 @@ extension Topic {
         }
 
         Links {
-            Link("Code", "https://google.com")
-            Link("Design", "https://zeroheight.com/700c95a05/p/0309e1-accordion/b/45490a")
+            ExternalLink("Code", "https://google.com")
+            ExternalLink("Design", "https://zeroheight.com/700c95a05/p/0309e1-accordion/b/45490a")
         }
 
         Code {

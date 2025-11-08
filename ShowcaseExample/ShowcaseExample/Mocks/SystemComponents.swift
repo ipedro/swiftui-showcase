@@ -34,7 +34,9 @@ extension Document {
             Topic.imageViews
 
             Topic("Charts") {
-                Description("Organize data in a chart to communicate information with clarity and visual appeal.")
+                Description {
+                    "Organize data in a chart to communicate information with clarity and visual appeal."
+                }
 
                 Preview {
                     Group {
@@ -126,19 +128,19 @@ extension Topic {
             "An image view displays a single image — or in some cases, an animated sequence of images — on a transparent or opaque background."
         }
 
-        Showcase.Link(.docs, .imageViewsDocs)
+        ExternalLink(.docs, .imageViewsDocs)
 
         Topic("Image") {
             Description("Use an Image instance when you want to add images to your SwiftUI app.")
 
             Topic.CodeBlock {
-            """
-            Image(systemName: "swift")
-            
-            // or
-            
-            Image("your-asset-name")
-            """
+                """
+                Image(systemName: "swift")
+                
+                // or
+                
+                Image("your-asset-name")
+                """
             }
 
             Preview {
@@ -148,7 +150,12 @@ extension Topic {
         }
 
         Topic("AsyncImage") {
-            Description("This view uses the shared URLSession instance to load an image from the specified URL, and then display it. For example, you can display an icon that’s stored on a server:")
+            Description {
+                """
+                This view uses the shared URLSession instance to load an image from the specified URL, and then display it. 
+                For example, you can display an icon that’s stored on a server:
+                """
+            }
 
             Topic.CodeBlock {
             """
@@ -192,7 +199,12 @@ extension Topic {
 
 extension Topic {
     static let asyncImage = Topic("AsyncImage") {
-        Description("This view uses the shared URLSession instance to load an image from the specified URL, and then display it. For example, you can display an icon that’s stored on a server:")
+        Description {
+            """
+            This view uses the shared URLSession instance to load an image from the specified URL, and then display it. 
+            For example, you can display an icon that’s stored on a server:
+            """
+        }
 
         Topic.CodeBlock {
             """
@@ -212,7 +224,7 @@ extension Topic {
     }
 }
 
-private extension Showcase.Link.Name {
+private extension ExternalLink.Name {
     static let docs: Self = "Documentation"
 }
 

@@ -1,4 +1,4 @@
-// Link.swift
+// ExternalLink.swift
 // Copyright (c) 2025 Pedro Almeida
 // Created by Pedro Almeida on 11/8/25.
 //
@@ -23,17 +23,17 @@
 import Foundation
 
 /// Represents an external link associated with a showcase element.
-public struct Link: Identifiable, Hashable, Equatable {
+public struct ExternalLink: Identifiable, Hashable, Equatable {
     /// The unique identifier for the external link (based on the URL).
     public let id = UUID()
 
     /// The title of the external link.
-    public var name: Link.Name
+    public var name: ExternalLink.Name
 
     /// The URL of the external link.
     public var url: URL
 
-    public static func == (lhs: Link, rhs: Link) -> Bool {
+    public static func == (lhs: ExternalLink, rhs: ExternalLink) -> Bool {
         lhs.id == rhs.id
     }
 
@@ -45,7 +45,7 @@ public struct Link: Identifiable, Hashable, Equatable {
     /// - Parameters:
     ///   - name: The title of the external link.
     ///   - url: The URL of the external link.
-    public init?(_ name: Link.Name, _ url: URL?) {
+    public init?(_ name: ExternalLink.Name, _ url: URL?) {
         guard let url = url else { return nil }
         self.name = name
         self.url = url
@@ -55,7 +55,7 @@ public struct Link: Identifiable, Hashable, Equatable {
     /// - Parameters:
     ///   - name: The title of the external link.
     ///   - url: The URL of the external link.
-    public init?(_ name: Link.Name, _ urlString: String) {
+    public init?(_ name: ExternalLink.Name, _ urlString: String) {
         guard let url = URL(string: urlString) else { return nil }
         self.name = name
         self.url = url

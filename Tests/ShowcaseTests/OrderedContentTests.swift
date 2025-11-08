@@ -24,14 +24,12 @@
 import SwiftUI
 import Testing
 
-// Disambiguate Showcase.Link from SwiftUI.Link
-
 /// Tests validating ordered content rendering behavior
 struct OrderedContentTests {
     @Test("Items are stored in declaration order")
     func itemsPreserveDeclarationOrder() throws {
         let topic = Topic("Test") {
-            Showcase.Link("Apple", URL(string: "https://example.com/1")!)!
+            ExternalLink("Apple", URL(string: "https://example.com/1")!)!
             
             Topic.CodeBlock {
                 "let x = 1"
@@ -43,7 +41,7 @@ struct OrderedContentTests {
             
             Topic.Embed(URL(string: "https://example.com/embed")!)!
             
-            Showcase.Link("GitHub", URL(string: "https://example.com/2")!)!
+            ExternalLink("GitHub", URL(string: "https://example.com/2")!)!
         }
         
         // Verify we have 5 items
@@ -80,7 +78,7 @@ struct OrderedContentTests {
     func mixedContentPreservesOrder() {
         let topic = Topic("Mixed") {
             Topic.Embed(URL(string: "https://example.com")!)!
-            Showcase.Link("Apple", URL(string: "https://example.com")!)!
+            ExternalLink("Apple", URL(string: "https://example.com")!)!
             Topic.CodeBlock { "code" }
             Topic.Preview("Preview") { Text("Demo") }
         }
@@ -118,8 +116,8 @@ struct OrderedContentTests {
     @Test("Backward compatibility - separate arrays still work")
     func separateArraysStillPopulated() {
         let topic = Topic("Backward Compat") {
-            Showcase.Link("Apple", URL(string: "https://example.com/1")!)!
-            Showcase.Link("GitHub", URL(string: "https://example.com/2")!)!
+            ExternalLink("Apple", URL(string: "https://example.com/1")!)!
+            ExternalLink("GitHub", URL(string: "https://example.com/2")!)!
             Topic.CodeBlock { "code" }
             Topic.Preview("Preview") { Text("Demo") }
         }

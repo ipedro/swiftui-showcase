@@ -1,4 +1,4 @@
-// Link+Builder.swift
+// ExternalLink+Builder.swift
 // Copyright (c) 2025 Pedro Almeida
 // Created by Pedro Almeida on 11/8/25.
 //
@@ -22,16 +22,16 @@
 
 import Foundation
 
-public extension Link {
+public extension ExternalLink {
     /// A result builder for creating external links.
     @resultBuilder struct Builder {
         /// Builds an array of external links from individual components.
-        public static func buildBlock() -> [Link] { [] }
+        public static func buildBlock() -> [ExternalLink] { [] }
 
         /// Builds an array of external links from variadic components.
-        public static func buildBlock(_ components: Link...) -> [Link] { components }
+        public static func buildBlock(_ components: ExternalLink...) -> [ExternalLink] { components }
 
         /// Builds an array of external links from optional components, filtering out nil values.
-        public static func buildBlock(_ components: Link?...) -> [Link] { components.compactMap { $0 } }
+        public static func buildBlock(_ components: ExternalLink?...) -> [ExternalLink] { components.compactMap { $0 } }
     }
 }

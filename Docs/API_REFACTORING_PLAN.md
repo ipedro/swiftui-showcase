@@ -26,6 +26,11 @@
 - Example app fixes for `Showcase.Link` qualified names
 
 ### ⏳ Remaining
+- [ ] **Rename `Link` → `ExternalLink`** (Phase 1.5 - avoid SwiftUI collision)
+  - [ ] Rename type, nested types, builders
+  - [ ] Rename files and directory
+  - [ ] Update function name `Links()` → `ExternalLinks()` (or keep as `Links()`?)
+  - [ ] Update all references
 - [ ] Extract `CodeBlock`, `Preview`, `Embed` types (Phase 1)
 - [ ] Make remaining wrappers internal (Phase 2)
 - [ ] **Move icons & descriptions to DSL** (Phase 2.5 - NEW)
@@ -52,15 +57,18 @@
 ### Primary Types (Remove `Topic.` prefix)
 
 - [x] `Topic.Link` → `Link` ✅ **DONE** - Extracted to `Models/Link/Link.swift`
+  - [ ] **TODO**: Rename `Link` → `ExternalLink` to avoid collision with `SwiftUI.Link`
 - [ ] `Topic.CodeBlock` → `CodeBlock`
 - [ ] `Topic.Preview` → `Preview`
 - [ ] `Topic.Embed` → `Embed`
 
 ### Nested Subtypes (Keep association)
 - [x] `Topic.LinkName` → `Link.Name` ✅ **DONE** - In `Models/Link/Link+Name.swift`
+  - [ ] **TODO**: Rename to `ExternalLink.Name` after parent type rename
 
 ### Builders (Nest under parent type)
 - [x] `Topic.LinkBuilder` → `Link.Builder` ✅ **DONE** - In `Models/Link/Link+Builder.swift`
+  - [ ] **TODO**: Rename to `ExternalLink.Builder` after parent type rename
 - [ ] `Topic.CodeBlockBuilder` → `CodeBlock.Builder`
 - [ ] `Topic.PreviewBuilder` → `Preview.Builder`
 - [ ] `Topic.EmbedBuilder` → `Embed.Builder`
@@ -102,18 +110,20 @@ internal struct LinksImpl: TopicContentConvertible {
 
 ### Public Wrapper Types to Remove
 - [x] `TopicLinks` ✅ **DONE** - Removed, replaced with internal `LinksImpl` + `Links()` function
+  - [ ] **TODO**: Rename function to `ExternalLinks()` after type rename
 - [ ] `TopicCodeBlocks` - Remove, replace with internal `CodeBlocksImpl` + update `Code()` function
 - [ ] `TopicPreviews` - Remove, replace with internal `PreviewsImpl` + update `Examples()` function  
 - [ ] `TopicEmbeds` - Remove, replace with internal `EmbedsImpl` + update `Embeds()` function
 - [ ] `TopicChildren` - Remove, replace with internal `ChildrenImpl` + update `Children()` function
 
-### Functions to Update (Return opaque types)
+### Functions to Remove (No longer needed with flattened API)
 - [x] `Links()` ✅ **DONE** - Returns `some TopicContentConvertible`, uses internal `LinksImpl`
-- [ ] `Code()` - Change return type from `TopicCodeBlocks` to `some TopicContentConvertible`
-- [ ] `Examples()` - Change return type from `TopicPreviews` to `some TopicContentConvertible`
-- [ ] `Embeds()` - Change return type from `TopicEmbeds` to `some TopicContentConvertible`
-- [ ] `Children()` - Change return type from `TopicChildren` to `some TopicContentConvertible`
-- [ ] `Example()` - Update parameter types after CodeBlock/Preview flattening
+  - [ ] **TODO**: Rename to `ExternalLinks()` after type rename (or keep as `Links()` for brevity?)
+- [ ] `Code()` - REMOVE - Not needed, use `CodeBlock` directly in DSL
+- [ ] `Examples()` - REMOVE - Not needed, use `Preview` directly in DSL
+- [ ] `Embeds()` - REMOVE - Not needed, use `Embed` directly in DSL
+- [ ] `Children()` - REMOVE - Not needed, nest `Topic` directly in DSL
+- [ ] `Example()` - REMOVE - Not needed after flattening
 
 ## 📋 Phase 2.5: Unify API - Move Icons & Descriptions to DSL
 
@@ -215,8 +225,11 @@ internal struct IconImpl: [Type]ContentConvertible {
 
 ### Files to Rename
 - [x] `Topic+Link.swift` → `Link.swift` ✅ **DONE** - Moved to `Models/Link/`
+  - [ ] **TODO**: Rename to `ExternalLink.swift`
 - [x] `Topic+LinkName.swift` → `Link+Name.swift` ✅ **DONE** - Moved to `Models/Link/`
+  - [ ] **TODO**: Rename to `ExternalLink+Name.swift`
 - [x] `Topic+LinkBuilder.swift` → `Link+Builder.swift` ✅ **DONE** - Moved to `Models/Link/`
+  - [ ] **TODO**: Rename to `ExternalLink+Builder.swift`
 - [ ] `Topic+CodeBlock.swift` → `CodeBlock.swift`
 - [ ] `Topic+CodeBlockBuilder.swift` → `CodeBlock+Builder.swift`
 - [ ] `Topic+Preview.swift` → `Preview.swift`
@@ -231,10 +244,11 @@ Models/
     Topic.swift
     TopicBuilder.swift
     TopicContentBuilder.swift
-  Link/
-    Link.swift
-    Link+Name.swift
-    Link+Builder.swift
+    TopicContentItem.swift
+  ExternalLink/          # Renamed from Link/
+    ExternalLink.swift
+    ExternalLink+Name.swift
+    ExternalLink+Builder.swift
   CodeBlock/
     CodeBlock.swift
     CodeBlock+Builder.swift
@@ -250,12 +264,13 @@ Models/
     ChapterContentBuilder.swift
   Document/
     Document.swift
+    DocumentContentBuilder.swift  # New
 ```
 
 ## 📋 Phase 4: Update All References
 
 ### View Files
-- [ ] `ShowcaseLink.swift` - update `Topic.Link` → `Link`
+- [ ] `ShowcaseLink.swift` - update `Topic.Link` → `Link` → `ExternalLink`
 - [ ] `ShowcaseCodeBlock.swift` - update `Topic.CodeBlock` → `CodeBlock`
 - [ ] `ShowcasePreview.swift` - update `Topic.Preview` → `Preview`
 - [ ] `ShowcaseEmbed.swift` - update `Topic.Embed` → `Embed`
@@ -274,6 +289,9 @@ Models/
 - [ ] `MockAccordion.swift`
 - [ ] `MockPreviews.swift`
 - [ ] `SystemComponents.swift`
+  - [ ] Remove `private extension Showcase.Link.Name` constants (use plain strings)
+  - [ ] Remove `private extension URL` constants (use inline URL construction)
+  - [ ] Use direct values in DSL like SwiftUI code
 
 ### Example App
 - [ ] `ContentView.swift`
@@ -330,17 +348,15 @@ Models/
 ```swift
 Document("Guide", icon: Image(systemName: "book"), description: "A guide") {
     Chapter("Basics", icon: Image(systemName: "1.circle")) {
-        Description("Learn the basics")
+        Description { "Learn the basics" }
         
         Topic("Button", icon: Image(systemName: "button")) {
-            Description("How to use buttons")
+            Description { "How to use buttons" }
             
-            Links {
-                Link("HIG", "https://...")
-            }
-            Code {
-                CodeBlock { "Button(\"Tap\") { }" }
-            }
+            Showcase.Link("HIG", URL(string: "https://developer.apple.com/design/human-interface-guidelines")!)
+            
+            Topic.CodeBlock { "Button(\"Tap\") { }" }
+            
             Preview {
                 Button("Example") {}
             }
@@ -363,7 +379,7 @@ Document("Guide") {
             Icon { Image(systemName: "button") }
             Description { "How to use buttons" }
             
-            Link("HIG", "https://...")
+            ExternalLink("HIG", URL(string: "https://developer.apple.com/design/human-interface-guidelines"))
             
             CodeBlock { "Button(\"Tap\") { }" }
             
@@ -379,6 +395,7 @@ Document("Guide") {
 - ✅ Type names shortened (less verbose)
 - ✅ Cleaner imports (no Topic. prefix needed)
 - ✅ Wrapper types removed from public API
+- ✅ Direct values in DSL (no helper constants needed)
 - ⚠️ All existing code needs updates
 - ⚠️ But already on breaking change branch
 

@@ -1,4 +1,4 @@
-// Link+Name.swift
+// ExternalLink+Name.swift
 // Copyright (c) 2025 Pedro Almeida
 // Created by Pedro Almeida on 11/8/25.
 //
@@ -22,7 +22,7 @@
 
 import Foundation
 
-public extension Link {
+public extension ExternalLink {
     /// Represents the name of an external link.
     struct Name: CustomStringConvertible, ExpressibleByStringLiteral {
         /// The description of the link name.

@@ -59,7 +59,7 @@ public extension Topic {
         public var items: [TopicContentItem]
         
         // Backward compatibility: separate arrays computed from items
-        public var links: [Link]
+        public var links: [ExternalLink]
         public var embeds: [Embed]
         public var codeBlocks: [CodeBlock]
         public var previews: [Preview]
@@ -68,7 +68,7 @@ public extension Topic {
         public init(
             description: String? = nil,
             items: [TopicContentItem] = [],
-            links: [Link] = [],
+            links: [ExternalLink] = [],
             embeds: [Embed] = [],
             codeBlocks: [CodeBlock] = [],
             previews: [Preview] = [],
@@ -189,7 +189,7 @@ extension Topic.CodeBlock: TopicContentConvertible {
     }
 }
 
-extension Link: TopicContentConvertible {
+extension ExternalLink: TopicContentConvertible {
     public func merge(into content: inout Topic.Content) {
         content.items.append(.link(self))
         content.links.append(self)
@@ -219,17 +219,17 @@ extension Topic: TopicContentConvertible {
 }
 
 // Note: Swift doesn't allow multiple conditional Array conformances to the same protocol.
-// Individual element types (Topic, Preview, CodeBlock, Link, Embed) conform directly,
+// Individual element types (Topic, Preview, CodeBlock, ExternalLink, Embed) conform directly,
 // and the result builder handles arrays automatically.
 
 /// Internal implementation for collecting links in topic content.
 @usableFromInline
 internal struct LinksImpl: TopicContentConvertible {
     @usableFromInline
-    let builder: () -> [Link]
+    let builder: () -> [ExternalLink]
 
     @usableFromInline
-    init(_ builder: @escaping () -> [Link]) {
+    init(_ builder: @escaping () -> [ExternalLink]) {
         self.builder = builder
     }
 
@@ -315,7 +315,7 @@ public func Code(@Topic.CodeBlockBuilder _ builder: @escaping () -> [Topic.CodeB
 
 /// Convenience helper mirroring ``LinksImpl`` while avoiding explicit type names in the DSL.
 @inlinable
-public func Links(@Link.Builder _ builder: @escaping () -> [Link]) -> some TopicContentConvertible {
+public func Links(@ExternalLink.Builder _ builder: @escaping () -> [ExternalLink]) -> some TopicContentConvertible {
     LinksImpl(builder)
 }
 

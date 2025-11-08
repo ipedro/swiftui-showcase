@@ -50,8 +50,8 @@ extension Topic {
         }
 
         Links {
-            Link("Code", .init(string: "NavigationalCard"))
-            Link("Design", .init(string: "https://google.com"))
+            ExternalLink("Code", .init(string: "NavigationalCard"))
+            ExternalLink("Design", .init(string: "https://google.com"))
         }
 
         Code {
@@ -93,8 +93,8 @@ extension Topic {
         }
 
         Links {
-            Link("Code", .init(string: "SelectableCard"))
-            Link("Design", .init(string: "https://google.com"))
+            ExternalLink("Code", .init(string: "SelectableCard"))
+            ExternalLink("Design", .init(string: "https://google.com"))
         }
 
         Code {
@@ -128,8 +128,8 @@ extension Topic {
         }
 
         Links {
-            Link("Code", .init(string: "StaticCard"))
-            Link("Design", .init(string: "https://google.com"))
+            ExternalLink("Code", .init(string: "StaticCard"))
+            ExternalLink("Design", .init(string: "https://google.com"))
         }
 
         Code {

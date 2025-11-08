@@ -42,7 +42,7 @@ import Foundation
 /// enabling views to render them exactly as specified in the builder DSL.
 public enum TopicContentItem: Identifiable {
     /// An external link to web content.
-    case link(Link)
+    case link(ExternalLink)
 
     /// A syntax-highlighted code block.
     case codeBlock(Topic.CodeBlock)

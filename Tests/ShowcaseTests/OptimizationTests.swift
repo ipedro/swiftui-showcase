@@ -24,8 +24,6 @@
 import SwiftUI
 import Testing
 
-// Disambiguate Showcase.Link from SwiftUI.Link
-
 /// Unit tests validating the behavior of performance optimizations.
 @Suite("Optimization Tests")
 struct OptimizationTests {
@@ -251,7 +249,7 @@ struct OptimizationTests {
         @Test("Not empty with links")
         func notEmptyWithLinks() {
             let topic = Topic("Test") {
-                Link("Documentation", "https://example.com")
+                ExternalLink("Documentation", "https://example.com")
             }
             #expect(!topic.isEmpty)
         }
@@ -310,7 +308,7 @@ struct OptimizationTests {
         @Test("Matches in links")
         func matchesInLinks() {
             let topic = Topic("Test") {
-                Link("Documentation", "https://example.com/special")
+                ExternalLink("Documentation", "https://example.com/special")
             }
 
             let result = topic.search(query: "special")
@@ -434,14 +432,14 @@ struct OptimizationTests {
 
         @Test("Link instances have unique hashes")
         func linkHashable() {
-            guard let link1 = Link("Documentation", "https://example.com"),
-                  let link2 = Link("Documentation", "https://example.com")
+            guard let link1 = ExternalLink("Documentation", "https://example.com"),
+                  let link2 = ExternalLink("Documentation", "https://example.com")
             else {
                 Issue.record("Failed to create links")
                 return
             }
 
-            var set = Set<Showcase.Link>()
+            var set = Set<ExternalLink>()
             set.insert(link1)
             set.insert(link2)
 
