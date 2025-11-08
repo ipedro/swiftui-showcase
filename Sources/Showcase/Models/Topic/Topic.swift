@@ -31,24 +31,12 @@ public struct Topic: Identifiable {
 
     /// Ordered content items that preserve declaration order.
     ///
-    /// This array contains all content items (links, code blocks, previews, embeds)
+    /// This array contains all content items (links, code blocks, examples, embeds)
     /// in the exact order they were declared in the builder DSL.
     @Lazy public var items: [TopicContentItem]
 
-    /// Code blocks associated with the topic.
-    @Lazy public var codeBlocks: [CodeBlock]
-
     /// Description of the topic.
     @Lazy public var description: String
-
-    /// External links associated with the topic.
-    @Lazy public var links: [ExternalLink]
-
-    /// External contents associated with the topic.
-    @Lazy public var embeds: [Embed]
-
-    /// Examples configuration for the topic.
-    @Lazy public var examples: [Example]
 
     /// Optional icon for the topic.
     @Lazy public var icon: Image?
@@ -85,12 +73,8 @@ public struct Topic: Identifiable {
         let content = content()
 
         _items = Lazy(wrappedValue: content.items)
-        _codeBlocks = Lazy(wrappedValue: content.codeBlocks)
         _description = Lazy(wrappedValue: content.description ?? "")
-        _embeds = Lazy(wrappedValue: content.embeds)
         _icon = Lazy(wrappedValue: icon)
-        _links = Lazy(wrappedValue: content.links)
-        _examples = Lazy(wrappedValue: content.examples)
         _title = Lazy(wrappedValue: title)
         children = content.children.isEmpty ? nil : content.children
     }
@@ -107,12 +91,8 @@ public struct Topic: Identifiable {
         let content = content()
 
         _items = Lazy(wrappedValue: content.items)
-        _codeBlocks = Lazy(wrappedValue: content.codeBlocks)
         _description = Lazy(wrappedValue: content.description ?? "")
-        _embeds = Lazy(wrappedValue: content.embeds)
         _icon = Lazy(wrappedValue: nil)
-        _links = Lazy(wrappedValue: content.links)
-        _examples = Lazy(wrappedValue: content.examples)
         _title = Lazy(wrappedValue: title)
         children = content.children.isEmpty ? nil : content.children
     }
@@ -135,10 +115,7 @@ public struct Topic: Identifiable {
     var isEmpty: Bool {
         // Use short-circuit evaluation for early exit
         description.isEmpty
-            && codeBlocks.isEmpty
-            && links.isEmpty
-            && embeds.isEmpty
-            && examples.isEmpty
+            && items.isEmpty
             && (children?.isEmpty ?? true)
     }
 }
@@ -173,14 +150,19 @@ extension Topic {
         // Early exit: Use short-circuit evaluation to avoid unnecessary checks
         let isMatch = title.localizedCaseInsensitiveContains(query)
             || description.localizedCaseInsensitiveContains(query)
-            || examples.contains(where: { $0.title?.localizedCaseInsensitiveContains(query) == true })
-            || codeBlocks.contains(where: {
-                $0.rawValue.localizedCaseInsensitiveContains(query)
-                    || $0.title?.localizedCaseInsensitiveContains(query) == true
-            })
-            || links.contains(where: {
-                $0.url.absoluteString.localizedCaseInsensitiveContains(query)
-                    || $0.name.description.localizedCaseInsensitiveContains(query)
+            || items.contains(where: { item in
+                switch item {
+                case .example(let example):
+                    return example.title?.localizedCaseInsensitiveContains(query) == true
+                case .codeBlock(let codeBlock):
+                    return codeBlock.rawValue.localizedCaseInsensitiveContains(query)
+                        || codeBlock.title?.localizedCaseInsensitiveContains(query) == true
+                case .link(let link):
+                    return link.url.absoluteString.localizedCaseInsensitiveContains(query)
+                        || link.name.description.localizedCaseInsensitiveContains(query)
+                case .embed:
+                    return false
+                }
             })
 
         var copy = self

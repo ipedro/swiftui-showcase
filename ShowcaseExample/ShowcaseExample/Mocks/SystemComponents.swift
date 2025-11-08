@@ -38,7 +38,7 @@ extension Document {
                     "Organize data in a chart to communicate information with clarity and visual appeal."
                 }
 
-                Preview {
+                Example {
                     Group {
                         AsyncImage(url: .init(string: "https://docs-assets.developer.apple.com/published/99ff482fad4dd4768a7280ce055bbe5d/charts-anatomy@2x.png")
                         ) { image in
@@ -143,7 +143,7 @@ extension Topic {
                 """
             }
 
-            Preview {
+            Example {
                 Image(systemName: "star")
                     .imageScale(.large)
             }
@@ -165,7 +165,7 @@ extension Topic {
             """
             }
 
-            Preview {
+            Example {
                 AsyncImage(url: .imageViewsPreview) { image in
                     image.resizable()
                 } placeholder: {
@@ -190,7 +190,7 @@ extension Topic {
             """
         }
 
-        Preview {
+        Example {
             Image(systemName: "star")
                 .imageScale(.large)
         }
@@ -214,7 +214,7 @@ extension Topic {
             """
         }
         
-        Preview {
+        Example {
             AsyncImage(url: .imageViewsPreview) { image in
                 image.resizable()
             } placeholder: {

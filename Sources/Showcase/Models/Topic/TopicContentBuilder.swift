@@ -50,79 +50,51 @@ public extension Topic {
     /// single structure consumed by the topic initializers.
     struct Content: AdditiveArithmetic {
         public var description: String?
-
+        
         /// Ordered heterogeneous content items that preserve declaration order.
         ///
-        /// This array stores all content items (links, code blocks, previews, embeds)
+        /// This array stores all content items (links, code blocks, examples, embeds)
         /// in the exact order they were declared in the builder DSL, enabling
         /// flexible content composition and rendering.
         public var items: [TopicContentItem]
-
-        // Backward compatibility: separate arrays computed from items
-        public var links: [ExternalLink]
-        public var embeds: [Embed]
-        public var codeBlocks: [CodeBlock]
-        public var examples: [Example]
+        
+        /// Child topics for hierarchical navigation.
         public var children: [Topic]
 
         public init(
             description: String? = nil,
             items: [TopicContentItem] = [],
-            links: [ExternalLink] = [],
-            embeds: [Embed] = [],
-            codeBlocks: [CodeBlock] = [],
-            examples: [Example] = [],
             children: [Topic] = []
         ) {
             self.description = description
             self.items = items
-            self.links = links
-            self.embeds = embeds
-            self.codeBlocks = codeBlocks
-            self.examples = examples
             self.children = children
         }
 
         // MARK: - AdditiveArithmetic
-
+        
         public static var zero: Topic.Content {
             Topic.Content()
         }
-
+        
         public static func + (lhs: Topic.Content, rhs: Topic.Content) -> Topic.Content {
             var result = lhs
-
+            
             if let description = rhs.description {
                 result.description = description
             }
-
+            
             if !rhs.items.isEmpty {
                 result.items.append(contentsOf: rhs.items)
-            }
-
-            if !rhs.links.isEmpty {
-                result.links.append(contentsOf: rhs.links)
-            }
-
-            if !rhs.embeds.isEmpty {
-                result.embeds.append(contentsOf: rhs.embeds)
-            }
-
-            if !rhs.codeBlocks.isEmpty {
-                result.codeBlocks.append(contentsOf: rhs.codeBlocks)
-            }
-
-            if !rhs.examples.isEmpty {
-                result.examples.append(contentsOf: rhs.examples)
             }
 
             if !rhs.children.isEmpty {
                 result.children.append(contentsOf: rhs.children)
             }
-
+            
             return result
         }
-
+        
         public static func - (lhs: Topic.Content, rhs: Topic.Content) -> Topic.Content {
             // Subtraction doesn't make semantic sense for content, so just return lhs
             lhs
@@ -167,7 +139,6 @@ public enum TopicContentBuilder {
         var result = Topic.Content()
         let example = Example(example: content)
         result.items.append(.example(example))
-        result.examples.append(example)
         return result
     }
 
@@ -191,21 +162,18 @@ extension Description: TopicContentConvertible {
 extension Example: TopicContentConvertible {
     public func merge(into content: inout Topic.Content) {
         content.items.append(.example(self))
-        content.examples.append(self)
     }
 }
 
 extension CodeBlock: TopicContentConvertible {
     public func merge(into content: inout Topic.Content) {
         content.items.append(.codeBlock(self))
-        content.codeBlocks.append(self)
     }
 }
 
 extension ExternalLink: TopicContentConvertible {
     public func merge(into content: inout Topic.Content) {
         content.items.append(.link(self))
-        content.links.append(self)
     }
 }
 
@@ -221,7 +189,6 @@ extension Optional: TopicContentConvertible where Wrapped: TopicContentConvertib
 extension Embed: TopicContentConvertible {
     public func merge(into content: inout Topic.Content) {
         content.items.append(.embed(self))
-        content.embeds.append(self)
     }
 }
 

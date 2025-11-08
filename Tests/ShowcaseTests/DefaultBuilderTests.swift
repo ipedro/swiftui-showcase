@@ -32,10 +32,7 @@ struct DefaultBuilderTests {
 
         #expect(topic.title == "Test Topic")
         #expect(topic.description == "")
-        #expect(topic.codeBlocks.isEmpty)
-        #expect(topic.links.isEmpty)
-        #expect(topic.embeds.isEmpty)
-        #expect(topic.examples.isEmpty)
+        #expect(topic.items.isEmpty)
         #expect(topic.children == nil)
     }
 
@@ -47,7 +44,7 @@ struct DefaultBuilderTests {
         #expect(topic.title == "Test Topic")
         #expect(topic.icon != nil)
         #expect(topic.description == "")
-        #expect(topic.codeBlocks.isEmpty)
+        #expect(topic.items.isEmpty)
     }
 
     @Test("Chapter with no content closure")
