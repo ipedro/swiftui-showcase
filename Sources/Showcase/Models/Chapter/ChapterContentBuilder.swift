@@ -41,14 +41,14 @@ public extension Chapter {
         }
 
         // MARK: - AdditiveArithmetic
-        
+
         public static var zero: Chapter.Content {
             Chapter.Content()
         }
-        
+
         public static func + (lhs: Chapter.Content, rhs: Chapter.Content) -> Chapter.Content {
             var result = lhs
-            
+
             if let description = rhs.description {
                 result.description = description
             }
@@ -56,10 +56,10 @@ public extension Chapter {
             if !rhs.topics.isEmpty {
                 result.topics.append(contentsOf: rhs.topics)
             }
-            
+
             return result
         }
-        
+
         public static func - (lhs: Chapter.Content, rhs: Chapter.Content) -> Chapter.Content {
             // Subtraction doesn't make semantic sense for content, so just return lhs
             lhs

@@ -50,7 +50,7 @@ public extension View {
 /// Wrapper for ordered content items to work with @StyledView macro
 public struct OrderedItems {
     public let items: [TopicContentItem]
-    
+
     public init(_ items: [TopicContentItem]) {
         self.items = items
     }
@@ -85,17 +85,17 @@ public struct ShowcaseContent: StyledView {
             }
 
             description
-            
+
             // Render content items in declaration order
             ForEach(orderedItems.items) { item in
                 switch item {
-                case .link(let link):
+                case let .link(link):
                     ShowcaseLink(data: link)
-                case .codeBlock(let codeBlock):
+                case let .codeBlock(codeBlock):
                     ShowcaseCodeBlock(data: codeBlock)
-                case .example(let example):
+                case let .example(example):
                     ShowcaseExample(data: example)
-                case .embed(let embed):
+                case let .embed(embed):
                     ShowcaseEmbed(data: embed)
                 }
             }

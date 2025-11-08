@@ -1,4 +1,4 @@
-// Topic+Embed.swift
+// Embed.swift
 // Copyright (c) 2025 Pedro Almeida
 // Created by Pedro Almeida on 11/8/25.
 //

@@ -35,7 +35,7 @@ struct PerformanceTests {
             return (0 ..< childrenPerLevel).map { index in
                 Topic("Child \(currentDepth)-\(index)") {
                     Description("Description for child \(currentDepth)-\(index) with some content")
-                    
+
                     CodeBlock("Example \(index)", text: {
                         """
                         import SwiftUI
@@ -47,7 +47,7 @@ struct PerformanceTests {
                         }
                         """
                     })
-                    
+
                     if let children = createChildren(currentDepth: currentDepth + 1) {
                         for child in children {
                             child
@@ -59,7 +59,7 @@ struct PerformanceTests {
 
         return Topic("Root Topic") {
             Description("Root topic with nested children")
-            
+
             if let children = createChildren(currentDepth: 0) {
                 for child in children {
                     child
@@ -73,7 +73,7 @@ struct PerformanceTests {
             let topics = (0 ..< topicsPerChapter).map { topicIndex in
                 Topic("Topic \(chapterIndex)-\(topicIndex)") {
                     Description("Description for topic \(chapterIndex)-\(topicIndex)")
-                    
+
                     CodeBlock(text: {
                         """
                         import SwiftUI

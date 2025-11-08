@@ -50,14 +50,14 @@ public extension Topic {
     /// single structure consumed by the topic initializers.
     struct Content: AdditiveArithmetic {
         public var description: String?
-        
+
         /// Ordered heterogeneous content items that preserve declaration order.
         ///
         /// This array stores all content items (links, code blocks, previews, embeds)
         /// in the exact order they were declared in the builder DSL, enabling
         /// flexible content composition and rendering.
         public var items: [TopicContentItem]
-        
+
         // Backward compatibility: separate arrays computed from items
         public var links: [ExternalLink]
         public var embeds: [Embed]
@@ -84,18 +84,18 @@ public extension Topic {
         }
 
         // MARK: - AdditiveArithmetic
-        
+
         public static var zero: Topic.Content {
             Topic.Content()
         }
-        
+
         public static func + (lhs: Topic.Content, rhs: Topic.Content) -> Topic.Content {
             var result = lhs
-            
+
             if let description = rhs.description {
                 result.description = description
             }
-            
+
             if !rhs.items.isEmpty {
                 result.items.append(contentsOf: rhs.items)
             }
@@ -119,10 +119,10 @@ public extension Topic {
             if !rhs.children.isEmpty {
                 result.children.append(contentsOf: rhs.children)
             }
-            
+
             return result
         }
-        
+
         public static func - (lhs: Topic.Content, rhs: Topic.Content) -> Topic.Content {
             // Subtraction doesn't make semantic sense for content, so just return lhs
             lhs

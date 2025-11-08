@@ -59,19 +59,19 @@ public enum TopicContentItem: Identifiable, Equatable {
     /// identity for SwiftUI's diffing algorithm.
     public var id: UUID {
         switch self {
-        case .link(let link):
+        case let .link(link):
             link.id
-        case .codeBlock(let codeBlock):
+        case let .codeBlock(codeBlock):
             codeBlock.id
-        case .embed(let embed):
+        case let .embed(embed):
             embed.id
-        case .example(let example):
+        case let .example(example):
             example.id
         }
     }
-    
+
     // MARK: - Equatable
-    
+
     public static func == (lhs: TopicContentItem, rhs: TopicContentItem) -> Bool {
         lhs.id == rhs.id
     }
