@@ -233,7 +233,7 @@ struct OptimizationTests {
         @Test("Not empty with previews")
         func notEmptyWithPreviews() {
             let topic = Topic("Test") {
-                Topic.Preview { Text("Preview") }
+                Example { Text("Preview") }
             }
             #expect(!topic.isEmpty)
         }

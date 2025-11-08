@@ -62,7 +62,7 @@ public extension Topic {
         public var links: [ExternalLink]
         public var embeds: [Embed]
         public var codeBlocks: [CodeBlock]
-        public var previews: [Preview]
+        public var examples: [Example]
         public var children: [Topic]
 
         public init(
@@ -71,7 +71,7 @@ public extension Topic {
             links: [ExternalLink] = [],
             embeds: [Embed] = [],
             codeBlocks: [CodeBlock] = [],
-            previews: [Preview] = [],
+            examples: [Example] = [],
             children: [Topic] = []
         ) {
             self.description = description
@@ -79,7 +79,7 @@ public extension Topic {
             self.links = links
             self.embeds = embeds
             self.codeBlocks = codeBlocks
-            self.previews = previews
+            self.examples = examples
             self.children = children
         }
 
@@ -104,8 +104,8 @@ public extension Topic {
                 codeBlocks.append(contentsOf: other.codeBlocks)
             }
 
-            if !other.previews.isEmpty {
-                previews.append(contentsOf: other.previews)
+            if !other.examples.isEmpty {
+                examples.append(contentsOf: other.examples)
             }
 
             if !other.children.isEmpty {
@@ -175,10 +175,10 @@ extension Description: TopicContentConvertible {
     }
 }
 
-extension Topic.Preview: TopicContentConvertible {
+extension Example: TopicContentConvertible {
     public func merge(into content: inout Topic.Content) {
-        content.items.append(.preview(self))
-        content.previews.append(self)
+        content.items.append(.example(self))
+        content.examples.append(self)
     }
 }
 
@@ -272,17 +272,17 @@ public struct TopicCodeBlocks: TopicContentConvertible {
 }
 
 /// Collects previews produced by a ``Topic/PreviewBuilder`` into the topic content DSL.
-public struct TopicPreviews: TopicContentConvertible {
-    private let builder: () -> [Topic.Preview]
+public struct TopicExamples: TopicContentConvertible {
+    private let builder: () -> [Example]
 
-    public init(@Topic.PreviewBuilder _ builder: @escaping () -> [Topic.Preview]) {
+    public init(@Example.Builder _ builder: @escaping () -> [Example]) {
         self.builder = builder
     }
 
     public func merge(into content: inout Topic.Content) {
         let previews = builder()
         guard !previews.isEmpty else { return }
-        content.previews.append(contentsOf: previews)
+        content.examples.append(contentsOf: previews)
     }
 }
 
@@ -303,8 +303,8 @@ public struct TopicChildren: TopicContentConvertible {
 
 /// Convenience helper mirroring ``PreviewsImpl`` while avoiding explicit type names in the DSL.
 @inlinable
-public func Previews(@Topic.PreviewBuilder _ builder: @escaping () -> [Topic.Preview]) -> TopicPreviews {
-    TopicPreviews(builder)
+public func Previews(@Example.Builder _ builder: @escaping () -> [Example]) -> TopicExamples {
+    TopicExamples(builder)
 }
 
 /// Convenience helper mirroring ``CodeBlocksImpl`` while avoiding explicit type names in the DSL.
@@ -336,7 +336,7 @@ public func Children(@TopicBuilder _ builder: @escaping () -> [Topic]) -> TopicC
 public func Preview(
     _ title: String? = nil,
     codeBlock: CodeBlock? = nil,
-    @ViewBuilder preview: @escaping () -> some View
-) -> Topic.Preview {
-    Topic.Preview(title, codeBlock: codeBlock, preview: preview)
+    @ViewBuilder example: @escaping () -> some View
+) -> Example {
+    Example(title, codeBlock: codeBlock, example: example)
 }

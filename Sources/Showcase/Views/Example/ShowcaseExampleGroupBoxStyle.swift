@@ -1,4 +1,4 @@
-// ShowcasePreviewGroupBoxStyle.swift
+// ShowcaseExampleGroupBoxStyle.swift
 // Copyright (c) 2025 Pedro Almeida
 // Created by Pedro Almeida on 11/8/25.
 //
@@ -22,22 +22,22 @@
 
 import SwiftUI
 
-public extension ShowcasePreviewStyle where Self == ShowcasePreviewGroupBoxStyle<DefaultGroupBoxStyle> {
+public extension ShowcaseExampleStyle where Self == ShowcaseExampleGroupBoxStyle<DefaultGroupBoxStyle> {
     /// Shows the preview content inside a group box, with an optional title.
-    static var groupBox: ShowcasePreviewGroupBoxStyle<DefaultGroupBoxStyle> {
-        ShowcasePreviewGroupBoxStyle(style: .automatic)
+    static var groupBox: ShowcaseExampleGroupBoxStyle<DefaultGroupBoxStyle> {
+        ShowcaseExampleGroupBoxStyle(style: .automatic)
     }
 
     /// Shows the preview content inside a custom group box.
-    static func groupBox<S: GroupBoxStyle>(_ style: S) -> ShowcasePreviewGroupBoxStyle<S> {
-        ShowcasePreviewGroupBoxStyle(style: style)
+    static func groupBox<S: GroupBoxStyle>(_ style: S) -> ShowcaseExampleGroupBoxStyle<S> {
+        ShowcaseExampleGroupBoxStyle(style: style)
     }
 }
 
-public struct ShowcasePreviewGroupBoxStyle<S: GroupBoxStyle>: ShowcasePreviewStyle {
+public struct ShowcaseExampleGroupBoxStyle<S: GroupBoxStyle>: ShowcaseExampleStyle {
     var style: S
 
-    public func makeBody(configuration: ShowcasePreviewConfiguration) -> some View {
+    public func makeBody(configuration: ShowcaseExampleConfiguration) -> some View {
         GroupBox {
             configuration.content
         } label: {

@@ -50,8 +50,8 @@ public enum TopicContentItem: Identifiable {
     /// An embedded web view or external content.
     case embed(Topic.Embed)
 
-    /// A live preview of a SwiftUI view.
-    case preview(Topic.Preview)
+    /// A live example of a SwiftUI view.
+    case example(Example)
 
     /// The unique identifier for this content item.
     ///
@@ -65,8 +65,8 @@ public enum TopicContentItem: Identifiable {
             codeBlock.id
         case .embed(let embed):
             embed.id
-        case .preview(let preview):
-            preview.id
+        case .example(let example):
+            example.id
         }
     }
 }

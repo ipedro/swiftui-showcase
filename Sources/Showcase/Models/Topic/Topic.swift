@@ -47,8 +47,8 @@ public struct Topic: Identifiable {
     /// External contents associated with the topic.
     @Lazy public var embeds: [Embed]
 
-    /// Previews configuration for the topic.
-    @Lazy public var previews: [Preview]
+    /// Examples configuration for the topic.
+    @Lazy public var examples: [Example]
 
     /// Optional icon for the topic.
     @Lazy public var icon: Image?
@@ -90,7 +90,7 @@ public struct Topic: Identifiable {
         _embeds = Lazy(wrappedValue: content.embeds)
         _icon = Lazy(wrappedValue: icon)
         _links = Lazy(wrappedValue: content.links)
-        _previews = Lazy(wrappedValue: content.previews)
+        _examples = Lazy(wrappedValue: content.examples)
         _title = Lazy(wrappedValue: title)
         children = content.children.isEmpty ? nil : content.children
     }
@@ -112,7 +112,7 @@ public struct Topic: Identifiable {
         _embeds = Lazy(wrappedValue: content.embeds)
         _icon = Lazy(wrappedValue: nil)
         _links = Lazy(wrappedValue: content.links)
-        _previews = Lazy(wrappedValue: content.previews)
+        _examples = Lazy(wrappedValue: content.examples)
         _title = Lazy(wrappedValue: title)
         children = content.children.isEmpty ? nil : content.children
     }
@@ -138,7 +138,7 @@ public struct Topic: Identifiable {
             && codeBlocks.isEmpty
             && links.isEmpty
             && embeds.isEmpty
-            && previews.isEmpty
+            && examples.isEmpty
             && (children?.isEmpty ?? true)
     }
 
@@ -162,13 +162,13 @@ public struct Topic: Identifiable {
         @ExternalLink.Builder links: @escaping () -> [ExternalLink] = Array.init,
         @EmbedBuilder embeds: @escaping () -> [Embed] = Array.init,
         @CodeBlock.Builder code codeBlocks: @escaping () -> [CodeBlock] = Array.init,
-        @PreviewBuilder previews: @escaping () -> [Preview] = Array.init,
+        @Example.Builder examples: @escaping () -> [Example] = Array.init,
         children: [Topic]? = nil
     ) {
         let linksArray = links()
         let embedsArray = embeds()
         let codeBlocksArray = codeBlocks()
-        let previewsArray = previews()
+        let previewsArray = examples()
 
         // Build items array preserving original order (links, embeds, code, previews)
         var itemsArray: [TopicContentItem] = []
@@ -176,7 +176,7 @@ public struct Topic: Identifiable {
         itemsArray.append(contentsOf: linksArray.map { .link($0) })
         itemsArray.append(contentsOf: embedsArray.map { .embed($0) })
         itemsArray.append(contentsOf: codeBlocksArray.map { .codeBlock($0) })
-        itemsArray.append(contentsOf: previewsArray.map { .preview($0) })
+        itemsArray.append(contentsOf: previewsArray.map { .example($0) })
 
         _items = Lazy(wrappedValue: itemsArray)
         _items = Lazy(wrappedValue: itemsArray)
@@ -186,7 +186,7 @@ _items = Lazy(wrappedValue: [])
         _embeds = Lazy(wrappedValue: embedsArray)
         _icon = Lazy(wrappedValue: icon())
         _links = Lazy(wrappedValue: linksArray)
-        _previews = Lazy(wrappedValue: previewsArray)
+        _examples = Lazy(wrappedValue: previewsArray)
         _title = Lazy(wrappedValue: title)
         self.children = children
     }
@@ -202,21 +202,21 @@ _items = Lazy(wrappedValue: [])
         @ExternalLink.Builder links: @escaping () -> [ExternalLink] = Array.init,
         @EmbedBuilder embeds: @escaping () -> [Embed] = Array.init,
         @CodeBlock.Builder code codeBlocks: @escaping () -> [CodeBlock] = Array.init,
-        @PreviewBuilder previews: @escaping () -> [Preview] = Array.init,
+        @Example.Builder examples: @escaping () -> [Example] = Array.init,
         @TopicBuilder _ children: () -> [Topic]
     ) {
         let children = children()
         let linksArray = links()
         let embedsArray = embeds()
         let codeBlocksArray = codeBlocks()
-        let previewsArray = previews()
+        let previewsArray = examples()
 
         var itemsArray: [TopicContentItem] = []
         itemsArray.reserveCapacity(linksArray.count + embedsArray.count + codeBlocksArray.count + previewsArray.count)
         itemsArray.append(contentsOf: linksArray.map { .link($0) })
         itemsArray.append(contentsOf: embedsArray.map { .embed($0) })
         itemsArray.append(contentsOf: codeBlocksArray.map { .codeBlock($0) })
-        itemsArray.append(contentsOf: previewsArray.map { .preview($0) })
+        itemsArray.append(contentsOf: previewsArray.map { .example($0) })
 
         _items = Lazy(wrappedValue: itemsArray)
 _items = Lazy(wrappedValue: [])
@@ -225,7 +225,7 @@ _items = Lazy(wrappedValue: [])
         _embeds = Lazy(wrappedValue: embedsArray)
         _icon = Lazy(wrappedValue: icon())
         _links = Lazy(wrappedValue: linksArray)
-        _previews = Lazy(wrappedValue: previewsArray)
+        _examples = Lazy(wrappedValue: previewsArray)
         _title = Lazy(wrappedValue: title)
         self.children = children.isEmpty ? nil : children
     }
@@ -259,7 +259,7 @@ _items = Lazy(wrappedValue: [])
         _embeds = Lazy(wrappedValue: embeds())
         _icon = Lazy(wrappedValue: icon())
         _links = Lazy(wrappedValue: links())
-        _previews = Lazy(wrappedValue: [Preview(preview: previews())])
+        _examples = Lazy(wrappedValue: [Example(example: previews())])
         _title = Lazy(wrappedValue: title)
         self.children = children
     }
@@ -285,7 +285,7 @@ _items = Lazy(wrappedValue: [])
         _embeds = Lazy(wrappedValue: embeds())
         _icon = Lazy(wrappedValue: icon())
         _links = Lazy(wrappedValue: links())
-        _previews = Lazy(wrappedValue: [Preview(preview: previews())])
+        _examples = Lazy(wrappedValue: [Example(example: previews())])
         _title = Lazy(wrappedValue: title)
         self.children = children.isEmpty ? nil : children
     }
@@ -308,7 +308,7 @@ _items = Lazy(wrappedValue: [])
         @ExternalLink.Builder links: @escaping () -> [ExternalLink] = Array.init,
         @EmbedBuilder embeds: @escaping () -> [Embed] = Array.init,
         @CodeBlock.Builder code codeBlocks: @escaping () -> [CodeBlock] = Array.init,
-        @PreviewBuilder previews: @escaping () -> [Preview] = Array.init,
+        @Example.Builder examples: @escaping () -> [Example] = Array.init,
         children: [Topic]? = nil
     ) {
 _items = Lazy(wrappedValue: [])
@@ -317,7 +317,7 @@ _items = Lazy(wrappedValue: [])
         _embeds = Lazy(wrappedValue: embeds())
         _icon = Lazy(wrappedValue: nil)
         _links = Lazy(wrappedValue: links())
-        _previews = Lazy(wrappedValue: previews())
+        _examples = Lazy(wrappedValue: examples())
         _title = Lazy(wrappedValue: title)
         self.children = children
     }
@@ -332,7 +332,7 @@ _items = Lazy(wrappedValue: [])
         @ExternalLink.Builder links: @escaping () -> [ExternalLink] = Array.init,
         @EmbedBuilder embeds: @escaping () -> [Embed] = Array.init,
         @CodeBlock.Builder code codeBlocks: @escaping () -> [CodeBlock] = Array.init,
-        @PreviewBuilder previews: @escaping () -> [Preview] = Array.init,
+        @Example.Builder examples: @escaping () -> [Example] = Array.init,
         @TopicBuilder _ children: () -> [Topic]
     ) {
         let children = children()
@@ -342,7 +342,7 @@ _items = Lazy(wrappedValue: [])
         _embeds = Lazy(wrappedValue: embeds())
         _icon = Lazy(wrappedValue: nil)
         _links = Lazy(wrappedValue: links())
-        _previews = Lazy(wrappedValue: previews())
+        _examples = Lazy(wrappedValue: examples())
         _title = Lazy(wrappedValue: title)
         self.children = children.isEmpty ? nil : children
     }
@@ -374,7 +374,7 @@ _items = Lazy(wrappedValue: [])
         _embeds = Lazy(wrappedValue: embeds())
         _icon = Lazy(wrappedValue: nil)
         _links = Lazy(wrappedValue: links())
-        _previews = Lazy(wrappedValue: [Preview(preview: previews())])
+        _examples = Lazy(wrappedValue: [Example(example: previews())])
         _title = Lazy(wrappedValue: title)
         self.children = children
     }
@@ -399,7 +399,7 @@ _items = Lazy(wrappedValue: [])
         _embeds = Lazy(wrappedValue: embeds())
         _icon = Lazy(wrappedValue: nil)
         _links = Lazy(wrappedValue: links())
-        _previews = Lazy(wrappedValue: [Preview(preview: previews())])
+        _examples = Lazy(wrappedValue: [Example(example: previews())])
         _title = Lazy(wrappedValue: title)
         self.children = children.isEmpty ? nil : children
     }
@@ -435,7 +435,7 @@ extension Topic {
         // Early exit: Use short-circuit evaluation to avoid unnecessary checks
         let isMatch = title.localizedCaseInsensitiveContains(query)
             || description.localizedCaseInsensitiveContains(query)
-            || previews.contains(where: { $0.title?.localizedCaseInsensitiveContains(query) == true })
+            || examples.contains(where: { $0.title?.localizedCaseInsensitiveContains(query) == true })
             || codeBlocks.contains(where: {
                 $0.rawValue.localizedCaseInsensitiveContains(query)
                     || $0.title?.localizedCaseInsensitiveContains(query) == true

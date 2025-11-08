@@ -35,7 +35,7 @@ struct OrderedContentTests {
                 "let x = 1"
             }
             
-            Topic.Preview("Preview") {
+            Example("Preview") {
                 Text("Demo")
             }
             
@@ -58,7 +58,7 @@ struct OrderedContentTests {
             return
         }
         
-        guard case .preview = topic.items[2] else {
+        guard case .example = topic.items[2] else {
             Issue.record("Expected third item to be preview")
             return
         }
@@ -80,7 +80,7 @@ struct OrderedContentTests {
             Topic.Embed(URL(string: "https://example.com")!)!
             ExternalLink("Apple", URL(string: "https://example.com")!)!
             CodeBlock { "code" }
-            Topic.Preview("Preview") { Text("Demo") }
+            Example("Preview") { Text("Demo") }
         }
         
         #expect(topic.items.count == 4)
@@ -89,7 +89,7 @@ struct OrderedContentTests {
         if case .embed = topic.items[0],
            case .link = topic.items[1],
            case .codeBlock = topic.items[2],
-           case .preview = topic.items[3] {
+           case .example = topic.items[3] {
             // Success - order matches
         } else {
             Issue.record("Items not in expected order")
@@ -119,13 +119,13 @@ struct OrderedContentTests {
             ExternalLink("Apple", URL(string: "https://example.com/1")!)!
             ExternalLink("GitHub", URL(string: "https://example.com/2")!)!
             CodeBlock { "code" }
-            Topic.Preview("Preview") { Text("Demo") }
+            Example("Preview") { Text("Demo") }
         }
         
         // Separate arrays should still be populated for backward compatibility
         #expect(topic.links.count == 2)
         #expect(topic.codeBlocks.count == 1)
-        #expect(topic.previews.count == 1)
+        #expect(topic.examples.count == 1)
         #expect(topic.embeds.count == 0)
         
         // Items array should have all 4
