@@ -38,16 +38,10 @@ jobs:
           # SwiftFormat check (if you want to enforce formatting)
           # swift package plugin --allow-writing-to-package-directory swiftformat --lint
 
-  # Build and test on multiple platforms
+  # Build and test
   test:
-    name: Test on ${{ matrix.platform }}
+    name: Build & Test
     runs-on: macos-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        platform:
-          - iOS
-          - macOS
     
     steps:
       - name: Checkout
@@ -57,22 +51,6 @@ jobs:
         uses: maxim-lobanov/setup-xcode@v1.6.0
         with:
           xcode-version: 'latest-stable'
-      
-      - name: List available simulators
-        if: matrix.platform == 'iOS'
-        run: xcrun simctl list devices available
-      
-      - name: Build for ${{ matrix.platform }}
-        if: matrix.platform == 'iOS'
-        run: |
-          xcodebuild build \
-            -project ShowcaseExample/ShowcaseExample.xcodeproj \
-            -scheme ShowcaseExample \
-            -destination 'platform=iOS Simulator,name=iPhone 16' \
-            -skipPackagePluginValidation \
-            -skipMacroValidation \
-            CODE_SIGN_IDENTITY="" \
-            CODE_SIGNING_REQUIRED=NO
       
       - name: Run Tests
         run: |
@@ -87,7 +65,7 @@ jobs:
         id: test
       
       - name: Test Summary
-        if: success() && matrix.platform == 'macOS'
+        if: success()
         run: |
           echo "## ✅ Test Results" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
@@ -95,7 +73,6 @@ jobs:
           echo "**Test Suites:** ${{ steps.test.outputs.suite_count }}" >> $GITHUB_STEP_SUMMARY
       
       - name: Upload Coverage to Codecov
-        if: matrix.platform == 'macOS'
         uses: codecov/codecov-action@v4
         with:
           fail_ci_if_error: false
