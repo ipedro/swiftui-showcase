@@ -87,7 +87,7 @@ jobs:
           if [ "${{ matrix.platform }}" == "iOS" ]; then
             xcodebuild build \
               -scheme Showcase \
-              -destination 'platform=iOS Simulator,arch=arm64,OS=18.4,name=iPhone 16' \
+              -destination 'platform=iOS Simulator,OS=18.4,name=iPhone 16' \
               -skipPackagePluginValidation \
               -skipMacroValidation \
               CODE_SIGN_IDENTITY="" \
