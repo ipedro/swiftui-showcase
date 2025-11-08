@@ -196,6 +196,15 @@ extension Link: TopicContentConvertible {
     }
 }
 
+extension Optional: TopicContentConvertible where Wrapped: TopicContentConvertible {
+    public func merge(into content: inout Topic.Content) {
+        guard case let .some(wrapped) = self else {
+            return
+        }
+        wrapped.merge(into: &content)
+    }
+}
+
 extension Topic.Embed: TopicContentConvertible {
     public func merge(into content: inout Topic.Content) {
         content.items.append(.embed(self))

@@ -3,7 +3,41 @@
 
 **Branch:** `codex/improve-ergonomics-of-document-creation-apis`  
 **Date:** November 8, 2025  
-**Status:** Planning → Implementation
+**Status:** In Progress
+
+## 📊 Progress Summary
+
+### ✅ Completed
+1. **Link Type Extraction** (Phase 1)
+   - ✅ Created `Models/Link/Link.swift` with standalone `Link` struct
+   - ✅ Created `Models/Link/Link+Name.swift` with `Link.Name` nested type
+   - ✅ Created `Models/Link/Link+Builder.swift` with `Link.Builder`
+   - ✅ Updated `LinksImpl` to be internal in `TopicContentBuilder.swift`
+   - ✅ Updated `Links()` function to return opaque `some TopicContentConvertible`
+   
+2. **Ordered Content Feature** (Bonus Work)
+   - ✅ Implemented `TopicContentItem` enum for heterogeneous content
+   - ✅ Updated view layer to render items in declaration order
+   - ✅ Created comprehensive tests (55 tests passing)
+   - ✅ Created PR #12 on clean branch `feature/ordered-content-rendering`
+
+### 🚧 In Progress
+- Updating all `Link` references throughout codebase
+- Example app fixes for `Showcase.Link` qualified names
+
+### ⏳ Remaining
+- [ ] Extract `CodeBlock`, `Preview`, `Embed` types (Phase 1)
+- [ ] Make remaining wrappers internal (Phase 2)
+- [ ] **Move icons & descriptions to DSL** (Phase 2.5 - NEW)
+  - [ ] Create DocumentContentBuilder with Icon/Description support
+  - [ ] Add Icon() to ChapterContentBuilder
+  - [ ] Add Icon() to TopicContentBuilder
+  - [ ] Remove all `icon:` and `description:` parameters from inits
+- [ ] Update all view files (Phase 4)
+- [ ] Update all test files (Phase 4)
+- [ ] Update all mock files (Phase 4)
+- [ ] Remove deprecated code (Phase 5)
+- [ ] Update documentation (Phase 6)
 
 ## 🎯 Goals
 
@@ -17,16 +51,16 @@
 
 ### Primary Types (Remove `Topic.` prefix)
 
-- [ ] `Topic.Link` → `Link`
+- [x] `Topic.Link` → `Link` ✅ **DONE** - Extracted to `Models/Link/Link.swift`
 - [ ] `Topic.CodeBlock` → `CodeBlock`
 - [ ] `Topic.Preview` → `Preview`
 - [ ] `Topic.Embed` → `Embed`
 
 ### Nested Subtypes (Keep association)
-- [ ] `Topic.LinkName` → `Link.Name`
+- [x] `Topic.LinkName` → `Link.Name` ✅ **DONE** - In `Models/Link/Link+Name.swift`
 
 ### Builders (Nest under parent type)
-- [ ] `Topic.LinkBuilder` → `Link.Builder`
+- [x] `Topic.LinkBuilder` → `Link.Builder` ✅ **DONE** - In `Models/Link/Link+Builder.swift`
 - [ ] `Topic.CodeBlockBuilder` → `CodeBlock.Builder`
 - [ ] `Topic.PreviewBuilder` → `Preview.Builder`
 - [ ] `Topic.EmbedBuilder` → `Embed.Builder`
@@ -35,26 +69,29 @@
 - ✅ `Topic.Content` (specifically Topic content structure)
 - ✅ `Chapter.Content` (specifically Chapter content structure)
 
-## 📋 Phase 2: Consolidate Wrappers & Functions
+## 📋 Phase 2: Remove Public Wrapper Types
 
-### Current Architecture (Redundant)
+### Architecture Pattern
+With flattened types, we no longer need public wrapper structs. Functions return opaque `some TopicContentConvertible` types, with internal `*Impl` structs handling the implementation.
+
+**Before (Link - Old API):**
 ```swift
-// Public wrapper struct
+// Public wrapper struct (REMOVED)
 public struct TopicLinks: TopicContentConvertible { ... }
 
-// Public convenience function
+// Function returning concrete wrapper
 public func Links(...) -> TopicLinks { TopicLinks(...) }
 ```
 
-### New Architecture (Consolidated)
+**After (Link - New API):**
 ```swift
-// PUBLIC API - Only the function is visible
+// PUBLIC API - Function returns opaque type
 @inlinable
 public func Links(@Link.Builder _ builder: @escaping () -> [Link]) -> some TopicContentConvertible {
     LinksImpl(builder)
 }
 
-// INTERNAL IMPLEMENTATION - Hidden from users
+// INTERNAL - Implementation hidden with @usableFromInline
 @usableFromInline
 internal struct LinksImpl: TopicContentConvertible {
     @usableFromInline let builder: () -> [Link]
@@ -63,27 +100,123 @@ internal struct LinksImpl: TopicContentConvertible {
 }
 ```
 
-### Wrappers to Remove (Make Internal)
-- [ ] `TopicLinks` → `@usableFromInline internal LinksImpl`
-- [ ] `TopicCodeBlocks` → `@usableFromInline internal CodeBlocksImpl`
-- [ ] `TopicPreviews` → `@usableFromInline internal PreviewsImpl`
-- [ ] `TopicEmbeds` → `@usableFromInline internal EmbedsImpl`
-- [ ] `TopicChildren` → `@usableFromInline internal ChildrenImpl`
+### Public Wrapper Types to Remove
+- [x] `TopicLinks` ✅ **DONE** - Removed, replaced with internal `LinksImpl` + `Links()` function
+- [ ] `TopicCodeBlocks` - Remove, replace with internal `CodeBlocksImpl` + update `Code()` function
+- [ ] `TopicPreviews` - Remove, replace with internal `PreviewsImpl` + update `Examples()` function  
+- [ ] `TopicEmbeds` - Remove, replace with internal `EmbedsImpl` + update `Embeds()` function
+- [ ] `TopicChildren` - Remove, replace with internal `ChildrenImpl` + update `Children()` function
 
-### Functions to Keep (Update signatures)
-- [ ] `Links()` - return `some TopicContentConvertible`
-- [ ] `Code()` - return `some TopicContentConvertible`
-- [ ] `Previews()` - return `some TopicContentConvertible`
-- [ ] `Embeds()` - return `some TopicContentConvertible`
-- [ ] `Children()` - return `some TopicContentConvertible`
-- [ ] `Preview()` - already returns concrete type, update parameters
+### Functions to Update (Return opaque types)
+- [x] `Links()` ✅ **DONE** - Returns `some TopicContentConvertible`, uses internal `LinksImpl`
+- [ ] `Code()` - Change return type from `TopicCodeBlocks` to `some TopicContentConvertible`
+- [ ] `Examples()` - Change return type from `TopicPreviews` to `some TopicContentConvertible`
+- [ ] `Embeds()` - Change return type from `TopicEmbeds` to `some TopicContentConvertible`
+- [ ] `Children()` - Change return type from `TopicChildren` to `some TopicContentConvertible`
+- [ ] `Example()` - Update parameter types after CodeBlock/Preview flattening
+
+## 📋 Phase 2.5: Unify API - Move Icons & Descriptions to DSL
+
+### Problem
+Inconsistent API across Document, Chapter, and Topic:
+- **Document**: Uses parameters for description AND icon
+- **Chapter**: Uses DSL for description, parameter for icon  
+- **Topic**: Uses DSL for description, parameter for icon
+
+**Current (Inconsistent):**
+```swift
+Document("Title", icon: Image(...), description: "...") {  // ❌ Parameters
+    Chapter("Content", icon: Image(...)) {                 // ❌ Icon parameter
+        Description { "..." }                              // ✅ DSL
+        
+        Topic("Button", icon: Image(...)) {                // ❌ Icon parameter  
+            Description { "..." }                          // ✅ DSL
+        }
+    }
+}
+```
+
+**Target (Consistent DSL):**
+```swift
+Document("Title") {
+    Icon { Image(...) }        // ✅ DSL
+    Description { "..." }      // ✅ DSL
+    
+    Chapter("Content") {
+        Icon { Image(...) }    // ✅ DSL
+        Description { "..." }  // ✅ DSL
+        
+        Topic("Button") {
+            Icon { Image(...) }        // ✅ DSL
+            Description { "..." }      // ✅ DSL
+        }
+    }
+}
+```
+
+### Implementation Steps
+
+#### Document
+- [ ] Create `DocumentContentBuilder.swift` with:
+  - `Document.Content` struct (icon, description, chapters)
+  - `DocumentContentBuilder` result builder
+  - `Icon()` function returning `DocumentContentConvertible`
+  - `Description()` function returning `DocumentContentConvertible`
+  - Internal `IconImpl` and `DescriptionImpl` structs
+- [ ] Update `Document.init()` to accept only title + `@DocumentContentBuilder` closure
+- [ ] Remove `icon:` and `description:` parameters from all Document inits
+- [ ] Update icon cascade logic in Document
+
+#### Chapter
+- [ ] Update `ChapterContentBuilder.swift` to add:
+  - `icon` property to `Chapter.Content` struct
+  - `Icon()` function returning `ChapterContentConvertible`
+  - Internal `IconImpl` struct
+- [ ] Update `Chapter.init()` to remove `icon:` parameter
+- [ ] Update icon cascade logic in Chapter
+
+#### Topic
+- [ ] Update `TopicContentBuilder.swift` to add:
+  - `icon` property to `Topic.Content` struct
+  - `Icon()` function returning `TopicContentConvertible`
+  - Internal `IconImpl` struct
+- [ ] Update `Topic.init()` to remove `icon:` parameter
+- [ ] Update icon cascade logic in Topic
+
+#### Example Updates
+- [ ] Update `SystemComponents.swift` to use new DSL
+- [ ] Update all mock files
+- [ ] Update all test files
+
+### Pattern to Follow
+Each content builder needs:
+```swift
+// In Content struct
+var icon: Image?
+
+// Public DSL function
+@inlinable
+public func Icon(@ViewBuilder _ content: @escaping () -> Image) -> some [Type]ContentConvertible {
+    IconImpl(content)
+}
+
+// Internal implementation
+@usableFromInline
+internal struct IconImpl: [Type]ContentConvertible {
+    @usableFromInline let builder: () -> Image
+    @usableFromInline init(_ builder: @escaping () -> Image) { ... }
+    @usableFromInline func merge(into content: inout [Type].Content) {
+        content.icon = builder()
+    }
+}
+```
 
 ## 📋 Phase 3: File Reorganization
 
 ### Files to Rename
-- [ ] `Topic+Link.swift` → `Link.swift`
-- [ ] `Topic+LinkName.swift` → `Link+Name.swift`
-- [ ] `Topic+LinkBuilder.swift` → `Link+Builder.swift`
+- [x] `Topic+Link.swift` → `Link.swift` ✅ **DONE** - Moved to `Models/Link/`
+- [x] `Topic+LinkName.swift` → `Link+Name.swift` ✅ **DONE** - Moved to `Models/Link/`
+- [x] `Topic+LinkBuilder.swift` → `Link+Builder.swift` ✅ **DONE** - Moved to `Models/Link/`
 - [ ] `Topic+CodeBlock.swift` → `CodeBlock.swift`
 - [ ] `Topic+CodeBlockBuilder.swift` → `CodeBlock+Builder.swift`
 - [ ] `Topic+Preview.swift` → `Preview.swift`
@@ -195,30 +328,49 @@ Models/
 
 **Before:**
 ```swift
-Topic("Button") {
-    Links {
-        Topic.Link("HIG", "https://...")
-    }
-    Code {
-        Topic.CodeBlock { "code here" }
-    }
-    Preview {
-        Button("Example") {}
+Document("Guide", icon: Image(systemName: "book"), description: "A guide") {
+    Chapter("Basics", icon: Image(systemName: "1.circle")) {
+        Description("Learn the basics")
+        
+        Topic("Button", icon: Image(systemName: "button")) {
+            Description("How to use buttons")
+            
+            Links {
+                Link("HIG", "https://...")
+            }
+            Code {
+                CodeBlock { "Button(\"Tap\") { }" }
+            }
+            Preview {
+                Button("Example") {}
+            }
+        }
     }
 }
 ```
 
 **After:**
 ```swift
-Topic("Button") {
-    Links {
-        Link("HIG", "https://...")
-    }
-    Code {
-        CodeBlock { "code here" }
-    }
-    Preview {
-        Button("Example") {}
+Document("Guide") {
+    Icon { Image(systemName: "book") }
+    Description { "A guide" }
+    
+    Chapter("Basics") {
+        Icon { Image(systemName: "1.circle") }
+        Description { "Learn the basics" }
+        
+        Topic("Button") {
+            Icon { Image(systemName: "button") }
+            Description { "How to use buttons" }
+            
+            Link("HIG", "https://...")
+            
+            CodeBlock { "Button(\"Tap\") { }" }
+            
+            Preview {
+                Button("Example") {}
+            }
+        }
     }
 }
 ```
