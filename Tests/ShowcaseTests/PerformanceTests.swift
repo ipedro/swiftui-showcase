@@ -41,9 +41,9 @@ struct PerformanceTests {
                             """
                             import SwiftUI
 
-                            struct ExampleView\(i): View {
+                            struct ExampleView\(index): View {
                                 var body: some View {
-                                    Text("Example \(i)")
+                                    Text("Example \(index)")
                                 }
                             }
                             """
