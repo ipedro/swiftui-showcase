@@ -6,7 +6,7 @@ let isDevelopment = !Context.packageDirectory.contains("/checkouts/")
 
 var dependencies: [Package.Dependency] = [
     .package(url: "https://github.com/JohnSundell/Splash", from: "0.16.0"),
-    .package(url: "https://github.com/nathantannar4/Engine", from: "2.0.1")
+    .package(url: "https://github.com/nathantannar4/Engine", from: "2.3.0")
 ]
 
 var plugins: [Target.PluginUsage] = []

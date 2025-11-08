@@ -35,11 +35,11 @@ public extension Topic {
         public var title: String?
 
         public var codeBlock: CodeBlock?
-        
+
         public static func == (lhs: Preview, rhs: Preview) -> Bool {
             lhs.id == rhs.id
         }
-        
+
         public func hash(into hasher: inout Hasher) {
             hasher.combine(id)
         }

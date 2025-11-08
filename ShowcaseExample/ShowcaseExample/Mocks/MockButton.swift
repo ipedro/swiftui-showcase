@@ -22,48 +22,49 @@ import Showcase
 import SwiftUI
 
 extension Topic {
-    static let mockButton = Topic(
-        "Button",
-        description: """
-        A button initiates an instantaneous action.
+    static let mockButton = Topic("Button") {
+        Description {
+            """
+            A button initiates an instantaneous action.
 
-        A stylized representation of two horizontally aligned buttons. The image is tinted red to subtly reflect the red in the original six-color Apple logo.
-        Versatile and highly customizable, buttons give people simple, familiar ways to do tasks in your app.
-        """,
-        links: {
+            A stylized representation of two horizontally aligned buttons. The image is tinted red to subtly reflect the red in the original six-color Apple logo.
+            Versatile and highly customizable, buttons give people simple, familiar ways to do tasks in your app.
+            """
+        }
+
+        Links {
             Topic.Link(" HIG", "https://developer.apple.com/design/human-interface-guidelines/buttons")
-        },
-        code: {
+        }
+
+        Code {
             Topic.CodeBlock {
-            """
-            Button("I'm a bordered button") {
-            // do something
+                """
+                Button("I'm a bordered button") {
+                    // do something
+                }
+                .buttonStyle(.bordered)
+                """
             }
-            .buttonStyle(.bordered)
-            """
-            }
-        },
-//        children: [.mockAccordion],
-        previews: {
+        }
+
+        Preview {
             Button("I'm a bordered button") {
                 // do something
             }
             .buttonStyle(.bordered)
         }
-    )
+    }
 }
 
 struct TopicButton_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
             ShowcaseNavigationStack(
-                .init(
-                    "Button",
-                    Chapter(
-                        "Chapter",
-                        .mockButton
-                    )
-                )
+                Document("Button") {
+                    Chapter("Chapter") {
+                        Topic.mockButton
+                    }
+                }
             )
         }
     }

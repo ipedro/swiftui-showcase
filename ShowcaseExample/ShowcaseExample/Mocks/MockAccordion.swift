@@ -22,50 +22,59 @@ import Showcase
 import SwiftUI
 
 extension Topic {
-    static let mockAccordion = Topic(
-        "Accordion",
-        description: """
-        Accordions enable users to expand and collapse multiple sections of content.
-        
-        An accordion is vertically stacked set of interactive headings that each contain a headline and description representing a section of content.
-        """,
-        links: {
-            Link("Code", "https://google.com")
-            Link("Design", "https://zeroheight.com/700c95a05/p/0309e1-accordion/b/45490a")
-        },
-        code: {
-        """
-        Accordion(data, selection: $selectedRow) { item in
-            Text(item.title).bold()
-        } rowContent: { item in
-            Text(item.content)
-        }
-        """
+    static let mockAccordion = Topic("Accordion") {
+        Description {
+            """
+            Accordions enable users to expand and collapse multiple sections of content.
 
-        """
-        Accordion(data, selection: $selectedRow) { item in
-            Text(item.title).bold()
-        } rowContent: { item in
-            Text(item.content)
+            An accordion is vertically stacked set of interactive headings that each contain a headline and description representing a section of content.
+            """
         }
-        """
-        },
-        previews: MockPreviews.init,
-        children: [.mockCard]
-    )
+
+        Links {
+            Topic.Link("Code", "https://google.com")
+            Topic.Link("Design", "https://zeroheight.com/700c95a05/p/0309e1-accordion/b/45490a")
+        }
+
+        Code {
+            Topic.CodeBlock {
+                """
+                Accordion(data, selection: $selectedRow) { item in
+                    Text(item.title).bold()
+                } rowContent: { item in
+                    Text(item.content)
+                }
+                """
+            }
+
+            Topic.CodeBlock {
+                """
+                Accordion(data, selection: $selectedRow) { item in
+                    Text(item.title).bold()
+                } rowContent: { item in
+                    Text(item.content)
+                }
+                """
+            }
+        }
+
+        Preview {
+            MockPreviews()
+        }
+
+        Topic.mockCard
+    }
 }
 
 struct TopicAccordion_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
             ShowcaseNavigationStack(
-                Document(
-                    "Accordion",
-                    Chapter(
-                        "Chapter",
-                        .mockAccordion
-                    )
-                )
+                Document("Accordion") {
+                    Chapter("Chapter") {
+                        Topic.mockAccordion
+                    }
+                }
             )
         }
     }

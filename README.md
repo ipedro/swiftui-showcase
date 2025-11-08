@@ -61,6 +61,7 @@ Also: Don't forget to add `"Showcase"` as a dependency of your package's target.
 The `Showcase` view is used to display your showcase topics. Here's an example:
 
 ```swift
+import Showcase
 import SwiftUI
 
 struct ContentView: View {
@@ -79,15 +80,30 @@ struct ContentView: View {
 The `ShowcaseList` view allows you to list chapters of showcase topics. Here's an example:
 
 ```swift
+import Showcase
 import SwiftUI
 
 struct ContentView: View {
     var body: some View {
         NavigationView {
-            // Create a list with two chapters
+            // Create a list with two chapters using the DSL builders
             ShowcaseList(
-                Chapter("Section 1", .card, .accordion),
-                Chapter("Section 2", .button, .text)
+                Chapter("Section 1") {
+                    Topic("Card") {
+                        Description("Display content and actions in a single container.")
+                    }
+
+                    Topic("Accordion") {
+                        Description("Reveal or hide related content on demand.")
+                    }
+                },
+                Chapter("Section 2") {
+                    Topic("Button") {
+                        Preview {
+                            Button("Tap me") {}
+                        }
+                    }
+                }
             )
             .navigationTitle("Component Showcase")
         }
@@ -100,17 +116,26 @@ struct ContentView: View {
 The `ShowcaseNavigationView` view provides navigation to chapters of showcase topics. Here's an example:
 
 ```swift
+import Showcase
 import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        // Create a ShowcaseNavigationView with a Chapter and optional icon
+        // Create a navigation stack from a document composed with the DSL
         ShowcaseNavigationStack(
-            ShowcaseChapter(
-                "My Chapter", 
-                Chapter("Section 1", .card, .accordion),
-                Chapter("Section 2", .button, .text)
-            )
+            Document("My Chapter") {
+                Chapter("Section 1") {
+                    Topic("Card") {
+                        Description("Display content and actions in a single container.")
+                    }
+
+                    Topic("Button") {
+                        Preview {
+                            Button("Tap me") {}
+                        }
+                    }
+                }
+            }
         )
     }
 }

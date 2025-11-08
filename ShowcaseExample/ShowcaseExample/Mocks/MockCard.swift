@@ -24,35 +24,38 @@ import SwiftUI
 // MARK: - Card Group
 
 extension Topic {
-    static let mockCard = Topic(
-        "Card",
-        description: """
-        Cards are surfaces that display content and actions on a single topic.
-        """,
-        children: [
-            .staticCard,
-            .navigationalCard,
-            .selectableCard
-        ]
-    )
+    static let mockCard = Topic("Card") {
+        Description {
+            """
+            Cards are surfaces that display content and actions on a single topic.
+            """
+        }
+
+        Topic.staticCard
+        Topic.navigationalCard
+        Topic.selectableCard
+    }
 }
 
 // MARK: - Navigational Card
 
 extension Topic {
-    static let navigationalCard = Topic(
-        "Navigational Card",
-        description: """
-        The purpose of navigational cards is to provide users access to more detailed information or navigational elements (other pages).
+    static let navigationalCard = Topic("Navigational Card") {
+        Description {
+            """
+            The purpose of navigational cards is to provide users access to more detailed information or navigational elements (other pages).
 
-        By clicking anywhere on the card, users can perform the desired action. While navigational cards can include interactive elements for additional calls to action, it is not recommended.
-        """,
-        links: {
-            Link("Code", .init(string: "NavigationalCard"))
-            Link("Design", .init(string: "https://google.com"))
-        },
-        code: {
-            CodeBlock("elevated") {
+            By clicking anywhere on the card, users can perform the desired action. While navigational cards can include interactive elements for additional calls to action, it is not recommended.
+            """
+        }
+
+        Links {
+            Topic.Link("Code", .init(string: "NavigationalCard"))
+            Topic.Link("Design", .init(string: "https://google.com"))
+        }
+
+        Code {
+            Topic.CodeBlock("elevated") {
                 """
                 NavigationalCard {
                     // action
@@ -61,8 +64,8 @@ extension Topic {
                 }
                 """
             }
-            
-            CodeBlock("outlined") {
+
+            Topic.CodeBlock("outlined") {
                 """
                 NavigationalCard {
                     // action
@@ -71,63 +74,76 @@ extension Topic {
                 }
                 """
             }
-        },
-        previews: {
+        }
+
+        Preview {
             MockPreviews()
         }
-    )
+    }
 }
 
 // MARK: - Selectable Card
 
 extension Topic {
-    static let selectableCard = Topic(
-        "Selectable Card",
-        description: """
-        Selectable cards serve for selecting an item that is part of a group of options with rich content displayed inside each option, which would be too complex for buttons to contain.
-        """,
-        links: {
-            Link("Code", .init(string: "SelectableCard"))
-            Link("Design", .init(string: "https://google.com"))
-        },
-        code: {
+    static let selectableCard = Topic("Selectable Card") {
+        Description {
             """
-            SelectableCard(isOn: $isOn) {
-                Text("I'm content")
+            Selectable cards serve for selecting an item that is part of a group of options with rich content displayed inside each option, which would be too complex for buttons to contain.
+            """
+        }
+
+        Links {
+            Topic.Link("Code", .init(string: "SelectableCard"))
+            Topic.Link("Design", .init(string: "https://google.com"))
+        }
+
+        Code {
+            Topic.CodeBlock {
+                """
+                SelectableCard(isOn: $isOn) {
+                    Text("I'm content")
+                }
+                """
             }
-            """
-        },
-        previews: {
+        }
+
+        Preview {
             MockPreviews()
         }
-    )
+    }
 }
 
 // MARK: - Static Card
 
 extension Topic {
-    static let staticCard = Topic(
-        "Static Card",
-        description: """
-        A static card can have interactive elements such as a call-to-action button, but it is not intended for navigation or selection.
-        
-        The card surface does not have interactive states, meaning it cannot be hovered or selected. However, it does contain other interactive components. An example of a static card is a recipe card.
-        """,
-        links: {
-            Link("Code", .init(string: "StaticCard"))
-            Link("Design", .init(string: "https://google.com"))
-        },
-        code: {
+    static let staticCard = Topic("Static Card") {
+        Description {
             """
-            StaticCard {
-                Text("I'm content")
+            A static card can have interactive elements such as a call-to-action button, but it is not intended for navigation or selection.
+
+            The card surface does not have interactive states, meaning it cannot be hovered or selected. However, it does contain other interactive components. An example of a static card is a recipe card.
+            """
+        }
+
+        Links {
+            Topic.Link("Code", .init(string: "StaticCard"))
+            Topic.Link("Design", .init(string: "https://google.com"))
+        }
+
+        Code {
+            Topic.CodeBlock {
+                """
+                StaticCard {
+                    Text("I'm content")
+                }
+                """
             }
-            """
-        },
-        previews: {
+        }
+
+        Preview {
             MockPreviews()
         }
-    )
+    }
 }
 
 #Preview {

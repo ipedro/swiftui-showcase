@@ -39,7 +39,7 @@ struct ShowcaseCodeBlockContent: View {
 
     @Environment(\.colorScheme)
     private var colorScheme
-    
+
     @State
     private var attributedCode: AttributedString?
 

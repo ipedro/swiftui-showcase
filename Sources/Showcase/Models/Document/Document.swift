@@ -40,76 +40,44 @@ public struct Document: Identifiable {
     /// The chapters within the document.
     public var chapters: [Chapter]
 
-    /// Initializes a showcase document with the specified title, chapters and
-    /// an optional description.
+    /// Initializes a showcase document using a ``ChapterBuilder`` closure to
+    /// compose its chapters while keeping support for the existing API
+    /// surface.
     /// - Parameters:
     ///   - title: The title of the document.
     ///   - icon: An optional default icon for topics.
     ///   - description: The optional description of the document.
-    ///   - chapters: The chapters within the document.
+    ///   - content: A builder closure that produces the chapters contained in
+    ///     the document.
     public init(
         _ title: String,
         icon: @escaping @autoclosure () -> Image,
         description: @escaping @autoclosure () -> String = "",
-        _ chapters: [Chapter] = []
+        @ChapterBuilder _ content: () -> [Chapter]
     ) {
+        let icon = icon()
         _title = Lazy(wrappedValue: title)
         _description = Lazy(wrappedValue: description())
-        _icon = Lazy(wrappedValue: icon())
-        self.chapters = chapters.sortedWithIcon(icon())
+        _icon = Lazy(wrappedValue: icon)
+        chapters = content().sortedWithIcon(icon)
     }
 
-    /// Initializes a showcase document with the specified title, chapters and
-    /// an optional description.
-    /// - Parameters:
-    ///   - title: The title of the document.
-    ///   - icon: An optional default icon for topics.
-    ///   - description: The optional description of the document.
-    ///   - chapters: The chapters within the document.
-    public init(
-        _ title: String,
-        icon: @escaping @autoclosure () -> Image,
-        description: @escaping @autoclosure () -> String = "",
-        _ chapters: Chapter...
-    ) {
-        _title = Lazy(wrappedValue: title)
-        _description = Lazy(wrappedValue: description())
-        _icon = Lazy(wrappedValue: icon())
-        self.chapters = chapters.sortedWithIcon(icon())
-    }
-
-    /// Initializes a showcase document with the specified title, chapters and
-    /// an optional description.
+    /// Initializes a showcase document using a ``ChapterBuilder`` closure to
+    /// compose its chapters without providing a default icon.
     /// - Parameters:
     ///   - title: The title of the document.
     ///   - description: The optional description of the document.
-    ///   - chapters: The chapters within the document.
+    ///   - content: A builder closure that produces the chapters contained in
+    ///     the document.
     public init(
         _ title: String,
         description: @escaping @autoclosure () -> String = "",
-        _ chapters: [Chapter] = []
+        @ChapterBuilder _ content: () -> [Chapter]
     ) {
         _title = Lazy(wrappedValue: title)
         _description = Lazy(wrappedValue: description())
         _icon = Lazy(wrappedValue: nil)
-        self.chapters = chapters.sorted()
-    }
-
-    /// Initializes a showcase document with the specified title, chapters and
-    /// an optional description.
-    /// - Parameters:
-    ///   - title: The title of the document.
-    ///   - description: The optional description of the document.
-    ///   - chapters: The chapters within the document.
-    public init(
-        _ title: String,
-        description: @escaping @autoclosure () -> String = "",
-        _ chapters: Chapter...
-    ) {
-        _title = Lazy(wrappedValue: title)
-        _description = Lazy(wrappedValue: description())
-        _icon = Lazy(wrappedValue: nil)
-        self.chapters = chapters.sorted()
+        chapters = content().sorted()
     }
 }
 

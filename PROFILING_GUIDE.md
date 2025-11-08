@@ -178,24 +178,21 @@ After the optimizations, you should see these metrics:
 
 **Commands:**
 ```swift
-let document = Document(
-    "Large Test",
-    (0..<100).map { i in
-        Chapter(
-            "Chapter \(i)",
-            (0..<10).map { j in
-                Topic(
-                    "Topic \(j)",
-                    code: {
+let document = Document("Large Test") {
+    for i in 0..<100 {
+        Chapter("Chapter \(i)") {
+            for j in 0..<10 {
+                Topic("Topic \(j)") {
+                    Code {
                         Topic.CodeBlock(text: {
                             "func example\(i)_\(j)() {}"
                         })
                     }
-                )
+                }
             }
-        )
+        }
     }
-)
+}
 ```
 
 ---
@@ -215,12 +212,12 @@ let document = Document(
 ```swift
 func createDeepTopic(depth: Int) -> Topic {
     guard depth > 0 else {
-        return Topic("Leaf")
+        return Topic("Leaf") {}
     }
-    return Topic(
-        "Level \(depth)",
-        children: [createDeepTopic(depth: depth - 1)]
-    )
+
+    return Topic("Level \(depth)") {
+        createDeepTopic(depth: depth - 1)
+    }
 }
 ```
 

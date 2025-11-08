@@ -39,72 +39,42 @@ public struct Chapter: Identifiable {
     /// The showcase topics within the chapter.
     public var topics: [Topic]
 
-    /// Initializes a showcase chapter with the specified title and showcase topics.
+    /// Initializes a showcase chapter using a ``ChapterContentBuilder``
+    /// closure to describe its description and topics while preserving the
+    /// existing API surface.
     /// - Parameters:
     ///   - title: The title of the chapter.
     ///   - icon: Optional icon for the chapter.
-    ///   - description: The optional description of the chapter.
-    ///   - topics: The showcase topics within the chapter.
+    ///   - content: A builder closure that produces the chapter description and topics.
     public init(
         _ title: String,
         icon: @escaping @autoclosure () -> Image,
-        description: @escaping @autoclosure () -> String = "",
-        _ topics: [Topic] = []
+        @ChapterContentBuilder _ content: () -> Content = { Content() }
     ) {
+        let icon = icon()
+        let content = content()
+
         _title = Lazy(wrappedValue: title)
-        _description = Lazy(wrappedValue: description())
-        _icon = Lazy(wrappedValue: icon())
-        self.topics = topics.sortedWithIcon(icon())
+        _description = Lazy(wrappedValue: content.description ?? "")
+        _icon = Lazy(wrappedValue: icon)
+        topics = content.topics.sortedWithIcon(icon)
     }
 
-    /// Initializes a showcase chapter with the specified title and showcase topics.
+    /// Initializes a showcase chapter using a ``ChapterContentBuilder`` closure
+    /// to describe its description and topics without providing an explicit icon.
     /// - Parameters:
     ///   - title: The title of the chapter.
-    ///   - icon: Optional icon for the chapter.
-    ///   - description: The optional description of the chapter.
-    ///   - topics: The showcase topics within the chapter.
+    ///   - content: A builder closure that produces the chapter description and topics.
     public init(
         _ title: String,
-        icon: @escaping @autoclosure () -> Image,
-        description: @escaping @autoclosure () -> String = "",
-        _ topics: Topic...
+        @ChapterContentBuilder _ content: () -> Content = { Content() }
     ) {
-        _title = Lazy(wrappedValue: title)
-        _description = Lazy(wrappedValue: description())
-        _icon = Lazy(wrappedValue: icon())
-        self.topics = topics.sortedWithIcon(icon())
-    }
+        let content = content()
 
-    /// Initializes a showcase chapter with the specified title and showcase topics.
-    /// - Parameters:
-    ///   - title: The title of the chapter.
-    ///   - description: The optional description of the chapter.
-    ///   - topics: The showcase topics within the chapter.
-    public init(
-        _ title: String,
-        description: @escaping @autoclosure () -> String = "",
-        _ topics: [Topic] = []
-    ) {
         _title = Lazy(wrappedValue: title)
-        _description = Lazy(wrappedValue: description())
+        _description = Lazy(wrappedValue: content.description ?? "")
         _icon = Lazy(wrappedValue: nil)
-        self.topics = topics.sorted()
-    }
-
-    /// Initializes a showcase chapter with the specified title and showcase topics.
-    /// - Parameters:
-    ///   - title: The title of the chapter.
-    ///   - description: The optional description of the chapter.
-    ///   - topics: The showcase topics within the chapter.
-    public init(
-        _ title: String,
-        description: @escaping @autoclosure () -> String = "",
-        _ topics: Topic...
-    ) {
-        _title = Lazy(wrappedValue: title)
-        _description = Lazy(wrappedValue: description())
-        _icon = Lazy(wrappedValue: nil)
-        self.topics = topics.sorted()
+        topics = content.topics.sorted()
     }
 }
 
@@ -142,15 +112,15 @@ extension Chapter {
     func withIcon(_ proposal: Image?) -> Chapter {
         // Early exit if no icon proposal or already has icon
         guard let proposal = proposal, self.icon == nil else { return self }
-        
+
         var copy = self
         copy._icon = Lazy(wrappedValue: proposal)
-        
+
         // Only process topics if they exist
         if !copy.topics.isEmpty {
             copy.topics = copy.topics.map { $0.withIcon(proposal) }
         }
-        
+
         return copy
     }
 
@@ -160,7 +130,7 @@ extension Chapter {
     /// - Returns: `true` if the query matches any part of the chapter or its topics.
     func search(query: String) -> Chapter? {
         // Use short-circuit evaluation for early exit
-        let isMatch = title.localizedCaseInsensitiveContains(query) 
+        let isMatch = title.localizedCaseInsensitiveContains(query)
             || description.localizedCaseInsensitiveContains(query)
 
         // Check all topics within the chapter.

@@ -1,6 +1,6 @@
-// TopicBuilder.swift
+// ChapterBuilder.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 18.09.23.
+// Created by Pedro Almeida on 11.09.23.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,37 +22,38 @@
 
 import Foundation
 
-/// A result builder for creating code blocks.
-@resultBuilder public struct TopicBuilder {
-    public static func buildBlock(_ components: [Topic]...) -> [Topic] {
+/// A result builder that produces an array of ``Chapter`` values.
+@resultBuilder public struct ChapterBuilder {
+    public static func buildBlock(_ components: [Chapter]...) -> [Chapter] {
         components.flatMap { $0 }
     }
 
-    public static func buildOptional(_ component: [Topic]?) -> [Topic] {
+    public static func buildOptional(_ component: [Chapter]?) -> [Chapter] {
         component ?? []
     }
 
-    public static func buildEither(first component: [Topic]) -> [Topic] {
+    public static func buildEither(first component: [Chapter]) -> [Chapter] {
         component
     }
 
-    public static func buildEither(second component: [Topic]) -> [Topic] {
+    public static func buildEither(second component: [Chapter]) -> [Chapter] {
         component
     }
 
-    public static func buildArray(_ components: [[Topic]]) -> [Topic] {
+    public static func buildArray(_ components: [[Chapter]]) -> [Chapter] {
         components.flatMap { $0 }
     }
 
-    public static func buildLimitedAvailability(_ component: [Topic]) -> [Topic] {
+    public static func buildLimitedAvailability(_ component: [Chapter]) -> [Chapter] {
         component
     }
 
-    public static func buildExpression(_ expression: Topic) -> [Topic] {
+    public static func buildExpression(_ expression: Chapter) -> [Chapter] {
         [expression]
     }
 
-    public static func buildExpression(_ expression: [Topic]) -> [Topic] {
+    @_disfavoredOverload
+    public static func buildExpression(_ expression: [Chapter]) -> [Chapter] {
         expression
     }
 }

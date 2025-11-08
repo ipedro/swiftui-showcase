@@ -125,7 +125,7 @@
 			mainGroup = EBA50C212CF80CD5000FB649;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				EBA50C3E2CF80D24000FB649 /* XCLocalSwiftPackageReference "../../swiftui-showcase" */,
+				EBA50C3E2CF80D24000FB649 /* XCLocalSwiftPackageReference ".." */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = EBA50C2B2CF80CD5000FB649 /* Products */;
@@ -374,9 +374,9 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		EBA50C3E2CF80D24000FB649 /* XCLocalSwiftPackageReference "../../swiftui-showcase" */ = {
+		EBA50C3E2CF80D24000FB649 /* XCLocalSwiftPackageReference ".." */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = "../../swiftui-showcase";
+			relativePath = "..";
 		};
 /* End XCLocalSwiftPackageReference section */
 

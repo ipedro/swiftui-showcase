@@ -15,23 +15,15 @@ jobs:
   # Linting and formatting check
   lint:
     name: SwiftLint & SwiftFormat
-    runs-on: macos-14
+    runs-on: macos-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v5
       
-      - name: Select Xcode
-        run: sudo xcode-select -s /Applications/Xcode_15.4.app
-      
-      - name: Cache SPM dependencies
-        uses: actions/cache@v4
+      - name: Set up Xcode
+        uses: maxim-lobanov/setup-xcode@v1.6.0
         with:
-          path: |
-            .build
-            ~/Library/Caches/org.swift.swiftpm
-          key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
-          restore-keys: |
-            ${{ runner.os }}-spm-
+          xcode-version: '26.0'
       
       - name: Run SwiftLint
         run: |
@@ -49,7 +41,7 @@ jobs:
   # Build and test on multiple platforms
   test:
     name: Test on ${{ matrix.platform }}
-    runs-on: macos-14
+    runs-on: macos-latest
     strategy:
       fail-fast: false
       matrix:
@@ -61,73 +53,80 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
       
-      - name: Select Xcode
-        run: sudo xcode-select -s /Applications/Xcode_15.4.app
-      
-      - name: Cache SPM dependencies
-        uses: actions/cache@v4
+      - name: Set up Xcode
+        uses: maxim-lobanov/setup-xcode@v1.6.0
         with:
-          path: |
-            .build
-            ~/Library/Caches/org.swift.swiftpm
-          key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
-          restore-keys: |
-            ${{ runner.os }}-spm-
+          xcode-version: '26.0'
       
-      - name: Build for ${{ matrix.platform }}
+      - name: List available simulators
+        if: matrix.platform == 'iOS'
+        run: xcrun simctl list devices available
+      
+      - name: Build ShowcaseExample for ${{ matrix.platform }}
         run: |
           if [ "${{ matrix.platform }}" == "iOS" ]; then
             xcodebuild build \
-              -scheme Showcase \
+              -project ShowcaseExample/ShowcaseExample.xcodeproj \
+              -scheme ShowcaseExample \
               -destination 'platform=iOS Simulator,name=iPhone 16' \
               -skipPackagePluginValidation \
               -skipMacroValidation \
               CODE_SIGN_IDENTITY="" \
               CODE_SIGNING_REQUIRED=NO
           else
-            swift build \
-              --configuration debug \
-              -Xswiftc -enable-testing
+            xcodebuild build \
+              -project ShowcaseExample/ShowcaseExample.xcodeproj \
+              -scheme ShowcaseExample \
+              -destination 'platform=macOS' \
+              -skipPackagePluginValidation \
+              -skipMacroValidation
           fi
       
       - name: Run Tests
-        run: swift test --parallel --enable-code-coverage
-      
-      - name: Performance Tests Summary
-        if: success()
         run: |
-          echo "## ⏱️ Performance Test Results" >> $GITHUB_STEP_SUMMARY
+          swift test --parallel --enable-code-coverage 2>&1 | tee test-output.log
+          
+          # Extract test counts from output
+          TOTAL_TESTS=$(grep -E "Test Suite.*passed" test-output.log | tail -1 | grep -oE '[0-9]+ passed' | grep -oE '[0-9]+' || echo "0")
+          TOTAL_SUITES=$(grep -E "Test Suite.*passed" test-output.log | grep -oE 'Executed [0-9]+ tests' | grep -oE '[0-9]+' || echo "0")
+          
+          echo "test_count=$TOTAL_TESTS" >> $GITHUB_OUTPUT
+          echo "suite_count=$TOTAL_SUITES" >> $GITHUB_OUTPUT
+        id: test
+      
+      - name: Test Summary
+        if: success() && matrix.platform == 'macOS'
+        run: |
+          echo "## ✅ Test Results" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "All performance benchmarks passed within target thresholds!" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Test Suite:** 42 tests in 10 suites" >> $GITHUB_STEP_SUMMARY
+          echo "**Tests Passed:** ${{ steps.test.outputs.test_count }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Test Suites:** ${{ steps.test.outputs.suite_count }}" >> $GITHUB_STEP_SUMMARY
+      
+      - name: Upload Coverage to Codecov
+        if: matrix.platform == 'macOS'
+        uses: codecov/codecov-action@v4
+        with:
+          fail_ci_if_error: false
+          verbose: true
 
   # Code coverage reporting
   coverage:
     name: Code Coverage
-    runs-on: macos-14
+    runs-on: macos-latest
     needs: test
     steps:
       - name: Checkout
         uses: actions/checkout@v5
       
-      - name: Select Xcode
-        run: sudo xcode-select -s /Applications/Xcode_15.4.app
-      
-      - name: Cache SPM dependencies
-        uses: actions/cache@v4
+      - name: Set up Xcode
+        uses: maxim-lobanov/setup-xcode@v1.6.0
         with:
-          path: |
-            .build
-            ~/Library/Caches/org.swift.swiftpm
-          key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
-          restore-keys: |
-            ${{ runner.os }}-spm-
+          xcode-version: '26.0'
 
   # Performance regression detection
   performance:
     name: Performance Benchmarks
-    runs-on: macos-14
+    runs-on: macos-latest
     needs: test
     steps:
       - name: Checkout
@@ -135,18 +134,10 @@ jobs:
         with:
           fetch-depth: 0  # Need history for comparison
       
-      - name: Select Xcode
-        run: sudo xcode-select -s /Applications/Xcode_15.4.app
-      
-      - name: Cache SPM dependencies
-        uses: actions/cache@v4
+      - name: Set up Xcode
+        uses: maxim-lobanov/setup-xcode@v1.6.0
         with:
-          path: |
-            .build
-            ~/Library/Caches/org.swift.swiftpm
-          key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
-          restore-keys: |
-            ${{ runner.os }}-spm-
+          xcode-version: '26.0'
       
       - name: Run Performance Tests
         run: |
@@ -168,34 +159,27 @@ jobs:
   # Build documentation
   docs:
     name: Build Documentation
-    runs-on: macos-14
+    runs-on: macos-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v5
       
-      - name: Select Xcode
-        run: sudo xcode-select -s /Applications/Xcode_15.4.app
-      
-      - name: Cache SPM dependencies
-        uses: actions/cache@v4
+      - name: Set up Xcode
+        uses: maxim-lobanov/setup-xcode@v1.6.0
         with:
-          path: |
-            .build
-            ~/Library/Caches/org.swift.swiftpm
-          key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
-          restore-keys: |
-            ${{ runner.os }}-spm-
+          xcode-version: '26.0'
       
       - name: Build DocC
         run: |
           xcodebuild docbuild -scheme Showcase \
             -derivedDataPath /tmp/docbuild \
-            -destination 'generic/platform=iOS' \
-            -skipPackagePluginValidation
-      
+            -destination 'platform=macOS' \
+            -skipPackagePluginValidation \
+            -skipMacroValidation
+
       - name: Verify DocC Archive
         run: |
-          if [ -d "/tmp/docbuild/Build/Products/Debug-iphoneos/Showcase.doccarchive" ]; then
+          if [ -d "/tmp/docbuild/Build/Products/Debug/Showcase.doccarchive" ]; then
             echo "✓ DocC archive generated successfully"
           else
             echo "✗ DocC archive not found"
