@@ -1,0 +1,65 @@
+name: Auto Format
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - '**.swift'
+      - '.github/workflows/auto-format.yml'
+      - 'Package.swift'
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    name: Apply SwiftFormat
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Set up Xcode
+        uses: maxim-lobanov/setup-xcode@v1.6.0
+        with:
+          xcode-version: '26.0'
+      
+      - name: Apply SwiftFormat
+        run: |
+          # Run SwiftFormat to auto-fix formatting issues
+          swift package plugin --allow-writing-to-package-directory swiftformat
+          
+          echo "SwiftFormat applied successfully"
+      
+      - name: Check for changes
+        id: changes
+        run: |
+          if git diff --quiet; then
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+            echo "No formatting changes needed"
+          else
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+            echo "Formatting changes detected:"
+            git diff --stat
+          fi
+      
+      - name: Commit and push changes
+        if: steps.changes.outputs.has_changes == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "chore: apply SwiftFormat [skip ci]"
+          git push
+      
+      - name: Summary
+        run: |
+          echo "## 🎨 SwiftFormat Auto-Applied" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ steps.changes.outputs.has_changes }}" == "true" ]; then
+            echo "✅ Formatting changes committed and pushed" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "✅ No formatting changes needed" >> $GITHUB_STEP_SUMMARY
+          fi
