@@ -16,19 +16,26 @@ jobs:
   lint:
     name: SwiftLint & SwiftFormat
     runs-on: macos-latest
+    permissions:
+      contents: read
+      pull-requests: write
     steps:
       - name: Checkout
         uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
       
       - name: Set up Xcode
         uses: maxim-lobanov/setup-xcode@v1.6.0
         with:
           xcode-version: '26.0'
       
-      - name: Run SwiftLint
-        run: |
-          # Run SwiftLint via SPM plugin
-          swift package plugin swiftlint
+      - name: Run SwiftLint with PR annotations
+        uses: norio-nomura/action-swiftlint@3.2.1
+        with:
+          args: --strict --reporter github-actions-logging
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
       - name: Check SwiftFormat
         run: |
