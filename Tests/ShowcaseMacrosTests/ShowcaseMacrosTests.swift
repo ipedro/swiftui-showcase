@@ -628,7 +628,8 @@ final class ShowcaseMacrosTests: XCTestCase {
                         }
                         CodeBlock(title: "Methods") {
                             \"\"\"
-                            /// Validates the user's name - Returns: true if the name is valid
+                            /// Validates the user's name
+                            /// - Returns: true if the name is valid
                             func validateName() -> Bool
 
                             /// Gets the user's display string

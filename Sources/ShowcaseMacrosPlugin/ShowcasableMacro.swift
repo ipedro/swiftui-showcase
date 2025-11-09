@@ -604,6 +604,21 @@ enum MemberDiscovery {
                 continue
             }
             
+            // Skip @ShowcaseCodeBlock marked properties (they're code examples, not API)
+            if varDecl.hasAttribute(named: "ShowcaseCodeBlock") {
+                continue
+            }
+            
+            // Skip @ShowcaseLink marked properties (they're documentation links, not API)
+            if varDecl.hasAttribute(named: "ShowcaseLink") {
+                continue
+            }
+            
+            // Skip @ShowcaseDescription marked properties (they're documentation, not API)
+            if varDecl.hasAttribute(named: "ShowcaseDescription") {
+                continue
+            }
+            
             // Check if public/internal
             let isPublic = varDecl.modifiers.contains { modifier in
                 modifier.name.text == "public" || modifier.name.text == "internal"
@@ -620,6 +635,11 @@ enum MemberDiscovery {
             // Extract property info
             for binding in varDecl.bindings {
                 guard let name = binding.pattern.as(IdentifierPatternSyntax.self)?.identifier.text else {
+                    continue
+                }
+                
+                // Skip SwiftUI View's body property - it's implementation detail, not API
+                if name == "body" {
                     continue
                 }
                 
@@ -698,7 +718,7 @@ enum MemberDiscovery {
     
     // MARK: - Doc Comment Extraction
     
-    private static func extractDocComment(from decl: some SyntaxProtocol) -> String? {
+    private static func extractDocComment(from decl: some SyntaxProtocol) -> DocComment {
         // Extract leading trivia (comments before the declaration)
         let trivia = decl.leadingTrivia
         var docLines: [String] = []
@@ -728,26 +748,237 @@ enum MemberDiscovery {
             }
         }
         
-        return docLines.isEmpty ? nil : docLines.joined(separator: " ")
+        let rawComment = docLines.isEmpty ? nil : docLines.joined(separator: "\n")
+        return DocCommentParser.parse(rawComment)
+    }
+}
+
+// MARK: - Structured Doc Comments
+
+/// Represents a parsed documentation comment with structured sections.
+struct DocComment {
+    /// The summary (first paragraph)
+    let summary: String?
+    
+    /// Extended discussion (middle paragraphs before special sections)
+    let discussion: String?
+    
+    /// Parameter descriptions keyed by parameter name
+    let parameters: [String: String]
+    
+    /// Return value description
+    let returns: String?
+    
+    /// Information about what this member throws
+    let `throws`: String?
+    
+    /// Note callouts
+    let notes: [String]
+    
+    /// Warning callouts
+    let warnings: [String]
+    
+    /// Important callouts
+    let important: [String]
+}
+
+/// Parses Swift documentation comments into structured data.
+enum DocCommentParser {
+    /// Parses a raw doc comment string into structured DocComment.
+    static func parse(_ rawComment: String?) -> DocComment {
+        guard let raw = rawComment else {
+            return DocComment(
+                summary: nil,
+                discussion: nil,
+                parameters: [:],
+                returns: nil,
+                throws: nil,
+                notes: [],
+                warnings: [],
+                important: []
+            )
+        }
+        
+        // Split into lines
+        let lines = raw.components(separatedBy: .newlines)
+        
+        var summary: String?
+        var discussionLines: [String] = []
+        var parameters: [String: String] = [:]
+        var returns: String?
+        var throwsInfo: String?
+        var notes: [String] = []
+        var warnings: [String] = []
+        var important: [String] = []
+        
+        var currentSection: Section = .summary
+        var currentParam: String?
+        var currentParamLines: [String] = []
+        
+        enum Section {
+            case summary, discussion, parameters, returns, `throws`, note, warning, important
+        }
+        
+        for line in lines {
+            let trimmed = line.trimmingCharacters(in: .whitespaces)
+            
+            // Detect section markers
+            if trimmed.hasPrefix("- Parameter ") || trimmed.hasPrefix("- parameter ") {
+                // Save previous parameter if any
+                if let param = currentParam, !currentParamLines.isEmpty {
+                    parameters[param] = currentParamLines.joined(separator: " ")
+                    currentParamLines = []
+                }
+                
+                // Extract parameter name and description
+                let parts = trimmed.dropFirst("- Parameter ".count).components(separatedBy: ":")
+                if parts.count >= 2 {
+                    currentParam = parts[0].trimmingCharacters(in: .whitespaces)
+                    let desc = parts.dropFirst().joined(separator: ":").trimmingCharacters(in: .whitespaces)
+                    currentParamLines.append(desc)
+                }
+                currentSection = .parameters
+                continue
+            } else if trimmed.hasPrefix("- Parameters:") || trimmed.hasPrefix("- parameters:") {
+                currentSection = .parameters
+                continue
+            } else if trimmed.hasPrefix("- Returns:") || trimmed.hasPrefix("- returns:") {
+                let desc = trimmed.dropFirst("- Returns:".count).trimmingCharacters(in: .whitespaces)
+                returns = desc.isEmpty ? nil : desc
+                currentSection = .returns
+                continue
+            } else if trimmed.hasPrefix("- Throws:") || trimmed.hasPrefix("- throws:") {
+                let desc = trimmed.dropFirst("- Throws:".count).trimmingCharacters(in: .whitespaces)
+                throwsInfo = desc.isEmpty ? nil : desc
+                currentSection = .throws
+                continue
+            } else if trimmed.hasPrefix("- Note:") || trimmed.hasPrefix("- note:") {
+                let desc = trimmed.dropFirst("- Note:".count).trimmingCharacters(in: .whitespaces)
+                if !desc.isEmpty {
+                    notes.append(desc)
+                }
+                currentSection = .note
+                continue
+            } else if trimmed.hasPrefix("- Warning:") || trimmed.hasPrefix("- warning:") {
+                let desc = trimmed.dropFirst("- Warning:".count).trimmingCharacters(in: .whitespaces)
+                if !desc.isEmpty {
+                    warnings.append(desc)
+                }
+                currentSection = .warning
+                continue
+            } else if trimmed.hasPrefix("- Important:") || trimmed.hasPrefix("- important:") {
+                let desc = trimmed.dropFirst("- Important:".count).trimmingCharacters(in: .whitespaces)
+                if !desc.isEmpty {
+                    important.append(desc)
+                }
+                currentSection = .important
+                continue
+            }
+            
+            // Handle nested parameter lists (indented under - Parameters:)
+            if currentSection == .parameters && trimmed.hasPrefix("- ") {
+                // Save previous parameter if any
+                if let param = currentParam, !currentParamLines.isEmpty {
+                    parameters[param] = currentParamLines.joined(separator: " ")
+                    currentParamLines = []
+                }
+                
+                // Parse nested parameter
+                let parts = trimmed.dropFirst(2).components(separatedBy: ":")
+                if parts.count >= 2 {
+                    currentParam = parts[0].trimmingCharacters(in: .whitespaces)
+                    let desc = parts.dropFirst().joined(separator: ":").trimmingCharacters(in: .whitespaces)
+                    currentParamLines.append(desc)
+                }
+                continue
+            }
+            
+            // Add content to current section
+            if trimmed.isEmpty {
+                // Empty line - might transition from summary to discussion
+                if currentSection == .summary && summary != nil {
+                    currentSection = .discussion
+                }
+                continue
+            }
+            
+            switch currentSection {
+            case .summary:
+                if summary == nil {
+                    summary = trimmed
+                } else {
+                    summary! += " " + trimmed
+                }
+            case .discussion:
+                discussionLines.append(trimmed)
+            case .parameters:
+                // Continuation of parameter description
+                if currentParam != nil {
+                    currentParamLines.append(trimmed)
+                }
+            case .returns:
+                if returns == nil {
+                    returns = trimmed
+                } else {
+                    returns! += " " + trimmed
+                }
+            case .throws:
+                if throwsInfo == nil {
+                    throwsInfo = trimmed
+                } else {
+                    throwsInfo! += " " + trimmed
+                }
+            case .note:
+                if !notes.isEmpty {
+                    notes[notes.count - 1] += " " + trimmed
+                }
+            case .warning:
+                if !warnings.isEmpty {
+                    warnings[warnings.count - 1] += " " + trimmed
+                }
+            case .important:
+                if !important.isEmpty {
+                    important[important.count - 1] += " " + trimmed
+                }
+            }
+        }
+        
+        // Save last parameter if any
+        if let param = currentParam, !currentParamLines.isEmpty {
+            parameters[param] = currentParamLines.joined(separator: " ")
+        }
+        
+        let discussion = discussionLines.isEmpty ? nil : discussionLines.joined(separator: " ")
+        
+        return DocComment(
+            summary: summary,
+            discussion: discussion,
+            parameters: parameters,
+            returns: returns,
+            throws: throwsInfo,
+            notes: notes,
+            warnings: warnings,
+            important: important
+        )
     }
 }
 
 struct InitializerInfo {
     let signature: String
-    let docComment: String?
+    let docComment: DocComment
 }
 
 struct MethodInfo {
     let name: String
     let signature: String
-    let docComment: String?
+    let docComment: DocComment
 }
 
 struct PropertyInfo {
     let name: String
     let type: String
     let isComputed: Bool
-    let docComment: String?
+    let docComment: DocComment
 }
 
 /// Generates the extension code.
@@ -764,8 +995,17 @@ enum CodeGenerator {
         if !initializers.isEmpty {
             var initContent = "CodeBlock(title: \"Initializers\") {\n\"\"\"\n"
             for initializer in initializers {
-                if let docComment = initializer.docComment {
-                    initContent += "/// \(docComment)\n"
+                let doc = initializer.docComment
+                if let summary = doc.summary {
+                    initContent += "/// \(summary)\n"
+                }
+                if !doc.parameters.isEmpty {
+                    for (name, desc) in doc.parameters.sorted(by: { $0.key < $1.key }) {
+                        initContent += "/// - Parameter \(name): \(desc)\n"
+                    }
+                }
+                if let throwsInfo = doc.throws {
+                    initContent += "/// - Throws: \(throwsInfo)\n"
                 }
                 initContent += "\(initializer.signature)\n\n"
             }
@@ -777,8 +1017,20 @@ enum CodeGenerator {
         if !methods.isEmpty {
             var methodContent = "CodeBlock(title: \"Methods\") {\n\"\"\"\n"
             for method in methods {
-                if let docComment = method.docComment {
-                    methodContent += "/// \(docComment)\n"
+                let doc = method.docComment
+                if let summary = doc.summary {
+                    methodContent += "/// \(summary)\n"
+                }
+                if !doc.parameters.isEmpty {
+                    for (name, desc) in doc.parameters.sorted(by: { $0.key < $1.key }) {
+                        methodContent += "/// - Parameter \(name): \(desc)\n"
+                    }
+                }
+                if let returns = doc.returns {
+                    methodContent += "/// - Returns: \(returns)\n"
+                }
+                if let throwsInfo = doc.throws {
+                    methodContent += "/// - Throws: \(throwsInfo)\n"
                 }
                 methodContent += "func \(method.signature)\n\n"
             }
@@ -790,8 +1042,9 @@ enum CodeGenerator {
         if !properties.isEmpty {
             var propContent = "CodeBlock(title: \"Properties\") {\n\"\"\"\n"
             for property in properties {
-                if let docComment = property.docComment {
-                    propContent += "/// \(docComment)\n"
+                let doc = property.docComment
+                if let summary = doc.summary {
+                    propContent += "/// \(summary)\n"
                 }
                 let keyword = property.isComputed ? "var" : "var"
                 propContent += "\(keyword) \(property.name): \(property.type)\n\n"
