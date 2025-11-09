@@ -249,8 +249,41 @@ enum ExampleFinder {
     }
     
     private static func extractExampleMetadata(from varDecl: VariableDeclSyntax) -> (title: String?, description: String?) {
-        // TODO: Extract title and description from @ShowcaseExample arguments
-        return (nil, nil)
+        // Find the @ShowcaseExample attribute
+        guard let exampleAttr = varDecl.attributes.first(where: { attr in
+            attr.as(AttributeSyntax.self)?.attributeName.as(IdentifierTypeSyntax.self)?.name.text == "ShowcaseExample"
+        })?.as(AttributeSyntax.self) else {
+            return (nil, nil)
+        }
+        
+        // Extract arguments from the attribute
+        guard let arguments = exampleAttr.arguments?.as(LabeledExprListSyntax.self) else {
+            return (nil, nil)
+        }
+        
+        var title: String?
+        var description: String?
+        
+        for argument in arguments {
+            let label = argument.label?.text
+            
+            // Extract string literal value
+            if let stringLiteral = argument.expression.as(StringLiteralExprSyntax.self),
+               let segment = stringLiteral.segments.first?.as(StringSegmentSyntax.self) {
+                let value = segment.content.text
+                
+                switch label {
+                case "title":
+                    title = value
+                case "description":
+                    description = value
+                default:
+                    break
+                }
+            }
+        }
+        
+        return (title, description)
     }
 }
 
