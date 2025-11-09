@@ -45,65 +45,41 @@ public extension View {
 
 @StyledView
 public struct ShowcaseIndexMenu: StyledView {
-    public let label: ShowcaseIndexMenuLabel
-    public let icon: ShowcaseIndexMenuIcon
-
-    init?(_ topic: Topic) {
-        guard let data = topic.children, !data.isEmpty else { return nil }
-        label = ShowcaseIndexMenuLabel(title: topic.title, data: data)
-        icon = ShowcaseIndexMenuIcon()
-    }
-
-    public var body: some View {
-        Menu {
-            label
-        } label: {
-            icon
-        }
-    }
-}
-
-// MARK: - Configuration
-
-public struct ShowcaseIndexMenuLabel: View {
     @Environment(\.scrollViewSelection)
     private var selection
+    
+    var title: String = ""
+    var data: [Topic] = []
 
-    let title: String
-    let data: [Topic]
-
-    #if canImport(UIKit)
-        @State private var impact: UISelectionFeedbackGenerator = {
-            let generator = UISelectionFeedbackGenerator()
-            generator.prepare()
-            return generator
-        }()
-    #endif
+    init(_ topic: Topic) {
+        self.title = topic.title
+        self.data = topic.children ?? []
+    }
 
     public var body: some View {
-        Button(title) {
-            #if canImport(UIKit)
-                impact.prepare() // Prepare for next interaction
-                impact.selectionChanged()
-            #endif
-            selection?.wrappedValue = ShowcaseScrollViewTopAnchor.ID
-        }
-
-        Divider()
-
-        ForEach(data, id: \.id) { topic in
-            Button {
-                #if canImport(UIKit)
-                    impact.prepare() // Prepare for next interaction
-                    impact.selectionChanged()
-                #endif
-                selection?.wrappedValue = topic.id
+        if !data.isEmpty {
+            Menu {
+                // Scroll to top button
+                Button(title) {
+                    selection?.wrappedValue = ShowcaseScrollViewTopAnchor.ID
+                }
+                
+                Divider()
+                
+                // Child topic buttons
+                ForEach(data, id: \.id) { topic in
+                    Button(topic.title) {
+                        selection?.wrappedValue = topic.id
+                    }
+                }
             } label: {
-                Text("   " + topic.title).accessibilityLabel(Text(topic.title))
+                ShowcaseIndexMenuIcon()
             }
         }
     }
 }
+
+// MARK: - Icon
 
 public struct ShowcaseIndexMenuIcon: View {
     var systemName: String = "list.bullet"

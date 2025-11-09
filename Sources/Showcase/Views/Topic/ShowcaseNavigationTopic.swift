@@ -37,10 +37,25 @@ struct ShowcaseNavigationTopic: View {
             .accessibilityElement(children: .contain)
             .toolbar {
                 ToolbarItem {
-                    ShowcaseIndexMenu(data)
+                    ShowcaseIndexMenuWrapper(data)
                 }
             }
             // must come after toolbar
             .modifier(ShowcaseScrollViewReader())
+    }
+}
+
+// Wrapper to handle optional menu
+private struct ShowcaseIndexMenuWrapper: View {
+    let topic: Topic
+    
+    init(_ topic: Topic) {
+        self.topic = topic
+    }
+    
+    var body: some View {
+        if let children = topic.children, !children.isEmpty {
+            ShowcaseIndexMenu(topic)
+        }
     }
 }
