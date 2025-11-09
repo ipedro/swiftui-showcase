@@ -176,7 +176,17 @@ enum APIReferenceGenerator {
     // MARK: - Helper Functions
     
     private static func extractParameterNames(from signature: String) -> String {
-        let paramPattern = #"(\w+)\s*:"#
+        // Extract parameter labels from init signature like "init(id: String, name: String)"
+        // Handles Swift parameter label syntax:
+        // - "init(_ value: Int)" -> "init(_:)"
+        // - "init(id: String)" -> "init(id:)"  
+        // - "init(for key: String)" -> "init(for:)" (external label only)
+        
+        // Pattern explanation:
+        // (_|\w+) - Match underscore OR word characters (external label or single label)
+        // (?:\s+\w+)? - Optionally match whitespace + word (internal label, non-capturing)
+        // \s*: - Match colon with optional whitespace
+        let paramPattern = #"(_|\w+)(?:\s+\w+)?\s*:"#
         guard let regex = try? NSRegularExpression(pattern: paramPattern) else {
             return "()"
         }
