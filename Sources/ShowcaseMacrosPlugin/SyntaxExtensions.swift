@@ -1,5 +1,6 @@
 // SyntaxExtensions.swift
 // Copyright (c) 2025 Pedro Almeida
+// Created by Pedro Almeida on 11/9/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -27,20 +28,22 @@ extension SyntaxProtocol {
     var stringLiteralValue: String? {
         if let stringLiteral = self.as(StringLiteralExprSyntax.self),
            stringLiteral.segments.count == 1,
-           case let .stringSegment(segment) = stringLiteral.segments.first {
+           case let .stringSegment(segment) = stringLiteral.segments.first
+        {
             return segment.content.text
         }
         return nil
     }
-    
+
     var integerLiteralValue: Int? {
         if let intLiteral = self.as(IntegerLiteralExprSyntax.self),
-           let value = Int(intLiteral.literal.text) {
+           let value = Int(intLiteral.literal.text)
+        {
             return value
         }
         return nil
     }
-    
+
     var booleanLiteralValue: Bool? {
         if let boolLiteral = self.as(BooleanLiteralExprSyntax.self) {
             return boolLiteral.literal.tokenKind == .keyword(.true)

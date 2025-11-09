@@ -44,29 +44,29 @@ public extension Document {
         }
 
         // MARK: - AdditiveArithmetic
-        
+
         public static var zero: Document.Content {
             Document.Content()
         }
-        
+
         public static func + (lhs: Document.Content, rhs: Document.Content) -> Document.Content {
             var result = lhs
-            
+
             if let description = rhs.description {
                 result.description = description
             }
-            
+
             if let icon = rhs.icon {
                 result.icon = icon
             }
-            
+
             if !rhs.chapters.isEmpty {
                 result.chapters.append(contentsOf: rhs.chapters)
             }
-            
+
             return result
         }
-        
+
         public static func - (lhs: Document.Content, rhs: Document.Content) -> Document.Content {
             // Subtraction doesn't make semantic sense for content, so just return lhs
             lhs
@@ -87,11 +87,11 @@ extension Description: DocumentContentConvertible {
 /// Sets the icon for a document.
 public struct Icon: DocumentContentConvertible {
     let image: Image
-    
+
     public init(_ image: Image) {
         self.image = image
     }
-    
+
     public func merge(into content: inout Document.Content) {
         content.icon = image
     }

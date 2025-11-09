@@ -1,6 +1,6 @@
 // ShowcaseNavigationTopic.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/8/25.
+// Created by Pedro Almeida on 11/9/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -48,11 +48,11 @@ struct ShowcaseNavigationTopic: View {
 // Wrapper to handle optional menu
 private struct ShowcaseIndexMenuWrapper: View {
     let topic: Topic
-    
+
     init(_ topic: Topic) {
         self.topic = topic
     }
-    
+
     var body: some View {
         if let children = topic.children, !children.isEmpty {
             ShowcaseIndexMenu(topic)

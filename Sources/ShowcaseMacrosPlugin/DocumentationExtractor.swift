@@ -1,5 +1,6 @@
 // DocumentationExtractor.swift
 // Copyright (c) 2025 Pedro Almeida
+// Created by Pedro Almeida on 11/9/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -26,19 +27,19 @@ enum DocumentationExtractor {
     static func extract(from declaration: some DeclGroupSyntax) -> Documentation {
         // Extract leading trivia (comments before the declaration)
         let leadingTrivia = declaration.leadingTrivia
-        
+
         var summary: String?
         var details: String?
         var usageExamples: [String] = []
         var notes: [String] = []
-        
+
         var currentSection: String?
         var docLines: [String] = []
-        
+
         for piece in leadingTrivia {
             if case let .docLineComment(comment) = piece {
                 let line = comment.trimmingPrefix("///").trimmingCharacters(in: .whitespaces)
-                
+
                 // Check for section markers
                 if line.hasPrefix("##") {
                     // Save previous section
@@ -52,7 +53,7 @@ enum DocumentationExtractor {
                 }
             }
         }
-        
+
         // Save last section
         if let section = currentSection {
             saveSection(section, lines: docLines, to: &summary, &details, &usageExamples, &notes)
@@ -60,7 +61,7 @@ enum DocumentationExtractor {
             // No sections, treat as summary
             summary = docLines.joined(separator: " ")
         }
-        
+
         return Documentation(
             summary: summary,
             details: details,
@@ -68,7 +69,7 @@ enum DocumentationExtractor {
             notes: notes
         )
     }
-    
+
     private static func saveSection(
         _ section: String,
         lines: [String],
@@ -78,13 +79,13 @@ enum DocumentationExtractor {
         _ notes: inout [String]
     ) {
         let content = lines.joined(separator: "\n")
-        
+
         switch section.lowercased() {
-        case "usage", "example", "examples":
+        case "example", "examples", "usage":
             usageExamples.append(content)
-        case "note", "notes", "important", "warning":
+        case "important", "note", "notes", "warning":
             notes.append(content)
-        case "details", "description":
+        case "description", "details":
             details = content
         default:
             break

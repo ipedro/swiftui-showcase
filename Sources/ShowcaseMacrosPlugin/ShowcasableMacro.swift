@@ -1,5 +1,6 @@
 // ShowcasableMacro.swift
 // Copyright (c) 2025 Pedro Almeida
+// Created by Pedro Almeida on 11/9/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -34,24 +35,24 @@ public struct ShowcasableMacro: ExtensionMacro {
     ) throws -> [ExtensionDeclSyntax] {
         // Extract macro arguments
         let arguments = try MacroArguments.extract(from: node)
-        
+
         // Extract type information
         let typeInfo = try TypeInfo.extract(from: declaration)
-        
+
         // Extract documentation
         let documentation = DocumentationExtractor.extract(from: declaration)
-        
+
         // Find manually marked content
         let examples = ExampleFinder.findExamples(in: declaration)
         let codeBlocks = ExampleFinder.findCodeBlocks(in: declaration)
         let links = ExampleFinder.findLinks(in: declaration)
         let descriptions = ExampleFinder.findDescriptions(in: declaration)
-        
+
         // Auto-discover members if enabled
         let initializers = arguments.autoDiscover ? MemberDiscovery.findInitializers(in: declaration) : []
         let methods = arguments.autoDiscover ? MemberDiscovery.findMethods(in: declaration) : []
         let properties = arguments.autoDiscover ? MemberDiscovery.findProperties(in: declaration) : []
-        
+
         // Prepare configuration structures
         let config = TopicConfiguration(
             typeInfo: typeInfo,
@@ -59,7 +60,7 @@ public struct ShowcasableMacro: ExtensionMacro {
             icon: arguments.icon,
             autoDiscover: arguments.autoDiscover
         )
-        
+
         let docs = TopicDocumentation(
             documentation: documentation,
             examples: examples,
@@ -67,30 +68,30 @@ public struct ShowcasableMacro: ExtensionMacro {
             links: links,
             descriptions: descriptions
         )
-        
+
         let members = TopicMembers(
             initializers: initializers,
             methods: methods,
             properties: properties
         )
-        
+
         // Generate the extension code
         let (showcaseTopicDecl, chapterDecl) = CodeGenerator.generateMembers(
             config: config,
             docs: docs,
             members: members
         )
-        
+
         let showcasableType = TypeSyntax(stringLiteral: "Showcasable")
-        
-        return [try ExtensionDeclSyntax(
+
+        return try [ExtensionDeclSyntax(
             extendedType: type,
             inheritanceClause: InheritanceClauseSyntax {
                 InheritedTypeSyntax(type: showcasableType)
             },
             memberBlock: MemberBlockSyntax(members: [
                 MemberBlockItemSyntax(decl: showcaseTopicDecl),
-                MemberBlockItemSyntax(decl: chapterDecl)
+                MemberBlockItemSyntax(decl: chapterDecl),
             ])
         )]
     }

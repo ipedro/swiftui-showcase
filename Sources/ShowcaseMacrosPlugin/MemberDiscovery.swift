@@ -1,5 +1,6 @@
 // MemberDiscovery.swift
 // Copyright (c) 2025 Pedro Almeida
+// Created by Pedro Almeida on 11/9/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -26,59 +27,59 @@ enum MemberDiscovery {
     /// Discovers all public initializers in a type.
     static func findInitializers(in declaration: some DeclGroupSyntax) -> [InitializerInfo] {
         var initializers: [InitializerInfo] = []
-        
+
         for member in declaration.memberBlock.members {
             // Skip hidden members
             if member.hasAttribute(named: "ShowcaseHidden") {
                 continue
             }
-            
+
             guard let initDecl = member.decl.as(InitializerDeclSyntax.self) else {
                 continue
             }
-            
+
             guard isAccessible(initDecl) else {
                 continue
             }
-            
+
             let signature = extractInitializerSignature(from: initDecl)
             let docComment = extractDocComment(from: initDecl)
-            
+
             initializers.append(InitializerInfo(
                 signature: signature,
                 docComment: docComment
             ))
         }
-        
+
         return initializers
     }
-    
+
     /// Discovers all public methods in a type.
     static func findMethods(in declaration: some DeclGroupSyntax) -> [MethodInfo] {
         var methods: [MethodInfo] = []
-        
+
         for member in declaration.memberBlock.members {
             // Skip hidden members
             if member.hasAttribute(named: "ShowcaseHidden") {
                 continue
             }
-            
+
             guard let funcDecl = member.decl.as(FunctionDeclSyntax.self) else {
                 continue
             }
-            
+
             guard isAccessible(funcDecl) else {
                 continue
             }
-            
+
             let isStatic = funcDecl.modifiers.contains { modifier in
                 modifier.name.text == "static" || modifier.name.text == "class"
             }
-            
+
             let name = funcDecl.name.text
             let signature = extractMethodSignature(from: funcDecl)
             let docComment = extractDocComment(from: funcDecl)
-            
+
             methods.append(MethodInfo(
                 name: name,
                 signature: signature,
@@ -86,46 +87,46 @@ enum MemberDiscovery {
                 docComment: docComment
             ))
         }
-        
+
         return methods
     }
-    
+
     /// Discovers all public properties in a type.
     static func findProperties(in declaration: some DeclGroupSyntax) -> [PropertyInfo] {
         var properties: [PropertyInfo] = []
-        
+
         for member in declaration.memberBlock.members {
             // Skip hidden members
             if member.hasAttribute(named: "ShowcaseHidden") {
                 continue
             }
-            
+
             guard let varDecl = member.decl.as(VariableDeclSyntax.self) else {
                 continue
             }
-            
+
             guard shouldIncludeProperty(varDecl) else {
                 continue
             }
-            
+
             let isStatic = varDecl.modifiers.contains { modifier in
                 modifier.name.text == "static" || modifier.name.text == "class"
             }
-            
+
             for binding in varDecl.bindings {
                 guard let name = binding.pattern.as(IdentifierPatternSyntax.self)?.identifier.text else {
                     continue
                 }
-                
+
                 // Skip SwiftUI View's body property
                 if name == "body" {
                     continue
                 }
-                
+
                 let type = binding.typeAnnotation?.type.description.trimmingCharacters(in: .whitespaces) ?? "Unknown"
                 let isComputed = binding.accessorBlock != nil
                 let docComment = extractDocComment(from: varDecl)
-                
+
                 properties.append(PropertyInfo(
                     name: name,
                     type: type,
@@ -135,62 +136,62 @@ enum MemberDiscovery {
                 ))
             }
         }
-        
+
         return properties
     }
-    
+
     // MARK: - Access Control
-    
+
     private static func isAccessible(_ decl: InitializerDeclSyntax) -> Bool {
         let isPublic = decl.modifiers.contains { modifier in
             modifier.name.text == "public" || modifier.name.text == "internal"
         }
-        
+
         let hasNoAccessModifier = !decl.modifiers.contains { modifier in
             ["public", "internal", "private", "fileprivate"].contains(modifier.name.text)
         }
-        
+
         return isPublic || hasNoAccessModifier
     }
-    
+
     private static func isAccessible(_ decl: FunctionDeclSyntax) -> Bool {
         let isPublic = decl.modifiers.contains { modifier in
             modifier.name.text == "public" || modifier.name.text == "internal"
         }
-        
+
         let hasNoAccessModifier = !decl.modifiers.contains { modifier in
             ["public", "internal", "private", "fileprivate"].contains(modifier.name.text)
         }
-        
+
         return isPublic || hasNoAccessModifier
     }
-    
+
     private static func isAccessible(_ decl: VariableDeclSyntax) -> Bool {
         let isPublic = decl.modifiers.contains { modifier in
             modifier.name.text == "public" || modifier.name.text == "internal"
         }
-        
+
         let hasNoAccessModifier = !decl.modifiers.contains { modifier in
             ["public", "internal", "private", "fileprivate"].contains(modifier.name.text)
         }
-        
+
         return isPublic || hasNoAccessModifier
     }
-    
+
     private static func shouldIncludeProperty(_ varDecl: VariableDeclSyntax) -> Bool {
         // Skip showcase-related attributes (they're documentation, not API)
         let showcaseAttributes = [
-            "ShowcaseExample"
+            "ShowcaseExample",
         ]
-        
+
         return !showcaseAttributes.contains(where: { varDecl.hasAttribute(named: $0) }) && isAccessible(varDecl)
     }
-    
+
     // MARK: - Signature Extraction
-    
+
     private static func extractInitializerSignature(from initDecl: InitializerDeclSyntax) -> String {
         var signature = "init"
-        
+
         let params = initDecl.signature.parameterClause.parameters
         if params.isEmpty {
             signature += "()"
@@ -198,13 +199,13 @@ enum MemberDiscovery {
             let paramStrings = params.map { extractParameterString(from: $0) }
             signature += "(" + paramStrings.joined(separator: ", ") + ")"
         }
-        
+
         return signature
     }
-    
+
     private static func extractMethodSignature(from funcDecl: FunctionDeclSyntax) -> String {
         var signature = funcDecl.name.text
-        
+
         let params = funcDecl.signature.parameterClause.parameters
         if params.isEmpty {
             signature += "()"
@@ -212,35 +213,35 @@ enum MemberDiscovery {
             let paramStrings = params.map { extractParameterString(from: $0) }
             signature += "(" + paramStrings.joined(separator: ", ") + ")"
         }
-        
+
         if let returnType = funcDecl.signature.returnClause?.type {
             signature += " -> \(returnType.description.trimmingCharacters(in: .whitespaces))"
         }
-        
+
         return signature
     }
-    
+
     private static func extractParameterString(from param: FunctionParameterSyntax) -> String {
         let firstName = param.firstName.text
         let secondName = param.secondName?.text
         let type = param.type.description.trimmingCharacters(in: .whitespaces)
-        
+
         if let secondName = secondName {
             return "\(firstName) \(secondName): \(type)"
         } else {
             return "\(firstName): \(type)"
         }
     }
-    
+
     // MARK: - Doc Comment Extraction
-    
+
     private static func extractDocComment(from decl: some SyntaxProtocol) -> DocComment {
         let trivia = decl.leadingTrivia
         var docLines: [String] = []
-        
+
         for piece in trivia {
             switch piece {
-            case .docLineComment(let text):
+            case let .docLineComment(text):
                 let cleaned = text.trimmingCharacters(in: .whitespaces)
                 if cleaned.hasPrefix("///") {
                     let line = String(cleaned.dropFirst(3)).trimmingCharacters(in: .whitespaces)
@@ -248,7 +249,7 @@ enum MemberDiscovery {
                         docLines.append(line)
                     }
                 }
-            case .docBlockComment(let text):
+            case let .docBlockComment(text):
                 let cleaned = text
                     .replacingOccurrences(of: "/**", with: "")
                     .replacingOccurrences(of: "*/", with: "")
@@ -260,7 +261,7 @@ enum MemberDiscovery {
                 break
             }
         }
-        
+
         let rawComment = docLines.isEmpty ? nil : docLines.joined(separator: "\n")
         return DocCommentParser.parse(rawComment)
     }

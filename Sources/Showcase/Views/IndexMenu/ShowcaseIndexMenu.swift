@@ -1,6 +1,6 @@
 // ShowcaseIndexMenu.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/8/25.
+// Created by Pedro Almeida on 11/9/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -47,13 +47,13 @@ public extension View {
 public struct ShowcaseIndexMenu: StyledView {
     @Environment(\.scrollViewSelection)
     private var selection
-    
+
     var title: String = ""
     var data: [Topic] = []
 
     init(_ topic: Topic) {
-        self.title = topic.title
-        self.data = topic.children ?? []
+        title = topic.title
+        data = topic.children ?? []
     }
 
     public var body: some View {
@@ -63,9 +63,9 @@ public struct ShowcaseIndexMenu: StyledView {
                 Button(title) {
                     selection?.wrappedValue = ShowcaseScrollViewTopAnchor.ID
                 }
-                
+
                 Divider()
-                
+
                 // Child topic buttons
                 ForEach(data, id: \.id) { topic in
                     Button(topic.title) {

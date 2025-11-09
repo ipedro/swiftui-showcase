@@ -1,5 +1,6 @@
 // CodeGenerator.swift
 // Copyright (c) 2025 Pedro Almeida
+// Created by Pedro Almeida on 11/9/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -33,31 +34,31 @@ enum CodeGenerator {
             docs: docs,
             members: members
         )
-        
+
         let topicInit = if let icon = config.icon {
             "Topic(\"\(config.typeInfo.name)\", icon: Image(systemName: \"\(icon)\"))"
         } else {
             "Topic(\"\(config.typeInfo.name)\")"
         }
-        
+
         let showcaseTopicDecl = DeclSyntax(stringLiteral: """
-            public static var showcaseTopic: Topic {
-                \(topicInit) {\(content)}
-            }
-            """)
-        
+        public static var showcaseTopic: Topic {
+            \(topicInit) {\(content)}
+        }
+        """)
+
         let chapterDecl = DeclSyntax(stringLiteral: """
-            public static var showcaseChapter: String { "\(config.chapter)" }
-            """)
-        
+        public static var showcaseChapter: String { "\(config.chapter)" }
+        """)
+
         return (showcaseTopicDecl, chapterDecl)
     }
-    
+
     /// Indents multi-line strings for proper embedding in generated code.
     static func indentMultiline(_ text: String, indent: String) -> String {
         let lines = text.components(separatedBy: "\n")
         guard lines.count > 1 else { return text }
-        
+
         return lines.enumerated().map { index, line in
             index == 0 ? line : indent + line
         }.joined(separator: "\n")

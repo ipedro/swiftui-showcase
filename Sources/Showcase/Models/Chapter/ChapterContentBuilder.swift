@@ -1,6 +1,6 @@
 // ChapterContentBuilder.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/8/25.
+// Created by Pedro Almeida on 11/9/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -55,7 +55,7 @@ public extension Chapter {
             if let description = rhs.description {
                 result.description = description
             }
-            
+
             if let icon = rhs.icon {
                 result.icon = icon
             }
@@ -106,7 +106,7 @@ public enum ChapterContentBuilder {
         expression.merge(into: &content)
         return content
     }
-    
+
     /// Allows using Showcasable types directly in chapter builders without `.showcaseTopic`
     public static func buildExpression<T>(_ type: T.Type) -> Chapter.Content where T: Showcasable {
         var content = Chapter.Content()

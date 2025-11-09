@@ -1,5 +1,6 @@
 // MemberInfo.swift
 // Copyright (c) 2025 Pedro Almeida
+// Created by Pedro Almeida on 11/9/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -61,25 +62,25 @@ struct PropertyInfo {
 struct DocComment {
     /// The summary (first paragraph)
     let summary: String?
-    
+
     /// Extended discussion (middle paragraphs before special sections)
     let discussion: String?
-    
+
     /// Parameter descriptions keyed by parameter name
     let parameters: [String: String]
-    
+
     /// Return value description
     let returns: String?
-    
+
     /// Information about what this member throws
     let `throws`: String?
-    
+
     /// Note callouts
     let notes: [String]
-    
+
     /// Warning callouts
     let warnings: [String]
-    
+
     /// Important callouts
     let important: [String]
 }

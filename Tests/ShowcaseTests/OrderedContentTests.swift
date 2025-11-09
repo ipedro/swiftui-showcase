@@ -1,6 +1,6 @@
 // OrderedContentTests.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/8/25.
+// Created by Pedro Almeida on 11/9/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -30,50 +30,50 @@ struct OrderedContentTests {
     func itemsPreserveDeclarationOrder() throws {
         let topic = Topic("Test") {
             ExternalLink("Apple", URL(string: "https://example.com/1")!)!
-            
+
             CodeBlock {
                 "let x = 1"
             }
-            
+
             Example("Preview") {
                 Text("Demo")
             }
-            
+
             Embed(URL(string: "https://example.com/embed")!)!
-            
+
             ExternalLink("GitHub", URL(string: "https://example.com/2")!)!
         }
-        
+
         // Verify we have 5 items
         #expect(topic.items.count == 5)
-        
+
         // Verify order matches declaration
         guard case .link = topic.items[0] else {
             Issue.record("Expected first item to be link")
             return
         }
-        
+
         guard case .codeBlock = topic.items[1] else {
             Issue.record("Expected second item to be codeBlock")
             return
         }
-        
+
         guard case .example = topic.items[2] else {
             Issue.record("Expected third item to be example")
             return
         }
-        
+
         guard case .embed = topic.items[3] else {
             Issue.record("Expected fourth item to be embed")
             return
         }
-        
+
         guard case .link = topic.items[4] else {
             Issue.record("Expected fifth item to be link")
             return
         }
     }
-    
+
     @Test("Mixed content types preserve order")
     func mixedContentPreservesOrder() {
         let topic = Topic("Mixed") {
@@ -82,37 +82,38 @@ struct OrderedContentTests {
             CodeBlock { "code" }
             Example("Preview") { Text("Demo") }
         }
-        
+
         #expect(topic.items.count == 4)
-        
+
         // Verify: Embed → Link → CodeBlock → Preview
         if case .embed = topic.items[0],
            case .link = topic.items[1],
            case .codeBlock = topic.items[2],
-           case .example = topic.items[3] {
+           case .example = topic.items[3]
+        {
             // Success - order matches
         } else {
             Issue.record("Items not in expected order")
         }
     }
-    
+
     @Test("Empty topic has empty items")
     func emptyTopicHasEmptyItems() {
         let topic = Topic("Empty")
-        
+
         #expect(topic.items.isEmpty)
     }
-    
+
     @Test("Topic with only description has empty items")
     func topicWithOnlyDescriptionHasEmptyItems() {
         let topic = Topic("Only Description") {
             Description("Just text, no content items")
         }
-        
+
         #expect(topic.items.isEmpty)
         #expect(topic.description == "Just text, no content items")
     }
-    
+
     @Test("Backward compatibility - separate arrays still work")
     func separateArraysStillPopulated() {
         let topic = Topic("Backward Compat") {
@@ -121,11 +122,11 @@ struct OrderedContentTests {
             CodeBlock { "code" }
             Example("Preview") { Text("Demo") }
         }
-        
+
         // Items array should have all 4 content pieces
         #expect(topic.items.count == 4)
     }
-    
+
     @Test("Multiple items of same type maintain order")
     func multipleItemsOfSameTypeMaintainOrder() {
         let topic = Topic("Same Type") {
@@ -133,9 +134,9 @@ struct OrderedContentTests {
             CodeBlock { "second" }
             CodeBlock { "third" }
         }
-        
+
         #expect(topic.items.count == 3)
-        
+
         // All should be codeBlock type in order
         for item in topic.items {
             guard case .codeBlock = item else {
