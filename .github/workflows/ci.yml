@@ -89,10 +89,10 @@ jobs:
       - name: Run Package Tests
         if: matrix.run-package-tests
         run: |
-          # Use xcodebuild to properly generate coverage data
+          # Run swift test with xcodebuild to get proper coverage
           set -o pipefail
           xcodebuild test \
-            -scheme Showcase \
+            -scheme swiftui-showcase-Package \
             -destination 'platform=macOS' \
             -skipPackagePluginValidation \
             -skipMacroValidation \
@@ -120,31 +120,13 @@ jobs:
           
           echo "Found xcresult: $XCRESULT"
           
-          # Find the profdata file in xcresult
-          PROFDATA=$(find "$XCRESULT" -name "*.profdata" | head -1)
+          # Extract coverage as JSON using xccov
+          xcrun xccov view --report --json "$XCRESULT" > coverage.json
           
-          if [ -z "$PROFDATA" ]; then
-            echo "Error: Could not find profdata in xcresult"
-            exit 1
-          fi
+          echo "Extracted coverage JSON from xcresult"
           
-          echo "Found profdata: $PROFDATA"
-          
-          # Find test binary
-          TEST_BINARY=$(find .build -type f -name "*PackageTests" ! -path "*.dSYM*" | head -1)
-          
-          if [ -z "$TEST_BINARY" ]; then
-            echo "Error: Could not find test binary"
-            exit 1
-          fi
-          
-          echo "Found test binary: $TEST_BINARY"
-          
-          # Convert profdata to lcov format for Codecov
-          xcrun llvm-cov export -format="lcov" \
-            "$TEST_BINARY" \
-            -instr-profile "$PROFDATA" \
-            > coverage.lcov
+          # Convert JSON to lcov format using Python script
+          python3 .github/scripts/xccov_to_lcov.py coverage.json coverage.lcov
           
           echo "Coverage report generated at coverage.lcov ($(wc -l < coverage.lcov) lines)"
       
