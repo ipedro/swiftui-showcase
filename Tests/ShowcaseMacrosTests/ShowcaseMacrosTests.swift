@@ -54,7 +54,7 @@ final class ShowcaseMacrosTests: XCTestCase {
             extension PrimaryButton: Showcasable {
                 @MainActor public static var showcaseTopic: Topic {
                     Topic("PrimaryButton") {
-                        CodeBlock(title: "Type Relationships") {
+                        CodeBlock("Type Relationships") {
                             \"\"\"
                             struct PrimaryButton: View
                             \"\"\"
@@ -184,7 +184,7 @@ final class ShowcaseMacrosTests: XCTestCase {
                         Example(title: "Basic") {
                             PrimaryButton.basic
                         }
-                        CodeBlock(title: "Basic - Source Code") {
+                        CodeBlock("Basic - Source Code") {
                             \"\"\"
                             PrimaryButton()
                             \"\"\"
@@ -237,7 +237,7 @@ final class ShowcaseMacrosTests: XCTestCase {
                             Description("A primary button with icon")
                             ActionButton.withIcon
                         }
-                        CodeBlock(title: "Primary Action - Source Code") {
+                        CodeBlock("Primary Action - Source Code") {
                             \"\"\"
                             ActionButton(title: "Submit", icon: "checkmark")
                             \"\"\"
@@ -270,7 +270,7 @@ final class ShowcaseMacrosTests: XCTestCase {
                     ActionButton(title: "Submit")
                 }
                 
-                @ShowcaseCodeBlock(title: "Integration")
+                @ShowcaseCodeBlock("Integration")
                 static let integrationCode = \"\"\"
                 ActionButton(title: "Save")
                     .buttonStyle(.borderedProminent)
@@ -314,12 +314,12 @@ final class ShowcaseMacrosTests: XCTestCase {
                     Topic("ActionButton") {
                         Description("A versatile button for actions")
                         Icon(Image(systemName: "button.circle"))
-                        CodeBlock(title: "Integration", code: "ActionButton(title: \"Save\")\n    .buttonStyle(.borderedProminent)")
+                        CodeBlock("Integration", code: "ActionButton(title: \"Save\")\n    .buttonStyle(.borderedProminent)")
                         Link("Design Guidelines", url: URL(string: "https://example.com/design")!)
                         Example(title: "Basic Usage") {
                             ActionButton.basic
                         }
-                        CodeBlock(title: "Basic Usage - Source Code") {
+                        CodeBlock("Basic Usage - Source Code") {
                             \"\"\"
                             ActionButton(title: "Submit")
                             \"\"\"
@@ -390,7 +390,7 @@ final class ShowcaseMacrosTests: XCTestCase {
             """
             @Showcasable(chapter: "Utilities")
             struct NetworkClient {
-                @ShowcaseCodeBlock(title: "Basic Request")
+                @ShowcaseCodeBlock("Basic Request")
                 static let basicUsage = \"\"\"
                 let client = NetworkClient()
                 let data = try await client.fetch(url: url)
@@ -408,7 +408,7 @@ final class ShowcaseMacrosTests: XCTestCase {
             extension NetworkClient: Showcasable {
                 @MainActor public static var showcaseTopic: Topic {
                     Topic("NetworkClient") {
-                        CodeBlock(title: "Basic Request", code: "let client = NetworkClient()\\nlet data = try await client.fetch(url: url)")
+                        CodeBlock("Basic Request", code: "let client = NetworkClient()\\nlet data = try await client.fetch(url: url)")
                     }
                 }
                 public static var showcaseChapter: String {
@@ -552,7 +552,7 @@ final class ShowcaseMacrosTests: XCTestCase {
                 @MainActor public static var showcaseTopic: Topic {
                     Topic("User") {
                         Topic("name") {
-                            CodeBlock(title: "Declaration") {
+                            CodeBlock("Declaration") {
                                 \"\"\"
                                 var name: String
                                 \"\"\"
@@ -646,7 +646,7 @@ final class ShowcaseMacrosTests: XCTestCase {
                                 Creates a new user with the given credentials
                                 \"\"\"
                             }
-                            CodeBlock(title: "Declaration") {
+                            CodeBlock("Declaration") {
                                 \"\"\"
                                 /// Creates a new user with the given credentials
                                 init(id: String, name: String)
@@ -659,7 +659,7 @@ final class ShowcaseMacrosTests: XCTestCase {
                                 Validates the user's name
                                 \"\"\"
                             }
-                            CodeBlock(title: "Declaration") {
+                            CodeBlock("Declaration") {
                                 \"\"\"
                                 /// Validates the user's name
                                 /// - Returns: true if the name is valid
@@ -673,7 +673,7 @@ final class ShowcaseMacrosTests: XCTestCase {
                                 Gets the user's display string
                                 \"\"\"
                             }
-                            CodeBlock(title: "Declaration") {
+                            CodeBlock("Declaration") {
                                 \"\"\"
                                 /// Gets the user's display string
                                 func displayString() -> String
@@ -686,7 +686,7 @@ final class ShowcaseMacrosTests: XCTestCase {
                                 The user's unique identifier
                                 \"\"\"
                             }
-                            CodeBlock(title: "Declaration") {
+                            CodeBlock("Declaration") {
                                 \"\"\"
                                 /// The user's unique identifier
                                 var id: String
@@ -699,7 +699,7 @@ final class ShowcaseMacrosTests: XCTestCase {
                                 The user's display name
                                 \"\"\"
                             }
-                            CodeBlock(title: "Declaration") {
+                            CodeBlock("Declaration") {
                                 \"\"\"
                                 /// The user's display name
                                 var name: String

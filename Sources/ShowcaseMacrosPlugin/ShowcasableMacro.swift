@@ -1154,7 +1154,7 @@ enum CodeGenerator {
         lines.append(declaration)
         
         // Build the CodeBlock
-        var content = "CodeBlock(title: \"Type Relationships\") {\n\"\"\"\n"
+        var content = "CodeBlock(\"Type Relationships\") {\n\"\"\"\n"
         content += lines.joined(separator: "\n")
         content += "\n\"\"\"\n}"
         
@@ -1238,7 +1238,7 @@ enum CodeGenerator {
         // Replace newlines with newlines + indentation to match closing """
         let indentedSignature = signatureDoc.replacingOccurrences(of: "\n", with: "\n            ")
         content.append("""
-        CodeBlock(title: "Declaration") {
+        CodeBlock("Declaration") {
             \"\"\"
             \(indentedSignature)
             \"\"\"
@@ -1289,7 +1289,7 @@ enum CodeGenerator {
         // Replace newlines with newlines + indentation to match closing """
         let indentedSignature = signatureDoc.replacingOccurrences(of: "\n", with: "\n            ")
         content.append("""
-        CodeBlock(title: "Declaration") {
+        CodeBlock("Declaration") {
             \"\"\"
             \(indentedSignature)
             \"\"\"
@@ -1330,7 +1330,7 @@ enum CodeGenerator {
         // Replace newlines with newlines + indentation to match closing """
         let indentedSignature = signatureDoc.replacingOccurrences(of: "\n", with: "\n            ")
         content.append("""
-        CodeBlock(title: "Declaration") {
+        CodeBlock("Declaration") {
             \"\"\"
             \(indentedSignature)
             \"\"\"
@@ -1368,7 +1368,7 @@ enum CodeGenerator {
     }
     
     private static func generateInitializersSection(_ initializers: [InitializerInfo]) -> String {
-        var content = "CodeBlock(title: \"Creating Instances\") {\n\"\"\"\n"
+        var content = "CodeBlock(\"Creating Instances\") {\n\"\"\"\n"
         for initializer in initializers {
             let doc = initializer.docComment
             if let summary = doc.summary {
@@ -1389,7 +1389,7 @@ enum CodeGenerator {
     }
     
     private static func generateMethodsSection(_ methods: [MethodInfo], title: String) -> String {
-        var content = "CodeBlock(title: \"\(title)\") {\n\"\"\"\n"
+        var content = "CodeBlock(\"\(title)\") {\n\"\"\"\n"
         for method in methods {
             let doc = method.docComment
             if let summary = doc.summary {
@@ -1415,7 +1415,7 @@ enum CodeGenerator {
     }
     
     private static func generatePropertiesSection(_ properties: [PropertyInfo], title: String) -> String {
-        var content = "CodeBlock(title: \"\(title)\") {\n\"\"\"\n"
+        var content = "CodeBlock(\"\(title)\") {\n\"\"\"\n"
         for property in properties {
             let doc = property.docComment
             if let summary = doc.summary {
@@ -1440,7 +1440,7 @@ enum CodeGenerator {
         
         // Generate Initializers section
         if !initializers.isEmpty {
-            var initContent = "CodeBlock(title: \"Initializers\") {\n\"\"\"\n"
+            var initContent = "CodeBlock(\"Initializers\") {\n\"\"\"\n"
             for initializer in initializers {
                 let doc = initializer.docComment
                 if let summary = doc.summary {
@@ -1462,7 +1462,7 @@ enum CodeGenerator {
         
         // Generate Methods section
         if !methods.isEmpty {
-            var methodContent = "CodeBlock(title: \"Methods\") {\n\"\"\"\n"
+            var methodContent = "CodeBlock(\"Methods\") {\n\"\"\"\n"
             for method in methods {
                 let doc = method.docComment
                 if let summary = doc.summary {
@@ -1487,7 +1487,7 @@ enum CodeGenerator {
         
         // Generate Properties section
         if !properties.isEmpty {
-            var propContent = "CodeBlock(title: \"Properties\") {\n\"\"\"\n"
+            var propContent = "CodeBlock(\"Properties\") {\n\"\"\"\n"
             for property in properties {
                 let doc = property.docComment
                 if let summary = doc.summary {
@@ -1555,7 +1555,7 @@ enum CodeGenerator {
         // Add usage examples from doc comments
         for (index, usage) in documentation.usageExamples.enumerated() {
             topicContent.append("""
-            CodeBlock(title: "Usage Example \(index + 1)") {
+            CodeBlock("Usage Example \(index + 1)") {
                 \"\"\"
                 \(usage)
                 \"\"\"
@@ -1569,7 +1569,7 @@ enum CodeGenerator {
                 .replacingOccurrences(of: "\\", with: "\\\\")
                 .replacingOccurrences(of: "\"", with: "\\\"")
                 .replacingOccurrences(of: "\n", with: "\\n")
-            topicContent.append("CodeBlock(title: \"\(codeBlock.title)\", code: \"\(escapedCode)\")")
+            topicContent.append("CodeBlock(\"\(codeBlock.title)\", code: \"\(escapedCode)\")")
         }
         
         // Add links from @ShowcaseLink
@@ -1581,14 +1581,14 @@ enum CodeGenerator {
         for example in examples {
             if let description = example.description {
                 topicContent.append("""
-                Example(title: "\(example.title)") {
+                Example("\(example.title)") {
                     Description("\(description)")
                     \(typeInfo.name).\(example.name)
                 }
                 """)
             } else {
                 topicContent.append("""
-                Example(title: "\(example.title)") {
+                Example("\(example.title)") {
                     \(typeInfo.name).\(example.name)
                 }
                 """)

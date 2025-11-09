@@ -103,7 +103,7 @@ public macro ShowcaseExample(
 /// ```swift
 /// @Showcasable(chapter: "Utilities")
 /// struct NetworkClient {
-///     @ShowcaseCodeBlock(title: "Basic Request")
+///     @ShowcaseCodeBlock("Basic Request")
 ///     static let basicUsage = """
 ///     let client = NetworkClient()
 ///     let data = try await client.fetch(url: url)
