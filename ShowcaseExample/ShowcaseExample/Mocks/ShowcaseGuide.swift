@@ -16,6 +16,7 @@ extension Document {
         Chapter.coreConceptsChapter
         Chapter.contentTypes
         Chapter.advancedFeatures
+        Chapter.designSystem
     }
 }
 
@@ -869,3 +870,37 @@ extension Topic {
         ExternalLink("Customization Guide", URL(string: "https://github.com/ipedro/swiftui-showcase#customization")!)
     }
 }
+
+// MARK: - Chapter 5: Design System Components
+
+extension Chapter {
+    static let designSystem = Chapter("Design System with Macros") {
+        Description {
+            """
+            See how `@Showcasable` macro automatically generates comprehensive API documentation \
+            from your SwiftUI components. These examples demonstrate what the macro produces:
+            
+            • Auto-discovery of initializers, methods, and properties
+            • Doc comment parsing (parameters, returns, throws)
+            • Static vs instance member categorization
+            • Type relationships and protocol conformances
+            • Multiple examples per component
+            • Integration code blocks
+            • Design guideline links
+            • Nested Topics for each API member
+            
+            **Note**: These are manual examples showing what the macro generates, since the \
+            example app runs separately from the macro plugin.
+            """
+        }
+        
+        // All 6 design system components demonstrating macro output
+        Topic.dsPrimaryButton
+        Topic.dsCard
+        Topic.dsBadge
+        Topic.dsAvatar
+        Topic.dsProgressIndicator
+        Topic.dsTextField
+    }
+}
+
