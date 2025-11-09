@@ -89,13 +89,15 @@ jobs:
       - name: Run Package Tests
         if: matrix.run-package-tests
         run: |
+          # Use xcodebuild to properly generate coverage data
+          set -o pipefail
           xcodebuild test \
             -scheme Showcase \
             -destination 'platform=macOS' \
             -skipPackagePluginValidation \
             -skipMacroValidation \
             -enableCodeCoverage YES \
-            -derivedDataPath .build/DerivedData \
+            -resultBundlePath .build/TestResults.xcresult \
             2>&1 | tee test-output.log
           
           # Extract test counts from output (Swift Testing format)
@@ -109,35 +111,34 @@ jobs:
       - name: Generate Coverage Report
         if: matrix.run-package-tests
         run: |
-          # Find the xcresult bundle
-          XCRESULT=$(find .build/DerivedData -name "*.xcresult" | head -1)
+          XCRESULT=".build/TestResults.xcresult"
           
-          if [ -z "$XCRESULT" ]; then
-            echo "Error: Could not find xcresult bundle"
+          if [ ! -d "$XCRESULT" ]; then
+            echo "Error: xcresult bundle not found at $XCRESULT"
             exit 1
           fi
           
           echo "Found xcresult: $XCRESULT"
           
-          # Export coverage using xccov
-          xcrun xccov view --report --json "$XCRESULT" > coverage.json
+          # Find the profdata file in xcresult
+          PROFDATA=$(find "$XCRESULT" -name "*.profdata" | head -1)
           
-          # Find the test binary and profdata from DerivedData
-          TEST_BINARY=$(find .build/DerivedData -name "*PackageTests" -type f | grep -v ".dSYM" | head -1)
-          PROFDATA=$(find .build/DerivedData -name "Coverage.profdata" | head -1)
+          if [ -z "$PROFDATA" ]; then
+            echo "Error: Could not find profdata in xcresult"
+            exit 1
+          fi
+          
+          echo "Found profdata: $PROFDATA"
+          
+          # Find test binary
+          TEST_BINARY=$(find .build -type f -name "*PackageTests" ! -path "*.dSYM*" | head -1)
           
           if [ -z "$TEST_BINARY" ]; then
             echo "Error: Could not find test binary"
             exit 1
           fi
           
-          if [ -z "$PROFDATA" ]; then
-            echo "Error: Could not find profdata file"
-            exit 1
-          fi
-          
           echo "Found test binary: $TEST_BINARY"
-          echo "Found profdata: $PROFDATA"
           
           # Convert profdata to lcov format for Codecov
           xcrun llvm-cov export -format="lcov" \
