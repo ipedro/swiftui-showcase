@@ -34,7 +34,7 @@ import ShowcaseMacros
 // MARK: - Button Component with Auto-Generated Code
 
 /// A customizable button component for the design system
-@Showcasable(chapter: "Components", icon: "button.horizontal")
+@Showcasable(chapter: "Components", icon: "button.horizontal", autoDiscover: false)
 struct DSButton: View {
     let title: String
     let style: ButtonStyle
@@ -77,8 +77,8 @@ struct DSButton: View {
         }
     }
     
-    // Example WITHOUT code block (explicitly disabled)
-    @ShowcaseExample(title: "Disabled State", showCode: false)
+    // Example WITHOUT code block - remove showCode parameter until macro supports it
+    @ShowcaseExample(title: "Disabled State")
     static var disabled: some View {
         DSButton(title: "Unavailable", style: .primary) {}
             .opacity(0.5)
@@ -222,7 +222,7 @@ extension Chapter {
         }
         
         DSButton.showcaseTopic
-        DSCard.showcaseTopic
+        DSCard<AnyView>.showcaseTopic
         DSBadge.showcaseTopic
     }
 }

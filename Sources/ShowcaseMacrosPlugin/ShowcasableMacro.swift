@@ -1535,10 +1535,8 @@ enum CodeGenerator {
             topicContent.append("Description(\"\(description)\")")
         }
         
-        // Add icon if provided
-        if let icon {
-            topicContent.append("Icon(Image(systemName: \"\(icon)\"))")
-        }
+        // Add icon if provided - Topics use icon parameter, not Icon builder
+        // Icon is added as a parameter to Topic initializer, not as content
         
         // Add Type Relationships section if auto-discover is enabled and there are any
         if autoDiscover && (!typeInfo.inheritedTypes.isEmpty || !typeInfo.genericConstraints.isEmpty) {
@@ -1598,10 +1596,12 @@ enum CodeGenerator {
             
             // Auto-generate CodeBlock if source code is available and showCode is enabled
             if example.showCode, let sourceCode = example.sourceCode {
+                // Indent the source code to match the CodeBlock indentation
+                let indentedCode = indentMultiline(sourceCode, indent: "                    ")
                 topicContent.append("""
                 CodeBlock(title: "\(example.title) - Source Code") {
                     \"\"\"
-                    \(sourceCode)
+                    \(indentedCode)
                     \"\"\"
                 }
                 """)
@@ -1610,9 +1610,16 @@ enum CodeGenerator {
         
         let content = topicContent.isEmpty ? " " : "\n\(topicContent.joined(separator: "\n"))\n"
         
+        // Generate Topic with icon parameter if provided
+        let topicInit = if let icon {
+            "Topic(\"\(typeInfo.name)\", icon: Image(systemName: \"\(icon)\"))"
+        } else {
+            "Topic(\"\(typeInfo.name)\")"
+        }
+        
         let showcaseTopicDecl = DeclSyntax(stringLiteral: """
             @MainActor public static var showcaseTopic: Topic {
-                Topic("\(typeInfo.name)") {\(content)}
+                \(topicInit) {\(content)}
             }
             """)
         
