@@ -5,6 +5,13 @@ included:
   - Sources
   - Tests
 
+excluded:
+  - ShowcaseExample
+  - .build
+  - .swiftpm
+  - Packages
+  - DerivedData
+
 type_name:
   allowed_symbols: ["_"]
 identifier_name:
@@ -23,12 +30,32 @@ identifier_name:
 line_length:
   warning: 200
   error: 240
+
+# More lenient limits for macro implementations and tests
 file_length:
-  warning: 400
-  error: 500
+  warning: 800  # Allow longer test files
+  error: 2000
+  
 type_body_length:
-  warning: 250
-  error: 350
+  warning: 700  # Allow larger test classes
+  error: 1000
+
+function_body_length:
+  warning: 150  # Allow longer test functions with extensive assertions
+  error: 250
+
+cyclomatic_complexity:
+  warning: 15
+  error: 40
+
+function_parameter_count:
+  warning: 6
+  error: 15
+
+large_tuple:
+  warning: 3
+  error: 4
+
 disabled_rules:
   - trailing_comma
   - trailing_whitespace
