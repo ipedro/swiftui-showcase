@@ -762,7 +762,7 @@ enum CodeGenerator {
         
         // Generate Initializers section
         if !initializers.isEmpty {
-            var initContent = "CodeBlock(language: .swift, title: \"Initializers\") {\n\"\"\"\n"
+            var initContent = "CodeBlock(title: \"Initializers\") {\n\"\"\"\n"
             for initializer in initializers {
                 if let docComment = initializer.docComment {
                     initContent += "/// \(docComment)\n"
@@ -775,7 +775,7 @@ enum CodeGenerator {
         
         // Generate Methods section
         if !methods.isEmpty {
-            var methodContent = "CodeBlock(language: .swift, title: \"Methods\") {\n\"\"\"\n"
+            var methodContent = "CodeBlock(title: \"Methods\") {\n\"\"\"\n"
             for method in methods {
                 if let docComment = method.docComment {
                     methodContent += "/// \(docComment)\n"
@@ -788,7 +788,7 @@ enum CodeGenerator {
         
         // Generate Properties section
         if !properties.isEmpty {
-            var propContent = "CodeBlock(language: .swift, title: \"Properties\") {\n\"\"\"\n"
+            var propContent = "CodeBlock(title: \"Properties\") {\n\"\"\"\n"
             for property in properties {
                 if let docComment = property.docComment {
                     propContent += "/// \(docComment)\n"
@@ -851,7 +851,7 @@ enum CodeGenerator {
         // Add usage examples from doc comments
         for (index, usage) in documentation.usageExamples.enumerated() {
             topicContent.append("""
-            CodeBlock(language: .swift, title: "Usage Example \(index + 1)") {
+            CodeBlock(title: "Usage Example \(index + 1)") {
                 \"\"\"
                 \(usage)
                 \"\"\"

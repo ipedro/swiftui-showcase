@@ -54,7 +54,7 @@ final class ShowcaseMacrosTests: XCTestCase {
             extension PrimaryButton: Showcasable {
                 @MainActor public static var showcaseTopic: Topic {
                     Topic("PrimaryButton") {
-                        CodeBlock(language: .swift, title: "Properties") {
+                        CodeBlock(title: "Properties") {
                             \"\"\"
                             var body: some View
 
@@ -619,14 +619,14 @@ final class ShowcaseMacrosTests: XCTestCase {
                             A user model with full documentation
                             \"\"\"
                         }
-                        CodeBlock(language: .swift, title: "Initializers") {
+                        CodeBlock(title: "Initializers") {
                             \"\"\"
                             /// Creates a new user with the given credentials
                             init(id: String, name: String)
 
                             \"\"\"
                         }
-                        CodeBlock(language: .swift, title: "Methods") {
+                        CodeBlock(title: "Methods") {
                             \"\"\"
                             /// Validates the user's name - Returns: true if the name is valid
                             func validateName() -> Bool
@@ -636,7 +636,7 @@ final class ShowcaseMacrosTests: XCTestCase {
 
                             \"\"\"
                         }
-                        CodeBlock(language: .swift, title: "Properties") {
+                        CodeBlock(title: "Properties") {
                             \"\"\"
                             /// The user's unique identifier
                             var id: String
