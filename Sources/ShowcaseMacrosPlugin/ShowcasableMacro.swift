@@ -46,6 +46,11 @@ public struct ShowcasableMacro: ExtensionMacro {
         let links = arguments.autoDiscover ? ExampleFinder.findLinks(in: declaration) : []
         let descriptions = arguments.autoDiscover ? ExampleFinder.findDescriptions(in: declaration) : []
         
+        // Auto-discover members for API reference
+        let initializers = arguments.autoDiscover ? MemberDiscovery.findInitializers(in: declaration) : []
+        let methods = arguments.autoDiscover ? MemberDiscovery.findMethods(in: declaration) : []
+        let properties = arguments.autoDiscover ? MemberDiscovery.findProperties(in: declaration) : []
+        
         // Generate the extension code
         let (showcaseTopicDecl, chapterDecl) = CodeGenerator.generateMembers(
             typeName: typeInfo.name,
@@ -55,7 +60,10 @@ public struct ShowcasableMacro: ExtensionMacro {
             examples: examples,
             codeBlocks: codeBlocks,
             links: links,
-            descriptions: descriptions
+            descriptions: descriptions,
+            initializers: initializers,
+            methods: methods,
+            properties: properties
         )
         
         let showcasableType = TypeSyntax(stringLiteral: "Showcasable")
@@ -489,8 +497,312 @@ struct LinkInfo {
     let url: String
 }
 
+// MARK: - Member Discovery
+
+/// Discovers and extracts information about type members for auto-documentation.
+enum MemberDiscovery {
+    /// Discovers all public initializers in a type.
+    static func findInitializers(in declaration: some DeclGroupSyntax) -> [InitializerInfo] {
+        var initializers: [InitializerInfo] = []
+        
+        for member in declaration.memberBlock.members {
+            // Skip hidden members
+            if member.hasAttribute(named: "ShowcaseHidden") {
+                continue
+            }
+            
+            guard let initDecl = member.decl.as(InitializerDeclSyntax.self) else {
+                continue
+            }
+            
+            // Check if public/internal
+            let isPublic = initDecl.modifiers.contains { modifier in
+                modifier.name.text == "public" || modifier.name.text == "internal"
+            }
+            
+            // Default to internal if no modifier
+            let hasNoAccessModifier = !initDecl.modifiers.contains { modifier in
+                ["public", "internal", "private", "fileprivate"].contains(modifier.name.text)
+            }
+            
+            guard isPublic || hasNoAccessModifier else {
+                continue
+            }
+            
+            // Extract signature
+            let signature = extractInitializerSignature(from: initDecl)
+            
+            // Extract doc comment
+            let docComment = extractDocComment(from: initDecl)
+            
+            initializers.append(InitializerInfo(
+                signature: signature,
+                docComment: docComment
+            ))
+        }
+        
+        return initializers
+    }
+    
+    /// Discovers all public methods in a type.
+    static func findMethods(in declaration: some DeclGroupSyntax) -> [MethodInfo] {
+        var methods: [MethodInfo] = []
+        
+        for member in declaration.memberBlock.members {
+            // Skip hidden members
+            if member.hasAttribute(named: "ShowcaseHidden") {
+                continue
+            }
+            
+            guard let funcDecl = member.decl.as(FunctionDeclSyntax.self) else {
+                continue
+            }
+            
+            // Check if public/internal
+            let isPublic = funcDecl.modifiers.contains { modifier in
+                modifier.name.text == "public" || modifier.name.text == "internal"
+            }
+            
+            let hasNoAccessModifier = !funcDecl.modifiers.contains { modifier in
+                ["public", "internal", "private", "fileprivate"].contains(modifier.name.text)
+            }
+            
+            guard isPublic || hasNoAccessModifier else {
+                continue
+            }
+            
+            let name = funcDecl.name.text
+            let signature = extractMethodSignature(from: funcDecl)
+            let docComment = extractDocComment(from: funcDecl)
+            
+            methods.append(MethodInfo(
+                name: name,
+                signature: signature,
+                docComment: docComment
+            ))
+        }
+        
+        return methods
+    }
+    
+    /// Discovers all public properties in a type.
+    static func findProperties(in declaration: some DeclGroupSyntax) -> [PropertyInfo] {
+        var properties: [PropertyInfo] = []
+        
+        for member in declaration.memberBlock.members {
+            // Skip hidden members
+            if member.hasAttribute(named: "ShowcaseHidden") {
+                continue
+            }
+            
+            guard let varDecl = member.decl.as(VariableDeclSyntax.self) else {
+                continue
+            }
+            
+            // Skip @ShowcaseExample marked properties (they're examples, not API)
+            if varDecl.hasAttribute(named: "ShowcaseExample") {
+                continue
+            }
+            
+            // Check if public/internal
+            let isPublic = varDecl.modifiers.contains { modifier in
+                modifier.name.text == "public" || modifier.name.text == "internal"
+            }
+            
+            let hasNoAccessModifier = !varDecl.modifiers.contains { modifier in
+                ["public", "internal", "private", "fileprivate"].contains(modifier.name.text)
+            }
+            
+            guard isPublic || hasNoAccessModifier else {
+                continue
+            }
+            
+            // Extract property info
+            for binding in varDecl.bindings {
+                guard let name = binding.pattern.as(IdentifierPatternSyntax.self)?.identifier.text else {
+                    continue
+                }
+                
+                let type = binding.typeAnnotation?.type.description.trimmingCharacters(in: .whitespaces) ?? "Unknown"
+                let isComputed = binding.accessorBlock != nil
+                let docComment = extractDocComment(from: varDecl)
+                
+                properties.append(PropertyInfo(
+                    name: name,
+                    type: type,
+                    isComputed: isComputed,
+                    docComment: docComment
+                ))
+            }
+        }
+        
+        return properties
+    }
+    
+    // MARK: - Signature Extraction
+    
+    private static func extractInitializerSignature(from initDecl: InitializerDeclSyntax) -> String {
+        var signature = "init"
+        
+        // Add parameters
+        let params = initDecl.signature.parameterClause.parameters
+        if params.isEmpty {
+            signature += "()"
+        } else {
+            let paramStrings = params.map { param -> String in
+                let firstName = param.firstName.text
+                let secondName = param.secondName?.text
+                let type = param.type.description.trimmingCharacters(in: .whitespaces)
+                
+                if let secondName = secondName {
+                    return "\(firstName) \(secondName): \(type)"
+                } else {
+                    return "\(firstName): \(type)"
+                }
+            }
+            signature += "(" + paramStrings.joined(separator: ", ") + ")"
+        }
+        
+        return signature
+    }
+    
+    private static func extractMethodSignature(from funcDecl: FunctionDeclSyntax) -> String {
+        var signature = funcDecl.name.text
+        
+        // Add parameters
+        let params = funcDecl.signature.parameterClause.parameters
+        if params.isEmpty {
+            signature += "()"
+        } else {
+            let paramStrings = params.map { param -> String in
+                let firstName = param.firstName.text
+                let secondName = param.secondName?.text
+                let type = param.type.description.trimmingCharacters(in: .whitespaces)
+                
+                if let secondName = secondName {
+                    return "\(firstName) \(secondName): \(type)"
+                } else {
+                    return "\(firstName): \(type)"
+                }
+            }
+            signature += "(" + paramStrings.joined(separator: ", ") + ")"
+        }
+        
+        // Add return type
+        if let returnType = funcDecl.signature.returnClause?.type {
+            signature += " -> \(returnType.description.trimmingCharacters(in: .whitespaces))"
+        }
+        
+        return signature
+    }
+    
+    // MARK: - Doc Comment Extraction
+    
+    private static func extractDocComment(from decl: some SyntaxProtocol) -> String? {
+        // Extract leading trivia (comments before the declaration)
+        let trivia = decl.leadingTrivia
+        var docLines: [String] = []
+        
+        for piece in trivia {
+            switch piece {
+            case .docLineComment(let text):
+                // Remove /// prefix
+                let cleaned = text.trimmingCharacters(in: .whitespaces)
+                if cleaned.hasPrefix("///") {
+                    let line = String(cleaned.dropFirst(3)).trimmingCharacters(in: .whitespaces)
+                    if !line.isEmpty {
+                        docLines.append(line)
+                    }
+                }
+            case .docBlockComment(let text):
+                // Remove /** */ wrapper
+                let cleaned = text
+                    .replacingOccurrences(of: "/**", with: "")
+                    .replacingOccurrences(of: "*/", with: "")
+                    .trimmingCharacters(in: .whitespacesAndNewlines)
+                if !cleaned.isEmpty {
+                    docLines.append(cleaned)
+                }
+            default:
+                break
+            }
+        }
+        
+        return docLines.isEmpty ? nil : docLines.joined(separator: " ")
+    }
+}
+
+struct InitializerInfo {
+    let signature: String
+    let docComment: String?
+}
+
+struct MethodInfo {
+    let name: String
+    let signature: String
+    let docComment: String?
+}
+
+struct PropertyInfo {
+    let name: String
+    let type: String
+    let isComputed: Bool
+    let docComment: String?
+}
+
 /// Generates the extension code.
 enum CodeGenerator {
+    /// Generates API Reference section from discovered members.
+    private static func generateAPIReference(
+        initializers: [InitializerInfo],
+        methods: [MethodInfo],
+        properties: [PropertyInfo]
+    ) -> String {
+        var sections: [String] = []
+        
+        // Generate Initializers section
+        if !initializers.isEmpty {
+            var initContent = "CodeBlock(language: .swift, title: \"Initializers\") {\n\"\"\"\n"
+            for initializer in initializers {
+                if let docComment = initializer.docComment {
+                    initContent += "/// \(docComment)\n"
+                }
+                initContent += "\(initializer.signature)\n\n"
+            }
+            initContent += "\"\"\"\n}"
+            sections.append(initContent)
+        }
+        
+        // Generate Methods section
+        if !methods.isEmpty {
+            var methodContent = "CodeBlock(language: .swift, title: \"Methods\") {\n\"\"\"\n"
+            for method in methods {
+                if let docComment = method.docComment {
+                    methodContent += "/// \(docComment)\n"
+                }
+                methodContent += "func \(method.signature)\n\n"
+            }
+            methodContent += "\"\"\"\n}"
+            sections.append(methodContent)
+        }
+        
+        // Generate Properties section
+        if !properties.isEmpty {
+            var propContent = "CodeBlock(language: .swift, title: \"Properties\") {\n\"\"\"\n"
+            for property in properties {
+                if let docComment = property.docComment {
+                    propContent += "/// \(docComment)\n"
+                }
+                let keyword = property.isComputed ? "var" : "var"
+                propContent += "\(keyword) \(property.name): \(property.type)\n\n"
+            }
+            propContent += "\"\"\"\n}"
+            sections.append(propContent)
+        }
+        
+        return sections.joined(separator: "\n")
+    }
+    
     static func generateMembers(
         typeName: String,
         chapter: String,
@@ -499,7 +811,10 @@ enum CodeGenerator {
         examples: [ExampleInfo],
         codeBlocks: [CodeBlockInfo],
         links: [LinkInfo],
-        descriptions: [String]
+        descriptions: [String],
+        initializers: [InitializerInfo],
+        methods: [MethodInfo],
+        properties: [PropertyInfo]
     ) -> (showcaseTopic: DeclSyntax, chapter: DeclSyntax) {
         var topicContent: [String] = []
         
@@ -522,6 +837,15 @@ enum CodeGenerator {
         // Add icon if provided
         if let icon {
             topicContent.append("Icon(Image(systemName: \"\(icon)\"))")
+        }
+        
+        // Add API Reference section if any members were discovered
+        if !initializers.isEmpty || !methods.isEmpty || !properties.isEmpty {
+            topicContent.append(generateAPIReference(
+                initializers: initializers,
+                methods: methods,
+                properties: properties
+            ))
         }
         
         // Add usage examples from doc comments
@@ -631,6 +955,38 @@ extension SyntaxProtocol {
 }
 
 extension VariableDeclSyntax {
+    func hasAttribute(named name: String) -> Bool {
+        attributes.contains { attribute in
+            attribute.as(AttributeSyntax.self)?.attributeName.as(IdentifierTypeSyntax.self)?.name.text == name
+        }
+    }
+}
+
+extension MemberBlockItemSyntax {
+    func hasAttribute(named name: String) -> Bool {
+        // Check the declaration's attributes
+        if let varDecl = decl.as(VariableDeclSyntax.self) {
+            return varDecl.hasAttribute(named: name)
+        }
+        if let funcDecl = decl.as(FunctionDeclSyntax.self) {
+            return funcDecl.hasAttribute(named: name)
+        }
+        if let initDecl = decl.as(InitializerDeclSyntax.self) {
+            return initDecl.hasAttribute(named: name)
+        }
+        return false
+    }
+}
+
+extension FunctionDeclSyntax {
+    func hasAttribute(named name: String) -> Bool {
+        attributes.contains { attribute in
+            attribute.as(AttributeSyntax.self)?.attributeName.as(IdentifierTypeSyntax.self)?.name.text == name
+        }
+    }
+}
+
+extension InitializerDeclSyntax {
     func hasAttribute(named name: String) -> Bool {
         attributes.contains { attribute in
             attribute.as(AttributeSyntax.self)?.attributeName.as(IdentifierTypeSyntax.self)?.name.text == name
