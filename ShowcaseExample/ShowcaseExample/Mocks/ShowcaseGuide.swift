@@ -16,6 +16,7 @@ extension Document {
         Chapter.coreConceptsChapter
         Chapter.contentTypes
         Chapter.advancedFeatures
+        Chapter.macroExamples
         Chapter.designSystem
     }
 }

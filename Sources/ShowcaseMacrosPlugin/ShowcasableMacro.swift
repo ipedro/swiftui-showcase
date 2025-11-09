@@ -287,13 +287,18 @@ enum ExampleFinder {
                let binding = varDecl.bindings.first,
                let name = binding.pattern.as(IdentifierPatternSyntax.self)?.identifier.text {
                 
-                // Extract title and description from attribute
-                let (title, description) = extractExampleMetadata(from: varDecl)
+                // Extract title, description, and showCode from attribute
+                let (title, description, showCode) = extractExampleMetadata(from: varDecl)
+                
+                // Extract source code from the property body
+                let sourceCode = extractSourceCode(from: binding)
                 
                 examples.append(ExampleInfo(
                     name: name,
                     title: title ?? name,
-                    description: description
+                    description: description,
+                    sourceCode: sourceCode,
+                    showCode: showCode
                 ))
             }
         }
@@ -388,21 +393,22 @@ enum ExampleFinder {
         return descriptions
     }
     
-    private static func extractExampleMetadata(from varDecl: VariableDeclSyntax) -> (title: String?, description: String?) {
+    private static func extractExampleMetadata(from varDecl: VariableDeclSyntax) -> (title: String?, description: String?, showCode: Bool) {
         // Find the @ShowcaseExample attribute
         guard let exampleAttr = varDecl.attributes.first(where: { attr in
             attr.as(AttributeSyntax.self)?.attributeName.as(IdentifierTypeSyntax.self)?.name.text == "ShowcaseExample"
         })?.as(AttributeSyntax.self) else {
-            return (nil, nil)
+            return (nil, nil, true) // Default showCode to true
         }
         
         // Extract arguments from the attribute
         guard let arguments = exampleAttr.arguments?.as(LabeledExprListSyntax.self) else {
-            return (nil, nil)
+            return (nil, nil, true) // Default showCode to true
         }
         
         var title: String?
         var description: String?
+        var showCode: Bool = true // Default to true
         
         for argument in arguments {
             let label = argument.label?.text
@@ -421,9 +427,53 @@ enum ExampleFinder {
                     break
                 }
             }
+            
+            // Extract boolean value for showCode
+            if label == "showCode" {
+                if let boolExpr = argument.expression.as(BooleanLiteralExprSyntax.self) {
+                    showCode = boolExpr.literal.text == "true"
+                }
+            }
         }
         
-        return (title, description)
+        return (title, description, showCode)
+    }
+    
+    /// Extracts source code from a property binding (getter body or initializer)
+    private static func extractSourceCode(from binding: PatternBindingSyntax) -> String? {
+        // Try to extract from accessor (computed property getter)
+        if let accessorBlock = binding.accessorBlock,
+           case .getter(let codeBlockItems) = accessorBlock.accessors {
+            return formatSourceCode(codeBlockItems.description)
+        }
+        
+        // Try to extract from initializer (stored property with initial value)
+        if let initializer = binding.initializer {
+            return formatSourceCode(initializer.value.description)
+        }
+        
+        return nil
+    }
+    
+    /// Formats source code by removing excessive leading whitespace
+    private static func formatSourceCode(_ code: String) -> String {
+        let lines = code.components(separatedBy: .newlines)
+        
+        // Find minimum indentation (excluding empty lines)
+        let nonEmptyLines = lines.filter { !$0.trimmingCharacters(in: .whitespaces).isEmpty }
+        guard let minIndent = nonEmptyLines.map({ line in
+            line.prefix(while: { $0.isWhitespace }).count
+        }).min() else {
+            return code.trimmingCharacters(in: .whitespacesAndNewlines)
+        }
+        
+        // Remove the common indentation from all lines
+        let formatted = lines.map { line in
+            guard !line.trimmingCharacters(in: .whitespaces).isEmpty else { return "" }
+            return String(line.dropFirst(min(minIndent, line.count)))
+        }.joined(separator: "\n")
+        
+        return formatted.trimmingCharacters(in: .whitespacesAndNewlines)
     }
     
     private static func extractCodeBlockTitle(from varDecl: VariableDeclSyntax) -> String? {
@@ -518,6 +568,8 @@ struct ExampleInfo {
     let name: String
     let title: String
     let description: String?
+    let sourceCode: String?
+    let showCode: Bool
 }
 
 struct CodeBlockInfo {
@@ -1030,6 +1082,17 @@ struct PropertyInfo {
 
 /// Generates the extension code.
 enum CodeGenerator {
+    /// Indents multi-line strings for proper embedding in generated code.
+    /// Adds the specified indentation to all lines after the first.
+    private static func indentMultiline(_ text: String, indent: String) -> String {
+        let lines = text.components(separatedBy: "\n")
+        guard lines.count > 1 else { return text }
+        
+        return lines.enumerated().map { index, line in
+            index == 0 ? line : indent + line
+        }.joined(separator: "\n")
+    }
+    
     /// Generates API Reference section from discovered members.
     /// Generates Type Relationships section showing inheritance, conformances, and constraints.
     private static func generateTypeRelationships(typeInfo: TypeInfo) -> String {
@@ -1172,10 +1235,12 @@ enum CodeGenerator {
         signatureDoc += initializer.signature
         
         // Add signature as code block
+        // Replace newlines with newlines + indentation to match closing """
+        let indentedSignature = signatureDoc.replacingOccurrences(of: "\n", with: "\n            ")
         content.append("""
         CodeBlock(title: "Declaration") {
             \"\"\"
-            \(signatureDoc)
+            \(indentedSignature)
             \"\"\"
         }
         """)
@@ -1221,10 +1286,12 @@ enum CodeGenerator {
         signatureDoc += "\(staticKeyword)func \(method.signature)"
         
         // Add signature as code block
+        // Replace newlines with newlines + indentation to match closing """
+        let indentedSignature = signatureDoc.replacingOccurrences(of: "\n", with: "\n            ")
         content.append("""
         CodeBlock(title: "Declaration") {
             \"\"\"
-            \(signatureDoc)
+            \(indentedSignature)
             \"\"\"
         }
         """)
@@ -1260,10 +1327,12 @@ enum CodeGenerator {
         signatureDoc += "\(staticKeyword)\(keyword) \(property.name): \(property.type)"
         
         // Add signature as code block
+        // Replace newlines with newlines + indentation to match closing """
+        let indentedSignature = signatureDoc.replacingOccurrences(of: "\n", with: "\n            ")
         content.append("""
         CodeBlock(title: "Declaration") {
             \"\"\"
-            \(signatureDoc)
+            \(indentedSignature)
             \"\"\"
         }
         """)
@@ -1523,6 +1592,17 @@ enum CodeGenerator {
                 topicContent.append("""
                 Example(title: "\(example.title)") {
                     \(typeInfo.name).\(example.name)
+                }
+                """)
+            }
+            
+            // Auto-generate CodeBlock if source code is available and showCode is enabled
+            if example.showCode, let sourceCode = example.sourceCode {
+                topicContent.append("""
+                CodeBlock(title: "\(example.title) - Source Code") {
+                    \"\"\"
+                    \(sourceCode)
+                    \"\"\"
                 }
                 """)
             }

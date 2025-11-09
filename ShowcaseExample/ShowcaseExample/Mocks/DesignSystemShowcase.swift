@@ -28,9 +28,12 @@
 //  • Doc comment parsing (summary, parameters, returns, throws)
 //  • Static vs instance member categorization  
 //  • Type relationships (protocols, generics)
-//  • Multiple examples
-//  • Code blocks for integration
+//  • Multiple examples with auto-generated code blocks (NEW in Phase 6!)
+//  • Code blocks for integration examples
 //  • Design guideline links
+//
+//  **Note**: This file manually creates the Topic structure to demonstrate the output.
+//  See MacroExamplesShowcase.swift for real @Showcasable usage with auto-generated code.
 //
 
 import SwiftUI

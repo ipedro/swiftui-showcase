@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		EB7EB9A92CF919D200366932 /* Showcase in Frameworks */ = {isa = PBXBuildFile; productRef = EB7EB9A82CF919D200366932 /* Showcase */; };
 		EB7EB9AA2CF919D200366932 /* Showcase in Embed Frameworks */ = {isa = PBXBuildFile; productRef = EB7EB9A82CF919D200366932 /* Showcase */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		EBCB6CAC2EC0FDFB00D77DCB /* ShowcaseMacros in Frameworks */ = {isa = PBXBuildFile; productRef = EBCB6CAB2EC0FDFB00D77DCB /* ShowcaseMacros */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -43,6 +44,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EB7EB9A92CF919D200366932 /* Showcase in Frameworks */,
+				EBCB6CAC2EC0FDFB00D77DCB /* ShowcaseMacros in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -95,6 +97,7 @@
 			name = ShowcaseExample;
 			packageProductDependencies = (
 				EB7EB9A82CF919D200366932 /* Showcase */,
+				EBCB6CAB2EC0FDFB00D77DCB /* ShowcaseMacros */,
 			);
 			productName = ShowcaseExample;
 			productReference = EBA50C2A2CF80CD5000FB649 /* ShowcaseExample.app */;
@@ -385,6 +388,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = EBA50C3E2CF80D24000FB649 /* XCLocalSwiftPackageReference ".." */;
 			productName = Showcase;
+		};
+		EBCB6CAB2EC0FDFB00D77DCB /* ShowcaseMacros */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EBA50C3E2CF80D24000FB649 /* XCLocalSwiftPackageReference ".." */;
+			productName = ShowcaseMacros;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

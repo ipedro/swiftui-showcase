@@ -184,6 +184,11 @@ final class ShowcaseMacrosTests: XCTestCase {
                         Example(title: "Basic") {
                             PrimaryButton.basic
                         }
+                        CodeBlock(title: "Basic - Source Code") {
+                            \"\"\"
+                            PrimaryButton()
+                            \"\"\"
+                        }
                     }
                 }
                 public static var showcaseChapter: String {
@@ -231,6 +236,11 @@ final class ShowcaseMacrosTests: XCTestCase {
                         Example(title: "Primary Action") {
                             Description("A primary button with icon")
                             ActionButton.withIcon
+                        }
+                        CodeBlock(title: "Primary Action - Source Code") {
+                            \"\"\"
+                            ActionButton(title: "Submit", icon: "checkmark")
+                            \"\"\"
                         }
                     }
                 }
@@ -308,6 +318,11 @@ final class ShowcaseMacrosTests: XCTestCase {
                         Link("Design Guidelines", url: URL(string: "https://example.com/design")!)
                         Example(title: "Basic Usage") {
                             ActionButton.basic
+                        }
+                        CodeBlock(title: "Basic Usage - Source Code") {
+                            \"\"\"
+                            ActionButton(title: "Submit")
+                            \"\"\"
                         }
                     }
                 }
@@ -634,7 +649,7 @@ final class ShowcaseMacrosTests: XCTestCase {
                             CodeBlock(title: "Declaration") {
                                 \"\"\"
                                 /// Creates a new user with the given credentials
-                            init(id: String, name: String)
+                                init(id: String, name: String)
                                 \"\"\"
                             }
                         }
@@ -647,8 +662,8 @@ final class ShowcaseMacrosTests: XCTestCase {
                             CodeBlock(title: "Declaration") {
                                 \"\"\"
                                 /// Validates the user's name
-                            /// - Returns: true if the name is valid
-                            func validateName() -> Bool
+                                /// - Returns: true if the name is valid
+                                func validateName() -> Bool
                                 \"\"\"
                             }
                         }
@@ -661,7 +676,7 @@ final class ShowcaseMacrosTests: XCTestCase {
                             CodeBlock(title: "Declaration") {
                                 \"\"\"
                                 /// Gets the user's display string
-                            func displayString() -> String
+                                func displayString() -> String
                                 \"\"\"
                             }
                         }
@@ -674,7 +689,7 @@ final class ShowcaseMacrosTests: XCTestCase {
                             CodeBlock(title: "Declaration") {
                                 \"\"\"
                                 /// The user's unique identifier
-                            var id: String
+                                var id: String
                                 \"\"\"
                             }
                         }
@@ -687,7 +702,7 @@ final class ShowcaseMacrosTests: XCTestCase {
                             CodeBlock(title: "Declaration") {
                                 \"\"\"
                                 /// The user's display name
-                            var name: String
+                                var name: String
                                 \"\"\"
                             }
                         }
