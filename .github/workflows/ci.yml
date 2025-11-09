@@ -89,7 +89,8 @@ jobs:
       - name: Run Package Tests
         if: matrix.run-package-tests
         run: |
-          swift test --parallel --enable-code-coverage 2>&1 | tee test-output.log
+          # Note: --parallel flag removed due to profraw write permission issues with code coverage
+          swift test --enable-code-coverage 2>&1 | tee test-output.log
           
           # Extract test counts from output (Swift Testing format)
           TOTAL_TESTS=$(grep -oE "Test run with [0-9]+ tests" test-output.log | tail -1 | grep -oE '[0-9]+' || echo "0")
