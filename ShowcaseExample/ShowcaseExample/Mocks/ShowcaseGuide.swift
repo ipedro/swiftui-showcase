@@ -16,6 +16,7 @@ extension Document {
         Chapter.coreConceptsChapter
         Chapter.contentTypes
         Chapter.advancedFeatures
+        Chapter.macroExamples
     }
 }
 
@@ -867,5 +868,82 @@ extension Topic {
         }
         
         ExternalLink("Customization Guide", URL(string: "https://github.com/ipedro/swiftui-showcase#customization")!)
+    }
+}
+
+// MARK: - Chapter 5: Macro Examples
+
+extension Chapter {
+    static let macroExamples = Chapter("Macro System") {
+        Description("Automatically generate Showcase documentation using Swift macros")
+        Icon(Image(systemName: "wand.and.stars"))
+        
+        Topic.macroOverview
+        // The macro-generated topic
+        GradientButton.showcaseTopic
+    }
+}
+
+extension Topic {
+    static let macroOverview = Topic("@Showcasable Macro") {
+        Description {
+            """
+            The @Showcasable macro automatically generates Topic conformance for your types, \
+            extracting documentation comments, icons, and examples.
+            
+            Benefits:
+            • Automatic documentation extraction from doc comments
+            • Zero boilerplate Topic creation
+            • Type-safe example discovery with @ShowcaseExample
+            • Organize components by chapter
+            """
+        }
+        
+        CodeBlock(language: .swift, title: "Basic Usage") {
+            """
+            import Showcase
+            import ShowcaseMacros
+            
+            /// A custom button with gradient background.
+            @Showcasable(chapter: "Buttons", icon: "paintbrush.fill")
+            struct GradientButton: View {
+                let title: String
+                let action: () -> Void
+                
+                @ShowcaseExample(title: "Default")
+                static var defaultStyle: some View {
+                    GradientButton(title: "Tap Me") { }
+                }
+                
+                var body: some View {
+                    Button(action: action) {
+                        Text(title)
+                            .padding()
+                            .background(
+                                LinearGradient(
+                                    colors: [.blue, .purple],
+                                    startPoint: .leading,
+                                    endPoint: .trailing
+                                )
+                            )
+                    }
+                }
+            }
+            """
+        }
+        
+        CodeBlock(language: .swift, title: "Using the Generated Topic") {
+            """
+            // The macro generates:
+            // - showcaseTopic property returning Topic
+            // - showcaseChapter property returning String
+            
+            Chapter("My Chapter") {
+                GradientButton.showcaseTopic
+            }
+            """
+        }
+        
+        ExternalLink("Macro Implementation", URL(string: "https://github.com/ipedro/swiftui-showcase/tree/main/Sources/ShowcaseMacros")!)
     }
 }
