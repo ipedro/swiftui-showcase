@@ -23,7 +23,7 @@
 import SwiftUI
 
 /// Describes a piece of textual content that can be attached to topics or chapters.
-public struct Description {
+public struct Description: View {
     public let value: String
 
     @inlinable
@@ -36,6 +36,12 @@ public struct Description {
     @inlinable
     public init(_ builder: () -> String) {
         value = builder()
+    }
+    
+    /// Description acts as a marker in ViewBuilder contexts.
+    /// Returns an empty view - the actual description is extracted by the showcase system.
+    public var body: some View {
+        EmptyView()
     }
 }
 
