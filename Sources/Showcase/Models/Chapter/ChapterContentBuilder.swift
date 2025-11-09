@@ -106,6 +106,20 @@ public enum ChapterContentBuilder {
         expression.merge(into: &content)
         return content
     }
+    
+    /// Allows using Showcasable types directly in chapter builders without `.showcaseTopic`
+    public static func buildExpression<T>(_ type: T.Type) -> Chapter.Content where T: Showcasable {
+        var content = Chapter.Content()
+        content.topics.append(T.showcaseTopic)
+        return content
+    }
+
+    /// Allows using Showcasable types directly in chapter builders without `.showcaseTopic`
+    public static func buildExpression<T>(_ expression: T) -> Chapter.Content where T: Showcasable {
+        var content = Chapter.Content()
+        content.topics.append(T.showcaseTopic)
+        return content
+    }
 
     public static func buildExpression(_ expression: [ChapterContentConvertible]) -> Chapter.Content {
         expression.reduce(into: Chapter.Content()) { partialResult, element in

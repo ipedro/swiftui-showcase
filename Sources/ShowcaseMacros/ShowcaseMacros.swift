@@ -203,10 +203,6 @@ public macro ShowcaseHidden() = #externalMacro(module: "ShowcaseMacrosPlugin", t
 ///
 /// This protocol is automatically conformed to by types marked with `@Showcasable`.
 /// You typically don't need to conform to this manually.
-public protocol Showcasable {
-    /// The generated topic containing this type's documentation.
-    @MainActor static var showcaseTopic: Topic { get }
-    
-    /// The chapter this showcasable belongs to.
-    static var showcaseChapter: String { get }
-}
+///
+/// Note: This is a re-export from the Showcase module for backwards compatibility.
+@_exported import protocol Showcase.Showcasable

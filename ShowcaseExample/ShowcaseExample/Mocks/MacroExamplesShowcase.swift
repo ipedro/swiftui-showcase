@@ -111,48 +111,6 @@ struct DSCard<Content: View>: View {
         self.content = content()
     }
     
-    @ShowcaseExample(title: "Simple Card")
-    static var simple: DSCard<AnyView> {
-        DSCard(title: "Welcome") {
-            AnyView(
-                Text("This is a simple card component")
-                    .foregroundColor(.secondary)
-            )
-        }
-    }
-    
-    @ShowcaseExample(title: "Card with Image")
-    static var withImage: DSCard<AnyView> {
-        DSCard(title: "Photo Card") {
-            AnyView(
-                VStack(spacing: 12) {
-                    Image(systemName: "photo")
-                        .font(.system(size: 48))
-                        .foregroundColor(.blue)
-                    Text("Add your photo here")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
-            )
-        }
-    }
-    
-    @ShowcaseExample(
-        title: "Card without Title",
-        description: "Cards can omit the title for cleaner layouts"
-    )
-    static var noTitle: DSCard<AnyView> {
-        DSCard {
-            AnyView(
-                HStack {
-                    Image(systemName: "checkmark.circle.fill")
-                        .foregroundColor(.green)
-                    Text("Operation completed successfully")
-                }
-            )
-        }
-    }
-    
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             if let title {
@@ -164,6 +122,65 @@ struct DSCard<Content: View>: View {
         .padding()
         .background(Color.gray.opacity(0.1))
         .cornerRadius(12)
+    }
+}
+
+// MARK: - DSCard Examples (Independent Example Views)
+
+@Showcasable(chapter: "Components", icon: "rectangle.stack")
+struct DSCardSimpleExample: View {
+    @ShowcaseExample(title: "Simple Card")
+    static var example: some View {
+        DSCard(title: "Welcome") {
+            Text("This is a simple card component")
+                .foregroundColor(.secondary)
+        }
+    }
+    
+    var body: some View {
+        Self.example
+    }
+}
+
+@Showcasable(chapter: "Components", icon: "rectangle.stack")
+struct DSCardWithImageExample: View {
+    @ShowcaseExample(title: "Card with Image")
+    static var example: some View {
+        DSCard(title: "Photo Card") {
+            VStack(spacing: 12) {
+                Image(systemName: "photo")
+                    .font(.system(size: 48))
+                    .foregroundColor(.blue)
+                Text("Add your photo here")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+        }
+    }
+    
+    var body: some View {
+        Self.example
+    }
+}
+
+@Showcasable(chapter: "Components", icon: "rectangle.stack")
+struct DSCardNoTitleExample: View {
+    @ShowcaseExample(
+        title: "Card without Title",
+        description: "Cards can omit the title for cleaner layouts"
+    )
+    static var example: some View {
+        DSCard {
+            HStack {
+                Image(systemName: "checkmark.circle.fill")
+                    .foregroundColor(.green)
+                Text("Operation completed successfully")
+            }
+        }
+    }
+    
+    var body: some View {
+        Self.example
     }
 }
 
@@ -227,8 +244,10 @@ extension Chapter {
             """
         }
         
-        DSButton.showcaseTopic
-        DSCard<AnyView>.showcaseTopic
-        DSBadge.showcaseTopic
+        DSButton.self
+        DSCardSimpleExample.self
+        DSCardWithImageExample.self
+        DSCardNoTitleExample.self
+        DSBadge.self
     }
 }
