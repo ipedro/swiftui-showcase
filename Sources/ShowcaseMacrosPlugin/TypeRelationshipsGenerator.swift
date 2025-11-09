@@ -85,11 +85,20 @@ enum TypeRelationshipsGenerator {
     }
     
     private static func isProtocol(_ typeName: String) -> Bool {
-        // LIMITATION: This uses heuristic pattern matching since Swift macros don't have
-        // full semantic analysis at compile time. This may incorrectly identify:
-        // - Classes named "ObservableObject" as protocols
-        // - Protocols not matching these patterns as classes
-        // For accurate type resolution, semantic analysis would be needed.
+        // LIMITATION: Swift macros operate on syntax trees without access to semantic type information.
+        // This heuristic uses naming patterns to distinguish protocols from classes, which may produce
+        // false positives (e.g., classes ending in "able") or false negatives (protocols with non-standard names).
+        //
+        // Why this limitation exists:
+        // - Macros expand during compilation before type checking completes
+        // - No access to module resolution or type metadata at macro expansion time
+        //
+        // Potential solutions (not implemented):
+        // - Use `#externalMacro` with a compiler plugin that has semantic access
+        // - Parse explicit `protocol` keyword in the source (requires declaration context)
+        // - Maintain a comprehensive allowlist of Swift stdlib/framework protocol names
+        //
+        // Current approach is "good enough" for common SwiftUI/Foundation types.
         let protocolPatterns = [
             "able", "Protocol", "View", "Equatable", "Hashable",
             "Codable", "Identifiable", "ObservableObject", "Sendable"

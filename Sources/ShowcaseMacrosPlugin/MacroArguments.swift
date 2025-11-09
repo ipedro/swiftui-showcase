@@ -36,7 +36,7 @@ struct MacroArguments {
         var chapter: String?
         var icon: String?
         var order: Int?
-        var autoDiscover: Bool = false
+        var autoDiscover: Bool = true
         
         for argument in arguments {
             let label = argument.label?.text
@@ -52,7 +52,7 @@ struct MacroArguments {
             } else if label == "order" {
                 order = expr.integerLiteralValue
             } else if label == "autoDiscover" {
-                autoDiscover = expr.booleanLiteralValue ?? false
+                autoDiscover = expr.booleanLiteralValue ?? true
             }
         }
         
