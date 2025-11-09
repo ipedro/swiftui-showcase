@@ -123,10 +123,20 @@ jobs:
           
           echo "Using test binary: $TEST_BINARY"
           
+          # Find the profdata file (architecture-specific path)
+          PROFDATA=$(find .build -name "default.profdata" -path "*/codecov/*" | head -1)
+          
+          if [ -z "$PROFDATA" ]; then
+            echo "Error: Could not find profdata file"
+            exit 1
+          fi
+          
+          echo "Found profdata: $PROFDATA"
+          
           # Convert profdata to lcov format for Codecov
           xcrun llvm-cov export -format="lcov" \
             "$TEST_BINARY" \
-            -instr-profile .build/debug/codecov/default.profdata \
+            -instr-profile "$PROFDATA" \
             > coverage.lcov
           
           echo "Coverage report generated at coverage.lcov ($(wc -l < coverage.lcov) lines)"
