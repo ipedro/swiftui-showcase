@@ -40,8 +40,11 @@ public struct ShowcasableMacro: ExtensionMacro {
         // Extract documentation
         let documentation = DocumentationExtractor.extract(from: declaration)
         
-        // Find examples if auto-discovery is enabled
+        // Find all content if auto-discovery is enabled
         let examples = arguments.autoDiscover ? ExampleFinder.findExamples(in: declaration) : []
+        let codeBlocks = arguments.autoDiscover ? ExampleFinder.findCodeBlocks(in: declaration) : []
+        let links = arguments.autoDiscover ? ExampleFinder.findLinks(in: declaration) : []
+        let descriptions = arguments.autoDiscover ? ExampleFinder.findDescriptions(in: declaration) : []
         
         // Generate the extension code
         let (showcaseTopicDecl, chapterDecl) = CodeGenerator.generateMembers(
@@ -49,7 +52,10 @@ public struct ShowcasableMacro: ExtensionMacro {
             chapter: arguments.chapter,
             icon: arguments.icon,
             documentation: documentation,
-            examples: examples
+            examples: examples,
+            codeBlocks: codeBlocks,
+            links: links,
+            descriptions: descriptions
         )
         
         let showcasableType = TypeSyntax(stringLiteral: "Showcasable")
@@ -228,6 +234,12 @@ enum ExampleFinder {
         var examples: [ExampleInfo] = []
         
         for member in declaration.memberBlock.members {
+            // Skip hidden members
+            if let varDecl = member.decl.as(VariableDeclSyntax.self),
+               varDecl.hasAttribute(named: "ShowcaseHidden") {
+                continue
+            }
+            
             // Check if member has @ShowcaseExample attribute
             if let varDecl = member.decl.as(VariableDeclSyntax.self),
                varDecl.hasAttribute(named: "ShowcaseExample"),
@@ -246,6 +258,93 @@ enum ExampleFinder {
         }
         
         return examples
+    }
+    
+    static func findCodeBlocks(in declaration: some DeclGroupSyntax) -> [CodeBlockInfo] {
+        var codeBlocks: [CodeBlockInfo] = []
+        
+        for member in declaration.memberBlock.members {
+            // Skip hidden members
+            if let varDecl = member.decl.as(VariableDeclSyntax.self),
+               varDecl.hasAttribute(named: "ShowcaseHidden") {
+                continue
+            }
+            
+            // Check if member has @ShowcaseCodeBlock attribute
+            if let varDecl = member.decl.as(VariableDeclSyntax.self),
+               varDecl.hasAttribute(named: "ShowcaseCodeBlock"),
+               let binding = varDecl.bindings.first {
+                
+                // Extract title from attribute
+                let title = extractCodeBlockTitle(from: varDecl)
+                
+                // Extract string literal value from initializer
+                if let initializer = binding.initializer,
+                   let stringLiteral = initializer.value.as(StringLiteralExprSyntax.self) {
+                    let code = extractStringLiteralContent(from: stringLiteral)
+                    
+                    codeBlocks.append(CodeBlockInfo(
+                        title: title ?? "Code",
+                        code: code
+                    ))
+                }
+            }
+        }
+        
+        return codeBlocks
+    }
+    
+    static func findLinks(in declaration: some DeclGroupSyntax) -> [LinkInfo] {
+        var links: [LinkInfo] = []
+        
+        for member in declaration.memberBlock.members {
+            // Skip hidden members
+            if let varDecl = member.decl.as(VariableDeclSyntax.self),
+               varDecl.hasAttribute(named: "ShowcaseHidden") {
+                continue
+            }
+            
+            // Check if member has @ShowcaseLink attribute
+            if let varDecl = member.decl.as(VariableDeclSyntax.self),
+               varDecl.hasAttribute(named: "ShowcaseLink") {
+                
+                // Extract title and url from attribute
+                let (title, url) = extractLinkMetadata(from: varDecl)
+                
+                if let title = title, let url = url {
+                    links.append(LinkInfo(
+                        title: title,
+                        url: url
+                    ))
+                }
+            }
+        }
+        
+        return links
+    }
+    
+    static func findDescriptions(in declaration: some DeclGroupSyntax) -> [String] {
+        var descriptions: [String] = []
+        
+        for member in declaration.memberBlock.members {
+            // Skip hidden members
+            if let varDecl = member.decl.as(VariableDeclSyntax.self),
+               varDecl.hasAttribute(named: "ShowcaseHidden") {
+                continue
+            }
+            
+            // Check if member has @ShowcaseDescription attribute
+            if let varDecl = member.decl.as(VariableDeclSyntax.self),
+               varDecl.hasAttribute(named: "ShowcaseDescription") {
+                
+                // Extract description text from attribute
+                if let description = extractDescriptionText(from: varDecl) {
+                    descriptions.append(description)
+                }
+            }
+        }
+        
+        return descriptions
     }
     
     private static func extractExampleMetadata(from varDecl: VariableDeclSyntax) -> (title: String?, description: String?) {
@@ -285,12 +384,109 @@ enum ExampleFinder {
         
         return (title, description)
     }
+    
+    private static func extractCodeBlockTitle(from varDecl: VariableDeclSyntax) -> String? {
+        guard let attr = varDecl.attributes.first(where: { attr in
+            attr.as(AttributeSyntax.self)?.attributeName.as(IdentifierTypeSyntax.self)?.name.text == "ShowcaseCodeBlock"
+        })?.as(AttributeSyntax.self) else {
+            return nil
+        }
+        
+        guard let arguments = attr.arguments?.as(LabeledExprListSyntax.self) else {
+            return nil
+        }
+        
+        for argument in arguments {
+            if argument.label?.text == "title",
+               let stringLiteral = argument.expression.as(StringLiteralExprSyntax.self),
+               let segment = stringLiteral.segments.first?.as(StringSegmentSyntax.self) {
+                return segment.content.text
+            }
+        }
+        
+        return nil
+    }
+    
+    private static func extractLinkMetadata(from varDecl: VariableDeclSyntax) -> (title: String?, url: String?) {
+        guard let attr = varDecl.attributes.first(where: { attr in
+            attr.as(AttributeSyntax.self)?.attributeName.as(IdentifierTypeSyntax.self)?.name.text == "ShowcaseLink"
+        })?.as(AttributeSyntax.self) else {
+            return (nil, nil)
+        }
+        
+        guard let arguments = attr.arguments?.as(LabeledExprListSyntax.self) else {
+            return (nil, nil)
+        }
+        
+        var title: String?
+        var url: String?
+        
+        for argument in arguments {
+            let label = argument.label?.text
+            
+            if let stringLiteral = argument.expression.as(StringLiteralExprSyntax.self),
+               let segment = stringLiteral.segments.first?.as(StringSegmentSyntax.self) {
+                let value = segment.content.text
+                
+                // First unlabeled argument is title
+                if label == nil && title == nil {
+                    title = value
+                } else if label == "url" {
+                    url = value
+                }
+            }
+        }
+        
+        return (title, url)
+    }
+    
+    private static func extractDescriptionText(from varDecl: VariableDeclSyntax) -> String? {
+        guard let attr = varDecl.attributes.first(where: { attr in
+            attr.as(AttributeSyntax.self)?.attributeName.as(IdentifierTypeSyntax.self)?.name.text == "ShowcaseDescription"
+        })?.as(AttributeSyntax.self) else {
+            return nil
+        }
+        
+        guard let arguments = attr.arguments?.as(LabeledExprListSyntax.self) else {
+            return nil
+        }
+        
+        // Get first string argument (unlabeled)
+        if let firstArg = arguments.first,
+           firstArg.label == nil,
+           let stringLiteral = firstArg.expression.as(StringLiteralExprSyntax.self),
+           let segment = stringLiteral.segments.first?.as(StringSegmentSyntax.self) {
+            return segment.content.text
+        }
+        
+        return nil
+    }
+    
+    private static func extractStringLiteralContent(from stringLiteral: StringLiteralExprSyntax) -> String {
+        var content = ""
+        for segment in stringLiteral.segments {
+            if let stringSegment = segment.as(StringSegmentSyntax.self) {
+                content += stringSegment.content.text
+            }
+        }
+        return content
+    }
 }
 
 struct ExampleInfo {
     let name: String
     let title: String
     let description: String?
+}
+
+struct CodeBlockInfo {
+    let title: String
+    let code: String
+}
+
+struct LinkInfo {
+    let title: String
+    let url: String
 }
 
 /// Generates the extension code.
@@ -300,11 +496,14 @@ enum CodeGenerator {
         chapter: String,
         icon: String?,
         documentation: Documentation,
-        examples: [ExampleInfo]
+        examples: [ExampleInfo],
+        codeBlocks: [CodeBlockInfo],
+        links: [LinkInfo],
+        descriptions: [String]
     ) -> (showcaseTopic: DeclSyntax, chapter: DeclSyntax) {
         var topicContent: [String] = []
         
-        // Add description if available
+        // Add description from documentation if available
         if let summary = documentation.summary {
             topicContent.append("""
             Description {
@@ -313,6 +512,11 @@ enum CodeGenerator {
                 \"\"\"
             }
             """)
+        }
+        
+        // Add additional descriptions from @ShowcaseDescription
+        for description in descriptions {
+            topicContent.append("Description(\"\(description)\")")
         }
         
         // Add icon if provided
@@ -329,6 +533,20 @@ enum CodeGenerator {
                 \"\"\"
             }
             """)
+        }
+        
+        // Add code blocks from @ShowcaseCodeBlock
+        for codeBlock in codeBlocks {
+            let escapedCode = codeBlock.code
+                .replacingOccurrences(of: "\\", with: "\\\\")
+                .replacingOccurrences(of: "\"", with: "\\\"")
+                .replacingOccurrences(of: "\n", with: "\\n")
+            topicContent.append("CodeBlock(title: \"\(codeBlock.title)\", code: \"\(escapedCode)\")")
+        }
+        
+        // Add links from @ShowcaseLink
+        for link in links {
+            topicContent.append("Link(\"\(link.title)\", url: URL(string: \"\(link.url)\")!)")
         }
         
         // Add examples

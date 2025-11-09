@@ -241,6 +241,83 @@ final class ShowcaseMacrosTests: XCTestCase {
         #endif
     }
     
+    func testShowcasableWithAllContent() throws {
+        #if canImport(ShowcaseMacrosPlugin)
+        assertMacroExpansion(
+            """
+            @Showcasable(chapter: "Buttons", icon: "button.circle")
+            struct ActionButton: View {
+                @ShowcaseDescription("A versatile button for actions")
+                static let overview = ""
+                
+                @ShowcaseExample(title: "Basic Usage")
+                static var basic: some View {
+                    ActionButton(title: "Submit")
+                }
+                
+                @ShowcaseCodeBlock(title: "Integration")
+                static let integrationCode = \"\"\"
+                ActionButton(title: "Save")
+                    .buttonStyle(.borderedProminent)
+                \"\"\"
+                
+                @ShowcaseLink("Design Guidelines", url: "https://example.com/design")
+                static let designDoc = ""
+                
+                @ShowcaseHidden
+                private var internalState: Int = 0
+                
+                var body: some View {
+                    Button("Action") {}
+                }
+            }
+            """,
+            expandedSource: """
+            struct ActionButton: View {
+                static let overview = ""
+
+                static var basic: some View {
+                    ActionButton(title: "Submit")
+                }
+
+                static let integrationCode = \"\"\"
+                ActionButton(title: "Save")
+                    .buttonStyle(.borderedProminent)
+                \"\"\"
+
+                static let designDoc = ""
+
+                private var internalState: Int = 0
+                
+                var body: some View {
+                    Button("Action") {}
+                }
+            }
+
+            extension ActionButton: Showcasable {
+                @MainActor public static var showcaseTopic: Topic {
+                    Topic("ActionButton") {
+                        Description("A versatile button for actions")
+                        Icon(Image(systemName: "button.circle"))
+                        CodeBlock(title: "Integration", code: "ActionButton(title: \"Save\")\n    .buttonStyle(.borderedProminent)")
+                        Link("Design Guidelines", url: URL(string: "https://example.com/design")!)
+                        Example(title: "Basic Usage") {
+                            ActionButton.basic
+                        }
+                    }
+                }
+                public static var showcaseChapter: String {
+                    "Buttons"
+                }
+            }
+            """,
+            macros: testMacros
+        )
+        #else
+        throw XCTSkip("Macros are only supported when running tests for the host platform")
+        #endif
+    }
+    
     // MARK: - Error Tests
     
     func testShowcasableMissingChapter() throws {
@@ -307,10 +384,11 @@ final class ShowcaseMacrosTests: XCTestCase {
                 let data = try await client.fetch(url: url)
                 \"\"\"
             }
-            
+
             extension NetworkClient: Showcasable {
                 @MainActor public static var showcaseTopic: Topic {
                     Topic("NetworkClient") {
+                        CodeBlock(title: "Basic Request", code: "let client = NetworkClient()\\nlet data = try await client.fetch(url: url)")
                     }
                 }
                 public static var showcaseChapter: String {
@@ -383,6 +461,7 @@ final class ShowcaseMacrosTests: XCTestCase {
             extension GridView: Showcasable {
                 @MainActor public static var showcaseTopic: Topic {
                     Topic("GridView") {
+                        Description("A responsive grid that adapts to screen size")
                     }
                 }
                 public static var showcaseChapter: String {
@@ -415,6 +494,7 @@ final class ShowcaseMacrosTests: XCTestCase {
             extension APIClient: Showcasable {
                 @MainActor public static var showcaseTopic: Topic {
                     Topic("APIClient") {
+                        Link("API Documentation", url: URL(string: "https://api.example.com/docs")!)
                     }
                 }
                 public static var showcaseChapter: String {
