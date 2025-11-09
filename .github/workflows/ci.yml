@@ -90,8 +90,9 @@ jobs:
         if: matrix.run-package-tests
         run: |
           # Run swift test (works perfectly with Swift Testing framework)
+          # --num-workers 1 prevents profraw permission conflicts
           set -o pipefail
-          swift test --enable-code-coverage 2>&1 | tee test-output.log
+          swift test --enable-code-coverage --num-workers 1 2>&1 | tee test-output.log
           
           # Extract test counts from output (Swift Testing format)
           TOTAL_TESTS=$(grep -oE "Test run with [0-9]+ tests" test-output.log | tail -1 | grep -oE '[0-9]+' || echo "0")
