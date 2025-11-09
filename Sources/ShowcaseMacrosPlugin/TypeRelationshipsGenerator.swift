@@ -85,7 +85,11 @@ enum TypeRelationshipsGenerator {
     }
     
     private static func isProtocol(_ typeName: String) -> Bool {
-        // Heuristic: common protocol patterns
+        // LIMITATION: This uses heuristic pattern matching since Swift macros don't have
+        // full semantic analysis at compile time. This may incorrectly identify:
+        // - Classes named "ObservableObject" as protocols
+        // - Protocols not matching these patterns as classes
+        // For accurate type resolution, semantic analysis would be needed.
         let protocolPatterns = [
             "able", "Protocol", "View", "Equatable", "Hashable",
             "Codable", "Identifiable", "ObservableObject", "Sendable"

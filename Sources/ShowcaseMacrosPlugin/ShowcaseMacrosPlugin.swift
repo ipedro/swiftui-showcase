@@ -27,10 +27,6 @@ struct ShowcaseMacrosPlugin: CompilerPlugin {
     let providingMacros: [Macro.Type] = [
         ShowcasableMacro.self,
         ShowcaseExampleMacro.self,
-        ShowcaseCodeBlockMacro.self,
-        ShowcaseIconMacro.self,
-        ShowcaseDescriptionMacro.self,
-        ShowcaseLinkMacro.self,
         ShowcaseHiddenMacro.self,
     ]
 }

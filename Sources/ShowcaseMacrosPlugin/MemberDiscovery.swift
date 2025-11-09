@@ -180,10 +180,7 @@ enum MemberDiscovery {
     private static func shouldIncludeProperty(_ varDecl: VariableDeclSyntax) -> Bool {
         // Skip showcase-related attributes (they're documentation, not API)
         let showcaseAttributes = [
-            "ShowcaseExample",
-            "ShowcaseCodeBlock",
-            "ShowcaseLink",
-            "ShowcaseDescription"
+            "ShowcaseExample"
         ]
         
         return !showcaseAttributes.contains(where: { varDecl.hasAttribute(named: $0) }) && isAccessible(varDecl)

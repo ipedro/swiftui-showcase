@@ -59,7 +59,7 @@ struct OrderedContentTests {
         }
         
         guard case .example = topic.items[2] else {
-            Issue.record("Expected third item to be preview")
+            Issue.record("Expected third item to be example")
             return
         }
         
@@ -123,7 +123,6 @@ struct OrderedContentTests {
         }
         
         // Items array should have all 4 content pieces
-        #expect(topic.items.count == 4)
         #expect(topic.items.count == 4)
     }
     
