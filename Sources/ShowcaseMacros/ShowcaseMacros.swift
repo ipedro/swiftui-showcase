@@ -95,7 +95,9 @@ public macro ShowcaseExample(
 
 /// Adds a code block to the showcase documentation.
 ///
-/// Use this macro to include code snippets directly in your showcasable types.
+/// **⚠️ Experimental**: This macro requires manual content and may be deprecated in favor of
+/// automatic code extraction from doc comments. Consider using triple-backtick code blocks
+/// in your doc comments instead.
 ///
 /// ## Usage
 /// ```swift
@@ -110,6 +112,7 @@ public macro ShowcaseExample(
 /// ```
 ///
 /// - Parameter title: Optional title for the code block
+@available(*, deprecated, message: "Consider using code blocks in doc comments instead")
 @attached(peer)
 public macro ShowcaseCodeBlock(
     title: String? = nil
@@ -117,7 +120,8 @@ public macro ShowcaseCodeBlock(
 
 /// Specifies an icon for the showcase topic.
 ///
-/// Use this macro to override the default icon at the property/method level.
+/// **⚠️ Experimental**: This macro may be deprecated. Use the `icon` parameter
+/// on `@Showcasable` instead.
 ///
 /// ## Usage
 /// ```swift
@@ -129,12 +133,14 @@ public macro ShowcaseCodeBlock(
 /// ```
 ///
 /// - Parameter name: SF Symbol name
+@available(*, deprecated, message: "Use the icon parameter on @Showcasable instead")
 @attached(peer)
 public macro ShowcaseIcon(_ name: String) = #externalMacro(module: "ShowcaseMacrosPlugin", type: "ShowcaseIconMacro")
 
 /// Adds a description to the showcase documentation.
 ///
-/// Use this macro to provide additional descriptions beyond doc comments.
+/// **⚠️ Experimental**: This macro requires manual content and may be deprecated in favor of
+/// automatic extraction from doc comments. Consider using doc comments on your type instead.
 ///
 /// ## Usage
 /// ```swift
@@ -146,12 +152,14 @@ public macro ShowcaseIcon(_ name: String) = #externalMacro(module: "ShowcaseMacr
 /// ```
 ///
 /// - Parameter text: The description text
+@available(*, deprecated, message: "Use doc comments on your type instead")
 @attached(peer)
 public macro ShowcaseDescription(_ text: String) = #externalMacro(module: "ShowcaseMacrosPlugin", type: "ShowcaseDescriptionMacro")
 
 /// Adds an external link to the showcase documentation.
 ///
-/// Use this macro to reference external resources, documentation, or examples.
+/// **⚠️ Experimental**: This macro requires manual content and may be deprecated.
+/// Consider documenting links in your doc comments instead.
 ///
 /// ## Usage
 /// ```swift
@@ -165,6 +173,7 @@ public macro ShowcaseDescription(_ text: String) = #externalMacro(module: "Showc
 /// - Parameters:
 ///   - title: Link title
 ///   - url: Target URL as string
+@available(*, deprecated, message: "Consider documenting links in doc comments instead")
 @attached(peer)
 public macro ShowcaseLink(
     _ title: String,
