@@ -52,6 +52,12 @@ enum APIReferenceGenerator {
             content.append(generateDescriptionBlock(summary))
         }
         
+        // Add code blocks from doc comments
+        for (index, codeBlock) in doc.codeBlocks.enumerated() {
+            let title = doc.codeBlocks.count == 1 ? "Example" : "Example \(index + 1)"
+            content.append(generateCodeBlock(title: title, code: codeBlock))
+        }
+        
         let signatureDoc = buildInitializerSignature(initializer: initializer)
         content.append(generateDeclarationBlock(signatureDoc))
         
@@ -68,6 +74,12 @@ enum APIReferenceGenerator {
             content.append(generateDescriptionBlock(summary))
         }
         
+        // Add code blocks from doc comments
+        for (index, codeBlock) in doc.codeBlocks.enumerated() {
+            let title = doc.codeBlocks.count == 1 ? "Example" : "Example \(index + 1)"
+            content.append(generateCodeBlock(title: title, code: codeBlock))
+        }
+        
         let signatureDoc = buildMethodSignature(method: method)
         content.append(generateDeclarationBlock(signatureDoc))
         
@@ -81,6 +93,12 @@ enum APIReferenceGenerator {
         
         if let summary = doc.summary {
             content.append(generateDescriptionBlock(summary))
+        }
+        
+        // Add code blocks from doc comments
+        for (index, codeBlock) in doc.codeBlocks.enumerated() {
+            let title = doc.codeBlocks.count == 1 ? "Example" : "Example \(index + 1)"
+            content.append(generateCodeBlock(title: title, code: codeBlock))
         }
         
         let signatureDoc = buildPropertySignature(property: property)
@@ -157,6 +175,17 @@ enum APIReferenceGenerator {
         Description {
             \"\"\"
             \(summary)
+            \"\"\"
+        }
+        """
+    }
+    
+    private static func generateCodeBlock(title: String, code: String) -> String {
+        let indented = code.replacingOccurrences(of: "\n", with: "\n            ")
+        return """
+        CodeBlock("\(title)") {
+            \"\"\"
+            \(indented)
             \"\"\"
         }
         """

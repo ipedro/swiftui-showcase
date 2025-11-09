@@ -82,4 +82,7 @@ struct DocComment {
     
     /// Important callouts
     let important: [String]
+    
+    /// Code blocks extracted from doc comments (e.g., ```swift ... ```)
+    let codeBlocks: [String]
 }

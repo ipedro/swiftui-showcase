@@ -34,9 +34,12 @@ enum DocCommentParser {
         var notes: [String] = []
         var warnings: [String] = []
         var important: [String] = []
+        var codeBlocks: [String] = []
         var currentSection: Section = .summary
         var currentParam: String?
         var currentParamLines: [String] = []
+        var inCodeBlock: Bool = false
+        var currentCodeBlockLines: [String] = []
     }
     
     /// Parses a raw doc comment string into structured DocComment.
@@ -59,6 +62,29 @@ enum DocCommentParser {
     // MARK: - Parsing Helpers
     
     private static func parseLine(_ line: String, state: inout ParsingState) {
+        // Check for code block markers (```swift or just ```)
+        if line.hasPrefix("```") {
+            if state.inCodeBlock {
+                // End of code block
+                let codeBlock = state.currentCodeBlockLines.joined(separator: "\n")
+                if !codeBlock.isEmpty {
+                    state.codeBlocks.append(codeBlock)
+                }
+                state.currentCodeBlockLines = []
+                state.inCodeBlock = false
+            } else {
+                // Start of code block
+                state.inCodeBlock = true
+            }
+            return
+        }
+        
+        // If inside code block, accumulate lines
+        if state.inCodeBlock {
+            state.currentCodeBlockLines.append(line)
+            return
+        }
+        
         // Check for section markers first
         if let newSection = detectSectionMarker(line, state: &state) {
             state.currentSection = newSection
@@ -256,7 +282,8 @@ enum DocCommentParser {
             throws: finalState.throwsInfo,
             notes: finalState.notes,
             warnings: finalState.warnings,
-            important: finalState.important
+            important: finalState.important,
+            codeBlocks: finalState.codeBlocks
         )
     }
     
@@ -269,7 +296,8 @@ enum DocCommentParser {
             throws: nil,
             notes: [],
             warnings: [],
-            important: []
+            important: [],
+            codeBlocks: []
         )
     }
 }
