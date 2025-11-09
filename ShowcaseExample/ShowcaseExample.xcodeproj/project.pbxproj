@@ -7,9 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		EB7EB9A92CF919D200366932 /* Showcase in Frameworks */ = {isa = PBXBuildFile; productRef = EB7EB9A82CF919D200366932 /* Showcase */; };
-		EB7EB9AA2CF919D200366932 /* Showcase in Embed Frameworks */ = {isa = PBXBuildFile; productRef = EB7EB9A82CF919D200366932 /* Showcase */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		EBCB6CAC2EC0FDFB00D77DCB /* ShowcaseMacros in Frameworks */ = {isa = PBXBuildFile; productRef = EBCB6CAB2EC0FDFB00D77DCB /* ShowcaseMacros */; };
+		EBAE8CDA2EC100C80042E587 /* Showcase in Frameworks */ = {isa = PBXBuildFile; productRef = EBAE8CD92EC100C80042E587 /* Showcase */; };
+		EBAE8CDC2EC100C80042E587 /* ShowcaseMacros in Frameworks */ = {isa = PBXBuildFile; productRef = EBAE8CDB2EC100C80042E587 /* ShowcaseMacros */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -19,7 +18,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				EB7EB9AA2CF919D200366932 /* Showcase in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -43,8 +41,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EB7EB9A92CF919D200366932 /* Showcase in Frameworks */,
-				EBCB6CAC2EC0FDFB00D77DCB /* ShowcaseMacros in Frameworks */,
+				EBAE8CDC2EC100C80042E587 /* ShowcaseMacros in Frameworks */,
+				EBAE8CDA2EC100C80042E587 /* Showcase in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -96,8 +94,8 @@
 			);
 			name = ShowcaseExample;
 			packageProductDependencies = (
-				EB7EB9A82CF919D200366932 /* Showcase */,
-				EBCB6CAB2EC0FDFB00D77DCB /* ShowcaseMacros */,
+				EBAE8CD92EC100C80042E587 /* Showcase */,
+				EBAE8CDB2EC100C80042E587 /* ShowcaseMacros */,
 			);
 			productName = ShowcaseExample;
 			productReference = EBA50C2A2CF80CD5000FB649 /* ShowcaseExample.app */;
@@ -128,7 +126,7 @@
 			mainGroup = EBA50C212CF80CD5000FB649;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				EBA50C3E2CF80D24000FB649 /* XCLocalSwiftPackageReference ".." */,
+				EBAE8CD82EC100C80042E587 /* XCLocalSwiftPackageReference "../../swiftui-showcase" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = EBA50C2B2CF80CD5000FB649 /* Products */;
@@ -377,21 +375,19 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		EBA50C3E2CF80D24000FB649 /* XCLocalSwiftPackageReference ".." */ = {
+		EBAE8CD82EC100C80042E587 /* XCLocalSwiftPackageReference "../../swiftui-showcase" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = ..;
+			relativePath = "../../swiftui-showcase";
 		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		EB7EB9A82CF919D200366932 /* Showcase */ = {
+		EBAE8CD92EC100C80042E587 /* Showcase */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = EBA50C3E2CF80D24000FB649 /* XCLocalSwiftPackageReference ".." */;
 			productName = Showcase;
 		};
-		EBCB6CAB2EC0FDFB00D77DCB /* ShowcaseMacros */ = {
+		EBAE8CDB2EC100C80042E587 /* ShowcaseMacros */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = EBA50C3E2CF80D24000FB649 /* XCLocalSwiftPackageReference ".." */;
 			productName = ShowcaseMacros;
 		};
 /* End XCSwiftPackageProductDependency section */

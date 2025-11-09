@@ -12,11 +12,6 @@ let package = Package(
     products: [
         .library(
             name: "Showcase",
-            type: .dynamic,
-            targets: ["Showcase"]
-        ),
-        .library(
-            name: "Showcase-auto",
             targets: ["Showcase"]
         ),
         .library(

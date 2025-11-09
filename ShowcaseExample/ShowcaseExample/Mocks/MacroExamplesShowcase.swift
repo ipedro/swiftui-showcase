@@ -31,7 +31,7 @@ import SwiftUI
 import Showcase
 import ShowcaseMacros
 
-// MARK: - Button Component with Auto-Generated Code
+// MARK: - Button Component with Auto-Generated Code 
 
 /// A customizable button component for the design system
 @Showcasable(chapter: "Components", icon: "button.horizontal", autoDiscover: false)

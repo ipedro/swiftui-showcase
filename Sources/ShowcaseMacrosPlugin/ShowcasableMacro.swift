@@ -1599,7 +1599,7 @@ enum CodeGenerator {
                 // Indent the source code to match the CodeBlock indentation
                 let indentedCode = indentMultiline(sourceCode, indent: "                    ")
                 topicContent.append("""
-                CodeBlock(title: "\(example.title) - Source Code") {
+                CodeBlock("\(example.title) - Source Code") {
                     \"\"\"
                     \(indentedCode)
                     \"\"\"
@@ -1618,7 +1618,7 @@ enum CodeGenerator {
         }
         
         let showcaseTopicDecl = DeclSyntax(stringLiteral: """
-            @MainActor public static var showcaseTopic: Topic {
+            public static var showcaseTopic: Topic {
                 \(topicInit) {\(content)}
             }
             """)
