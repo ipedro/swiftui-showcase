@@ -37,10 +37,10 @@ import ShowcaseMacros
 @Showcasable(chapter: "Components", icon: "button.horizontal", autoDiscover: false)
 struct DSButton: View {
     let title: String
-    let style: ButtonStyle
+    let style: Style
     let action: () -> Void
     
-    enum ButtonStyle {
+    enum Style {
         case primary, secondary, destructive
         
         var color: Color {
@@ -127,25 +127,17 @@ struct DSCard<Content: View>: View {
 
 // MARK: - DSCard Examples (Independent Example Views)
 
-@Showcasable(chapter: "Components", icon: "rectangle.stack")
 struct DSCardSimpleExample: View {
-    @ShowcaseExample(title: "Simple Card")
-    static var example: some View {
+    var body: some View {
         DSCard(title: "Welcome") {
             Text("This is a simple card component")
                 .foregroundColor(.secondary)
         }
     }
-    
-    var body: some View {
-        Self.example
-    }
 }
 
-@Showcasable(chapter: "Components", icon: "rectangle.stack")
 struct DSCardWithImageExample: View {
-    @ShowcaseExample(title: "Card with Image")
-    static var example: some View {
+    var body: some View {
         DSCard(title: "Photo Card") {
             VStack(spacing: 12) {
                 Image(systemName: "photo")
@@ -157,19 +149,10 @@ struct DSCardWithImageExample: View {
             }
         }
     }
-    
-    var body: some View {
-        Self.example
-    }
 }
 
-@Showcasable(chapter: "Components", icon: "rectangle.stack")
 struct DSCardNoTitleExample: View {
-    @ShowcaseExample(
-        title: "Card without Title",
-        description: "Cards can omit the title for cleaner layouts"
-    )
-    static var example: some View {
+    var body: some View {
         DSCard {
             HStack {
                 Image(systemName: "checkmark.circle.fill")
@@ -177,10 +160,6 @@ struct DSCardNoTitleExample: View {
                 Text("Operation completed successfully")
             }
         }
-    }
-    
-    var body: some View {
-        Self.example
     }
 }
 
@@ -245,9 +224,6 @@ extension Chapter {
         }
         
         DSButton.self
-        DSCardSimpleExample.self
-        DSCardWithImageExample.self
-        DSCardNoTitleExample.self
         DSBadge.self
     }
 }
