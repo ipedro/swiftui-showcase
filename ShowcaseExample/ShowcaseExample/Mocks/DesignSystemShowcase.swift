@@ -31,9 +31,11 @@
 //  • Multiple examples with auto-generated code blocks (NEW in Phase 6!)
 //  • Code blocks for integration examples
 //  • Design guideline links
+//  • Control code block visibility with showCode parameter (showCode: true/false)
 //
 //  **Note**: This file manually creates the Topic structure to demonstrate the output.
 //  See MacroExamplesShowcase.swift for real @Showcasable usage with auto-generated code.
+//  For showCode parameter examples, see the dsPrimaryButton and dsAvatar topics below.
 //
 
 import SwiftUI
@@ -55,6 +57,45 @@ extension Topic {
             ## Type Relationships
             
             Conforms to: `View`
+            
+            ## Auto-Generated Code Blocks (Phase 6 Feature)
+            
+            When using @Showcasable macro with @ShowcaseExample, code blocks are \
+            automatically generated from example source code. This demonstrates the feature:
+            
+            **With Code Block (default behavior):**
+            ```swift
+            @ShowcaseExample(title: "Primary Button")
+            static var primary: some View {
+                DSPrimaryButton(title: "Continue") { }
+            }
+            ```
+            This generates BOTH:
+            • Example preview (live interactive view)
+            • CodeBlock (syntax-highlighted source code)
+            
+            **Without Code Block (opt-out):**
+            ```swift
+            @ShowcaseExample(title: "Disabled", showCode: false)
+            static var disabled: some View {
+                DSPrimaryButton(title: "Unavailable") { }
+                    .opacity(0.5)
+            }
+            ```
+            This generates ONLY:
+            • Example preview (no code block shown)
+            
+            **Use showCode: false when:**
+            • The example is self-explanatory visually
+            • Code adds no additional value
+            • Reducing documentation length
+            • Example has complex surrounding test code
+            
+            **Use showCode: true (default) when:**
+            • API usage patterns are not obvious
+            • Showing specific parameter combinations
+            • Demonstrating modifiers or chaining
+            • Teaching implementation details
             """
         }
         
@@ -392,6 +433,21 @@ extension Topic {
             ## Type Relationships
             
             Conforms to: `View`
+            
+            ## showCode Parameter Example
+            
+            This topic demonstrates how @ShowcaseExample's showCode parameter works:
+            
+            • **"Initials" example** - Uses `showCode: true` (default) to show both \
+            the live preview AND the source code. Useful when the implementation \
+            pattern is important to understand.
+            
+            • **"Different Sizes" example** - Uses `showCode: false` to show ONLY \
+            the visual preview. The code is complex iteration logic that doesn't \
+            add value to the documentation - the visual result is self-explanatory.
+            
+            This gives documentation authors fine-grained control over when to \
+            display implementation details versus keeping the focus on visual results.
             """
         }
         
