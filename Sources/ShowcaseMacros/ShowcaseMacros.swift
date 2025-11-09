@@ -93,6 +93,101 @@ public macro ShowcaseExample(
     description: String? = nil
 ) = #externalMacro(module: "ShowcaseMacrosPlugin", type: "ShowcaseExampleMacro")
 
+/// Adds a code block to the showcase documentation.
+///
+/// Use this macro to include code snippets directly in your showcasable types.
+///
+/// ## Usage
+/// ```swift
+/// @Showcasable(chapter: "Utilities")
+/// struct NetworkClient {
+///     @ShowcaseCodeBlock(title: "Basic Request")
+///     static let basicUsage = """
+///     let client = NetworkClient()
+///     let data = try await client.fetch(url: url)
+///     """
+/// }
+/// ```
+///
+/// - Parameter title: Optional title for the code block
+@attached(peer)
+public macro ShowcaseCodeBlock(
+    title: String? = nil
+) = #externalMacro(module: "ShowcaseMacrosPlugin", type: "ShowcaseCodeBlockMacro")
+
+/// Specifies an icon for the showcase topic.
+///
+/// Use this macro to override the default icon at the property/method level.
+///
+/// ## Usage
+/// ```swift
+/// @Showcasable(chapter: "Components")
+/// struct CustomButton {
+///     @ShowcaseIcon("star.fill")
+///     var body: some View { ... }
+/// }
+/// ```
+///
+/// - Parameter name: SF Symbol name
+@attached(peer)
+public macro ShowcaseIcon(_ name: String) = #externalMacro(module: "ShowcaseMacrosPlugin", type: "ShowcaseIconMacro")
+
+/// Adds a description to the showcase documentation.
+///
+/// Use this macro to provide additional descriptions beyond doc comments.
+///
+/// ## Usage
+/// ```swift
+/// @Showcasable(chapter: "Layouts")
+/// struct GridView {
+///     @ShowcaseDescription("A responsive grid that adapts to screen size")
+///     var body: some View { ... }
+/// }
+/// ```
+///
+/// - Parameter text: The description text
+@attached(peer)
+public macro ShowcaseDescription(_ text: String) = #externalMacro(module: "ShowcaseMacrosPlugin", type: "ShowcaseDescriptionMacro")
+
+/// Adds an external link to the showcase documentation.
+///
+/// Use this macro to reference external resources, documentation, or examples.
+///
+/// ## Usage
+/// ```swift
+/// @Showcasable(chapter: "APIs")
+/// struct APIClient {
+///     @ShowcaseLink("API Documentation", url: "https://api.example.com/docs")
+///     static let documentation = ()
+/// }
+/// ```
+///
+/// - Parameters:
+///   - title: Link title
+///   - url: Target URL as string
+@attached(peer)
+public macro ShowcaseLink(
+    _ title: String,
+    url: String
+) = #externalMacro(module: "ShowcaseMacrosPlugin", type: "ShowcaseLinkMacro")
+
+/// Hides a member from showcase documentation.
+///
+/// Use this macro to exclude specific properties or methods from auto-discovery.
+///
+/// ## Usage
+/// ```swift
+/// @Showcasable(chapter: "Models", autoDiscover: true)
+/// struct User {
+///     var name: String
+///     
+///     @ShowcaseHidden
+///     private var internalCache: [String: Any]
+/// }
+/// ```
+@attached(peer)
+public macro ShowcaseHidden() = #externalMacro(module: "ShowcaseMacrosPlugin", type: "ShowcaseHiddenMacro")
+
 // MARK: - Protocol
 
 /// A type that can provide showcase documentation.

@@ -1,4 +1,4 @@
-// ShowcaseMacrosPlugin.swift
+// ShowcaseHiddenMacro.swift
 // Copyright (c) 2025 Pedro Almeida
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,18 +19,22 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import SwiftCompilerPlugin
+import SwiftSyntax
 import SwiftSyntaxMacros
 
-@main
-struct ShowcaseMacrosPlugin: CompilerPlugin {
-    let providingMacros: [Macro.Type] = [
-        ShowcasableMacro.self,
-        ShowcaseExampleMacro.self,
-        ShowcaseCodeBlockMacro.self,
-        ShowcaseIconMacro.self,
-        ShowcaseDescriptionMacro.self,
-        ShowcaseLinkMacro.self,
-        ShowcaseHiddenMacro.self,
-    ]
+/// Peer macro that marks a member as hidden from showcase documentation.
+///
+/// This macro is used for discovery by `@Showcasable`. It doesn't generate
+/// any code itself but signals to the parent macro to exclude this member
+/// from auto-discovery.
+public struct ShowcaseHiddenMacro: PeerMacro {
+    public static func expansion(
+        of node: AttributeSyntax,
+        providingPeersOf declaration: some DeclSyntaxProtocol,
+        in context: some MacroExpansionContext
+    ) throws -> [DeclSyntax] {
+        // This is a marker macro - no code generation needed
+        // The @Showcasable macro will discover and respect this during its expansion
+        return []
+    }
 }
