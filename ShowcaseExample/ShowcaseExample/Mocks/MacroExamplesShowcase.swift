@@ -112,24 +112,28 @@ struct DSCard<Content: View>: View {
     }
     
     @ShowcaseExample(title: "Simple Card")
-    static var simple: some View {
+    static var simple: DSCard<AnyView> {
         DSCard(title: "Welcome") {
-            Text("This is a simple card component")
-                .foregroundColor(.secondary)
+            AnyView(
+                Text("This is a simple card component")
+                    .foregroundColor(.secondary)
+            )
         }
     }
     
     @ShowcaseExample(title: "Card with Image")
-    static var withImage: some View {
+    static var withImage: DSCard<AnyView> {
         DSCard(title: "Photo Card") {
-            VStack(spacing: 12) {
-                Image(systemName: "photo")
-                    .font(.system(size: 48))
-                    .foregroundColor(.blue)
-                Text("Add your photo here")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-            }
+            AnyView(
+                VStack(spacing: 12) {
+                    Image(systemName: "photo")
+                        .font(.system(size: 48))
+                        .foregroundColor(.blue)
+                    Text("Add your photo here")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+            )
         }
     }
     
@@ -137,13 +141,15 @@ struct DSCard<Content: View>: View {
         title: "Card without Title",
         description: "Cards can omit the title for cleaner layouts"
     )
-    static var noTitle: some View {
+    static var noTitle: DSCard<AnyView> {
         DSCard {
-            HStack {
-                Image(systemName: "checkmark.circle.fill")
-                    .foregroundColor(.green)
-                Text("Operation completed successfully")
-            }
+            AnyView(
+                HStack {
+                    Image(systemName: "checkmark.circle.fill")
+                        .foregroundColor(.green)
+                    Text("Operation completed successfully")
+                }
+            )
         }
     }
     
