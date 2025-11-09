@@ -152,7 +152,8 @@ struct OptimizationTests {
             let icon1 = Image(systemName: "star")
             let icon2 = Image(systemName: "circle")
 
-            let chapterWithIcon = Chapter("Test", icon: icon1) {
+            let chapterWithIcon = Chapter("Test") {
+                Icon(icon1)
                 Topic("Topic1")
             }
             let result = chapterWithIcon.withIcon(icon2)

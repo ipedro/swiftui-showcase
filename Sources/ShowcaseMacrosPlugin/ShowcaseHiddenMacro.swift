@@ -1,6 +1,5 @@
-// ShowcaseNavigationTopic.swift
+// ShowcaseHiddenMacro.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/8/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,42 +19,22 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import SwiftUI
+import SwiftSyntax
+import SwiftSyntaxMacros
 
-struct ShowcaseNavigationTopic: View {
-    var data: Topic
-
-    init?(_ data: Topic?) {
-        guard let data else { return nil }
-        self.data = data
-    }
-
-    var body: some View {
-        ShowcaseTopic(data)
-            .equatable()
-            .navigationTitle(data.title)
-            .accessibilityElement(children: .contain)
-            .toolbar {
-                ToolbarItem {
-                    ShowcaseIndexMenuWrapper(data)
-                }
-            }
-            // must come after toolbar
-            .modifier(ShowcaseScrollViewReader())
-    }
-}
-
-// Wrapper to handle optional menu
-private struct ShowcaseIndexMenuWrapper: View {
-    let topic: Topic
-    
-    init(_ topic: Topic) {
-        self.topic = topic
-    }
-    
-    var body: some View {
-        if let children = topic.children, !children.isEmpty {
-            ShowcaseIndexMenu(topic)
-        }
+/// Peer macro that marks a member as hidden from showcase documentation.
+///
+/// This macro is used for discovery by `@Showcasable`. It doesn't generate
+/// any code itself but signals to the parent macro to exclude this member
+/// from auto-discovery.
+public struct ShowcaseHiddenMacro: PeerMacro {
+    public static func expansion(
+        of node: AttributeSyntax,
+        providingPeersOf declaration: some DeclSyntaxProtocol,
+        in context: some MacroExpansionContext
+    ) throws -> [DeclSyntax] {
+        // This is a marker macro - no code generation needed
+        // The @Showcasable macro will discover and respect this during its expansion
+        return []
     }
 }

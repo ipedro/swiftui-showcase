@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 import Foundation
+import SwiftUI
 
 /// A type-erased component that can contribute to a chapter's content when
 /// assembled through ``ChapterContentBuilder``.
@@ -33,10 +34,12 @@ public extension Chapter {
     /// structure consumed by the chapter initializers.
     struct Content: AdditiveArithmetic {
         public var description: String?
+        public var icon: Image?
         public var topics: [Topic]
 
-        public init(description: String? = nil, topics: [Topic] = []) {
+        public init(description: String? = nil, icon: Image? = nil, topics: [Topic] = []) {
             self.description = description
+            self.icon = icon
             self.topics = topics
         }
 
@@ -51,6 +54,10 @@ public extension Chapter {
 
             if let description = rhs.description {
                 result.description = description
+            }
+            
+            if let icon = rhs.icon {
+                result.icon = icon
             }
 
             if !rhs.topics.isEmpty {
@@ -99,6 +106,20 @@ public enum ChapterContentBuilder {
         expression.merge(into: &content)
         return content
     }
+    
+    /// Allows using Showcasable types directly in chapter builders without `.showcaseTopic`
+    public static func buildExpression<T>(_ type: T.Type) -> Chapter.Content where T: Showcasable {
+        var content = Chapter.Content()
+        content.topics.append(T.showcaseTopic)
+        return content
+    }
+
+    /// Allows using Showcasable types directly in chapter builders without `.showcaseTopic`
+    public static func buildExpression<T>(_ expression: T) -> Chapter.Content where T: Showcasable {
+        var content = Chapter.Content()
+        content.topics.append(T.showcaseTopic)
+        return content
+    }
 
     public static func buildExpression(_ expression: [ChapterContentConvertible]) -> Chapter.Content {
         expression.reduce(into: Chapter.Content()) { partialResult, element in
@@ -111,11 +132,23 @@ public enum ChapterContentBuilder {
     }
 }
 
+// MARK: - Description Support
+
 extension Description: ChapterContentConvertible {
     public func merge(into content: inout Chapter.Content) {
         content.description = value
     }
 }
+
+// MARK: - Icon Support
+
+extension Icon: ChapterContentConvertible {
+    public func merge(into content: inout Chapter.Content) {
+        content.icon = image
+    }
+}
+
+// MARK: - Topic Support
 
 extension Topic: ChapterContentConvertible {
     public func merge(into content: inout Chapter.Content) {

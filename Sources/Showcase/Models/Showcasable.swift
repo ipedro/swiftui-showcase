@@ -1,6 +1,5 @@
-// ShowcaseNavigationTopic.swift
+// Showcasable.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/8/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,42 +19,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import SwiftUI
+import Foundation
 
-struct ShowcaseNavigationTopic: View {
-    var data: Topic
-
-    init?(_ data: Topic?) {
-        guard let data else { return nil }
-        self.data = data
-    }
-
-    var body: some View {
-        ShowcaseTopic(data)
-            .equatable()
-            .navigationTitle(data.title)
-            .accessibilityElement(children: .contain)
-            .toolbar {
-                ToolbarItem {
-                    ShowcaseIndexMenuWrapper(data)
-                }
-            }
-            // must come after toolbar
-            .modifier(ShowcaseScrollViewReader())
-    }
-}
-
-// Wrapper to handle optional menu
-private struct ShowcaseIndexMenuWrapper: View {
-    let topic: Topic
+/// A type that can provide showcase documentation.
+///
+/// This protocol is automatically conformed to by types marked with `@Showcasable`.
+/// You typically don't need to conform to this manually.
+public protocol Showcasable {
+    /// The generated topic containing this type's documentation.
+    static var showcaseTopic: Topic { get }
     
-    init(_ topic: Topic) {
-        self.topic = topic
-    }
-    
-    var body: some View {
-        if let children = topic.children, !children.isEmpty {
-            ShowcaseIndexMenu(topic)
-        }
-    }
+    /// The chapter this showcasable belongs to.
+    static var showcaseChapter: String { get }
 }

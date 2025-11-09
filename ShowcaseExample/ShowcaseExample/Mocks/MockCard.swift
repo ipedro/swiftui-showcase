@@ -49,34 +49,30 @@ extension Topic {
             """
         }
 
-        Links {
-            ExternalLink("Code", .init(string: "NavigationalCard"))
-            ExternalLink("Design", .init(string: "https://google.com"))
+        ExternalLink("Code", .init(string: "NavigationalCard"))
+        ExternalLink("Design", .init(string: "https://google.com"))
+
+        CodeBlock("elevated") {
+            """
+            NavigationalCard {
+                // action
+            } label: {
+                Text("I'm content")
+            }
+            """
         }
 
-        Code {
-            CodeBlock("elevated") {
-                """
-                NavigationalCard {
-                    // action
-                } label: {
-                    Text("I'm content")
-                }
-                """
+        CodeBlock("outlined") {
+            """
+            NavigationalCard {
+                // action
+            } label: {
+                Text("I'm content")
             }
-
-            CodeBlock("outlined") {
-                """
-                NavigationalCard {
-                    // action
-                } label: {
-                    Text("I'm content")
-                }
-                """
-            }
+            """
         }
 
-        Preview {
+        Example {
             MockPreviews()
         }
     }
@@ -92,22 +88,18 @@ extension Topic {
             """
         }
 
-        Links {
-            ExternalLink("Code", .init(string: "SelectableCard"))
-            ExternalLink("Design", .init(string: "https://google.com"))
-        }
+        ExternalLink("Code", .init(string: "SelectableCard"))
+        ExternalLink("Design", .init(string: "https://google.com"))
 
-        Code {
-            CodeBlock {
-                """
-                SelectableCard(isOn: $isOn) {
-                    Text("I'm content")
-                }
-                """
+        CodeBlock {
+            """
+            SelectableCard(isOn: $isOn) {
+                Text("I'm content")
             }
+            """
         }
 
-        Preview {
+        Example {
             MockPreviews()
         }
     }
@@ -127,22 +119,18 @@ extension Topic {
             """
         }
 
-        Links {
-            ExternalLink("Code", .init(string: "StaticCard"))
-            ExternalLink("Design", .init(string: "https://google.com"))
-        }
+        ExternalLink("Code", .init(string: "StaticCard"))
+        ExternalLink("Design", .init(string: "https://google.com"))
 
-        Code {
-            CodeBlock {
-                """
-                StaticCard {
-                    Text("I'm content")
-                }
-                """
+        CodeBlock {
+            """
+            StaticCard {
+                Text("I'm content")
             }
+            """
         }
 
-        Preview {
+        Example {
             MockPreviews()
         }
     }

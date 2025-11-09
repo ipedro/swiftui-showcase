@@ -99,7 +99,7 @@ struct ContentView: View {
                 },
                 Chapter("Section 2") {
                     Topic("Button") {
-                        Preview {
+                        Example {
                             Button("Tap me") {}
                         }
                     }
@@ -130,7 +130,7 @@ struct ContentView: View {
                     }
 
                     Topic("Button") {
-                        Preview {
+                        Example {
                             Button("Tap me") {}
                         }
                     }

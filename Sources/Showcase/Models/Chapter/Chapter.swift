@@ -39,27 +39,6 @@ public struct Chapter: Identifiable {
     /// The showcase topics within the chapter.
     public var topics: [Topic]
 
-    /// Initializes a showcase chapter using a ``ChapterContentBuilder``
-    /// closure to describe its description and topics while preserving the
-    /// existing API surface.
-    /// - Parameters:
-    ///   - title: The title of the chapter.
-    ///   - icon: Optional icon for the chapter.
-    ///   - content: A builder closure that produces the chapter description and topics.
-    public init(
-        _ title: String,
-        icon: @escaping @autoclosure () -> Image,
-        @ChapterContentBuilder _ content: () -> Content = { Content() }
-    ) {
-        let icon = icon()
-        let content = content()
-
-        _title = Lazy(wrappedValue: title)
-        _description = Lazy(wrappedValue: content.description ?? "")
-        _icon = Lazy(wrappedValue: icon)
-        topics = content.topics.sortedWithIcon(icon)
-    }
-
     /// Initializes a showcase chapter using a ``ChapterContentBuilder`` closure
     /// to describe its description and topics without providing an explicit icon.
     /// - Parameters:
@@ -73,8 +52,8 @@ public struct Chapter: Identifiable {
 
         _title = Lazy(wrappedValue: title)
         _description = Lazy(wrappedValue: content.description ?? "")
-        _icon = Lazy(wrappedValue: nil)
-        topics = content.topics.sorted()
+        _icon = Lazy(wrappedValue: content.icon)
+        topics = content.topics.sortedWithIcon(content.icon)
     }
 }
 

@@ -283,7 +283,7 @@ struct PerformanceTests {
             // Access properties multiple times - should be cached
             for _ in 0 ..< 100 {
                 _ = topic.description
-                _ = topic.codeBlocks
+                _ = topic.items
             }
         }, targetSeconds: 0.001)
     }

@@ -32,10 +32,7 @@ struct DefaultBuilderTests {
 
         #expect(topic.title == "Test Topic")
         #expect(topic.description == "")
-        #expect(topic.codeBlocks.isEmpty)
-        #expect(topic.links.isEmpty)
-        #expect(topic.embeds.isEmpty)
-        #expect(topic.examples.isEmpty)
+        #expect(topic.items.isEmpty)
         #expect(topic.children == nil)
     }
 
@@ -47,7 +44,7 @@ struct DefaultBuilderTests {
         #expect(topic.title == "Test Topic")
         #expect(topic.icon != nil)
         #expect(topic.description == "")
-        #expect(topic.codeBlocks.isEmpty)
+        #expect(topic.items.isEmpty)
     }
 
     @Test("Chapter with no content closure")
@@ -62,7 +59,9 @@ struct DefaultBuilderTests {
     @Test("Chapter with icon and no content closure")
     func chapterWithIconWithoutBraces() {
         let icon = Image(systemName: "book")
-        let chapter = Chapter("Test Chapter", icon: icon)
+        let chapter = Chapter("Test Chapter") {
+            Icon(icon)
+        }
 
         #expect(chapter.title == "Test Chapter")
         #expect(chapter.icon != nil)
@@ -81,7 +80,9 @@ struct DefaultBuilderTests {
 
     @Test("Document with description and no content closure")
     func documentWithDescriptionWithoutBraces() {
-        let document = Document("Test Document", description: "A test") {}
+        let document = Document("Test Document") {
+            Description("A test")
+        }
 
         #expect(document.title == "Test Document")
         #expect(document.description == "A test")
@@ -91,7 +92,9 @@ struct DefaultBuilderTests {
     @Test("Document with icon and no content closure")
     func documentWithIconWithoutBraces() {
         let icon = Image(systemName: "doc")
-        let document = Document("Test Document", icon: icon) {}
+        let document = Document("Test Document") {
+            Icon(icon)
+        }
 
         #expect(document.title == "Test Document")
         #expect(document.icon != nil)

@@ -32,22 +32,18 @@ extension Topic {
             """
         }
 
-        Links {
-            ExternalLink(" HIG", "https://developer.apple.com/design/human-interface-guidelines/buttons")
-        }
+        ExternalLink("HIG", "https://developer.apple.com/design/human-interface-guidelines/buttons")
 
-        Code {
-            CodeBlock {
-                """
-                Button("I'm a bordered button") {
-                    // do something
-                }
-                .buttonStyle(.bordered)
-                """
+        CodeBlock {
+            """
+            Button("I'm a bordered button") {
+                // do something
             }
+            .buttonStyle(.bordered)
+            """
         }
 
-        Preview {
+        Example {
             Button("I'm a bordered button") {
                 // do something
             }

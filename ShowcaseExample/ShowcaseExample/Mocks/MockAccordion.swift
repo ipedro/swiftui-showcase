@@ -31,34 +31,30 @@ extension Topic {
             """
         }
 
-        Links {
-            ExternalLink("Code", "https://google.com")
-            ExternalLink("Design", "https://zeroheight.com/700c95a05/p/0309e1-accordion/b/45490a")
+        ExternalLink("Code", "https://google.com")
+        ExternalLink("Design", "https://zeroheight.com/700c95a05/p/0309e1-accordion/b/45490a")
+
+        CodeBlock {
+            """
+            Accordion(data, selection: $selectedRow) { item in
+                Text(item.title).bold()
+            } rowContent: { item in
+                Text(item.content)
+            }
+            """
         }
 
-        Code {
-            CodeBlock {
-                """
-                Accordion(data, selection: $selectedRow) { item in
-                    Text(item.title).bold()
-                } rowContent: { item in
-                    Text(item.content)
-                }
-                """
+        CodeBlock {
+            """
+            Accordion(data, selection: $selectedRow) { item in
+                Text(item.title).bold()
+            } rowContent: { item in
+                Text(item.content)
             }
-
-            CodeBlock {
-                """
-                Accordion(data, selection: $selectedRow) { item in
-                    Text(item.title).bold()
-                } rowContent: { item in
-                    Text(item.content)
-                }
-                """
-            }
+            """
         }
 
-        Preview {
+        Example {
             MockPreviews()
         }
 

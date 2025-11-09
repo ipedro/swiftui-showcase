@@ -61,10 +61,9 @@ public struct ShowcaseNavigationStack: View {
 struct ShowcaseList_Previews: PreviewProvider {
     static var previews: some View {
         ShowcaseNavigationStack(
-            Document(
-                "My Document",
-                description: "This document contains one chapter. That chapter has topics that you can find below."
-            ) {
+            Document("My Document") {
+                Description("This document contains one chapter. That chapter has topics that you can find below.")
+                
                 Chapter("Components") {
                     Description("This chapter is about example components")
 

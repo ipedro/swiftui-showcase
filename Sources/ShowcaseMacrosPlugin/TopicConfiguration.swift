@@ -1,6 +1,5 @@
-// ShowcaseNavigationTopic.swift
+// TopicConfiguration.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/8/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,42 +19,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import SwiftUI
-
-struct ShowcaseNavigationTopic: View {
-    var data: Topic
-
-    init?(_ data: Topic?) {
-        guard let data else { return nil }
-        self.data = data
-    }
-
-    var body: some View {
-        ShowcaseTopic(data)
-            .equatable()
-            .navigationTitle(data.title)
-            .accessibilityElement(children: .contain)
-            .toolbar {
-                ToolbarItem {
-                    ShowcaseIndexMenuWrapper(data)
-                }
-            }
-            // must come after toolbar
-            .modifier(ShowcaseScrollViewReader())
-    }
+/// Configuration for topic generation.
+struct TopicConfiguration {
+    let typeInfo: TypeInfo
+    let chapter: String
+    let icon: String?
+    let autoDiscover: Bool
 }
 
-// Wrapper to handle optional menu
-private struct ShowcaseIndexMenuWrapper: View {
-    let topic: Topic
-    
-    init(_ topic: Topic) {
-        self.topic = topic
-    }
-    
-    var body: some View {
-        if let children = topic.children, !children.isEmpty {
-            ShowcaseIndexMenu(topic)
-        }
-    }
+/// Documentation content for topic generation.
+struct TopicDocumentation {
+    let documentation: Documentation
+    let examples: [ExampleInfo]
+    let codeBlocks: [CodeBlockInfo]
+    let links: [LinkInfo]
+    let descriptions: [String]
+}
+
+/// Discovered API members for topic generation.
+struct TopicMembers {
+    let initializers: [InitializerInfo]
+    let methods: [MethodInfo]
+    let properties: [PropertyInfo]
 }
