@@ -3,30 +3,6 @@
 import CompilerPluginSupport
 import PackageDescription
 
-let isDevelopment = !Context.packageDirectory.contains("/checkouts/")
-
-var dependencies: [Package.Dependency] = [
-    .package(url: "https://github.com/JohnSundell/Splash", from: "0.16.0"),
-    .package(url: "https://github.com/nathantannar4/Engine", from: "2.3.0"),
-    .package(url: "https://github.com/swiftlang/swift-syntax", from: "600.0.0")
-]
-
-var plugins: [Target.PluginUsage] = []
-
-if isDevelopment {
-    dependencies += [
-        .package(url: "https://github.com/SimplyDanny/SwiftLintPlugins", from: "0.58.0"),
-        .package(url: "https://github.com/nicklockwood/SwiftFormat", from: "0.54.0")
-    ]
-
-    plugins += [
-        .plugin(
-            name: "SwiftLintBuildToolPlugin",
-            package: "SwiftLintPlugins"
-        )
-    ]
-}
-
 let package = Package(
     name: "swiftui-showcase",
     platforms: [
@@ -48,7 +24,11 @@ let package = Package(
             targets: ["ShowcaseMacros"]
         )
     ],
-    dependencies: dependencies,
+    dependencies: [
+        .package(url: "https://github.com/JohnSundell/Splash", from: "0.16.0"),
+        .package(url: "https://github.com/nathantannar4/Engine", from: "2.3.0"),
+        .package(url: "https://github.com/swiftlang/swift-syntax", from: "600.0.0")
+    ],
     targets: [
         .target(
             name: "Showcase",
@@ -58,10 +38,8 @@ let package = Package(
                 .product(name: "EngineMacros", package: "Engine")
             ],
             swiftSettings: [
-                .enableExperimentalFeature("AccessLevelOnImport"),
-                .swiftLanguageMode(.v5)
-            ],
-            plugins: plugins
+                .enableExperimentalFeature("AccessLevelOnImport")
+            ]
         ),
         
         // MARK: - Macros
@@ -93,7 +71,6 @@ let package = Package(
                 .swiftLanguageMode(.v5)
             ]
         ),
-        
         .testTarget(
             name: "ShowcaseMacrosTests",
             dependencies: [
@@ -102,5 +79,6 @@ let package = Package(
                 .product(name: "SwiftSyntaxMacrosTestSupport", package: "swift-syntax")
             ]
         )
-    ]
+    ],
+    swiftLanguageModes: [.v5]
 )
