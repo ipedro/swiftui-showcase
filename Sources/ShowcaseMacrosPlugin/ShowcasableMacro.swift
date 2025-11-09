@@ -603,6 +603,11 @@ enum MemberDiscovery {
                 continue
             }
             
+            // Check if static
+            let isStatic = funcDecl.modifiers.contains { modifier in
+                modifier.name.text == "static" || modifier.name.text == "class"
+            }
+            
             let name = funcDecl.name.text
             let signature = extractMethodSignature(from: funcDecl)
             let docComment = extractDocComment(from: funcDecl)
@@ -610,6 +615,7 @@ enum MemberDiscovery {
             methods.append(MethodInfo(
                 name: name,
                 signature: signature,
+                isStatic: isStatic,
                 docComment: docComment
             ))
         }
@@ -664,6 +670,11 @@ enum MemberDiscovery {
                 continue
             }
             
+            // Check if static
+            let isStatic = varDecl.modifiers.contains { modifier in
+                modifier.name.text == "static" || modifier.name.text == "class"
+            }
+            
             // Extract property info
             for binding in varDecl.bindings {
                 guard let name = binding.pattern.as(IdentifierPatternSyntax.self)?.identifier.text else {
@@ -683,6 +694,7 @@ enum MemberDiscovery {
                     name: name,
                     type: type,
                     isComputed: isComputed,
+                    isStatic: isStatic,
                     docComment: docComment
                 ))
             }
@@ -1003,6 +1015,7 @@ struct InitializerInfo {
 struct MethodInfo {
     let name: String
     let signature: String
+    let isStatic: Bool
     let docComment: DocComment
 }
 
@@ -1010,6 +1023,7 @@ struct PropertyInfo {
     let name: String
     let type: String
     let isComputed: Bool
+    let isStatic: Bool
     let docComment: DocComment
 }
 
@@ -1084,6 +1098,113 @@ enum CodeGenerator {
     }
     
     private static func generateAPIReference(
+        initializers: [InitializerInfo],
+        methods: [MethodInfo],
+        properties: [PropertyInfo]
+    ) -> String {
+        var sections: [String] = []
+        
+        // Categorize methods
+        let staticMethods = methods.filter { $0.isStatic }
+        let instanceMethods = methods.filter { !$0.isStatic }
+        
+        // Categorize properties
+        let staticProperties = properties.filter { $0.isStatic }
+        let instanceProperties = properties.filter { !$0.isStatic }
+        
+        // 1. Creating Instances (Initializers)
+        if !initializers.isEmpty {
+            sections.append(generateInitializersSection(initializers))
+        }
+        
+        // 2. Type Methods
+        if !staticMethods.isEmpty {
+            sections.append(generateMethodsSection(staticMethods, title: "Type Methods"))
+        }
+        
+        // 3. Instance Methods
+        if !instanceMethods.isEmpty {
+            sections.append(generateMethodsSection(instanceMethods, title: "Instance Methods"))
+        }
+        
+        // 4. Type Properties
+        if !staticProperties.isEmpty {
+            sections.append(generatePropertiesSection(staticProperties, title: "Type Properties"))
+        }
+        
+        // 5. Instance Properties
+        if !instanceProperties.isEmpty {
+            sections.append(generatePropertiesSection(instanceProperties, title: "Instance Properties"))
+        }
+        
+        return sections.joined(separator: "\n")
+    }
+    
+    private static func generateInitializersSection(_ initializers: [InitializerInfo]) -> String {
+        var content = "CodeBlock(title: \"Creating Instances\") {\n\"\"\"\n"
+        for initializer in initializers {
+            let doc = initializer.docComment
+            if let summary = doc.summary {
+                content += "/// \(summary)\n"
+            }
+            if !doc.parameters.isEmpty {
+                for (name, desc) in doc.parameters.sorted(by: { $0.key < $1.key }) {
+                    content += "/// - Parameter \(name): \(desc)\n"
+                }
+            }
+            if let throwsInfo = doc.throws {
+                content += "/// - Throws: \(throwsInfo)\n"
+            }
+            content += "\(initializer.signature)\n\n"
+        }
+        content += "\"\"\"\n}"
+        return content
+    }
+    
+    private static func generateMethodsSection(_ methods: [MethodInfo], title: String) -> String {
+        var content = "CodeBlock(title: \"\(title)\") {\n\"\"\"\n"
+        for method in methods {
+            let doc = method.docComment
+            if let summary = doc.summary {
+                content += "/// \(summary)\n"
+            }
+            if !doc.parameters.isEmpty {
+                for (name, desc) in doc.parameters.sorted(by: { $0.key < $1.key }) {
+                    content += "/// - Parameter \(name): \(desc)\n"
+                }
+            }
+            if let returns = doc.returns {
+                content += "/// - Returns: \(returns)\n"
+            }
+            if let throwsInfo = doc.throws {
+                content += "/// - Throws: \(throwsInfo)\n"
+            }
+            // Add static keyword for type methods
+            let staticKeyword = method.isStatic ? "static " : ""
+            content += "\(staticKeyword)func \(method.signature)\n\n"
+        }
+        content += "\"\"\"\n}"
+        return content
+    }
+    
+    private static func generatePropertiesSection(_ properties: [PropertyInfo], title: String) -> String {
+        var content = "CodeBlock(title: \"\(title)\") {\n\"\"\"\n"
+        for property in properties {
+            let doc = property.docComment
+            if let summary = doc.summary {
+                content += "/// \(summary)\n"
+            }
+            // Add static keyword for type properties
+            let staticKeyword = property.isStatic ? "static " : ""
+            let keyword = property.isComputed ? "var" : "var"
+            content += "\(staticKeyword)\(keyword) \(property.name): \(property.type)\n\n"
+        }
+        content += "\"\"\"\n}"
+        return content
+    }
+    
+    // Legacy method for backward compatibility - now delegates to categorized sections
+    private static func generateAPIReference_Legacy(
         initializers: [InitializerInfo],
         methods: [MethodInfo],
         properties: [PropertyInfo]
