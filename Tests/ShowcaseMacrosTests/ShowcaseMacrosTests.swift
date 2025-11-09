@@ -54,6 +54,12 @@ final class ShowcaseMacrosTests: XCTestCase {
             extension PrimaryButton: Showcasable {
                 @MainActor public static var showcaseTopic: Topic {
                     Topic("PrimaryButton") {
+                        CodeBlock(language: .swift, title: "Properties") {
+                            \"\"\"
+                            var body: some View
+
+                            \"\"\"
+                        }
                     }
                 }
                 public static var showcaseChapter: String {
@@ -72,7 +78,7 @@ final class ShowcaseMacrosTests: XCTestCase {
         #if canImport(ShowcaseMacrosPlugin)
         assertMacroExpansion(
             """
-            @Showcasable(chapter: "Buttons", icon: "button.horizontal")
+            @Showcasable(chapter: "Buttons", icon: "button.horizontal", autoDiscover: false)
             struct PrimaryButton: View {
                 var body: some View {
                     Button("Primary") {}
@@ -109,7 +115,7 @@ final class ShowcaseMacrosTests: XCTestCase {
         assertMacroExpansion(
             """
             /// A primary action button.
-            @Showcasable(chapter: "Buttons")
+            @Showcasable(chapter: "Buttons", autoDiscover: false)
             struct PrimaryButton: View {
                 var body: some View {
                     Button("Primary") {}
@@ -150,7 +156,7 @@ final class ShowcaseMacrosTests: XCTestCase {
         #if canImport(ShowcaseMacrosPlugin)
         assertMacroExpansion(
             """
-            @Showcasable(chapter: "Buttons")
+            @Showcasable(chapter: "Buttons", autoDiscover: false)
             struct PrimaryButton: View {
                 @ShowcaseExample(title: "Basic")
                 static var basic: some View {
@@ -197,7 +203,7 @@ final class ShowcaseMacrosTests: XCTestCase {
         #if canImport(ShowcaseMacrosPlugin)
         assertMacroExpansion(
             """
-            @Showcasable(chapter: "Buttons")
+            @Showcasable(chapter: "Buttons", autoDiscover: false)
             struct ActionButton: View {
                 @ShowcaseExample(title: "Primary Action", description: "A primary button with icon")
                 static var withIcon: some View {
@@ -245,7 +251,7 @@ final class ShowcaseMacrosTests: XCTestCase {
         #if canImport(ShowcaseMacrosPlugin)
         assertMacroExpansion(
             """
-            @Showcasable(chapter: "Buttons", icon: "button.circle")
+            @Showcasable(chapter: "Buttons", icon: "button.circle", autoDiscover: false)
             struct ActionButton: View {
                 @ShowcaseDescription("A versatile button for actions")
                 static let overview = ""
@@ -531,6 +537,115 @@ final class ShowcaseMacrosTests: XCTestCase {
             extension User: Showcasable {
                 @MainActor public static var showcaseTopic: Topic {
                     Topic("User") {
+                    }
+                }
+                public static var showcaseChapter: String {
+                    "Models"
+                }
+            }
+            """,
+            macros: testMacros
+        )
+        #else
+        throw XCTSkip("Macros are only supported when running tests for the host platform")
+        #endif
+    }
+    
+    // MARK: - Auto-Discovery Tests
+    
+    func testMemberAutoDiscovery() throws {
+        #if canImport(ShowcaseMacrosPlugin)
+        assertMacroExpansion(
+            """
+            /// A user model with full documentation
+            @Showcasable(chapter: "Models")
+            struct DocumentedUser {
+                /// The user's unique identifier
+                var id: String
+                
+                /// The user's display name
+                var name: String
+                
+                /// Creates a new user with the given credentials
+                init(id: String, name: String) {
+                    self.id = id
+                    self.name = name
+                }
+                
+                /// Validates the user's name
+                /// - Returns: true if the name is valid
+                func validateName() -> Bool {
+                    return !name.isEmpty
+                }
+                
+                /// Gets the user's display string
+                func displayString() -> String {
+                    return "\\(name) (\\(id))"
+                }
+            }
+            """,
+            expandedSource: """
+            /// A user model with full documentation
+            struct DocumentedUser {
+                /// The user's unique identifier
+                var id: String
+                
+                /// The user's display name
+                var name: String
+                
+                /// Creates a new user with the given credentials
+                init(id: String, name: String) {
+                    self.id = id
+                    self.name = name
+                }
+                
+                /// Validates the user's name
+                /// - Returns: true if the name is valid
+                func validateName() -> Bool {
+                    return !name.isEmpty
+                }
+                
+                /// Gets the user's display string
+                func displayString() -> String {
+                    return "\\(name) (\\(id))"
+                }
+            }
+
+            extension DocumentedUser: Showcasable {
+                @MainActor public static var showcaseTopic: Topic {
+                    Topic("DocumentedUser") {
+                        Description {
+                            \"\"\"
+                            A user model with full documentation
+                            \"\"\"
+                        }
+                        CodeBlock(language: .swift, title: "Initializers") {
+                            \"\"\"
+                            /// Creates a new user with the given credentials
+                            init(id: String, name: String)
+
+                            \"\"\"
+                        }
+                        CodeBlock(language: .swift, title: "Methods") {
+                            \"\"\"
+                            /// Validates the user's name - Returns: true if the name is valid
+                            func validateName() -> Bool
+
+                            /// Gets the user's display string
+                            func displayString() -> String
+
+                            \"\"\"
+                        }
+                        CodeBlock(language: .swift, title: "Properties") {
+                            \"\"\"
+                            /// The user's unique identifier
+                            var id: String
+
+                            /// The user's display name
+                            var name: String
+
+                            \"\"\"
+                        }
                     }
                 }
                 public static var showcaseChapter: String {
