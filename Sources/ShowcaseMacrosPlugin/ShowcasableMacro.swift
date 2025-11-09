@@ -40,20 +40,20 @@ public struct ShowcasableMacro: ExtensionMacro {
         // Extract documentation
         let documentation = DocumentationExtractor.extract(from: declaration)
         
-        // Find all content if auto-discovery is enabled
-        let examples = arguments.autoDiscover ? ExampleFinder.findExamples(in: declaration) : []
-        let codeBlocks = arguments.autoDiscover ? ExampleFinder.findCodeBlocks(in: declaration) : []
-        let links = arguments.autoDiscover ? ExampleFinder.findLinks(in: declaration) : []
-        let descriptions = arguments.autoDiscover ? ExampleFinder.findDescriptions(in: declaration) : []
+        // Always find manually marked content (regardless of autoDiscover)
+        let examples = ExampleFinder.findExamples(in: declaration)
+        let codeBlocks = ExampleFinder.findCodeBlocks(in: declaration)
+        let links = ExampleFinder.findLinks(in: declaration)
+        let descriptions = ExampleFinder.findDescriptions(in: declaration)
         
-        // Auto-discover members for API reference
+        // Auto-discover members for API reference only if enabled
         let initializers = arguments.autoDiscover ? MemberDiscovery.findInitializers(in: declaration) : []
         let methods = arguments.autoDiscover ? MemberDiscovery.findMethods(in: declaration) : []
         let properties = arguments.autoDiscover ? MemberDiscovery.findProperties(in: declaration) : []
         
         // Generate the extension code
         let (showcaseTopicDecl, chapterDecl) = CodeGenerator.generateMembers(
-            typeName: typeInfo.name,
+            typeInfo: typeInfo,
             chapter: arguments.chapter,
             icon: arguments.icon,
             documentation: documentation,
@@ -63,7 +63,8 @@ public struct ShowcasableMacro: ExtensionMacro {
             descriptions: descriptions,
             initializers: initializers,
             methods: methods,
-            properties: properties
+            properties: properties,
+            autoDiscover: arguments.autoDiscover
         )
         
         let showcasableType = TypeSyntax(stringLiteral: "Showcasable")
@@ -134,26 +135,57 @@ struct MacroArguments {
 struct TypeInfo {
     let name: String
     let genericParameters: String?
+    let inheritedTypes: [String]
+    let genericConstraints: [String]
     
     static func extract(from declaration: some DeclGroupSyntax) throws -> TypeInfo {
         // Extract type name based on declaration kind
         let name: String
         let genericParams: String?
+        let inheritedTypes: [String]
+        let constraints: [String]
         
         if let structDecl = declaration.as(StructDeclSyntax.self) {
             name = structDecl.name.text
             genericParams = structDecl.genericParameterClause?.description.trimmingCharacters(in: .whitespaces)
+            inheritedTypes = extractInheritedTypes(from: structDecl.inheritanceClause)
+            constraints = extractGenericConstraints(from: structDecl.genericWhereClause)
         } else if let classDecl = declaration.as(ClassDeclSyntax.self) {
             name = classDecl.name.text
             genericParams = classDecl.genericParameterClause?.description.trimmingCharacters(in: .whitespaces)
+            inheritedTypes = extractInheritedTypes(from: classDecl.inheritanceClause)
+            constraints = extractGenericConstraints(from: classDecl.genericWhereClause)
         } else if let enumDecl = declaration.as(EnumDeclSyntax.self) {
             name = enumDecl.name.text
             genericParams = enumDecl.genericParameterClause?.description.trimmingCharacters(in: .whitespaces)
+            inheritedTypes = extractInheritedTypes(from: enumDecl.inheritanceClause)
+            constraints = extractGenericConstraints(from: enumDecl.genericWhereClause)
         } else {
             throw MacroError.unsupportedDeclarationType
         }
         
-        return TypeInfo(name: name, genericParameters: genericParams)
+        return TypeInfo(
+            name: name,
+            genericParameters: genericParams,
+            inheritedTypes: inheritedTypes,
+            genericConstraints: constraints
+        )
+    }
+    
+    private static func extractInheritedTypes(from clause: InheritanceClauseSyntax?) -> [String] {
+        guard let clause = clause else { return [] }
+        
+        return clause.inheritedTypes.map { inheritedType in
+            inheritedType.type.description.trimmingCharacters(in: .whitespaces)
+        }
+    }
+    
+    private static func extractGenericConstraints(from clause: GenericWhereClauseSyntax?) -> [String] {
+        guard let clause = clause else { return [] }
+        
+        return clause.requirements.map { requirement in
+            requirement.description.trimmingCharacters(in: .whitespaces)
+        }
     }
 }
 
@@ -984,6 +1016,73 @@ struct PropertyInfo {
 /// Generates the extension code.
 enum CodeGenerator {
     /// Generates API Reference section from discovered members.
+    /// Generates Type Relationships section showing inheritance, conformances, and constraints.
+    private static func generateTypeRelationships(typeInfo: TypeInfo) -> String {
+        var lines: [String] = []
+        
+        // Separate inherited types into protocols and classes
+        var protocols: [String] = []
+        var superclass: String?
+        
+        // Heuristic: if it starts with uppercase and doesn't contain protocol-like patterns, it's likely a class
+        // This is a simplification - in real code, we'd need more context
+        for inheritedType in typeInfo.inheritedTypes {
+            // Common protocol patterns
+            if inheritedType.hasSuffix("able") || 
+               inheritedType.hasSuffix("Protocol") ||
+               inheritedType == "View" ||
+               inheritedType == "Equatable" ||
+               inheritedType == "Hashable" ||
+               inheritedType == "Codable" ||
+               inheritedType == "Identifiable" ||
+               inheritedType == "ObservableObject" ||
+               inheritedType == "Sendable" {
+                protocols.append(inheritedType)
+            } else {
+                // Assume it's a superclass if we don't have one yet
+                if superclass == nil {
+                    superclass = inheritedType
+                } else {
+                    // Multiple base classes not allowed in Swift, so treat as protocol
+                    protocols.append(inheritedType)
+                }
+            }
+        }
+        
+        // Build the declaration line
+        var declaration = "struct "
+        if let genericParams = typeInfo.genericParameters {
+            declaration += "\(typeInfo.name)\(genericParams)"
+        } else {
+            declaration += typeInfo.name
+        }
+        
+        // Add inheritance
+        var inheritanceList: [String] = []
+        if let superclass = superclass {
+            inheritanceList.append(superclass)
+        }
+        inheritanceList.append(contentsOf: protocols)
+        
+        if !inheritanceList.isEmpty {
+            declaration += ": \(inheritanceList.joined(separator: ", "))"
+        }
+        
+        // Add where clause if there are constraints
+        if !typeInfo.genericConstraints.isEmpty {
+            declaration += " where \(typeInfo.genericConstraints.joined(separator: ", "))"
+        }
+        
+        lines.append(declaration)
+        
+        // Build the CodeBlock
+        var content = "CodeBlock(title: \"Type Relationships\") {\n\"\"\"\n"
+        content += lines.joined(separator: "\n")
+        content += "\n\"\"\"\n}"
+        
+        return content
+    }
+    
     private static func generateAPIReference(
         initializers: [InitializerInfo],
         methods: [MethodInfo],
@@ -1057,7 +1156,7 @@ enum CodeGenerator {
     }
     
     static func generateMembers(
-        typeName: String,
+        typeInfo: TypeInfo,
         chapter: String,
         icon: String?,
         documentation: Documentation,
@@ -1067,7 +1166,8 @@ enum CodeGenerator {
         descriptions: [String],
         initializers: [InitializerInfo],
         methods: [MethodInfo],
-        properties: [PropertyInfo]
+        properties: [PropertyInfo],
+        autoDiscover: Bool
     ) -> (showcaseTopic: DeclSyntax, chapter: DeclSyntax) {
         var topicContent: [String] = []
         
@@ -1090,6 +1190,11 @@ enum CodeGenerator {
         // Add icon if provided
         if let icon {
             topicContent.append("Icon(Image(systemName: \"\(icon)\"))")
+        }
+        
+        // Add Type Relationships section if auto-discover is enabled and there are any
+        if autoDiscover && (!typeInfo.inheritedTypes.isEmpty || !typeInfo.genericConstraints.isEmpty) {
+            topicContent.append(generateTypeRelationships(typeInfo: typeInfo))
         }
         
         // Add API Reference section if any members were discovered
@@ -1132,13 +1237,13 @@ enum CodeGenerator {
                 topicContent.append("""
                 Example(title: "\(example.title)") {
                     Description("\(description)")
-                    \(typeName).\(example.name)
+                    \(typeInfo.name).\(example.name)
                 }
                 """)
             } else {
                 topicContent.append("""
                 Example(title: "\(example.title)") {
-                    \(typeName).\(example.name)
+                    \(typeInfo.name).\(example.name)
                 }
                 """)
             }
@@ -1148,7 +1253,7 @@ enum CodeGenerator {
         
         let showcaseTopicDecl = DeclSyntax(stringLiteral: """
             @MainActor public static var showcaseTopic: Topic {
-                Topic("\(typeName)") {\(content)}
+                Topic("\(typeInfo.name)") {\(content)}
             }
             """)
         

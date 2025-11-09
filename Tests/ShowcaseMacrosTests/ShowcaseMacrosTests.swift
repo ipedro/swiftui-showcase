@@ -54,10 +54,9 @@ final class ShowcaseMacrosTests: XCTestCase {
             extension PrimaryButton: Showcasable {
                 @MainActor public static var showcaseTopic: Topic {
                     Topic("PrimaryButton") {
-                        CodeBlock(title: "Properties") {
+                        CodeBlock(title: "Type Relationships") {
                             \"\"\"
-                            var body: some View
-
+                            struct PrimaryButton: View
                             \"\"\"
                         }
                     }
@@ -537,6 +536,12 @@ final class ShowcaseMacrosTests: XCTestCase {
             extension User: Showcasable {
                 @MainActor public static var showcaseTopic: Topic {
                     Topic("User") {
+                        CodeBlock(title: "Properties") {
+                            \"\"\"
+                            var name: String
+
+                            \"\"\"
+                        }
                     }
                 }
                 public static var showcaseChapter: String {
