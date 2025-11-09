@@ -193,6 +193,54 @@ final class ShowcaseMacrosTests: XCTestCase {
         #endif
     }
     
+    func testShowcasableWithExampleAndDescription() throws {
+        #if canImport(ShowcaseMacrosPlugin)
+        assertMacroExpansion(
+            """
+            @Showcasable(chapter: "Buttons")
+            struct ActionButton: View {
+                @ShowcaseExample(title: "Primary Action", description: "A primary button with icon")
+                static var withIcon: some View {
+                    ActionButton(title: "Submit", icon: "checkmark")
+                }
+                
+                var body: some View {
+                    Button("Action") {}
+                }
+            }
+            """,
+            expandedSource: """
+            struct ActionButton: View {
+                static var withIcon: some View {
+                    ActionButton(title: "Submit", icon: "checkmark")
+                }
+                
+                var body: some View {
+                    Button("Action") {}
+                }
+            }
+
+            extension ActionButton: Showcasable {
+                @MainActor public static var showcaseTopic: Topic {
+                    Topic("ActionButton") {
+                        Example(title: "Primary Action") {
+                            Description("A primary button with icon")
+                            ActionButton.withIcon
+                        }
+                    }
+                }
+                public static var showcaseChapter: String {
+                    "Buttons"
+                }
+            }
+            """,
+            macros: testMacros
+        )
+        #else
+        throw XCTSkip("Macros are only supported when running tests for the host platform")
+        #endif
+    }
+    
     // MARK: - Error Tests
     
     func testShowcasableMissingChapter() throws {
