@@ -1,3 +1,10 @@
+# SwiftLint Configuration
+# Only lint Sources/ and Tests/ directories
+
+included:
+  - Sources
+  - Tests
+
 type_name:
   allowed_symbols: ["_"]
 identifier_name:
