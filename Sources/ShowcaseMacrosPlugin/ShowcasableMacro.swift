@@ -19,6 +19,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+import Foundation
 import SwiftSyntax
 import SwiftSyntaxMacros
 
@@ -1102,7 +1103,7 @@ enum CodeGenerator {
         methods: [MethodInfo],
         properties: [PropertyInfo]
     ) -> String {
-        var sections: [String] = []
+        var topics: [String] = []
         
         // Categorize methods
         let staticMethods = methods.filter { $0.isStatic }
@@ -1112,32 +1113,189 @@ enum CodeGenerator {
         let staticProperties = properties.filter { $0.isStatic }
         let instanceProperties = properties.filter { !$0.isStatic }
         
-        // 1. Creating Instances (Initializers)
-        if !initializers.isEmpty {
-            sections.append(generateInitializersSection(initializers))
+        // 1. Creating Instances (Initializers) - each as individual Topic
+        for initializer in initializers {
+            topics.append(generateInitializerTopic(initializer))
         }
         
-        // 2. Type Methods
-        if !staticMethods.isEmpty {
-            sections.append(generateMethodsSection(staticMethods, title: "Type Methods"))
+        // 2. Type Methods - each as individual Topic
+        for method in staticMethods {
+            topics.append(generateMethodTopic(method))
         }
         
-        // 3. Instance Methods
-        if !instanceMethods.isEmpty {
-            sections.append(generateMethodsSection(instanceMethods, title: "Instance Methods"))
+        // 3. Instance Methods - each as individual Topic
+        for method in instanceMethods {
+            topics.append(generateMethodTopic(method))
         }
         
-        // 4. Type Properties
-        if !staticProperties.isEmpty {
-            sections.append(generatePropertiesSection(staticProperties, title: "Type Properties"))
+        // 4. Type Properties - each as individual Topic
+        for property in staticProperties {
+            topics.append(generatePropertyTopic(property))
         }
         
-        // 5. Instance Properties
-        if !instanceProperties.isEmpty {
-            sections.append(generatePropertiesSection(instanceProperties, title: "Instance Properties"))
+        // 5. Instance Properties - each as individual Topic
+        for property in instanceProperties {
+            topics.append(generatePropertyTopic(property))
         }
         
-        return sections.joined(separator: "\n")
+        return topics.joined(separator: "\n")
+    }
+    
+    private static func generateInitializerTopic(_ initializer: InitializerInfo) -> String {
+        var content: [String] = []
+        let doc = initializer.docComment
+        
+        // Add description if available
+        if let summary = doc.summary {
+            content.append("""
+            Description {
+                \"\"\"
+                \(summary)
+                \"\"\"
+            }
+            """)
+        }
+        
+        // Build complete signature with documentation
+        var signatureDoc = ""
+        if let summary = doc.summary {
+            signatureDoc += "/// \(summary)\n"
+        }
+        if !doc.parameters.isEmpty {
+            for (name, desc) in doc.parameters.sorted(by: { $0.key < $1.key }) {
+                signatureDoc += "/// - Parameter \(name): \(desc)\n"
+            }
+        }
+        if let throwsInfo = doc.throws {
+            signatureDoc += "/// - Throws: \(throwsInfo)\n"
+        }
+        signatureDoc += initializer.signature
+        
+        // Add signature as code block
+        content.append("""
+        CodeBlock(title: "Declaration") {
+            \"\"\"
+            \(signatureDoc)
+            \"\"\"
+        }
+        """)
+        
+        let topicContent = content.isEmpty ? "" : "\n\(content.joined(separator: "\n"))\n"
+        return """
+        Topic("init\(extractParameterNames(from: initializer.signature))") {\(topicContent)}
+        """
+    }
+    
+    private static func generateMethodTopic(_ method: MethodInfo) -> String {
+        var content: [String] = []
+        let doc = method.docComment
+        
+        // Add description if available
+        if let summary = doc.summary {
+            content.append("""
+            Description {
+                \"\"\"
+                \(summary)
+                \"\"\"
+            }
+            """)
+        }
+        
+        // Build complete signature with documentation
+        var signatureDoc = ""
+        if let summary = doc.summary {
+            signatureDoc += "/// \(summary)\n"
+        }
+        if !doc.parameters.isEmpty {
+            for (name, desc) in doc.parameters.sorted(by: { $0.key < $1.key }) {
+                signatureDoc += "/// - Parameter \(name): \(desc)\n"
+            }
+        }
+        if let returns = doc.returns {
+            signatureDoc += "/// - Returns: \(returns)\n"
+        }
+        if let throwsInfo = doc.throws {
+            signatureDoc += "/// - Throws: \(throwsInfo)\n"
+        }
+        let staticKeyword = method.isStatic ? "static " : ""
+        signatureDoc += "\(staticKeyword)func \(method.signature)"
+        
+        // Add signature as code block
+        content.append("""
+        CodeBlock(title: "Declaration") {
+            \"\"\"
+            \(signatureDoc)
+            \"\"\"
+        }
+        """)
+        
+        let topicContent = content.isEmpty ? "" : "\n\(content.joined(separator: "\n"))\n"
+        return """
+        Topic("\(method.name)") {\(topicContent)}
+        """
+    }
+    
+    private static func generatePropertyTopic(_ property: PropertyInfo) -> String {
+        var content: [String] = []
+        let doc = property.docComment
+        
+        // Add description if available
+        if let summary = doc.summary {
+            content.append("""
+            Description {
+                \"\"\"
+                \(summary)
+                \"\"\"
+            }
+            """)
+        }
+        
+        // Build complete signature with documentation
+        var signatureDoc = ""
+        if let summary = doc.summary {
+            signatureDoc += "/// \(summary)\n"
+        }
+        let staticKeyword = property.isStatic ? "static " : ""
+        let keyword = property.isComputed ? "var" : "var"
+        signatureDoc += "\(staticKeyword)\(keyword) \(property.name): \(property.type)"
+        
+        // Add signature as code block
+        content.append("""
+        CodeBlock(title: "Declaration") {
+            \"\"\"
+            \(signatureDoc)
+            \"\"\"
+        }
+        """)
+        
+        let topicContent = content.isEmpty ? "" : "\n\(content.joined(separator: "\n"))\n"
+        return """
+        Topic("\(property.name)") {\(topicContent)}
+        """
+    }
+    
+    private static func extractParameterNames(from signature: String) -> String {
+        // Extract parameter names from initializer signature for topic title
+        // Example: "init(name: String, age: Int)" -> "(name:age:)"
+        let paramPattern = #"(\w+)\s*:"#
+        guard let regex = try? NSRegularExpression(pattern: paramPattern) else {
+            return "()"
+        }
+        
+        let nsString = signature as NSString
+        let matches = regex.matches(in: signature, range: NSRange(location: 0, length: nsString.length))
+        
+        if matches.isEmpty {
+            return "()"
+        }
+        
+        let paramNames = matches.compactMap { match -> String? in
+            guard match.numberOfRanges > 1 else { return nil }
+            let range = match.range(at: 1)
+            return nsString.substring(with: range)
+        }
+        
+        return "(\(paramNames.map { "\($0):" }.joined()))"
     }
     
     private static func generateInitializersSection(_ initializers: [InitializerInfo]) -> String {

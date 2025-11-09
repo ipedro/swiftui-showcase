@@ -536,11 +536,12 @@ final class ShowcaseMacrosTests: XCTestCase {
             extension User: Showcasable {
                 @MainActor public static var showcaseTopic: Topic {
                     Topic("User") {
-                        CodeBlock(title: "Properties") {
-                            \"\"\"
-                            var name: String
-
-                            \"\"\"
+                        Topic("name") {
+                            CodeBlock(title: "Declaration") {
+                                \"\"\"
+                                var name: String
+                                \"\"\"
+                            }
                         }
                     }
                 }
@@ -624,33 +625,71 @@ final class ShowcaseMacrosTests: XCTestCase {
                             A user model with full documentation
                             \"\"\"
                         }
-                        CodeBlock(title: "Initializers") {
-                            \"\"\"
-                            /// Creates a new user with the given credentials
+                        Topic("init(id:name:)") {
+                            Description {
+                                \"\"\"
+                                Creates a new user with the given credentials
+                                \"\"\"
+                            }
+                            CodeBlock(title: "Declaration") {
+                                \"\"\"
+                                /// Creates a new user with the given credentials
                             init(id: String, name: String)
-
-                            \"\"\"
+                                \"\"\"
+                            }
                         }
-                        CodeBlock(title: "Methods") {
-                            \"\"\"
-                            /// Validates the user's name
+                        Topic("validateName") {
+                            Description {
+                                \"\"\"
+                                Validates the user's name
+                                \"\"\"
+                            }
+                            CodeBlock(title: "Declaration") {
+                                \"\"\"
+                                /// Validates the user's name
                             /// - Returns: true if the name is valid
                             func validateName() -> Bool
-
-                            /// Gets the user's display string
-                            func displayString() -> String
-
-                            \"\"\"
+                                \"\"\"
+                            }
                         }
-                        CodeBlock(title: "Properties") {
-                            \"\"\"
-                            /// The user's unique identifier
+                        Topic("displayString") {
+                            Description {
+                                \"\"\"
+                                Gets the user's display string
+                                \"\"\"
+                            }
+                            CodeBlock(title: "Declaration") {
+                                \"\"\"
+                                /// Gets the user's display string
+                            func displayString() -> String
+                                \"\"\"
+                            }
+                        }
+                        Topic("id") {
+                            Description {
+                                \"\"\"
+                                The user's unique identifier
+                                \"\"\"
+                            }
+                            CodeBlock(title: "Declaration") {
+                                \"\"\"
+                                /// The user's unique identifier
                             var id: String
-
-                            /// The user's display name
+                                \"\"\"
+                            }
+                        }
+                        Topic("name") {
+                            Description {
+                                \"\"\"
+                                The user's display name
+                                \"\"\"
+                            }
+                            CodeBlock(title: "Declaration") {
+                                \"\"\"
+                                /// The user's display name
                             var name: String
-
-                            \"\"\"
+                                \"\"\"
+                            }
                         }
                     }
                 }
