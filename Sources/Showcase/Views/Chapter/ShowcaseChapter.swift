@@ -57,20 +57,21 @@ struct ShowcaseChapter: VersionedView {
                 ShowcaseChapterRow(
                     title: topic.title,
                     icon: topic.icon
-                ).equatable()
+                )
+                .equatable()
+                .multilineTextAlignment(.leading)
             }
         }
     }
 
     private func header() -> some View {
-        Text(title)
+        Text(title).multilineTextAlignment(.leading)
     }
 
-    private func footer() -> Text? {
-        if description.isEmpty {
-            nil
-        } else {
-            Text(description)
+    @ViewBuilder
+    private func footer() -> some View {
+        if !description.isEmpty {
+            Text(description).multilineTextAlignment(.leading)
         }
     }
 }

@@ -163,8 +163,25 @@ struct ShowcaseScrollTopButton: View {
 
 extension AttributedString {
     init(styledMarkdown markdownString: String) throws {
+        // Ensure proper paragraph breaks before markdown headers
+        // Markdown parsers can collapse whitespace, so we normalize to ensure
+        // there are always TWO blank lines before headers for proper spacing
+        var normalizedMarkdown = markdownString
+        
+        // Replace any occurrence of newlines before headers with double newlines
+        // This handles: "\n## Header" -> "\n\n## Header"
+        // And: "\n\n## Header" -> "\n\n\n## Header"
+        for level in 1...6 {
+            let headerPrefix = String(repeating: "#", count: level)
+            normalizedMarkdown = normalizedMarkdown.replacingOccurrences(
+                of: "\n\(headerPrefix) ",
+                with: "\n\n\(headerPrefix) ",
+                options: .literal
+            )
+        }
+        
         var output = try AttributedString(
-            markdown: markdownString,
+            markdown: normalizedMarkdown,
             options: .init(
                 allowsExtendedAttributes: true,
                 interpretedSyntax: .full,
@@ -194,7 +211,8 @@ extension AttributedString {
             }
             
             if intentRange.lowerBound != output.startIndex {
-                output.characters.insert(contentsOf: "\n", at: intentRange.lowerBound)
+                // Add TWO newlines (blank line) before headers for proper paragraph spacing
+                output.characters.insert(contentsOf: "\n\n", at: intentRange.lowerBound)
             }
         }
 
