@@ -206,7 +206,8 @@ enum TopicContentGenerator {
     private static func generateExamples(docs: TopicDocumentation, typeName: String) -> [String] {
         guard !docs.examples.isEmpty else { return [] }
 
-        // If we have 2+ examples, group them in an ExampleGroup for better organization
+        // If we have 2+ examples, group them in an ExampleGroup for tabbed navigation
+        // Provides consistent UI and better discoverability even with just two examples
         if docs.examples.count >= 2 {
             return [generateExampleGroup(docs: docs, typeName: typeName)]
         }
@@ -276,16 +277,13 @@ enum TopicContentGenerator {
         let stringLiteralIndent = String(repeating: " ", count: blockIndentCount + 4)  // Opening/closing quotes
         let contentIndent = String(repeating: " ", count: blockIndentCount + 8)  // Content needs more indent
         
-        // Escape any backslashes in the source code to prevent escape sequence issues
-        let escapedCode = sourceCode.replacingOccurrences(of: "\\", with: "\\\\")
-        
         // Build the entire CodeBlock as a single multi-line string
         var codeBlock = ""
         codeBlock += "\(blockIndent)CodeBlock(\"\(codeTitle)\") {\n"
         codeBlock += "\(stringLiteralIndent)#\"\"\"\n"  // Use raw string literal (#"""...""#)
         
-        // Add each line of source code
-        for line in escapedCode.components(separatedBy: "\n") {
+        // Add each line of source code (raw strings handle backslashes literally)
+        for line in sourceCode.components(separatedBy: "\n") {
             codeBlock += "\(contentIndent)\(line)\n"
         }
         

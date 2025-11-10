@@ -30,7 +30,6 @@ import XCTest
     import ShowcaseMacrosPlugin
 #endif
 
-// swiftlint:disable:next type_body_length
 final class ShowcaseMacrosTests: XCTestCase {
     // MARK: - Basic Showcasable Tests
 

@@ -44,8 +44,8 @@ enum ExampleFinder {
         // Auto-discover examples in ALL nested types
         examples.append(contentsOf: findExamplesInNestedTypes(declaration))
 
-        // If external example types are specified, try to find them as nested types
-        // (Due to macro limitations, "external" types must still be nested within the same file)
+        // If explicitly specified example types are provided, find them as nested types
+        // (Due to macro limitations, referenced types must be nested within the same declaration)
         for typeName in exampleTypes where !typeName.isEmpty {
             if let nestedType = findNestedType(named: typeName, in: declaration) {
                 examples.append(contentsOf: findExamplesInDeclaration(nestedType))
