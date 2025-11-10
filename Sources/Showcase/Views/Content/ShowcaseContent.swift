@@ -194,6 +194,19 @@ extension AttributedString {
             baseURL: nil
         )
 
+        // Style inline code (backticks)
+        for (inlineIntent, range) in output.runs[AttributeScopes.FoundationAttributes.InlinePresentationIntentAttribute.self] {
+            guard let inlineIntent = inlineIntent, inlineIntent.contains(.code) else { continue }
+            output[range].font = .system(.body, design: .monospaced)
+            output[range].backgroundColor = Color.secondary.opacity(0.15)
+            #if canImport(UIKit)
+            output[range].foregroundColor = .label
+            #elseif canImport(AppKit)
+            output[range].foregroundColor = .labelColor
+            #endif
+        }
+
+        // Style headers
         for (intentBlock, intentRange) in output.runs[AttributeScopes.FoundationAttributes.PresentationIntentAttribute.self].reversed() {
             guard let intentBlock = intentBlock else { continue }
             for intent in intentBlock.components {

@@ -39,12 +39,21 @@ public struct ShowcaseListView: View {
                         .foregroundStyle(.secondary)
                         .frame(minWidth: 24, alignment: .trailing)
                     
-                    Text(item)
+                    renderItem(item)
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
             }
         }
         .padding(.leading, 8)
+    }
+    
+    private func renderItem(_ text: String) -> Text {
+        do {
+            let attributed = try AttributedString(styledMarkdown: text)
+            return Text(attributed)
+        } catch {
+            return Text(text)
+        }
     }
     
     private func marker(for index: Int) -> String {
