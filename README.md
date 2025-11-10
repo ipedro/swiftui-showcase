@@ -164,6 +164,259 @@ struct ContentView: View {
 }
 ```
 
+### Macros for Automatic Documentation
+
+Showcase provides powerful macros to automatically generate documentation from your SwiftUI components with minimal effort.
+
+#### @Showcasable
+
+The `@Showcasable` macro automatically generates a `showcaseTopic` property for your types, extracting documentation from doc comments and discovering members:
+
+```swift
+import Showcase
+import ShowcaseMacros
+
+/// A card component for displaying content
+///
+/// Cards are versatile containers that can hold any SwiftUI content.
+///
+/// > Note: Always provide meaningful content to your cards
+@Showcasable(icon: "rectangle.fill")
+struct Card<Content: View>: View {
+    /// The card's optional title
+    let title: String?
+    
+    /// The card's content
+    let content: Content
+    
+    /// Creates a card with optional title
+    init(title: String? = nil, @ViewBuilder content: () -> Content) {
+        self.title = title
+        self.content = content()
+    }
+    
+    var body: some View {
+        VStack(alignment: .leading) {
+            if let title {
+                Text(title).font(.headline)
+            }
+            content
+        }
+        .padding()
+        .background(Color.gray.opacity(0.1))
+        .cornerRadius(12)
+    }
+}
+```
+
+**The macro automatically generates:**
+
+```swift
+extension Card: Showcasable {
+    public static var showcaseTopic: Topic {
+        Topic("Card") {
+            // Type relationships
+            CodeBlock("Type Relationships") {
+                """
+                struct Card<Content: View>: View
+                """
+            }
+            
+            // Main description
+            Description {
+                """
+                A card component for displaying content
+
+                Cards are versatile containers that can hold any SwiftUI content.
+                """
+            }
+            
+            // Note extracted from doc comment
+            Note {
+                """
+                Always provide meaningful content to your cards
+                """
+            }
+            
+            // Auto-discovered initializer
+            Topic("init(title:content:)") {
+                Description {
+                    """
+                    Creates a card with optional title
+                    """
+                }
+                CodeBlock("Declaration") {
+                    """
+                    init(title: String?, content: () -> Content)
+                    """
+                }
+            }
+            
+            // Auto-discovered properties
+            Topic("title") {
+                Description {
+                    """
+                    The card's optional title
+                    """
+                }
+                CodeBlock("Declaration") {
+                    """
+                    var title: String?
+                    """
+                }
+            }
+            
+            Topic("content") {
+                Description {
+                    """
+                    The card's content
+                    """
+                }
+                CodeBlock("Declaration") {
+                    """
+                    var content: Content
+                    """
+                }
+            }
+        }
+    }
+}
+```
+
+#### @ShowcaseExample
+
+Use `@ShowcaseExample` to define reusable examples that will be automatically discovered:
+
+```swift
+struct CardExamples {
+    @ShowcaseExample(title: "Simple Card")
+    static var simple: some View {
+        Card(title: "Welcome") {
+            Text("This is a simple card")
+        }
+    }
+    
+    @ShowcaseExample(
+        title: "Card with Image",
+        description: "Cards can contain any SwiftUI content"
+    )
+    static var withImage: some View {
+        Card(title: "Photo") {
+            VStack {
+                Image(systemName: "photo")
+                    .font(.largeTitle)
+                Text("Add your photo here")
+            }
+        }
+    }
+}
+
+// Reference examples in @Showcasable
+@Showcasable(icon: "rectangle.fill", examples: [CardExamples.self])
+struct Card<Content: View>: View {
+    // ... implementation
+}
+```
+
+**The macro automatically adds examples to the generated topic:**
+
+```swift
+extension Card: Showcasable {
+    public static var showcaseTopic: Topic {
+        Topic("Card") {
+            // ... type info and members ...
+            
+            // Examples are automatically added
+            ExampleGroup("Examples") {
+                Example("Simple Card") {
+                    CardExamples.simple
+                    CodeBlock("Source Code") {
+                        """
+                        Card(title: "Welcome") {
+                            Text("This is a simple card")
+                        }
+                        """
+                    }
+                }
+                
+                Example("Card with Image") {
+                    Description {
+                        """
+                        Cards can contain any SwiftUI content
+                        """
+                    }
+                    CardExamples.withImage
+                    CodeBlock("Source Code") {
+                        """
+                        Card(title: "Photo") {
+                            VStack {
+                                Image(systemName: "photo")
+                                    .font(.largeTitle)
+                                Text("Add your photo here")
+                            }
+                        }
+                        """
+                    }
+                }
+            }
+        }
+    }
+}
+```
+
+#### @ShowcaseHidden
+
+Hide specific members from auto-discovery:
+
+```swift
+@Showcasable
+struct MyView: View {
+    @ShowcaseHidden
+    private var internalHelper: String = ""
+    
+    public var displayName: String = "User"
+    
+    var body: some View {
+        Text("Hello, \(displayName)")
+    }
+}
+```
+
+**The macro generates documentation excluding hidden members:**
+
+```swift
+extension MyView: Showcasable {
+    public static var showcaseTopic: Topic {
+        Topic("MyView") {
+            CodeBlock("Type Relationships") {
+                """
+                struct MyView: View
+                """
+            }
+            
+            // Only public, non-hidden members are documented
+            Topic("displayName") {
+                CodeBlock("Declaration") {
+                    """
+                    var displayName: String
+                    """
+                }
+            }
+            
+            // internalHelper is NOT included (marked with @ShowcaseHidden)
+        }
+    }
+}
+```
+
+#### Benefits of Macros
+
+- **Automatic Updates**: Documentation stays in sync with your code
+- **Less Boilerplate**: No manual Topic construction needed
+- **Doc Comment Integration**: Leverages existing documentation
+- **Type Safety**: Compile-time validation of examples
+- **Auto-Discovery**: Finds members, examples, and relationships automatically
+
 <!--## Documentation-->
 
 <!--For detailed documentation and examples, please visit the [Showcase Wiki](https://github.com/ipedro/swiftui-showcase/wiki).-->
