@@ -189,38 +189,89 @@ enum TopicContentGenerator {
     // MARK: - Examples
 
     private static func generateExamples(docs: TopicDocumentation, typeName: String) -> [String] {
+        guard !docs.examples.isEmpty else { return [] }
+        
+        // If we have 3+ examples, group them in a TabView for better UX
+        if docs.examples.count >= 3 {
+            return [generateExampleGroup(docs: docs, typeName: typeName)]
+        }
+        
+        // Otherwise, generate individual examples
         var content: [String] = []
-
         for example in docs.examples {
-            // Add example block
+            content.append(generateSingleExample(example: example, typeName: typeName))
+        }
+        return content
+    }
+    
+    private static func generateExampleGroup(docs: TopicDocumentation, typeName: String) -> String {
+        var exampleBlocks: [String] = []
+        
+        for example in docs.examples {
+            // Build the example parameters
+            var params = "\"\(example.title)\""
+            
             if let description = example.description {
-                content.append("""
-                Example("\(example.title)") {
-                    Description("\(description)")
-                    \(typeName).\(example.name)
-                }
-                """)
-            } else {
-                content.append("""
-                Example("\(example.title)") {
-                    \(typeName).\(example.name)
-                }
-                """)
+                params += ", description: \"\(description)\""
             }
-
-            // Add source code block if enabled
+            
+            // Build code block parameter if needed
             if example.showCode, let sourceCode = example.sourceCode {
-                let indentedCode = CodeGenerator.indentMultiline(sourceCode, indent: "                    ")
-                content.append("""
-                CodeBlock("\(example.title) - Source Code") {
-                    \"\"\"
-                    \(indentedCode)
-                    \"\"\"
-                }
-                """)
+                let indentedCode = CodeGenerator.indentMultiline(sourceCode, indent: "                            ")
+                params += """
+, codeBlock: CodeBlock("Source") {
+                            \"\"\"
+                            \(indentedCode)
+                            \"\"\"
+                        }
+"""
             }
+            
+            exampleBlocks.append("""
+                    Example(\(params)) {
+                        \(typeName).\(example.name)
+                    }
+            """)
+        }
+        
+        return """
+        ExampleGroup("Examples") {
+        \(exampleBlocks.joined(separator: "\n"))
+        }
+        """
+    }
+    
+    private static func generateSingleExample(example: ExampleInfo, typeName: String) -> String {
+        // Add example block
+        var content: String
+        if let description = example.description {
+            content = """
+            Example("\(example.title)") {
+                Description("\(description)")
+                \(typeName).\(example.name)
+            }
+            """
+        } else {
+            content = """
+            Example("\(example.title)") {
+                \(typeName).\(example.name)
+            }
+            """
         }
 
+        // Add source code block if enabled
+        if example.showCode, let sourceCode = example.sourceCode {
+            let indentedCode = CodeGenerator.indentMultiline(sourceCode, indent: "                    ")
+            content += """
+            
+            CodeBlock("\(example.title) - Source Code") {
+                \"\"\"
+                \(indentedCode)
+                \"\"\"
+            }
+            """
+        }
+        
         return content
     }
 }

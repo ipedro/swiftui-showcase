@@ -159,6 +159,9 @@ extension Topic {
                     return description.value.localizedCaseInsensitiveContains(query)
                 case let .example(example):
                     return example.title?.localizedCaseInsensitiveContains(query) == true
+                case let .exampleGroup(group):
+                    return group.title?.localizedCaseInsensitiveContains(query) == true
+                        || group.examples.contains(where: { $0.title?.localizedCaseInsensitiveContains(query) == true })
                 case let .codeBlock(codeBlock):
                     return codeBlock.rawValue.localizedCaseInsensitiveContains(query)
                         || codeBlock.title?.localizedCaseInsensitiveContains(query) == true

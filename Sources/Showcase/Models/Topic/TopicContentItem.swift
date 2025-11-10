@@ -60,6 +60,9 @@ public enum TopicContentItem: Identifiable, Equatable {
 
     /// A live example of a SwiftUI view.
     case example(Example)
+    
+    /// A group of related examples displayed in a TabView.
+    case exampleGroup(ExampleGroup)
 
     /// A special callout for notes, warnings, deprecations, etc.
     case note(Note)
@@ -82,6 +85,8 @@ public enum TopicContentItem: Identifiable, Equatable {
             AnyHashable(embed.id)
         case let .example(example):
             AnyHashable(example.id)
+        case let .exampleGroup(group):
+            AnyHashable(group.id)
         case let .note(note):
             AnyHashable(note)
         }
