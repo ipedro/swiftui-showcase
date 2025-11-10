@@ -27,12 +27,11 @@ public struct ShowcaseExampleGroup: View {
     let examples: [Example]
     let groupTitle: String?
     
-    @State private var selectedTab: UUID
+    @State private var selectedIndex: Int = 0
     
     public init(examples: [Example], title: String? = nil) {
         self.examples = examples
         self.groupTitle = title
-        _selectedTab = State(initialValue: examples.first?.id ?? UUID())
     }
     
     public var body: some View {
@@ -48,13 +47,13 @@ public struct ShowcaseExampleGroup: View {
                 // Tab selector
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 8) {
-                        ForEach(examples) { example in
+                        ForEach(Array(examples.enumerated()), id: \.offset) { index, example in
                             TabButton(
-                                title: example.title ?? "Example",
-                                isSelected: selectedTab == example.id
+                                title: example.title ?? "Example \(index + 1)",
+                                isSelected: selectedIndex == index
                             ) {
                                 withAnimation(.snappy(duration: 0.2)) {
-                                    selectedTab = example.id
+                                    selectedIndex = index
                                 }
                             }
                         }
@@ -66,18 +65,13 @@ public struct ShowcaseExampleGroup: View {
                 
                 Divider()
                 
-                // Tab content
-                TabView(selection: $selectedTab) {
-                    ForEach(examples) { example in
-                        ShowcaseExample(data: example)
-                            .padding()
-                            .tag(example.id)
-                    }
+                // Tab content - show selected example
+                if examples.indices.contains(selectedIndex) {
+                    ShowcaseExample(data: examples[selectedIndex])
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .transition(.opacity)
                 }
-                #if os(iOS)
-                .tabViewStyle(.page(indexDisplayMode: .never))
-                #endif
-                .frame(minHeight: 200)
             }
             .clipShape(RoundedRectangle(cornerRadius: 10))
             .overlay(
