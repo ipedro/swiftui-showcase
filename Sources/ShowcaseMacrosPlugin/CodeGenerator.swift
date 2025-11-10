@@ -1,6 +1,6 @@
 // CodeGenerator.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/10/25.
+// Created by Pedro Almeida on 09.11.25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -47,7 +47,7 @@ enum CodeGenerator {
             \(topicInit) {\(content)}
         }
         """
-        
+
         // Parse it into a DeclSyntax
         // Using Parser instead of stringLiteral initializer for better error handling
         return DeclSyntax(stringLiteral: sourceCode)

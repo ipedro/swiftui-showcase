@@ -1,6 +1,6 @@
 // TopicContentGenerator.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/10/25.
+// Created by Pedro Almeida on 09.11.25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -182,7 +182,7 @@ enum TopicContentGenerator {
             let indentedCode = codeBlock.code.components(separatedBy: .newlines)
                 .map { "    \($0)" }
                 .joined(separator: "\n")
-            
+
             return """
             CodeBlock("\(codeBlock.title)") {
                 \"\"\"
@@ -274,22 +274,22 @@ enum TopicContentGenerator {
         let codeTitle = "\(example.title) - Source Code"
         let blockIndentCount = max(codeIndentCount - 4, 0)
         let blockIndent = String(repeating: " ", count: blockIndentCount)
-        let stringLiteralIndent = String(repeating: " ", count: blockIndentCount + 4)  // Opening/closing quotes
-        let contentIndent = String(repeating: " ", count: blockIndentCount + 8)  // Content needs more indent
-        
+        let stringLiteralIndent = String(repeating: " ", count: blockIndentCount + 4) // Opening/closing quotes
+        let contentIndent = String(repeating: " ", count: blockIndentCount + 8) // Content needs more indent
+
         // Build the entire CodeBlock as a single multi-line string
         var codeBlock = ""
         codeBlock += "\(blockIndent)CodeBlock(\"\(codeTitle)\") {\n"
-        codeBlock += "\(stringLiteralIndent)#\"\"\"\n"  // Use raw string literal (#"""...""#)
-        
+        codeBlock += "\(stringLiteralIndent)#\"\"\"\n" // Use raw string literal (#"""...""#)
+
         // Add each line of source code (raw strings handle backslashes literally)
         for line in sourceCode.components(separatedBy: "\n") {
             codeBlock += "\(contentIndent)\(line)\n"
         }
-        
+
         codeBlock += "\(stringLiteralIndent)\"\"\"#\n"
         codeBlock += "\(blockIndent)}"
-        
+
         return [codeBlock]
     }
 }
