@@ -60,7 +60,7 @@ public enum TopicContentItem: Identifiable, Equatable {
 
     /// A live example of a SwiftUI view.
     case example(Example)
-    
+
     /// A group of related examples displayed in a TabView.
     case exampleGroup(ExampleGroup)
 

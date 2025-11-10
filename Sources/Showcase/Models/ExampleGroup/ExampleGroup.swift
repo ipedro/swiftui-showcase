@@ -26,21 +26,21 @@ import Foundation
 public struct ExampleGroup: Identifiable, Hashable, Equatable {
     /// The unique identifier for the example group.
     public let id = UUID()
-    
+
     /// The title of the example group.
     public var title: String?
-    
+
     /// The examples in this group.
     public var examples: [Example]
-    
+
     public static func == (lhs: ExampleGroup, rhs: ExampleGroup) -> Bool {
         lhs.id == rhs.id
     }
-    
+
     public func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
-    
+
     /// Initializes an example group with a title and examples.
     /// - Parameters:
     ///   - title: Optional title for the group.
@@ -49,14 +49,14 @@ public struct ExampleGroup: Identifiable, Hashable, Equatable {
         self.title = title
         self.examples = examples
     }
-    
+
     /// Initializes an example group with a title and example builder.
     /// - Parameters:
     ///   - title: Optional title for the group.
     ///   - builder: A result builder that produces examples.
     public init(_ title: String? = nil, @ExampleGroupBuilder builder: () -> [Example]) {
         self.title = title
-        self.examples = builder()
+        examples = builder()
     }
 }
 
@@ -67,19 +67,19 @@ public enum ExampleGroupBuilder {
     public static func buildBlock(_ components: Example...) -> [Example] {
         components
     }
-    
+
     public static func buildArray(_ components: [[Example]]) -> [Example] {
         components.flatMap { $0 }
     }
-    
+
     public static func buildOptional(_ component: [Example]?) -> [Example] {
         component ?? []
     }
-    
+
     public static func buildEither(first component: [Example]) -> [Example] {
         component
     }
-    
+
     public static func buildEither(second component: [Example]) -> [Example] {
         component
     }

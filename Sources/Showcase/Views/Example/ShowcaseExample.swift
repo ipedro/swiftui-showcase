@@ -51,7 +51,7 @@ public struct ShowcaseExample: StyledView, Equatable {
     var label: Optional<Text>
     var codeBlock: CodeBlock?
     // swiftlint:enable syntactic_sugar
-    
+
     @State private var isCodeExpanded = false
 
     public var body: some View {
@@ -79,7 +79,7 @@ private struct IntegratedExampleView: View {
     let content: AnyView
     let codeBlock: CodeBlock
     @Binding var isCodeExpanded: Bool
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             // Title if present
@@ -88,7 +88,7 @@ private struct IntegratedExampleView: View {
                     .font(.headline)
                     .padding(.bottom, 12)
             }
-            
+
             VStack(spacing: 0) {
                 // Preview section with label
                 VStack(spacing: 0) {
@@ -102,16 +102,16 @@ private struct IntegratedExampleView: View {
                     .padding(.horizontal, 12)
                     .padding(.vertical, 8)
                     .background(Color.secondary.opacity(0.05))
-                    
+
                     content
                         .padding()
                         .frame(maxWidth: .infinity, alignment: .center)
                         .background(Color.secondary.opacity(0.02))
                 }
-                
+
                 // Divider
                 Divider()
-                
+
                 // Code toggle button
                 Button {
                     withAnimation(.snappy(duration: 0.2)) {
@@ -134,7 +134,7 @@ private struct IntegratedExampleView: View {
                     .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
-                
+
                 // Code section (collapsible)
                 if isCodeExpanded {
                     ShowcaseCodeBlock(data: codeBlock)
@@ -159,12 +159,12 @@ private struct SimpleExampleView: View {
     let label: Optional<Text>
     // swiftlint:enable syntactic_sugar
     let content: AnyView
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             label
                 .font(.headline)
-            
+
             content
                 .padding()
                 .frame(maxWidth: .infinity)

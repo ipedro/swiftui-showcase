@@ -88,7 +88,7 @@ public struct ShowcaseContent: StyledView {
             ForEach(Array(orderedItems.items.enumerated()), id: \.element.id) { index, item in
                 let previousItem = index > 0 ? orderedItems.items[index - 1] : nil
                 let spacing = adaptiveSpacing(for: item, after: previousItem)
-                
+
                 Group {
                     switch item {
                     case let .description(description):
@@ -118,11 +118,11 @@ public struct ShowcaseContent: StyledView {
             }
         }
     }
-    
+
     /// Calculates adaptive spacing between content items based on their types
     private func adaptiveSpacing(for item: TopicContentItem, after previous: TopicContentItem?) -> CGFloat {
         guard let previous else { return 0 }
-        
+
         // Define spacing rules based on content relationships
         switch (previous, item) {
         case (.description, .codeBlock):

@@ -26,14 +26,14 @@ import SwiftUI
 public struct ShowcaseExampleGroup: View {
     let examples: [Example]
     let groupTitle: String?
-    
+
     @State private var selectedIndex: Int = 0
-    
+
     public init(examples: [Example], title: String? = nil) {
         self.examples = examples
-        self.groupTitle = title
+        groupTitle = title
     }
-    
+
     public var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             // Group title if provided
@@ -42,7 +42,7 @@ public struct ShowcaseExampleGroup: View {
                     .font(.headline)
                     .padding(.bottom, 12)
             }
-            
+
             VStack(spacing: 0) {
                 // Tab selector
                 ScrollView(.horizontal, showsIndicators: false) {
@@ -62,9 +62,9 @@ public struct ShowcaseExampleGroup: View {
                     .padding(.vertical, 8)
                 }
                 .background(Color.secondary.opacity(0.05))
-                
+
                 Divider()
-                
+
                 // Tab content - show selected example
                 if examples.indices.contains(selectedIndex) {
                     ShowcaseExample(data: examples[selectedIndex])
@@ -89,7 +89,7 @@ private struct TabButton: View {
     let title: String
     let isSelected: Bool
     let action: () -> Void
-    
+
     var body: some View {
         Button(action: action) {
             Text(title)
