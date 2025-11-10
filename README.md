@@ -374,9 +374,37 @@ struct MyView: View {
     @ShowcaseHidden
     private var internalHelper: String = ""
     
+    public var displayName: String = "User"
+    
     var body: some View {
-        // Only public API will be documented
-        Text("Hello")
+        Text("Hello, \(displayName)")
+    }
+}
+```
+
+**The macro generates documentation excluding hidden members:**
+
+```swift
+extension MyView: Showcasable {
+    public static var showcaseTopic: Topic {
+        Topic("MyView") {
+            CodeBlock("Type Relationships") {
+                """
+                struct MyView: View
+                """
+            }
+            
+            // Only public, non-hidden members are documented
+            Topic("displayName") {
+                CodeBlock("Declaration") {
+                    """
+                    var displayName: String
+                    """
+                }
+            }
+            
+            // internalHelper is NOT included (marked with @ShowcaseHidden)
+        }
     }
 }
 ```
