@@ -1,4 +1,6 @@
-//  Copyright (c) 2025 Pedro Almeida
+// IdiomPaddingModifier.swift
+// Copyright (c) 2025 Pedro Almeida
+// Created by Pedro Almeida on 11/10/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -78,18 +80,23 @@ struct IdiomEdgeInsetsModifier: UserInterfaceIdiomModifier {
     func phoneBody(content: Content) -> some View {
         content.padding(phoneInsets)
     }
+
     func padBody(content: Content) -> some View {
         content.padding(padInsets)
     }
+
     func macBody(content: Content) -> some View {
         content.padding(macInsets)
     }
+
     func tvBody(content: Content) -> some View {
         content.padding(tvInsets)
     }
+
     func watchBody(content: Content) -> some View {
         content.padding(watchInsets)
     }
+
     func visionBody(content: Content) -> some View {
         content.padding(visionInsets)
     }
@@ -107,18 +114,23 @@ struct IdiomEdgesLengthModifier: UserInterfaceIdiomModifier {
     func phoneBody(content: Content) -> some View {
         content.padding(edges, phoneLength)
     }
+
     func padBody(content: Content) -> some View {
         content.padding(edges, padLength)
     }
+
     func macBody(content: Content) -> some View {
         content.padding(edges, macLength)
     }
+
     func tvBody(content: Content) -> some View {
         content.padding(edges, tvLength)
     }
+
     func watchBody(content: Content) -> some View {
         content.padding(edges, watchLength)
     }
+
     func visionBody(content: Content) -> some View {
         content.padding(edges, visionLength)
     }

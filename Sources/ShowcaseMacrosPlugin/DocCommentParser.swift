@@ -1,6 +1,6 @@
 // DocCommentParser.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 09.11.25.
+// Created by Pedro Almeida on 11/10/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -107,7 +107,7 @@ enum DocCommentParser {
             parseBlockquoteNote(line, state: &state)
             return .note
         }
-        
+
         if line.hasPrefix("- Parameter ") || line.hasPrefix("- parameter ") {
             saveCurrentParameter(state: &state)
             parseParameterMarker(line, state: &state)
