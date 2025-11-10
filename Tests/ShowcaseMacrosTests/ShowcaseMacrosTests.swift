@@ -30,6 +30,7 @@ import XCTest
     import ShowcaseMacrosPlugin
 #endif
 
+// swiftlint:disable:next type_body_length
 final class ShowcaseMacrosTests: XCTestCase {
     // MARK: - Basic Showcasable Tests
 
@@ -563,191 +564,199 @@ final class ShowcaseMacrosTests: XCTestCase {
     func testDSButtonWithMarkdownAndCodeBlocks() throws {
         #if canImport(ShowcaseMacrosPlugin)
             assertMacroExpansion(
-                """
-                /// A customizable button component for the design system
-                ///
-                /// `DSButton` provides a consistent button interface with three built-in styles:
-                /// primary, secondary, and destructive. Each style automatically applies appropriate
-                /// colors and styling to match your design system.
-                ///
-                /// ## Basic Usage
-                ///
-                /// ```swift
-                /// DSButton(title: "Continue", style: .primary) {
-                ///     print("Action triggered")
-                /// }
-                /// ```
-                ///
-                /// ## Button Styles
-                ///
-                /// Choose from three predefined styles depending on the action's importance:
-                ///
-                /// ```swift
-                /// // Primary: For main actions
-                /// DSButton(title: "Save", style: .primary) {
-                ///     saveDocument()
-                /// }
-                ///
-                /// // Secondary: For alternative actions
-                /// DSButton(title: "Cancel", style: .secondary) {
-                ///     dismissView()
-                /// }
-                ///
-                /// // Destructive: For dangerous actions
-                /// DSButton(title: "Delete", style: .destructive) {
-                ///     deleteItem()
-                /// }
-                /// ```
-                ///
-                /// ## Styling and Customization
-                ///
-                /// Combine with SwiftUI modifiers for additional customization:
-                ///
-                /// ```swift
-                /// DSButton(title: "Custom", style: .primary) {
-                ///     performAction()
-                /// }
-                /// .opacity(0.5)
-                /// .disabled(true)
-                /// ```
-                @Showcasable(chapter: "Components", icon: "button.horizontal")
-                struct DSButton: View {
-                    var body: some View {
-                        Button("Action") {}
-                    }
-                }
-                """,
-                expandedSource: #"""
-                /// A customizable button component for the design system
-                ///
-                /// `DSButton` provides a consistent button interface with three built-in styles:
-                /// primary, secondary, and destructive. Each style automatically applies appropriate
-                /// colors and styling to match your design system.
-                ///
-                /// ## Basic Usage
-                ///
-                /// ```swift
-                /// DSButton(title: "Continue", style: .primary) {
-                ///     print("Action triggered")
-                /// }
-                /// ```
-                ///
-                /// ## Button Styles
-                ///
-                /// Choose from three predefined styles depending on the action's importance:
-                ///
-                /// ```swift
-                /// // Primary: For main actions
-                /// DSButton(title: "Save", style: .primary) {
-                ///     saveDocument()
-                /// }
-                ///
-                /// // Secondary: For alternative actions
-                /// DSButton(title: "Cancel", style: .secondary) {
-                ///     dismissView()
-                /// }
-                ///
-                /// // Destructive: For dangerous actions
-                /// DSButton(title: "Delete", style: .destructive) {
-                ///     deleteItem()
-                /// }
-                /// ```
-                ///
-                /// ## Styling and Customization
-                ///
-                /// Combine with SwiftUI modifiers for additional customization:
-                ///
-                /// ```swift
-                /// DSButton(title: "Custom", style: .primary) {
-                ///     performAction()
-                /// }
-                /// .opacity(0.5)
-                /// .disabled(true)
-                /// ```
-                struct DSButton: View {
-                    var body: some View {
-                        Button("Action") {}
-                    }
-                }
-
-                extension DSButton: Showcasable {
-                    public static var showcaseTopic: Topic {
-                        Topic("DSButton", icon: Image(systemName: "button.horizontal")) {
-                            Description {
-                                """
-                                A customizable button component for the design system
-
-                                `DSButton` provides a consistent button interface with three built-in styles:
-                                primary, secondary, and destructive. Each style automatically applies appropriate
-                                colors and styling to match your design system.
-
-                                ## Basic Usage
-                                """
-                            }
-                            CodeBlock("Example 1") {
-                                """
-                                DSButton(title: "Continue", style: .primary) {
-                                    print("Action triggered")
-                                }
-                                """
-                            }
-                            Description {
-                                """
-                                ## Button Styles
-
-                                Choose from three predefined styles depending on the action's importance:
-                                """
-                            }
-                            CodeBlock("Example 2") {
-                                """
-                                // Primary: For main actions
-                                DSButton(title: "Save", style: .primary) {
-                                    saveDocument()
-                                }
-
-                                // Secondary: For alternative actions
-                                DSButton(title: "Cancel", style: .secondary) {
-                                    dismissView()
-                                }
-
-                                // Destructive: For dangerous actions
-                                DSButton(title: "Delete", style: .destructive) {
-                                    deleteItem()
-                                }
-                                """
-                            }
-                            Description {
-                                """
-                                ## Styling and Customization
-
-                                Combine with SwiftUI modifiers for additional customization:
-                                """
-                            }
-                            CodeBlock("Example 3") {
-                                """
-                                DSButton(title: "Custom", style: .primary) {
-                                    performAction()
-                                }
-                                .opacity(0.5)
-                                .disabled(true)
-                                """
-                            }
-                            CodeBlock("Type Relationships") {
-                                """
-                                struct DSButton: View
-                                """
-                            }
-                        }
-                    }
-                    public static var showcaseChapter: String {
-                        "Components"
-                    }
-                }
-                """#,
+                dsButtonOriginalSource(),
+                expandedSource: dsButtonExpandedSource(),
                 macros: testMacros
             )
         #else
             throw XCTSkip("Macros are only supported when running tests for the host platform")
         #endif
+    }
+
+    private func dsButtonOriginalSource() -> String {
+        """
+        /// A customizable button component for the design system
+        ///
+        /// `DSButton` provides a consistent button interface with three built-in styles:
+        /// primary, secondary, and destructive. Each style automatically applies appropriate
+        /// colors and styling to match your design system.
+        ///
+        /// ## Basic Usage
+        ///
+        /// ```swift
+        /// DSButton(title: "Continue", style: .primary) {
+        ///     print("Action triggered")
+        /// }
+        /// ```
+        ///
+        /// ## Button Styles
+        ///
+        /// Choose from three predefined styles depending on the action's importance:
+        ///
+        /// ```swift
+        /// // Primary: For main actions
+        /// DSButton(title: "Save", style: .primary) {
+        ///     saveDocument()
+        /// }
+        ///
+        /// // Secondary: For alternative actions
+        /// DSButton(title: "Cancel", style: .secondary) {
+        ///     dismissView()
+        /// }
+        ///
+        /// // Destructive: For dangerous actions
+        /// DSButton(title: "Delete", style: .destructive) {
+        ///     deleteItem()
+        /// }
+        /// ```
+        ///
+        /// ## Styling and Customization
+        ///
+        /// Combine with SwiftUI modifiers for additional customization:
+        ///
+        /// ```swift
+        /// DSButton(title: "Custom", style: .primary) {
+        ///     performAction()
+        /// }
+        /// .opacity(0.5)
+        /// .disabled(true)
+        /// ```
+        @Showcasable(chapter: "Components", icon: "button.horizontal")
+        struct DSButton: View {
+            var body: some View {
+                Button("Action") {}
+            }
+        }
+        """
+    }
+
+    private func dsButtonExpandedSource() -> String {
+        #"""
+        /// A customizable button component for the design system
+        ///
+        /// `DSButton` provides a consistent button interface with three built-in styles:
+        /// primary, secondary, and destructive. Each style automatically applies appropriate
+        /// colors and styling to match your design system.
+        ///
+        /// ## Basic Usage
+        ///
+        /// ```swift
+        /// DSButton(title: "Continue", style: .primary) {
+        ///     print("Action triggered")
+        /// }
+        /// ```
+        ///
+        /// ## Button Styles
+        ///
+        /// Choose from three predefined styles depending on the action's importance:
+        ///
+        /// ```swift
+        /// // Primary: For main actions
+        /// DSButton(title: "Save", style: .primary) {
+        ///     saveDocument()
+        /// }
+        ///
+        /// // Secondary: For alternative actions
+        /// DSButton(title: "Cancel", style: .secondary) {
+        ///     dismissView()
+        /// }
+        ///
+        /// // Destructive: For dangerous actions
+        /// DSButton(title: "Delete", style: .destructive) {
+        ///     deleteItem()
+        /// }
+        /// ```
+        ///
+        /// ## Styling and Customization
+        ///
+        /// Combine with SwiftUI modifiers for additional customization:
+        ///
+        /// ```swift
+        /// DSButton(title: "Custom", style: .primary) {
+        ///     performAction()
+        /// }
+        /// .opacity(0.5)
+        /// .disabled(true)
+        /// ```
+        struct DSButton: View {
+            var body: some View {
+                Button("Action") {}
+            }
+        }
+
+        extension DSButton: Showcasable {
+            public static var showcaseTopic: Topic {
+                Topic("DSButton", icon: Image(systemName: "button.horizontal")) {
+                    Description {
+                        """
+                        A customizable button component for the design system
+
+                        `DSButton` provides a consistent button interface with three built-in styles:
+                        primary, secondary, and destructive. Each style automatically applies appropriate
+                        colors and styling to match your design system.
+
+                        ## Basic Usage
+                        """
+                    }
+                    CodeBlock("Example 1") {
+                        """
+                        DSButton(title: "Continue", style: .primary) {
+                            print("Action triggered")
+                        }
+                        """
+                    }
+                    Description {
+                        """
+                        ## Button Styles
+
+                        Choose from three predefined styles depending on the action's importance:
+                        """
+                    }
+                    CodeBlock("Example 2") {
+                        """
+                        // Primary: For main actions
+                        DSButton(title: "Save", style: .primary) {
+                            saveDocument()
+                        }
+
+                        // Secondary: For alternative actions
+                        DSButton(title: "Cancel", style: .secondary) {
+                            dismissView()
+                        }
+
+                        // Destructive: For dangerous actions
+                        DSButton(title: "Delete", style: .destructive) {
+                            deleteItem()
+                        }
+                        """
+                    }
+                    Description {
+                        """
+                        ## Styling and Customization
+
+                        Combine with SwiftUI modifiers for additional customization:
+                        """
+                    }
+                    CodeBlock("Example 3") {
+                        """
+                        DSButton(title: "Custom", style: .primary) {
+                            performAction()
+                        }
+                        .opacity(0.5)
+                        .disabled(true)
+                        """
+                    }
+                    CodeBlock("Type Relationships") {
+                        """
+                        struct DSButton: View
+                        """
+                    }
+                }
+            }
+            public static var showcaseChapter: String {
+                "Components"
+            }
+        }
+        """#
     }
 }
