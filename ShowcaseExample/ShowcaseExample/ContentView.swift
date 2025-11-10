@@ -10,7 +10,7 @@ import Showcase
 
 struct ContentView: View {
     var body: some View {
-        ShowcaseNavigationStack(.showcaseGuide)
+        ShowcaseNavigationSplitView(.showcaseGuide)
     }
 }
 

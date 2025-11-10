@@ -23,20 +23,21 @@ import Showcase
 
 extension Chapter {
     /// Design system components with @Showcasable macro
-    static let designSystemComponents = Chapter("Components") {
+    static let designSystem = Chapter("Design System") {
         Description {
             """
-            Core UI components for building consistent interfaces.
+            A complete design system with reusable UI components.
             
             All components use the @Showcasable macro with auto-generated code blocks \
             from @ShowcaseExample annotations. This ensures documentation always matches \
             the actual implementation.
             
             **Features:**
-            * Automatic code block generation
-            * Live interactive examples
+            * Automatic code block generation from @ShowcaseExample
+            * Live interactive previews
             * Type-safe documentation
             * Compile-time verification
+            * Consistent design patterns
             """
         }
         

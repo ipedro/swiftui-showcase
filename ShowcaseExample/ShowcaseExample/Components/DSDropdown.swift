@@ -160,7 +160,11 @@ struct DSDropdown<Item: Hashable & Identifiable, Content: View>: View {
                     }
                     .frame(maxHeight: 200)
                 }
+                #if os(macOS)
                 .background(Color(nsColor: .controlBackgroundColor))
+                #else
+                .background(Color(uiColor: .systemBackground))
+                #endif
                 .cornerRadius(8)
                 .shadow(radius: 4)
                 .padding(.top, 4)

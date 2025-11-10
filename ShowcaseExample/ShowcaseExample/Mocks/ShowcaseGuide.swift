@@ -16,7 +16,6 @@ extension Document {
         Chapter.coreConceptsChapter
         Chapter.contentTypes
         Chapter.advancedFeatures
-        Chapter.designSystemComponents
         Chapter.designSystem
     }
 }
@@ -1040,42 +1039,4 @@ extension Topic {
         ExternalLink("Customization Guide", URL(string: "https://github.com/ipedro/swiftui-showcase#customization")!)
     }
 }
-
-// MARK: - Chapter 5: Design System Components
-
-extension Chapter {
-    static let designSystem = Chapter("Manual Topic Syntax") {
-        Description {
-            """
-            Examples of manually creating Topics using the declarative API (without macros).
-            
-            This demonstrates the underlying Topic syntax that the @Showcasable macro generates \
-            automatically. You can use this manual approach when you need fine-grained control or \
-            when working with types that can't use macros.
-            
-            **Manual vs Macro Approach:**
-            
-            Manual Topic creation gives you complete control over structure and content, but requires \
-            maintaining the code examples and documentation separately. The @Showcasable macro \
-            automates this process by extracting documentation from doc comments and generating \
-            code blocks from @ShowcaseExample properties.
-            
-            **When to use manual Topics:**
-            - Complex custom documentation structures
-            - Non-code documentation (guides, tutorials)
-            - Mixing content from multiple sources
-            - Special formatting requirements
-            
-            **When to use @Showcasable macro:**
-            - Documenting SwiftUI components
-            - Auto-generating code examples
-            - Keeping docs in sync with code
-            - Standard API documentation
-            
-            See the "Components" chapter for real @Showcasable macro examples.
-            """
-        }
-    }
-}
-
 
