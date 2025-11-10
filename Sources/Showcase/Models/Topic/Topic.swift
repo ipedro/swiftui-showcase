@@ -1,6 +1,6 @@
 // Topic.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/8/25.
+// Created by Pedro Almeida on 11/9/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -157,12 +157,12 @@ extension Topic {
                 switch item {
                 case .description(let description):
                     return description.value.localizedCaseInsensitiveContains(query)
-                case .example(let example):
+                case let .example(example):
                     return example.title?.localizedCaseInsensitiveContains(query) == true
-                case .codeBlock(let codeBlock):
+                case let .codeBlock(codeBlock):
                     return codeBlock.rawValue.localizedCaseInsensitiveContains(query)
                         || codeBlock.title?.localizedCaseInsensitiveContains(query) == true
-                case .link(let link):
+                case let .link(link):
                     return link.url.absoluteString.localizedCaseInsensitiveContains(query)
                         || link.name.description.localizedCaseInsensitiveContains(query)
                 case .list(let list):

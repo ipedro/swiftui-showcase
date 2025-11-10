@@ -1,6 +1,6 @@
 // Document.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/8/25.
+// Created by Pedro Almeida on 11/9/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -39,7 +39,7 @@ public struct Document: Identifiable {
 
     /// The chapters within the document.
     public var chapters: [Chapter]
-    
+
     /// Initializes a showcase document using a ``DocumentContentBuilder`` closure
     /// that allows mixing descriptions and chapters in the builder DSL.
     /// - Parameters:
@@ -53,7 +53,7 @@ public struct Document: Identifiable {
         _title = Lazy(wrappedValue: title)
         _description = Lazy(wrappedValue: documentContent.description ?? "")
         _icon = Lazy(wrappedValue: documentContent.icon)
-        
+
         if let icon = documentContent.icon {
             chapters = documentContent.chapters.sortedWithIcon(icon)
         } else {

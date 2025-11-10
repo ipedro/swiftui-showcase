@@ -1,5 +1,6 @@
 // MacroArguments.swift
 // Copyright (c) 2025 Pedro Almeida
+// Created by Pedro Almeida on 11/9/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -27,21 +28,21 @@ struct MacroArguments {
     let icon: String?
     let order: Int?
     let autoDiscover: Bool
-    
+
     static func extract(from node: AttributeSyntax) throws -> MacroArguments {
         guard case let .argumentList(arguments) = node.arguments else {
             throw MacroError.missingArguments
         }
-        
+
         var chapter: String?
         var icon: String?
         var order: Int?
-        var autoDiscover: Bool = true
-        
+        var autoDiscover = true
+
         for argument in arguments {
             let label = argument.label?.text
             let expr = argument.expression
-            
+
             if label == nil, chapter == nil {
                 // First unlabeled argument is chapter
                 chapter = expr.stringLiteralValue
@@ -55,11 +56,11 @@ struct MacroArguments {
                 autoDiscover = expr.booleanLiteralValue ?? true
             }
         }
-        
+
         guard let chapter = chapter else {
             throw MacroError.missingChapterArgument
         }
-        
+
         return MacroArguments(
             chapter: chapter,
             icon: icon,

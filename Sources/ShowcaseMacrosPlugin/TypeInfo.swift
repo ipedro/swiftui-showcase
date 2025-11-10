@@ -1,5 +1,6 @@
 // TypeInfo.swift
 // Copyright (c) 2025 Pedro Almeida
+// Created by Pedro Almeida on 11/9/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -27,14 +28,14 @@ struct TypeInfo {
     let genericParameters: String?
     let inheritedTypes: [String]
     let genericConstraints: [String]
-    
+
     static func extract(from declaration: some DeclGroupSyntax) throws -> TypeInfo {
         // Extract type name based on declaration kind
         let name: String
         let genericParams: String?
         let inheritedTypes: [String]
         let constraints: [String]
-        
+
         if let structDecl = declaration.as(StructDeclSyntax.self) {
             name = structDecl.name.text
             genericParams = structDecl.genericParameterClause?.description.trimmingCharacters(in: .whitespaces)
@@ -53,7 +54,7 @@ struct TypeInfo {
         } else {
             throw MacroError.unsupportedDeclarationType
         }
-        
+
         return TypeInfo(
             name: name,
             genericParameters: genericParams,
@@ -61,18 +62,18 @@ struct TypeInfo {
             genericConstraints: constraints
         )
     }
-    
+
     private static func extractInheritedTypes(from clause: InheritanceClauseSyntax?) -> [String] {
         guard let clause = clause else { return [] }
-        
+
         return clause.inheritedTypes.map { inheritedType in
             inheritedType.type.description.trimmingCharacters(in: .whitespaces)
         }
     }
-    
+
     private static func extractGenericConstraints(from clause: GenericWhereClauseSyntax?) -> [String] {
         guard let clause = clause else { return [] }
-        
+
         return clause.requirements.map { requirement in
             requirement.description.trimmingCharacters(in: .whitespaces)
         }

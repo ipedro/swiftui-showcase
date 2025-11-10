@@ -1,5 +1,6 @@
 // TypeRelationshipsGenerator.swift
 // Copyright (c) 2025 Pedro Almeida
+// Created by Pedro Almeida on 11/9/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +24,7 @@
 enum TypeRelationshipsGenerator {
     static func generate(typeInfo: TypeInfo) -> String {
         let declaration = buildDeclaration(typeInfo: typeInfo)
-        
+
         return """
         CodeBlock("Type Relationships") {
         \"\"\"
@@ -32,35 +33,35 @@ enum TypeRelationshipsGenerator {
         }
         """
     }
-    
+
     private static func buildDeclaration(typeInfo: TypeInfo) -> String {
         var declaration = "struct "
-        
+
         // Add type name with generics
         if let genericParams = typeInfo.genericParameters {
             declaration += "\(typeInfo.name)\(genericParams)"
         } else {
             declaration += typeInfo.name
         }
-        
+
         // Add inheritance
         let inheritanceList = categorizeInheritance(typeInfo: typeInfo)
         if !inheritanceList.isEmpty {
             declaration += ": \(inheritanceList.joined(separator: ", "))"
         }
-        
+
         // Add where clause
         if !typeInfo.genericConstraints.isEmpty {
             declaration += " where \(typeInfo.genericConstraints.joined(separator: ", "))"
         }
-        
+
         return declaration
     }
-    
+
     private static func categorizeInheritance(typeInfo: TypeInfo) -> [String] {
         var protocols: [String] = []
         var superclass: String?
-        
+
         for inheritedType in typeInfo.inheritedTypes {
             if isProtocol(inheritedType) {
                 protocols.append(inheritedType)
@@ -74,16 +75,16 @@ enum TypeRelationshipsGenerator {
                 }
             }
         }
-        
+
         var result: [String] = []
         if let superclass = superclass {
             result.append(superclass)
         }
         result.append(contentsOf: protocols)
-        
+
         return result
     }
-    
+
     private static func isProtocol(_ typeName: String) -> Bool {
         // LIMITATION: Swift macros operate on syntax trees without access to semantic type information.
         // This heuristic uses naming patterns to distinguish protocols from classes, which may produce
@@ -101,9 +102,9 @@ enum TypeRelationshipsGenerator {
         // Current approach is "good enough" for common SwiftUI/Foundation types.
         let protocolPatterns = [
             "able", "Protocol", "View", "Equatable", "Hashable",
-            "Codable", "Identifiable", "ObservableObject", "Sendable"
+            "Codable", "Identifiable", "ObservableObject", "Sendable",
         ]
-        
+
         return protocolPatterns.contains { pattern in
             typeName.hasSuffix(pattern) || typeName == pattern
         }

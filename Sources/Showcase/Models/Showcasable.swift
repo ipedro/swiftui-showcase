@@ -1,5 +1,6 @@
 // Showcasable.swift
 // Copyright (c) 2025 Pedro Almeida
+// Created by Pedro Almeida on 11/9/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -28,7 +29,7 @@ import Foundation
 public protocol Showcasable {
     /// The generated topic containing this type's documentation.
     static var showcaseTopic: Topic { get }
-    
+
     /// The chapter this showcasable belongs to.
     static var showcaseChapter: String { get }
 }

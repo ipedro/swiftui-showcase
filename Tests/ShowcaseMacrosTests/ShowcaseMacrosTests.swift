@@ -1,5 +1,6 @@
 // ShowcaseMacrosTests.swift
 // Copyright (c) 2025 Pedro Almeida
+// Created by Pedro Almeida on 11/9/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -26,130 +27,129 @@ import SwiftSyntaxMacrosTestSupport
 import XCTest
 
 #if canImport(ShowcaseMacrosPlugin)
-import ShowcaseMacrosPlugin
+    import ShowcaseMacrosPlugin
 #endif
 
 final class ShowcaseMacrosTests: XCTestCase {
-    
     // MARK: - Basic Showcasable Tests
-    
+
     func testShowcasableBasic() throws {
         #if canImport(ShowcaseMacrosPlugin)
-        assertMacroExpansion(
-            """
-            @Showcasable(chapter: "Buttons")
-            struct PrimaryButton: View {
-                var body: some View {
-                    Button("Primary") {}
-                }
-            }
-            """,
-            expandedSource: """
-            struct PrimaryButton: View {
-                var body: some View {
-                    Button("Primary") {}
-                }
-            }
-            
-            extension PrimaryButton: Showcasable {
-                public static var showcaseTopic: Topic {
-                    Topic("PrimaryButton") {
-                        CodeBlock("Type Relationships") {
-                            \"\"\"
-                            struct PrimaryButton: View
-                            \"\"\"
-                        }
+            assertMacroExpansion(
+                """
+                @Showcasable(chapter: "Buttons")
+                struct PrimaryButton: View {
+                    var body: some View {
+                        Button("Primary") {}
                     }
                 }
-                public static var showcaseChapter: String {
-                    "Buttons"
+                """,
+                expandedSource: """
+                struct PrimaryButton: View {
+                    var body: some View {
+                        Button("Primary") {}
+                    }
                 }
-            }
-            """,
-            macros: testMacros
-        )
+
+                extension PrimaryButton: Showcasable {
+                    public static var showcaseTopic: Topic {
+                        Topic("PrimaryButton") {
+                            CodeBlock("Type Relationships") {
+                                \"\"\"
+                                struct PrimaryButton: View
+                                \"\"\"
+                            }
+                        }
+                    }
+                    public static var showcaseChapter: String {
+                        "Buttons"
+                    }
+                }
+                """,
+                macros: testMacros
+            )
         #else
-        throw XCTSkip("Macros are only supported when running tests for the host platform")
+            throw XCTSkip("Macros are only supported when running tests for the host platform")
         #endif
     }
-    
+
     func testShowcasableWithIcon() throws {
         #if canImport(ShowcaseMacrosPlugin)
-        assertMacroExpansion(
-            """
-            @Showcasable(chapter: "Buttons", icon: "button.horizontal", autoDiscover: false)
-            struct PrimaryButton: View {
-                var body: some View {
-                    Button("Primary") {}
-                }
-            }
-            """,
-            expandedSource: """
-            struct PrimaryButton: View {
-                var body: some View {
-                    Button("Primary") {}
-                }
-            }
-            
-            extension PrimaryButton: Showcasable {
-                public static var showcaseTopic: Topic {
-                    Topic("PrimaryButton", icon: Image(systemName: "button.horizontal")) {
+            assertMacroExpansion(
+                """
+                @Showcasable(chapter: "Buttons", icon: "button.horizontal", autoDiscover: false)
+                struct PrimaryButton: View {
+                    var body: some View {
+                        Button("Primary") {}
                     }
                 }
-                public static var showcaseChapter: String {
-                    "Buttons"
+                """,
+                expandedSource: """
+                struct PrimaryButton: View {
+                    var body: some View {
+                        Button("Primary") {}
+                    }
                 }
-            }
-            """,
-            macros: testMacros
-        )
-        #else
-        throw XCTSkip("Macros are only supported when running tests for the host platform")
-        #endif
-    }
-    
-    func testShowcasableWithDocComment() throws {
-        #if canImport(ShowcaseMacrosPlugin)
-        assertMacroExpansion(
-            """
-            /// A primary action button.
-            @Showcasable(chapter: "Buttons", autoDiscover: false)
-            struct PrimaryButton: View {
-                var body: some View {
-                    Button("Primary") {}
-                }
-            }
-            """,
-            expandedSource: """
-            /// A primary action button.
-            struct PrimaryButton: View {
-                var body: some View {
-                    Button("Primary") {}
-                }
-            }
-            
-            extension PrimaryButton: Showcasable {
-                public static var showcaseTopic: Topic {
-                    Topic("PrimaryButton") {
-                        Description {
-                            \"\"\"
-                            A primary action button.
-                            \"\"\"
+
+                extension PrimaryButton: Showcasable {
+                    public static var showcaseTopic: Topic {
+                        Topic("PrimaryButton", icon: Image(systemName: "button.horizontal")) {
                         }
                     }
+                    public static var showcaseChapter: String {
+                        "Buttons"
+                    }
                 }
-                public static var showcaseChapter: String {
-                    "Buttons"
-                }
-            }
-            """,
-            macros: testMacros
-        )
+                """,
+                macros: testMacros
+            )
         #else
-        throw XCTSkip("Macros are only supported when running tests for the host platform")
+            throw XCTSkip("Macros are only supported when running tests for the host platform")
         #endif
     }
-    
+
+    func testShowcasableWithDocComment() throws {
+        #if canImport(ShowcaseMacrosPlugin)
+            assertMacroExpansion(
+                """
+                /// A primary action button.
+                @Showcasable(chapter: "Buttons", autoDiscover: false)
+                struct PrimaryButton: View {
+                    var body: some View {
+                        Button("Primary") {}
+                    }
+                }
+                """,
+                expandedSource: """
+                /// A primary action button.
+                struct PrimaryButton: View {
+                    var body: some View {
+                        Button("Primary") {}
+                    }
+                }
+
+                extension PrimaryButton: Showcasable {
+                    public static var showcaseTopic: Topic {
+                        Topic("PrimaryButton") {
+                            Description {
+                                \"\"\"
+                                A primary action button.
+                                \"\"\"
+                            }
+                        }
+                    }
+                    public static var showcaseChapter: String {
+                        "Buttons"
+                    }
+                }
+                """,
+                macros: testMacros
+            )
+        #else
+            throw XCTSkip("Macros are only supported when running tests for the host platform")
+        #endif
+    }
+
     func testShowcasableWithCodeBlocksInDocComment() throws {
         // Note: This test is skipped because SwiftSyntaxMacrosTestSupport's assertMacroExpansion
         // does not preserve the multi-line structure of doc comments when extracting them from trivia.
@@ -157,406 +157,406 @@ final class ShowcaseMacrosTests: XCTestCase {
         // In real compilation (ShowcaseExample app), the feature works as expected.
         throw XCTSkip("assertMacroExpansion doesn't preserve doc comment newlines for code block extraction")
     }
-    
+
     func testShowcasableWithExample() throws {
         #if canImport(ShowcaseMacrosPlugin)
-        assertMacroExpansion(
-            """
-            @Showcasable(chapter: "Buttons", autoDiscover: false)
-            struct PrimaryButton: View {
-                @ShowcaseExample(title: "Basic")
-                static var basic: some View {
-                    PrimaryButton()
-                }
-                
-                var body: some View {
-                    Button("Primary") {}
-                }
-            }
-            """,
-            expandedSource: """
-            struct PrimaryButton: View {
-                static var basic: some View {
-                    PrimaryButton()
-                }
-                
-                var body: some View {
-                    Button("Primary") {}
-                }
-            }
-            
-            extension PrimaryButton: Showcasable {
-                public static var showcaseTopic: Topic {
-                    Topic("PrimaryButton") {
-                        Example("Basic") {
-                            PrimaryButton.basic
-                        }
-                        CodeBlock("Basic - Source Code") {
-                            \"\"\"
-                            PrimaryButton()
-                            \"\"\"
-                        }
+            assertMacroExpansion(
+                """
+                @Showcasable(chapter: "Buttons", autoDiscover: false)
+                struct PrimaryButton: View {
+                    @ShowcaseExample(title: "Basic")
+                    static var basic: some View {
+                        PrimaryButton()
+                    }
+                    
+                    var body: some View {
+                        Button("Primary") {}
                     }
                 }
-                public static var showcaseChapter: String {
-                    "Buttons"
+                """,
+                expandedSource: """
+                struct PrimaryButton: View {
+                    static var basic: some View {
+                        PrimaryButton()
+                    }
+                    
+                    var body: some View {
+                        Button("Primary") {}
+                    }
                 }
-            }
-            """,
-            macros: testMacros
-        )
+
+                extension PrimaryButton: Showcasable {
+                    public static var showcaseTopic: Topic {
+                        Topic("PrimaryButton") {
+                            Example("Basic") {
+                                PrimaryButton.basic
+                            }
+                            CodeBlock("Basic - Source Code") {
+                                \"\"\"
+                                PrimaryButton()
+                                \"\"\"
+                            }
+                        }
+                    }
+                    public static var showcaseChapter: String {
+                        "Buttons"
+                    }
+                }
+                """,
+                macros: testMacros
+            )
         #else
-        throw XCTSkip("Macros are only supported when running tests for the host platform")
+            throw XCTSkip("Macros are only supported when running tests for the host platform")
         #endif
     }
-    
+
     func testShowcasableWithExampleAndDescription() throws {
         #if canImport(ShowcaseMacrosPlugin)
-        assertMacroExpansion(
-            """
-            @Showcasable(chapter: "Buttons", autoDiscover: false)
-            struct ActionButton: View {
-                @ShowcaseExample(title: "Primary Action", description: "A primary button with icon")
-                static var withIcon: some View {
-                    ActionButton(title: "Submit", icon: "checkmark")
-                }
-                
-                var body: some View {
-                    Button("Action") {}
-                }
-            }
-            """,
-            expandedSource: """
-            struct ActionButton: View {
-                static var withIcon: some View {
-                    ActionButton(title: "Submit", icon: "checkmark")
-                }
-                
-                var body: some View {
-                    Button("Action") {}
-                }
-            }
-
-            extension ActionButton: Showcasable {
-                public static var showcaseTopic: Topic {
-                    Topic("ActionButton") {
-                        Example("Primary Action") {
-                            Description("A primary button with icon")
-                            ActionButton.withIcon
-                        }
-                        CodeBlock("Primary Action - Source Code") {
-                            \"\"\"
-                            ActionButton(title: "Submit", icon: "checkmark")
-                            \"\"\"
-                        }
+            assertMacroExpansion(
+                """
+                @Showcasable(chapter: "Buttons", autoDiscover: false)
+                struct ActionButton: View {
+                    @ShowcaseExample(title: "Primary Action", description: "A primary button with icon")
+                    static var withIcon: some View {
+                        ActionButton(title: "Submit", icon: "checkmark")
+                    }
+                    
+                    var body: some View {
+                        Button("Action") {}
                     }
                 }
-                public static var showcaseChapter: String {
-                    "Buttons"
+                """,
+                expandedSource: """
+                struct ActionButton: View {
+                    static var withIcon: some View {
+                        ActionButton(title: "Submit", icon: "checkmark")
+                    }
+                    
+                    var body: some View {
+                        Button("Action") {}
+                    }
                 }
-            }
-            """,
-            macros: testMacros
-        )
+
+                extension ActionButton: Showcasable {
+                    public static var showcaseTopic: Topic {
+                        Topic("ActionButton") {
+                            Example("Primary Action") {
+                                Description("A primary button with icon")
+                                ActionButton.withIcon
+                            }
+                            CodeBlock("Primary Action - Source Code") {
+                                \"\"\"
+                                ActionButton(title: "Submit", icon: "checkmark")
+                                \"\"\"
+                            }
+                        }
+                    }
+                    public static var showcaseChapter: String {
+                        "Buttons"
+                    }
+                }
+                """,
+                macros: testMacros
+            )
         #else
-        throw XCTSkip("Macros are only supported when running tests for the host platform")
+            throw XCTSkip("Macros are only supported when running tests for the host platform")
         #endif
     }
-    
+
     func testShowcasableWithAllContent() throws {
         #if canImport(ShowcaseMacrosPlugin)
-        assertMacroExpansion(
-            """
-            /// A versatile button for actions
-            @Showcasable(chapter: "Buttons", icon: "button.circle", autoDiscover: false)
-            struct ActionButton: View {
-                @ShowcaseExample(title: "Basic Usage")
-                static var basic: some View {
-                    ActionButton(title: "Submit")
-                }
-                
-                @ShowcaseHidden
-                private var internalState: Int = 0
-                
-                var body: some View {
-                    Button("Action") {}
-                }
-            }
-            """,
-            expandedSource: """
-            /// A versatile button for actions
-            struct ActionButton: View {
-                static var basic: some View {
-                    ActionButton(title: "Submit")
-                }
-
-                private var internalState: Int = 0
-                
-                var body: some View {
-                    Button("Action") {}
-                }
-            }
-
-            extension ActionButton: Showcasable {
-                public static var showcaseTopic: Topic {
-                    Topic("ActionButton", icon: Image(systemName: "button.circle")) {
-                        Description {
-                            \"\"\"
-                            A versatile button for actions
-                            \"\"\"
-                        }
-                        Example("Basic Usage") {
-                            ActionButton.basic
-                        }
-                        CodeBlock("Basic Usage - Source Code") {
-                            \"\"\"
-                            ActionButton(title: "Submit")
-                            \"\"\"
-                        }
+            assertMacroExpansion(
+                """
+                /// A versatile button for actions
+                @Showcasable(chapter: "Buttons", icon: "button.circle", autoDiscover: false)
+                struct ActionButton: View {
+                    @ShowcaseExample(title: "Basic Usage")
+                    static var basic: some View {
+                        ActionButton(title: "Submit")
+                    }
+                    
+                    @ShowcaseHidden
+                    private var internalState: Int = 0
+                    
+                    var body: some View {
+                        Button("Action") {}
                     }
                 }
-                public static var showcaseChapter: String {
-                    "Buttons"
+                """,
+                expandedSource: """
+                /// A versatile button for actions
+                struct ActionButton: View {
+                    static var basic: some View {
+                        ActionButton(title: "Submit")
+                    }
+
+                    private var internalState: Int = 0
+                    
+                    var body: some View {
+                        Button("Action") {}
+                    }
                 }
-            }
-            """,
-            macros: testMacros
-        )
+
+                extension ActionButton: Showcasable {
+                    public static var showcaseTopic: Topic {
+                        Topic("ActionButton", icon: Image(systemName: "button.circle")) {
+                            Description {
+                                \"\"\"
+                                A versatile button for actions
+                                \"\"\"
+                            }
+                            Example("Basic Usage") {
+                                ActionButton.basic
+                            }
+                            CodeBlock("Basic Usage - Source Code") {
+                                \"\"\"
+                                ActionButton(title: "Submit")
+                                \"\"\"
+                            }
+                        }
+                    }
+                    public static var showcaseChapter: String {
+                        "Buttons"
+                    }
+                }
+                """,
+                macros: testMacros
+            )
         #else
-        throw XCTSkip("Macros are only supported when running tests for the host platform")
+            throw XCTSkip("Macros are only supported when running tests for the host platform")
         #endif
     }
-    
+
     // MARK: - Error Tests
-    
+
     func testShowcasableMissingChapter() throws {
         #if canImport(ShowcaseMacrosPlugin)
-        assertMacroExpansion(
-            """
-            @Showcasable
-            struct PrimaryButton: View {
-                var body: some View {
-                    Button("Primary") {}
+            assertMacroExpansion(
+                """
+                @Showcasable
+                struct PrimaryButton: View {
+                    var body: some View {
+                        Button("Primary") {}
+                    }
                 }
-            }
-            """,
-            expandedSource: """
-            struct PrimaryButton: View {
-                var body: some View {
-                    Button("Primary") {}
+                """,
+                expandedSource: """
+                struct PrimaryButton: View {
+                    var body: some View {
+                        Button("Primary") {}
+                    }
                 }
-            }
-            """,
-            diagnostics: [
-                DiagnosticSpec(message: "@Showcasable requires arguments", line: 1, column: 1)
-            ],
-            macros: testMacros
-        )
+                """,
+                diagnostics: [
+                    DiagnosticSpec(message: "@Showcasable requires arguments", line: 1, column: 1),
+                ],
+                macros: testMacros
+            )
         #else
-        throw XCTSkip("Macros are only supported when running tests for the host platform")
+            throw XCTSkip("Macros are only supported when running tests for the host platform")
         #endif
     }
-    
+
     // MARK: - Test Configuration
-    
+
     #if canImport(ShowcaseMacrosPlugin)
-    let testMacros: [String: Macro.Type] = [
-        "Showcasable": ShowcasableMacro.self,
-        "ShowcaseExample": ShowcaseExampleMacro.self,
-        "ShowcaseHidden": ShowcaseHiddenMacro.self,
-    ]
+        let testMacros: [String: Macro.Type] = [
+            "Showcasable": ShowcasableMacro.self,
+            "ShowcaseExample": ShowcaseExampleMacro.self,
+            "ShowcaseHidden": ShowcaseHiddenMacro.self,
+        ]
     #else
-    let testMacros: [String: Macro.Type] = [:]
+        let testMacros: [String: Macro.Type] = [:]
     #endif
-    
+
     func testShowcaseHiddenMacro() throws {
         #if canImport(ShowcaseMacrosPlugin)
-        assertMacroExpansion(
-            """
-            @Showcasable(chapter: "Models", autoDiscover: true)
-            struct User {
-                var name: String
-                
-                @ShowcaseHidden
-                private var internalCache: [String: Any]
-            }
-            """,
-            expandedSource: """
-            struct User {
-                var name: String
+            assertMacroExpansion(
+                """
+                @Showcasable(chapter: "Models", autoDiscover: true)
+                struct User {
+                    var name: String
+                    
+                    @ShowcaseHidden
+                    private var internalCache: [String: Any]
+                }
+                """,
+                expandedSource: """
+                struct User {
+                    var name: String
 
-                private var internalCache: [String: Any]
-            }
+                    private var internalCache: [String: Any]
+                }
 
-            extension User: Showcasable {
-                public static var showcaseTopic: Topic {
-                    Topic("User") {
-                        Topic("name") {
-                            CodeBlock("Declaration") {
-                                \"\"\"
-                                var name: String
-                                \"\"\"
+                extension User: Showcasable {
+                    public static var showcaseTopic: Topic {
+                        Topic("User") {
+                            Topic("name") {
+                                CodeBlock("Declaration") {
+                                    \"\"\"
+                                    var name: String
+                                    \"\"\"
+                                }
                             }
                         }
                     }
+                    public static var showcaseChapter: String {
+                        "Models"
+                    }
                 }
-                public static var showcaseChapter: String {
-                    "Models"
-                }
-            }
-            """,
-            macros: testMacros
-        )
+                """,
+                macros: testMacros
+            )
         #else
-        throw XCTSkip("Macros are only supported when running tests for the host platform")
+            throw XCTSkip("Macros are only supported when running tests for the host platform")
         #endif
     }
-    
+
     // MARK: - Auto-Discovery Tests
-    
+
     func testMemberAutoDiscovery() throws {
         #if canImport(ShowcaseMacrosPlugin)
-        assertMacroExpansion(
-            """
-            /// A user model with full documentation
-            @Showcasable(chapter: "Models")
-            struct DocumentedUser {
-                /// The user's unique identifier
-                var id: String
-                
-                /// The user's display name
-                var name: String
-                
-                /// Creates a new user with the given credentials
-                init(id: String, name: String) {
-                    self.id = id
-                    self.name = name
+            assertMacroExpansion(
+                """
+                /// A user model with full documentation
+                @Showcasable(chapter: "Models")
+                struct DocumentedUser {
+                    /// The user's unique identifier
+                    var id: String
+                    
+                    /// The user's display name
+                    var name: String
+                    
+                    /// Creates a new user with the given credentials
+                    init(id: String, name: String) {
+                        self.id = id
+                        self.name = name
+                    }
+                    
+                    /// Validates the user's name
+                    /// - Returns: true if the name is valid
+                    func validateName() -> Bool {
+                        return !name.isEmpty
+                    }
+                    
+                    /// Gets the user's display string
+                    func displayString() -> String {
+                        return "\\(name) (\\(id))"
+                    }
                 }
-                
-                /// Validates the user's name
-                /// - Returns: true if the name is valid
-                func validateName() -> Bool {
-                    return !name.isEmpty
+                """,
+                expandedSource: """
+                /// A user model with full documentation
+                struct DocumentedUser {
+                    /// The user's unique identifier
+                    var id: String
+                    
+                    /// The user's display name
+                    var name: String
+                    
+                    /// Creates a new user with the given credentials
+                    init(id: String, name: String) {
+                        self.id = id
+                        self.name = name
+                    }
+                    
+                    /// Validates the user's name
+                    /// - Returns: true if the name is valid
+                    func validateName() -> Bool {
+                        return !name.isEmpty
+                    }
+                    
+                    /// Gets the user's display string
+                    func displayString() -> String {
+                        return "\\(name) (\\(id))"
+                    }
                 }
-                
-                /// Gets the user's display string
-                func displayString() -> String {
-                    return "\\(name) (\\(id))"
-                }
-            }
-            """,
-            expandedSource: """
-            /// A user model with full documentation
-            struct DocumentedUser {
-                /// The user's unique identifier
-                var id: String
-                
-                /// The user's display name
-                var name: String
-                
-                /// Creates a new user with the given credentials
-                init(id: String, name: String) {
-                    self.id = id
-                    self.name = name
-                }
-                
-                /// Validates the user's name
-                /// - Returns: true if the name is valid
-                func validateName() -> Bool {
-                    return !name.isEmpty
-                }
-                
-                /// Gets the user's display string
-                func displayString() -> String {
-                    return "\\(name) (\\(id))"
-                }
-            }
 
-            extension DocumentedUser: Showcasable {
-                public static var showcaseTopic: Topic {
-                    Topic("DocumentedUser") {
-                        Description {
-                            \"\"\"
-                            A user model with full documentation
-                            \"\"\"
-                        }
-                        Topic("init(id:name:)") {
+                extension DocumentedUser: Showcasable {
+                    public static var showcaseTopic: Topic {
+                        Topic("DocumentedUser") {
                             Description {
                                 \"\"\"
-                                Creates a new user with the given credentials
+                                A user model with full documentation
                                 \"\"\"
                             }
-                            CodeBlock("Declaration") {
-                                \"\"\"
-                                /// Creates a new user with the given credentials
-                                        init(id: String, name: String)
-                                \"\"\"
+                            Topic("init(id:name:)") {
+                                Description {
+                                    \"\"\"
+                                    Creates a new user with the given credentials
+                                    \"\"\"
+                                }
+                                CodeBlock("Declaration") {
+                                    \"\"\"
+                                    /// Creates a new user with the given credentials
+                                            init(id: String, name: String)
+                                    \"\"\"
+                                }
                             }
-                        }
-                        Topic("validateName") {
-                            Description {
-                                \"\"\"
-                                Validates the user's name
-                                \"\"\"
+                            Topic("validateName") {
+                                Description {
+                                    \"\"\"
+                                    Validates the user's name
+                                    \"\"\"
+                                }
+                                CodeBlock("Declaration") {
+                                    \"\"\"
+                                    /// Validates the user's name
+                                            /// - Returns: true if the name is valid
+                                            func validateName() -> Bool
+                                    \"\"\"
+                                }
                             }
-                            CodeBlock("Declaration") {
-                                \"\"\"
-                                /// Validates the user's name
-                                        /// - Returns: true if the name is valid
-                                        func validateName() -> Bool
-                                \"\"\"
+                            Topic("displayString") {
+                                Description {
+                                    \"\"\"
+                                    Gets the user's display string
+                                    \"\"\"
+                                }
+                                CodeBlock("Declaration") {
+                                    \"\"\"
+                                    /// Gets the user's display string
+                                            func displayString() -> String
+                                    \"\"\"
+                                }
                             }
-                        }
-                        Topic("displayString") {
-                            Description {
-                                \"\"\"
-                                Gets the user's display string
-                                \"\"\"
+                            Topic("id") {
+                                Description {
+                                    \"\"\"
+                                    The user's unique identifier
+                                    \"\"\"
+                                }
+                                CodeBlock("Declaration") {
+                                    \"\"\"
+                                    /// The user's unique identifier
+                                            var id: String
+                                    \"\"\"
+                                }
                             }
-                            CodeBlock("Declaration") {
-                                \"\"\"
-                                /// Gets the user's display string
-                                        func displayString() -> String
-                                \"\"\"
-                            }
-                        }
-                        Topic("id") {
-                            Description {
-                                \"\"\"
-                                The user's unique identifier
-                                \"\"\"
-                            }
-                            CodeBlock("Declaration") {
-                                \"\"\"
-                                /// The user's unique identifier
-                                        var id: String
-                                \"\"\"
-                            }
-                        }
-                        Topic("name") {
-                            Description {
-                                \"\"\"
-                                The user's display name
-                                \"\"\"
-                            }
-                            CodeBlock("Declaration") {
-                                \"\"\"
-                                /// The user's display name
-                                        var name: String
-                                \"\"\"
+                            Topic("name") {
+                                Description {
+                                    \"\"\"
+                                    The user's display name
+                                    \"\"\"
+                                }
+                                CodeBlock("Declaration") {
+                                    \"\"\"
+                                    /// The user's display name
+                                            var name: String
+                                    \"\"\"
+                                }
                             }
                         }
                     }
+                    public static var showcaseChapter: String {
+                        "Models"
+                    }
                 }
-                public static var showcaseChapter: String {
-                    "Models"
-                }
-            }
-            """,
-            macros: testMacros
-        )
+                """,
+                macros: testMacros
+            )
         #else
-        throw XCTSkip("Macros are only supported when running tests for the host platform")
+            throw XCTSkip("Macros are only supported when running tests for the host platform")
         #endif
     }
     

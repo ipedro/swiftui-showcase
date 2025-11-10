@@ -1,6 +1,6 @@
 // TopicContentBuilder.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/8/25.
+// Created by Pedro Almeida on 11/9/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -39,7 +39,7 @@ public struct Description: View, Identifiable {
     public init(_ builder: () -> String) {
         value = builder()
     }
-    
+
     /// Description acts as a marker in ViewBuilder contexts.
     /// Returns an empty view - the actual description is extracted by the showcase system.
     public var body: some View {
@@ -63,7 +63,7 @@ public extension Topic {
         /// in the exact order they were declared in the builder DSL, enabling
         /// flexible content composition and rendering.
         public var items: [TopicContentItem]
-        
+
         /// Child topics for hierarchical navigation.
         public var children: [Topic]
 
@@ -76,14 +76,14 @@ public extension Topic {
         }
 
         // MARK: - AdditiveArithmetic
-        
+
         public static var zero: Topic.Content {
             Topic.Content()
         }
-        
+
         public static func + (lhs: Topic.Content, rhs: Topic.Content) -> Topic.Content {
             var result = lhs
-            
+
             if !rhs.items.isEmpty {
                 result.items.append(contentsOf: rhs.items)
             }
@@ -91,10 +91,10 @@ public extension Topic {
             if !rhs.children.isEmpty {
                 result.children.append(contentsOf: rhs.children)
             }
-            
+
             return result
         }
-        
+
         public static func - (lhs: Topic.Content, rhs: Topic.Content) -> Topic.Content {
             // Subtraction doesn't make semantic sense for content, so just return lhs
             lhs

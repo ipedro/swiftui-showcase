@@ -1,6 +1,6 @@
 // ShowcaseNavigationStack.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/8/25.
+// Created by Pedro Almeida on 11/9/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -64,7 +64,7 @@ struct ShowcaseList_Previews: PreviewProvider {
         ShowcaseNavigationStack(
             Document("My Document") {
                 Description("This document contains one chapter. That chapter has topics that you can find below.")
-                
+
                 Chapter("Components") {
                     Description("This chapter is about example components")
 

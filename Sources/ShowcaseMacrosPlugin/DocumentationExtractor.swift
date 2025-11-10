@@ -1,5 +1,6 @@
 // DocumentationExtractor.swift
 // Copyright (c) 2025 Pedro Almeida
+// Created by Pedro Almeida on 11/9/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -27,7 +28,7 @@ enum DocumentationExtractor {
         // Extract raw doc comment from leading trivia
         let leadingTrivia = declaration.leadingTrivia
         var docLines: [String] = []
-        
+
         for piece in leadingTrivia {
             switch piece {
             case .docLineComment(let text):
@@ -58,10 +59,10 @@ enum DocumentationExtractor {
                 break
             }
         }
-        
+
         let rawComment = docLines.joined(separator: "\n")
         let docComment = DocCommentParser.parse(rawComment)
-        
+
         return Documentation(
             summary: docComment.summary,
             details: docComment.discussion,
