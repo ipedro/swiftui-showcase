@@ -30,7 +30,7 @@ final class ShowcasableAutoDiscoveryTests: ShowcaseMacrosTestsBase {
             assertMacroExpansion(
                 """
                 /// A user model with full documentation
-                @Showcasable(chapter: "Models")
+                @Showcasable
                 struct DocumentedUser {
                     /// The user's unique identifier
                     var id: String
@@ -228,7 +228,7 @@ final class ShowcasableAutoDiscoveryTests: ShowcaseMacrosTestsBase {
         /// .opacity(0.5)
         /// .disabled(true)
         /// ```
-        @Showcasable(chapter: "Components", icon: "button.horizontal")
+        @Showcasable(icon: "button.horizontal")
         struct DSButton: View {
             var body: some View {
                 Button("Action") {}

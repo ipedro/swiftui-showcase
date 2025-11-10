@@ -29,7 +29,7 @@ final class ShowcaseHiddenMacroTests: ShowcaseMacrosTestsBase {
         #if canImport(ShowcaseMacrosPlugin)
             assertMacroExpansion(
                 """
-                @Showcasable(chapter: "Models", autoDiscover: true)
+                @Showcasable(autoDiscover: true)
                 struct User {
                     var name: String
                     

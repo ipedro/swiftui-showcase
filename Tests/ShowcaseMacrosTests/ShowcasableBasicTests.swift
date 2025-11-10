@@ -29,7 +29,7 @@ final class ShowcasableBasicTests: ShowcaseMacrosTestsBase {
         #if canImport(ShowcaseMacrosPlugin)
             assertMacroExpansion(
                 """
-                @Showcasable(chapter: "Buttons")
+                @Showcasable
                 struct PrimaryButton: View {
                     var body: some View {
                         Button("Primary") {}
@@ -67,7 +67,7 @@ final class ShowcasableBasicTests: ShowcaseMacrosTestsBase {
         #if canImport(ShowcaseMacrosPlugin)
             assertMacroExpansion(
                 """
-                @Showcasable(chapter: "Buttons", icon: "button.horizontal", autoDiscover: false)
+                @Showcasable(icon: "button.horizontal", autoDiscover: false)
                 struct PrimaryButton: View {
                     var body: some View {
                         Button("Primary") {}
@@ -100,7 +100,7 @@ final class ShowcasableBasicTests: ShowcaseMacrosTestsBase {
             assertMacroExpansion(
                 """
                 /// A primary action button.
-                @Showcasable(chapter: "Buttons", autoDiscover: false)
+                @Showcasable(autoDiscover: false)
                 struct PrimaryButton: View {
                     var body: some View {
                         Button("Primary") {}
@@ -146,7 +146,7 @@ final class ShowcasableBasicTests: ShowcaseMacrosTestsBase {
         #if canImport(ShowcaseMacrosPlugin)
             assertMacroExpansion(
                 """
-                @Showcasable(chapter: "Buttons", autoDiscover: false)
+                @Showcasable(autoDiscover: false)
                 struct PrimaryButton: View {
                     @ShowcaseExample(title: "Basic")
                     static var basic: some View {
@@ -195,7 +195,7 @@ final class ShowcasableBasicTests: ShowcaseMacrosTestsBase {
         #if canImport(ShowcaseMacrosPlugin)
             assertMacroExpansion(
                 """
-                @Showcasable(chapter: "Buttons", autoDiscover: false)
+                @Showcasable(autoDiscover: false)
                 struct ActionButton: View {
                     @ShowcaseExample(title: "Primary Action", description: "A primary button with icon")
                     static var withIcon: some View {
@@ -250,7 +250,7 @@ final class ShowcasableBasicTests: ShowcaseMacrosTestsBase {
             assertMacroExpansion(
                 """
                 /// A versatile button for actions
-                @Showcasable(chapter: "Buttons", icon: "button.circle", autoDiscover: false)
+                @Showcasable(icon: "button.circle", autoDiscover: false)
                 struct ActionButton: View {
                     @ShowcaseExample(title: "Basic Usage")
                     static var basic: some View {
