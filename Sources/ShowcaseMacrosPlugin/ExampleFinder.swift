@@ -30,8 +30,7 @@ enum ExampleFinder {
         for member in declaration.memberBlock.members {
             // Skip hidden members
             if let varDecl = member.decl.as(VariableDeclSyntax.self),
-               varDecl.hasAttribute(named: "ShowcaseHidden")
-            {
+               varDecl.hasAttribute(named: "ShowcaseHidden") {
                 continue
             }
 
@@ -39,8 +38,7 @@ enum ExampleFinder {
             if let varDecl = member.decl.as(VariableDeclSyntax.self),
                varDecl.hasAttribute(named: "ShowcaseExample"),
                let binding = varDecl.bindings.first,
-               let name = binding.pattern.as(IdentifierPatternSyntax.self)?.identifier.text
-            {
+               let name = binding.pattern.as(IdentifierPatternSyntax.self)?.identifier.text {
                 // Extract title, description, and showCode from attribute
                 let (title, description, showCode) = extractExampleMetadata(from: varDecl)
 
@@ -101,8 +99,7 @@ enum ExampleFinder {
             let label = argument.label?.text
 
             if let stringLiteral = argument.expression.as(StringLiteralExprSyntax.self),
-               let segment = stringLiteral.segments.first?.as(StringSegmentSyntax.self)
-            {
+               let segment = stringLiteral.segments.first?.as(StringSegmentSyntax.self) {
                 let value = segment.content.text
 
                 switch label {
@@ -116,8 +113,7 @@ enum ExampleFinder {
             }
 
             if label == "showCode",
-               let boolExpr = argument.expression.as(BooleanLiteralExprSyntax.self)
-            {
+               let boolExpr = argument.expression.as(BooleanLiteralExprSyntax.self) {
                 showCode = boolExpr.literal.text == "true"
             }
         }
@@ -130,8 +126,7 @@ enum ExampleFinder {
     private static func extractSourceCode(from binding: PatternBindingSyntax) -> String? {
         // Try to extract from accessor (computed property getter)
         if let accessorBlock = binding.accessorBlock,
-           case let .getter(codeBlockItems) = accessorBlock.accessors
-        {
+           case let .getter(codeBlockItems) = accessorBlock.accessors {
             return formatSourceCode(codeBlockItems.description)
         }
 
