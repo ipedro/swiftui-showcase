@@ -59,31 +59,25 @@ public struct ShowcaseNavigationSplitView<Sidebar: View, ContentToolbar: View, D
     }
 
     public var body: some View {
-        NavigationSplitView(
-            columnVisibility: $columnVisibility,
-            sidebar: sidebar,
-            content: content,
-            detail: detail
-        )
+        Group {
+            if Sidebar.self != EmptyView.self {
+                // Three-column layout with custom sidebar
+                NavigationSplitView(
+                    columnVisibility: $columnVisibility,
+                    sidebar: { _sidebar },
+                    content: { list },
+                    detail: detail
+                )
+            } else {
+                // Two-column layout (sidebar + detail)
+                NavigationSplitView(
+                    columnVisibility: $columnVisibility,
+                    sidebar: { list },
+                    detail: detail
+                )
+            }
+        }
         .previewDisplayName(data.title)
-    }
-
-    @ViewBuilder
-    private func sidebar() -> some View {
-        if Sidebar.self != EmptyView.self {
-            _sidebar
-        } else {
-            list
-        }
-    }
-
-    @ViewBuilder
-    private func content() -> some View {
-        if Sidebar.self != EmptyView.self {
-            list
-        } else {
-            _sidebar
-        }
     }
 
     @ViewBuilder
