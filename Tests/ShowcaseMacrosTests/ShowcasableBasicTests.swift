@@ -396,4 +396,3 @@ final class ShowcasableBasicTests: ShowcaseMacrosTestsBase {
         #endif
     }
 }
-
