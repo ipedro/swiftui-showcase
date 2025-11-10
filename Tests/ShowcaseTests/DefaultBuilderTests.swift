@@ -31,7 +31,6 @@ struct DefaultBuilderTests {
         let topic = Topic("Test Topic")
 
         #expect(topic.title == "Test Topic")
-        #expect(topic.description == "")
         #expect(topic.items.isEmpty)
         #expect(topic.children == nil)
     }
@@ -43,7 +42,6 @@ struct DefaultBuilderTests {
 
         #expect(topic.title == "Test Topic")
         #expect(topic.icon != nil)
-        #expect(topic.description == "")
         #expect(topic.items.isEmpty)
     }
 

@@ -23,7 +23,8 @@
 import SwiftUI
 
 /// Describes a piece of textual content that can be attached to topics or chapters.
-public struct Description: View {
+public struct Description: View, Identifiable {
+    public let id = UUID()
     public let value: String
 
     @inlinable
@@ -55,8 +56,6 @@ public extension Topic {
     /// Aggregates the pieces declared inside a ``TopicContentBuilder`` into a
     /// single structure consumed by the topic initializers.
     struct Content: AdditiveArithmetic {
-        public var description: String?
-        
         /// Ordered heterogeneous content items that preserve declaration order.
         ///
         /// This array stores all content items (links, code blocks, examples, embeds)
@@ -68,11 +67,9 @@ public extension Topic {
         public var children: [Topic]
 
         public init(
-            description: String? = nil,
             items: [TopicContentItem] = [],
             children: [Topic] = []
         ) {
-            self.description = description
             self.items = items
             self.children = children
         }
@@ -85,10 +82,6 @@ public extension Topic {
         
         public static func + (lhs: Topic.Content, rhs: Topic.Content) -> Topic.Content {
             var result = lhs
-            
-            if let description = rhs.description {
-                result.description = description
-            }
             
             if !rhs.items.isEmpty {
                 result.items.append(contentsOf: rhs.items)
@@ -161,7 +154,7 @@ public enum TopicContentBuilder {
 
 extension Description: TopicContentConvertible {
     public func merge(into content: inout Topic.Content) {
-        content.description = value
+        content.items.append(.description(self))
     }
 }
 

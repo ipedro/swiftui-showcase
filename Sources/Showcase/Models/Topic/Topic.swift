@@ -35,9 +35,6 @@ public struct Topic: Identifiable {
     /// in the exact order they were declared in the builder DSL.
     @Lazy public var items: [TopicContentItem]
 
-    /// Description of the topic.
-    @Lazy public var description: String
-
     /// Optional icon for the topic.
     @Lazy public var icon: Image?
 
@@ -73,7 +70,6 @@ public struct Topic: Identifiable {
         let content = content()
 
         _items = Lazy(wrappedValue: content.items)
-        _description = Lazy(wrappedValue: content.description ?? "")
         _icon = Lazy(wrappedValue: icon)
         _title = Lazy(wrappedValue: title)
         children = content.children.isEmpty ? nil : content.children
@@ -91,7 +87,6 @@ public struct Topic: Identifiable {
         let content = content()
 
         _items = Lazy(wrappedValue: content.items)
-        _description = Lazy(wrappedValue: content.description ?? "")
         _icon = Lazy(wrappedValue: nil)
         _title = Lazy(wrappedValue: title)
         children = content.children.isEmpty ? nil : content.children
@@ -114,8 +109,7 @@ public struct Topic: Identifiable {
 
     var isEmpty: Bool {
         // Use short-circuit evaluation for early exit
-        description.isEmpty
-            && items.isEmpty
+        items.isEmpty
             && (children?.isEmpty ?? true)
     }
 }
@@ -149,9 +143,10 @@ extension Topic {
     func search(query: String) -> Topic? {
         // Early exit: Use short-circuit evaluation to avoid unnecessary checks
         let isMatch = title.localizedCaseInsensitiveContains(query)
-            || description.localizedCaseInsensitiveContains(query)
             || items.contains(where: { item in
                 switch item {
+                case .description(let description):
+                    return description.value.localizedCaseInsensitiveContains(query)
                 case .example(let example):
                     return example.title?.localizedCaseInsensitiveContains(query) == true
                 case .codeBlock(let codeBlock):

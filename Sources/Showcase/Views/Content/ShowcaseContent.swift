@@ -62,7 +62,6 @@ public struct ShowcaseContent: StyledView {
     public let id: AnyHashable
     public let isEmpty: Bool
     public let title: Optional<Text>
-    public let description: Optional<Text>
     public let orderedItems: OrderedItems
     // swiftlint:enable syntactic_sugar
 
@@ -84,11 +83,11 @@ public struct ShowcaseContent: StyledView {
                 }
             }
 
-            description
-
             // Render content items in declaration order
-            ForEach(orderedItems.items) { item in
+            ForEach(orderedItems.items, id: \.id) { item in
                 switch item {
+                case let .description(description):
+                    renderDescription(description.value)
                 case let .link(link):
                     ShowcaseLink(data: link)
                 case let .codeBlock(codeBlock):
@@ -104,6 +103,16 @@ public struct ShowcaseContent: StyledView {
             if let preferredBodyFont {
                 font = preferredBodyFont
             }
+        }
+    }
+
+    func renderDescription(_ description: String) -> Text {
+        do {
+            let attributedString = try AttributedString(markdown: description)
+            return Text(attributedString)
+        }
+        catch {
+            return Text(description)
         }
     }
 

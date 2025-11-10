@@ -32,8 +32,10 @@ import Foundation
 ///
 /// ```swift
 /// Topic {
+///     Description { "Intro text" }
 ///     ExternalLink("Apple", url: URL(...)!)
 ///     CodeBlock { "print(\"Hello\")" }
+///     Description { "More explanation" }
 ///     Example { Text("Demo") }
 /// }
 /// ```
@@ -41,6 +43,9 @@ import Foundation
 /// The content items are stored as `[TopicContentItem]` in declaration order,
 /// enabling views to render them exactly as specified in the builder DSL.
 public enum TopicContentItem: Identifiable, Equatable {
+    /// A text description or explanation.
+    case description(Description)
+    
     /// An external link to web content.
     case link(ExternalLink)
 
@@ -59,6 +64,8 @@ public enum TopicContentItem: Identifiable, Equatable {
     /// identity for SwiftUI's diffing algorithm.
     public var id: UUID {
         switch self {
+        case let .description(description):
+            description.id
         case let .link(link):
             link.id
         case let .codeBlock(codeBlock):
