@@ -39,6 +39,9 @@ enum TopicContentGenerator {
         // Add descriptions
         topicContent.append(contentsOf: generateDescriptions(docs: docs))
 
+        // Add notes
+        topicContent.append(contentsOf: generateNotes(docs: docs))
+
         // Add API reference if members exist
         if let apiReference = generateAPIReference(members: members) {
             topicContent.append(apiReference)
@@ -137,6 +140,20 @@ enum TopicContentGenerator {
             .joined(separator: "\n")
 
         return "CodeBlock(\"\(title)\") {\n    \"\"\"\n\(indentedCode)\n    \"\"\"\n}"
+    }
+
+    // MARK: - Notes
+
+    private static func generateNotes(docs: TopicDocumentation) -> [String] {
+        docs.documentation.notes.map { note in
+            """
+            Note {
+                \"\"\"
+                \(note)
+                \"\"\"
+            }
+            """
+        }
     }
 
     // MARK: - Type Relationships

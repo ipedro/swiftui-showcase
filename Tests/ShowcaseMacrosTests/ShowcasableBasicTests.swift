@@ -342,4 +342,58 @@ final class ShowcasableBasicTests: ShowcaseMacrosTestsBase {
             throw XCTSkip("Macros are only supported when running tests for the host platform")
         #endif
     }
+
+    func testShowcasableWithBlockquoteNote() throws {
+        #if canImport(ShowcaseMacrosPlugin)
+            assertMacroExpansion(
+                """
+                /// A card component
+                ///
+                /// > The card takes a generic content.
+                @Showcasable
+                struct DSCard: View {
+                    var body: some View {
+                        EmptyView()
+                    }
+                }
+                """,
+                expandedSource: #"""
+                /// A card component
+                ///
+                /// > The card takes a generic content.
+                struct DSCard: View {
+                    var body: some View {
+                        EmptyView()
+                    }
+                }
+
+                extension DSCard: Showcasable {
+                    public static var showcaseTopic: Topic {
+                        Topic("DSCard") {
+                            CodeBlock("Type Relationships") {
+                                """
+                                struct DSCard: View
+                                """
+                            }
+                            Description {
+                                """
+                                A card component
+                                """
+                            }
+                            Note {
+                                """
+                                The card takes a generic content.
+                                """
+                            }
+                        }
+                    }
+                }
+                """#,
+                macros: testMacros
+            )
+        #else
+            throw XCTSkip("Macros are only supported when running tests for the host platform")
+        #endif
+    }
 }
+
