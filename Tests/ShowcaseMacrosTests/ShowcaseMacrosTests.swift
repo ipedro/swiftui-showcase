@@ -618,6 +618,52 @@ final class ShowcaseMacrosTests: XCTestCase {
                 }
                 """,
                 expandedSource: """
+                /// A customizable button component for the design system
+                ///
+                /// `DSButton` provides a consistent button interface with three built-in styles:
+                /// primary, secondary, and destructive. Each style automatically applies appropriate
+                /// colors and styling to match your design system.
+                ///
+                /// ## Basic Usage
+                ///
+                /// ```swift
+                /// DSButton(title: "Continue", style: .primary) {
+                ///     print("Action triggered")
+                /// }
+                /// ```
+                ///
+                /// ## Button Styles
+                ///
+                /// Choose from three predefined styles depending on the action's importance:
+                ///
+                /// ```swift
+                /// // Primary: For main actions
+                /// DSButton(title: "Save", style: .primary) {
+                ///     saveDocument()
+                /// }
+                ///
+                /// // Secondary: For alternative actions
+                /// DSButton(title: "Cancel", style: .secondary) {
+                ///     dismissView()
+                /// }
+                ///
+                /// // Destructive: For dangerous actions
+                /// DSButton(title: "Delete", style: .destructive) {
+                ///     deleteItem()
+                /// }
+                /// ```
+                ///
+                /// ## Styling and Customization
+                ///
+                /// Combine with SwiftUI modifiers for additional customization:
+                ///
+                /// ```swift
+                /// DSButton(title: "Custom", style: .primary) {
+                ///     performAction()
+                /// }
+                /// .opacity(0.5)
+                /// .disabled(true)
+                /// ```
                 struct DSButton: View {
                     var body: some View {
                         Button("Action") {}
