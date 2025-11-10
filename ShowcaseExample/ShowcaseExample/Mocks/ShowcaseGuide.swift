@@ -552,7 +552,47 @@ extension Topic {
             """
         }
         
-        Example {
+        Description {
+            """
+            You can also add `Description` blocks inside examples to provide additional context:
+            """
+        }
+        
+        CodeBlock("Example with Description") {
+            """
+            Example("Primary Button") {
+                Description {
+                    \"\"\"
+                    This button style should be used for the main action on a screen.
+                    It features high contrast and prominence.
+                    \"\"\"
+                }
+                
+                Button("Continue") {
+                    print("Primary action")
+                }
+                .buttonStyle(.borderedProminent)
+                
+                CodeBlock("Source") {
+                    \"\"\"
+                    Button("Continue") {
+                        print("Primary action")
+                    }
+                    .buttonStyle(.borderedProminent)
+                    \"\"\"
+                }
+            }
+            """
+        }
+        
+        Example("Live Preview") {
+            Description {
+                """
+                This example demonstrates a button with a description. The description \
+                provides additional context about the component's intended use.
+                """
+            }
+            
             VStack(spacing: 20) {
                 Text("Live Example:")
                     .font(.headline)

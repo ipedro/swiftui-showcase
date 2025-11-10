@@ -77,7 +77,14 @@ public struct Example: Identifiable, Hashable, Equatable {
     ) {
         let builtContent = content()
         self.title = title
-        self.description = description
+        
+        // Use description from builder if available, otherwise use parameter
+        if let builderDescription = builtContent.descriptionText {
+            self.description = builderDescription
+        } else {
+            self.description = description
+        }
+        
         self.codeBlock = builtContent.codeBlock
 
         if let viewProvider = builtContent.view {
@@ -114,6 +121,7 @@ extension Example {
     public struct Content {
         var view: (() -> AnyView)?
         var codeBlock: CodeBlock?
+        var descriptions: [String] = []
 
         init() {}
 
@@ -123,6 +131,10 @@ extension Example {
 
         init(codeBlock: CodeBlock) {
             self.codeBlock = codeBlock
+        }
+
+        init(description: String) {
+            self.descriptions = [description]
         }
 
         mutating func merge(_ other: Content) {
@@ -139,12 +151,22 @@ extension Example {
                 }
                 self.codeBlock = codeBlock
             }
+
+            if !other.descriptions.isEmpty {
+                self.descriptions.append(contentsOf: other.descriptions)
+            }
         }
 
         func merging(_ other: Content) -> Content {
             var combined = self
             combined.merge(other)
             return combined
+        }
+
+        /// Computed property that returns the concatenated description text.
+        var descriptionText: String? {
+            guard !descriptions.isEmpty else { return nil }
+            return descriptions.joined(separator: "\n\n")
         }
     }
 }
@@ -185,6 +207,10 @@ public enum ExampleContentBuilder {
 
     public static func buildExpression(_ codeBlock: CodeBlock) -> Example.Content {
         Example.Content(codeBlock: codeBlock)
+    }
+
+    public static func buildExpression(_ description: Description) -> Example.Content {
+        Example.Content(description: description.value)
     }
 
     public static func buildExpression(_ content: Example.Content) -> Example.Content {
