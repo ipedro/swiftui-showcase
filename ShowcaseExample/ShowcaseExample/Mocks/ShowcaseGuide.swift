@@ -47,36 +47,34 @@ extension Topic {
             """
         }
         
-        Example {
-            VStack(alignment: .leading, spacing: 16) {
-                Label("Declarative DSL", systemImage: "curlybraces")
-                    .font(.headline)
-                Text("Build documentation using intuitive Swift syntax")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                
-                Divider()
-                
-                Label("Live Examples", systemImage: "play.rectangle")
-                    .font(.headline)
-                Text("Embed interactive SwiftUI views")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                
-                Divider()
-                
-                Label("Organized Content", systemImage: "folder.fill")
-                    .font(.headline)
-                Text("Structure docs with chapters and topics")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-            }
-            .padding()
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .background(Color.secondary.opacity(0.1))
-            .cornerRadius(12)
+        VStack(alignment: .leading, spacing: 16) {
+            Label("Declarative DSL", systemImage: "curlybraces")
+                .font(.headline)
+            Text("Build documentation using intuitive Swift syntax")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+
+            Divider()
+
+            Label("Live Examples", systemImage: "play.rectangle")
+                .font(.headline)
+            Text("Embed interactive SwiftUI views")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+
+            Divider()
+
+            Label("Organized Content", systemImage: "folder.fill")
+                .font(.headline)
+            Text("Structure docs with chapters and topics")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
         }
-        
+        .padding()
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color.secondary.opacity(0.1))
+        .cornerRadius(12)
+
         ExternalLink("GitHub Repository", URL(string: "https://github.com/ipedro/swiftui-showcase")!)
     }
     
@@ -102,21 +100,19 @@ extension Topic {
             """
         }
         
-        Example {
-            VStack(spacing: 12) {
-                Image(systemName: "shippingbox.fill")
-                    .font(.system(size: 48))
-                    .foregroundStyle(.blue)
-                
-                Text("Swift Package Manager")
-                    .font(.headline)
-                
-                Text("Zero configuration required")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-            .padding()
+        VStack(spacing: 12) {
+            Image(systemName: "shippingbox.fill")
+                .font(.system(size: 48))
+                .foregroundStyle(.blue)
+
+            Text("Swift Package Manager")
+                .font(.headline)
+
+            Text("Zero configuration required")
+                .font(.caption)
+                .foregroundStyle(.secondary)
         }
+        .padding()
     }
     
     static let quickStart = Topic("Quick Start") {
@@ -162,33 +158,31 @@ extension Topic {
             """
         }
         
-        Example {
-            VStack(alignment: .leading, spacing: 8) {
-                HStack {
-                    Image(systemName: "doc.fill")
-                    Text("Document: My Components")
-                        .font(.headline)
-                }
-                
-                HStack {
-                    Image(systemName: "folder.fill")
-                        .padding(.leading, 20)
-                    Text("Chapter: UI Elements")
-                        .font(.subheadline)
-                }
-                
-                HStack {
-                    Image(systemName: "doc.text.fill")
-                        .padding(.leading, 40)
-                    Text("Topic: Button")
-                        .font(.caption)
-                }
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Image(systemName: "doc.fill")
+                Text("Document: My Components")
+                    .font(.headline)
             }
-            .padding()
-            .background(Color.secondary.opacity(0.1))
-            .cornerRadius(8)
+
+            HStack {
+                Image(systemName: "folder.fill")
+                    .padding(.leading, 20)
+                Text("Chapter: UI Elements")
+                    .font(.subheadline)
+            }
+
+            HStack {
+                Image(systemName: "doc.text.fill")
+                    .padding(.leading, 40)
+                Text("Topic: Button")
+                    .font(.caption)
+            }
         }
-        
+        .padding()
+        .background(Color.secondary.opacity(0.1))
+        .cornerRadius(8)
+
         ExternalLink("Full Documentation", URL(string: "https://github.com/ipedro/swiftui-showcase#readme")!)
     }
 }
@@ -229,21 +223,19 @@ extension Topic {
             """
         }
         
-        Example {
-            VStack(spacing: 16) {
-                Image(systemName: "book.fill")
-                    .font(.system(size: 48))
-                    .foregroundStyle(.purple)
-                
-                Text("Top-Level Container")
-                    .font(.headline)
-                
-                Text("Organizes all your documentation")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-            .padding()
+        VStack(spacing: 16) {
+            Image(systemName: "book.fill")
+                .font(.system(size: 48))
+                .foregroundStyle(.purple)
+
+            Text("Top-Level Container")
+                .font(.headline)
+
+            Text("Organizes all your documentation")
+                .font(.caption)
+                .foregroundStyle(.secondary)
         }
+        .padding()
     }
     
     static let chapters = Topic("Chapters") {
@@ -268,40 +260,38 @@ extension Topic {
             """
         }
         
-        Example {
-            VStack(alignment: .leading, spacing: 12) {
-                HStack {
-                    Image(systemName: "folder.fill")
-                        .foregroundStyle(.blue)
-                    Text("Chapter: Getting Started")
-                        .font(.headline)
-                }
-                
-                Divider()
-                
-                VStack(alignment: .leading, spacing: 8) {
-                    HStack {
-                        Image(systemName: "doc.text")
-                        Text("Topic: Installation")
-                            .font(.subheadline)
-                    }
-                    HStack {
-                        Image(systemName: "doc.text")
-                        Text("Topic: Quick Start")
-                            .font(.subheadline)
-                    }
-                    HStack {
-                        Image(systemName: "doc.text")
-                        Text("Topic: Configuration")
-                            .font(.subheadline)
-                    }
-                }
-                .padding(.leading, 20)
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Image(systemName: "folder.fill")
+                    .foregroundStyle(.blue)
+                Text("Chapter: Getting Started")
+                    .font(.headline)
             }
-            .padding()
-            .background(Color.secondary.opacity(0.1))
-            .cornerRadius(8)
+
+            Divider()
+
+            VStack(alignment: .leading, spacing: 8) {
+                HStack {
+                    Image(systemName: "doc.text")
+                    Text("Topic: Installation")
+                        .font(.subheadline)
+                }
+                HStack {
+                    Image(systemName: "doc.text")
+                    Text("Topic: Quick Start")
+                        .font(.subheadline)
+                }
+                HStack {
+                    Image(systemName: "doc.text")
+                    Text("Topic: Configuration")
+                        .font(.subheadline)
+                }
+            }
+            .padding(.leading, 20)
         }
+        .padding()
+        .background(Color.secondary.opacity(0.1))
+        .cornerRadius(8)
     }
     
     static let topics = Topic("Topics") {
@@ -335,25 +325,23 @@ extension Topic {
             """
         }
         
-        Example {
-            VStack(alignment: .leading, spacing: 12) {
-                Text("Topic: Button Component")
-                    .font(.title2)
-                    .bold()
-                
-                Text("Interactive tappable control")
-                    .foregroundStyle(.secondary)
-                
-                Divider()
-                
-                Text("Code, examples, links, and more...")
-                    .font(.caption)
-            }
-            .padding()
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .background(Color.secondary.opacity(0.1))
-            .cornerRadius(8)
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Topic: Button Component")
+                .font(.title2)
+                .bold()
+
+            Text("Interactive tappable control")
+                .foregroundStyle(.secondary)
+
+            Divider()
+
+            Text("Code, examples, links, and more...")
+                .font(.caption)
         }
+        .padding()
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color.secondary.opacity(0.1))
+        .cornerRadius(8)
     }
     
     static let contentHierarchy = Topic("Content Hierarchy") {
@@ -380,35 +368,33 @@ extension Topic {
             """
         }
         
-        Example {
-            VStack(alignment: .leading, spacing: 8) {
-                Text("📁 Components")
-                    .font(.headline)
-                
-                Text("  📁 Buttons")
-                    .font(.subheadline)
-                    .padding(.leading, 12)
-                
-                Text("    📄 Primary Button")
-                    .font(.caption)
-                    .padding(.leading, 24)
-                
-                Text("    📄 Secondary Button")
-                    .font(.caption)
-                    .padding(.leading, 24)
-                
-                Text("  📁 Forms")
-                    .font(.subheadline)
-                    .padding(.leading, 12)
-                
-                Text("    📄 Text Fields")
-                    .font(.caption)
-                    .padding(.leading, 24)
-            }
-            .padding()
-            .background(Color.secondary.opacity(0.1))
-            .cornerRadius(8)
+        VStack(alignment: .leading, spacing: 8) {
+            Text("📁 Components")
+                .font(.headline)
+
+            Text("  📁 Buttons")
+                .font(.subheadline)
+                .padding(.leading, 12)
+
+            Text("    📄 Primary Button")
+                .font(.caption)
+                .padding(.leading, 24)
+
+            Text("    📄 Secondary Button")
+                .font(.caption)
+                .padding(.leading, 24)
+
+            Text("  📁 Forms")
+                .font(.subheadline)
+                .padding(.leading, 12)
+
+            Text("    📄 Text Fields")
+                .font(.caption)
+                .padding(.leading, 24)
         }
+        .padding()
+        .background(Color.secondary.opacity(0.1))
+        .cornerRadius(8)
     }
 }
 
@@ -475,27 +461,25 @@ extension Topic {
             """
         }
         
-        Example {
-            VStack(alignment: .leading, spacing: 12) {
-                HStack {
-                    Image(systemName: "curlybraces")
-                    Text("Syntax Highlighting")
-                        .font(.headline)
-                }
-                
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("✓ Swift")
-                    Text("✓ JSON")
-                    Text("✓ Markdown")
-                    Text("✓ And more...")
-                }
-                .font(.caption)
-                .foregroundStyle(.secondary)
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Image(systemName: "curlybraces")
+                Text("Syntax Highlighting")
+                    .font(.headline)
             }
-            .padding()
-            .background(Color.secondary.opacity(0.1))
-            .cornerRadius(8)
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text("✓ Swift")
+                Text("✓ JSON")
+                Text("✓ Markdown")
+                Text("✓ And more...")
+            }
+            .font(.caption)
+            .foregroundStyle(.secondary)
         }
+        .padding()
+        .background(Color.secondary.opacity(0.1))
+        .cornerRadius(8)
     }
     
     static let examples = Topic("Examples") {
@@ -513,12 +497,10 @@ extension Topic {
             Topic("Button") {
                 Description("A tappable control")
                 
-                Example {
-                    Button("Tap Me") {
-                        print("Tapped!")
-                    }
-                    .buttonStyle(.borderedProminent)
+                Button("Tap Me") {
+                    print("Tapped!")
                 }
+                .buttonStyle(.borderedProminent)
             }
             """
         }
@@ -610,22 +592,20 @@ extension Topic {
             .cornerRadius(12)
         }
         
-        Example {
-            VStack(spacing: 16) {
-                HStack(spacing: 16) {
-                    ForEach(["red", "blue", "green"], id: \.self) { color in
-                        Circle()
-                            .fill(color == "red" ? .red : color == "blue" ? .blue : .green)
-                            .frame(width: 40, height: 40)
-                    }
+        VStack(spacing: 16) {
+            HStack(spacing: 16) {
+                ForEach(["red", "blue", "green"], id: \.self) { color in
+                    Circle()
+                        .fill(color == "red" ? .red : color == "blue" ? .blue : .green)
+                        .frame(width: 40, height: 40)
                 }
-                
-                Text("Multiple examples per topic")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
             }
-            .padding()
+
+            Text("Multiple examples per topic")
+                .font(.caption)
+                .foregroundStyle(.secondary)
         }
+        .padding()
     }
     
     static let externalLinks = Topic("External Links") {
@@ -655,19 +635,17 @@ extension Topic {
         ExternalLink("Apple HIG", URL(string: "https://developer.apple.com/design/human-interface-guidelines/")!)
         ExternalLink("SwiftUI Documentation", URL(string: "https://developer.apple.com/documentation/swiftui/")!)
         
-        Example {
-            VStack(alignment: .leading, spacing: 12) {
-                Label("External Resources", systemImage: "link.circle.fill")
-                    .font(.headline)
-                
-                Text("Links open in Safari or embedded views")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-            .padding()
-            .background(Color.secondary.opacity(0.1))
-            .cornerRadius(8)
+        VStack(alignment: .leading, spacing: 12) {
+            Label("External Resources", systemImage: "link.circle.fill")
+                .font(.headline)
+
+            Text("Links open in Safari or embedded views")
+                .font(.caption)
+                .foregroundStyle(.secondary)
         }
+        .padding()
+        .background(Color.secondary.opacity(0.1))
+        .cornerRadius(8)
     }
     
     static let embeds = Topic("Embeds") {
@@ -695,24 +673,22 @@ extension Topic {
         
         ExternalLink("Showcase Repository", URL(string: "https://github.com/ipedro/swiftui-showcase")!)
         
-        Example {
-            VStack(spacing: 16) {
-                Image(systemName: "globe")
-                    .font(.system(size: 48))
-                    .foregroundStyle(.blue)
-                
-                Text("Embedded Web Content")
-                    .font(.headline)
-                
-                Text("Renders external URLs inline")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-            .padding()
-            .frame(maxWidth: .infinity)
-            .background(Color.secondary.opacity(0.1))
-            .cornerRadius(12)
+        VStack(spacing: 16) {
+            Image(systemName: "globe")
+                .font(.system(size: 48))
+                .foregroundStyle(.blue)
+
+            Text("Embedded Web Content")
+                .font(.headline)
+
+            Text("Renders external URLs inline")
+                .font(.caption)
+                .foregroundStyle(.secondary)
         }
+        .padding()
+        .frame(maxWidth: .infinity)
+        .background(Color.secondary.opacity(0.1))
+        .cornerRadius(12)
     }
     
     static let notes = Topic("Notes & Callouts") {
@@ -791,28 +767,26 @@ extension Topic {
             """
         }
         
-        Example("Note Styles") {
-            VStack(alignment: .leading, spacing: 12) {
-                ForEach([
-                    ("info.circle.fill", "Note", Color.blue),
-                    ("exclamationmark.circle.fill", "Important", Color.purple),
-                    ("exclamationmark.triangle.fill", "Warning", Color.orange),
-                    ("xmark.octagon.fill", "Deprecated", Color.red),
-                    ("flask.fill", "Experimental", Color.yellow),
-                    ("lightbulb.fill", "Tip", Color.green)
-                ], id: \.1) { icon, label, color in
-                    HStack(spacing: 8) {
-                        Image(systemName: icon)
-                            .foregroundStyle(color)
-                        Text(label)
-                            .font(.subheadline)
-                    }
+        VStack(alignment: .leading, spacing: 12) {
+            ForEach([
+                ("info.circle.fill", "Note", Color.blue),
+                ("exclamationmark.circle.fill", "Important", Color.purple),
+                ("exclamationmark.triangle.fill", "Warning", Color.orange),
+                ("xmark.octagon.fill", "Deprecated", Color.red),
+                ("flask.fill", "Experimental", Color.yellow),
+                ("lightbulb.fill", "Tip", Color.green)
+            ], id: \.1) { icon, label, color in
+                HStack(spacing: 8) {
+                    Image(systemName: icon)
+                        .foregroundStyle(color)
+                    Text(label)
+                        .font(.subheadline)
                 }
             }
-            .padding()
-            .background(Color.secondary.opacity(0.1))
-            .cornerRadius(12)
         }
+        .padding()
+        .background(Color.secondary.opacity(0.1))
+        .cornerRadius(12)
     }
 }
 
@@ -820,8 +794,9 @@ extension Topic {
 
 extension Chapter {
     static let advancedFeatures = Chapter("Advanced Features") {
-        Description("Master powerful capabilities for sophisticated documentation")
-        
+        Description {
+            "Master powerful capabilities for sophisticated documentation"
+        }
         Topic.orderedContentRendering
         Topic.nestedTopics
         Topic.customStyles
@@ -868,26 +843,24 @@ extension Topic {
             """
         }
         
-        Example {
-            VStack(alignment: .leading, spacing: 16) {
-                Label("1. Code Block", systemImage: "curlybraces")
-                Label("2. Description", systemImage: "text.alignleft")
-                Label("3. Example", systemImage: "play.rectangle")
-                Label("4. External Link", systemImage: "link")
-                Label("5. Embed", systemImage: "globe")
-            }
-            .font(.subheadline)
-            .padding()
-            .background(
-                LinearGradient(
-                    colors: [Color.blue.opacity(0.1), Color.purple.opacity(0.1)],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                )
-            )
-            .cornerRadius(12)
+        VStack(alignment: .leading, spacing: 16) {
+            Label("1. Code Block", systemImage: "curlybraces")
+            Label("2. Description", systemImage: "text.alignleft")
+            Label("3. Example", systemImage: "play.rectangle")
+            Label("4. External Link", systemImage: "link")
+            Label("5. Embed", systemImage: "globe")
         }
-        
+        .font(.subheadline)
+        .padding()
+        .background(
+            LinearGradient(
+                colors: [Color.blue.opacity(0.1), Color.purple.opacity(0.1)],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+        )
+        .cornerRadius(12)
+
         Description {
             """
             This flexibility allows you to:
@@ -919,12 +892,12 @@ extension Topic {
                     
                     Topic("Primary Button") {
                         CodeBlock { "Button(\\"Submit\\") { }" }
-                        Example { Button("Submit") { }.buttonStyle(.borderedProminent) }
+                        Button("Submit") { }.buttonStyle(.borderedProminent)
                     }
                     
                     Topic("Secondary Button") {
                         CodeBlock { "Button(\\"Cancel\\") { }" }
-                        Example { Button("Cancel") { }.buttonStyle(.bordered) }
+                        Button("Cancel") { }.buttonStyle(.bordered)
                     }
                 }
                 
@@ -936,33 +909,31 @@ extension Topic {
             """
         }
         
-        Example {
-            VStack(alignment: .leading, spacing: 8) {
-                Group {
-                    Text("Level 1: UI Components")
-                        .font(.headline)
-                    
-                    Text("  Level 2: Buttons")
-                        .font(.subheadline)
-                        .padding(.leading, 12)
-                    
-                    Text("    Level 3: Primary Button")
-                        .font(.caption)
-                        .padding(.leading, 24)
-                    
-                    Text("    Level 3: Secondary Button")
-                        .font(.caption)
-                        .padding(.leading, 24)
-                    
-                    Text("  Level 2: Forms")
-                        .font(.subheadline)
-                        .padding(.leading, 12)
-                }
+        VStack(alignment: .leading, spacing: 8) {
+            Group {
+                Text("Level 1: UI Components")
+                    .font(.headline)
+
+                Text("  Level 2: Buttons")
+                    .font(.subheadline)
+                    .padding(.leading, 12)
+
+                Text("    Level 3: Primary Button")
+                    .font(.caption)
+                    .padding(.leading, 24)
+
+                Text("    Level 3: Secondary Button")
+                    .font(.caption)
+                    .padding(.leading, 24)
+
+                Text("  Level 2: Forms")
+                    .font(.subheadline)
+                    .padding(.leading, 12)
             }
-            .padding()
-            .background(Color.secondary.opacity(0.1))
-            .cornerRadius(8)
         }
+        .padding()
+        .background(Color.secondary.opacity(0.1))
+        .cornerRadius(8)
     }
     
     static let customStyles = Topic("Custom Styles") {
@@ -1001,41 +972,39 @@ extension Topic {
                 .tint(.purple)
             """
         }
-        
-        Example {
-            HStack(spacing: 20) {
-                VStack {
-                    Text("Default")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    
-                    Button("Learn More") { }
-                        .buttonStyle(.bordered)
-                }
-                
-                VStack {
-                    Text("Custom")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    
-                    Button("Learn More") { }
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .padding(.horizontal, 20)
-                        .padding(.vertical, 12)
-                        .background(
-                            LinearGradient(
-                                colors: [.blue, .purple],
-                                startPoint: .leading,
-                                endPoint: .trailing
-                            )
-                        )
-                        .cornerRadius(12)
-                }
+
+        HStack(spacing: 20) {
+            VStack {
+                Text("Default")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+
+                Button("Learn More") { }
+                    .buttonStyle(.bordered)
             }
-            .padding()
+
+            VStack {
+                Text("Custom")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+
+                Button("Learn More") { }
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 12)
+                    .background(
+                        LinearGradient(
+                            colors: [.blue, .purple],
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
+                    )
+                    .cornerRadius(12)
+            }
         }
-        
+        .padding()
+
         ExternalLink("Customization Guide", URL(string: "https://github.com/ipedro/swiftui-showcase#customization")!)
     }
 }

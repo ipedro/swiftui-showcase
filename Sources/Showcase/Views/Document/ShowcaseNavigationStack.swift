@@ -69,9 +69,7 @@ struct ShowcaseList_Previews: PreviewProvider {
                     Description("This chapter is about example components")
 
                     Topic("Topic") {
-                        Example {
-                            Button("Topic") {}
-                        }
+                        Button("Topic") {}
                     }
                 }
             }
