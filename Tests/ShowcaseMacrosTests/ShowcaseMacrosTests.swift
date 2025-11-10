@@ -44,7 +44,7 @@ final class ShowcaseMacrosTests: XCTestCase {
                     }
                 }
                 """,
-                expandedSource: """
+                expandedSource: #"""
                 struct PrimaryButton: View {
                     var body: some View {
                         Button("Primary") {}
@@ -55,9 +55,9 @@ final class ShowcaseMacrosTests: XCTestCase {
                     public static var showcaseTopic: Topic {
                         Topic("PrimaryButton") {
                             CodeBlock("Type Relationships") {
-                                \"\"\"
+                                """
                                 struct PrimaryButton: View
-                                \"\"\"
+                                """
                             }
                         }
                     }
@@ -65,7 +65,8 @@ final class ShowcaseMacrosTests: XCTestCase {
                         "Buttons"
                     }
                 }
-                """,
+                """#,
+                diagnostics: [],
                 macros: testMacros
             )
         #else
@@ -84,7 +85,7 @@ final class ShowcaseMacrosTests: XCTestCase {
                     }
                 }
                 """,
-                expandedSource: """
+                expandedSource: #"""
                 struct PrimaryButton: View {
                     var body: some View {
                         Button("Primary") {}
@@ -100,7 +101,7 @@ final class ShowcaseMacrosTests: XCTestCase {
                         "Buttons"
                     }
                 }
-                """,
+                """#,
                 macros: testMacros
             )
         #else
@@ -120,7 +121,7 @@ final class ShowcaseMacrosTests: XCTestCase {
                     }
                 }
                 """,
-                expandedSource: """
+                expandedSource: #"""
                 /// A primary action button.
                 struct PrimaryButton: View {
                     var body: some View {
@@ -132,9 +133,9 @@ final class ShowcaseMacrosTests: XCTestCase {
                     public static var showcaseTopic: Topic {
                         Topic("PrimaryButton") {
                             Description {
-                                \"\"\"
+                                """
                                 A primary action button.
-                                \"\"\"
+                                """
                             }
                         }
                     }
@@ -142,7 +143,7 @@ final class ShowcaseMacrosTests: XCTestCase {
                         "Buttons"
                     }
                 }
-                """,
+                """#,
                 macros: testMacros
             )
         #else
@@ -174,7 +175,7 @@ final class ShowcaseMacrosTests: XCTestCase {
                     }
                 }
                 """,
-                expandedSource: """
+                expandedSource: #"""
                 struct PrimaryButton: View {
                     static var basic: some View {
                         PrimaryButton()
@@ -188,21 +189,21 @@ final class ShowcaseMacrosTests: XCTestCase {
                 extension PrimaryButton: Showcasable {
                     public static var showcaseTopic: Topic {
                         Topic("PrimaryButton") {
-                            Example("Basic") {
-                                PrimaryButton.basic
-                            }
-                            CodeBlock("Basic - Source Code") {
-                                \"\"\"
-                                PrimaryButton()
-                                \"\"\"
-                            }
+                                Example("Basic") {
+                                    PrimaryButton.basic
+                                    CodeBlock("Basic - Source Code") {
+                                        """
+                                        PrimaryButton()
+                                        """
+                                    }
+                                }
                         }
                     }
                     public static var showcaseChapter: String {
                         "Buttons"
                     }
                 }
-                """,
+                """#,
                 macros: testMacros
             )
         #else
@@ -226,7 +227,7 @@ final class ShowcaseMacrosTests: XCTestCase {
                     }
                 }
                 """,
-                expandedSource: """
+                expandedSource: #"""
                 struct ActionButton: View {
                     static var withIcon: some View {
                         ActionButton(title: "Submit", icon: "checkmark")
@@ -240,22 +241,21 @@ final class ShowcaseMacrosTests: XCTestCase {
                 extension ActionButton: Showcasable {
                     public static var showcaseTopic: Topic {
                         Topic("ActionButton") {
-                            Example("Primary Action") {
-                                Description("A primary button with icon")
-                                ActionButton.withIcon
-                            }
-                            CodeBlock("Primary Action - Source Code") {
-                                \"\"\"
-                                ActionButton(title: "Submit", icon: "checkmark")
-                                \"\"\"
-                            }
+                                Example("Primary Action", description: "A primary button with icon") {
+                                    ActionButton.withIcon
+                                    CodeBlock("Primary Action - Source Code") {
+                                        """
+                                        ActionButton(title: "Submit", icon: "checkmark")
+                                        """
+                                    }
+                                }
                         }
                     }
                     public static var showcaseChapter: String {
                         "Buttons"
                     }
                 }
-                """,
+                """#,
                 macros: testMacros
             )
         #else
@@ -283,7 +283,7 @@ final class ShowcaseMacrosTests: XCTestCase {
                     }
                 }
                 """,
-                expandedSource: """
+                expandedSource: #"""
                 /// A versatile button for actions
                 struct ActionButton: View {
                     static var basic: some View {
@@ -301,25 +301,25 @@ final class ShowcaseMacrosTests: XCTestCase {
                     public static var showcaseTopic: Topic {
                         Topic("ActionButton", icon: Image(systemName: "button.circle")) {
                             Description {
-                                \"\"\"
+                                """
                                 A versatile button for actions
-                                \"\"\"
+                                """
                             }
-                            Example("Basic Usage") {
-                                ActionButton.basic
-                            }
-                            CodeBlock("Basic Usage - Source Code") {
-                                \"\"\"
-                                ActionButton(title: "Submit")
-                                \"\"\"
-                            }
+                                        Example("Basic Usage") {
+                                            ActionButton.basic
+                                            CodeBlock("Basic Usage - Source Code") {
+                                                """
+                                                ActionButton(title: "Submit")
+                                                """
+                                            }
+                                        }
                         }
                     }
                     public static var showcaseChapter: String {
                         "Buttons"
                     }
                 }
-                """,
+                """#,
                 macros: testMacros
             )
         #else
@@ -381,7 +381,7 @@ final class ShowcaseMacrosTests: XCTestCase {
                     private var internalCache: [String: Any]
                 }
                 """,
-                expandedSource: """
+                expandedSource: #"""
                 struct User {
                     var name: String
 
@@ -393,9 +393,9 @@ final class ShowcaseMacrosTests: XCTestCase {
                         Topic("User") {
                             Topic("name") {
                                 CodeBlock("Declaration") {
-                                    \"\"\"
+                                    """
                                     var name: String
-                                    \"\"\"
+                                    """
                                 }
                             }
                         }
@@ -404,7 +404,7 @@ final class ShowcaseMacrosTests: XCTestCase {
                         "Models"
                     }
                 }
-                """,
+                """#,
                 macros: testMacros
             )
         #else
@@ -445,7 +445,7 @@ final class ShowcaseMacrosTests: XCTestCase {
                     }
                 }
                 """,
-                expandedSource: """
+                expandedSource: #"""
                 /// A user model with full documentation
                 struct DocumentedUser {
                     /// The user's unique identifier
@@ -468,7 +468,7 @@ final class ShowcaseMacrosTests: XCTestCase {
                     
                     /// Gets the user's display string
                     func displayString() -> String {
-                        return "\\(name) (\\(id))"
+                        return "\(name) (\(id))"
                     }
                 }
 
@@ -476,74 +476,74 @@ final class ShowcaseMacrosTests: XCTestCase {
                     public static var showcaseTopic: Topic {
                         Topic("DocumentedUser") {
                             Description {
-                                \"\"\"
+                                """
                                 A user model with full documentation
-                                \"\"\"
+                                """
                             }
                             Topic("init(id:name:)") {
                                 Description {
-                                    \"\"\"
+                                    """
                                     Creates a new user with the given credentials
-                                    \"\"\"
+                                    """
                                 }
                                 CodeBlock("Declaration") {
-                                    \"\"\"
+                                    """
                                     /// Creates a new user with the given credentials
                                             init(id: String, name: String)
-                                    \"\"\"
+                                    """
                                 }
                             }
                             Topic("validateName") {
                                 Description {
-                                    \"\"\"
+                                    """
                                     Validates the user's name
-                                    \"\"\"
+                                    """
                                 }
                                 CodeBlock("Declaration") {
-                                    \"\"\"
+                                    """
                                     /// Validates the user's name
                                             /// - Returns: true if the name is valid
                                             func validateName() -> Bool
-                                    \"\"\"
+                                    """
                                 }
                             }
                             Topic("displayString") {
                                 Description {
-                                    \"\"\"
+                                    """
                                     Gets the user's display string
-                                    \"\"\"
+                                    """
                                 }
                                 CodeBlock("Declaration") {
-                                    \"\"\"
+                                    """
                                     /// Gets the user's display string
                                             func displayString() -> String
-                                    \"\"\"
+                                    """
                                 }
                             }
                             Topic("id") {
                                 Description {
-                                    \"\"\"
+                                    """
                                     The user's unique identifier
-                                    \"\"\"
+                                    """
                                 }
                                 CodeBlock("Declaration") {
-                                    \"\"\"
+                                    """
                                     /// The user's unique identifier
                                             var id: String
-                                    \"\"\"
+                                    """
                                 }
                             }
                             Topic("name") {
                                 Description {
-                                    \"\"\"
+                                    """
                                     The user's display name
-                                    \"\"\"
+                                    """
                                 }
                                 CodeBlock("Declaration") {
-                                    \"\"\"
+                                    """
                                     /// The user's display name
                                             var name: String
-                                    \"\"\"
+                                    """
                                 }
                             }
                         }
@@ -552,7 +552,7 @@ final class ShowcaseMacrosTests: XCTestCase {
                         "Models"
                     }
                 }
-                """,
+                """#,
                 macros: testMacros
             )
         #else
@@ -617,7 +617,7 @@ final class ShowcaseMacrosTests: XCTestCase {
                     }
                 }
                 """,
-                expandedSource: """
+                expandedSource: #"""
                 /// A customizable button component for the design system
                 ///
                 /// `DSButton` provides a consistent button interface with three built-in styles:
@@ -674,7 +674,7 @@ final class ShowcaseMacrosTests: XCTestCase {
                     public static var showcaseTopic: Topic {
                         Topic("DSButton", icon: Image(systemName: "button.horizontal")) {
                             Description {
-                                \"\"\"
+                                """
                                 A customizable button component for the design system
 
                                 `DSButton` provides a consistent button interface with three built-in styles:
@@ -682,24 +682,24 @@ final class ShowcaseMacrosTests: XCTestCase {
                                 colors and styling to match your design system.
 
                                 ## Basic Usage
-                                \"\"\"
+                                """
                             }
                             CodeBlock("Example 1") {
-                                \"\"\"
+                                """
                                 DSButton(title: "Continue", style: .primary) {
                                     print("Action triggered")
                                 }
-                                \"\"\"
+                                """
                             }
                             Description {
-                                \"\"\"
+                                """
                                 ## Button Styles
 
                                 Choose from three predefined styles depending on the action's importance:
-                                \"\"\"
+                                """
                             }
                             CodeBlock("Example 2") {
-                                \"\"\"
+                                """
                                 // Primary: For main actions
                                 DSButton(title: "Save", style: .primary) {
                                     saveDocument()
@@ -714,28 +714,28 @@ final class ShowcaseMacrosTests: XCTestCase {
                                 DSButton(title: "Delete", style: .destructive) {
                                     deleteItem()
                                 }
-                                \"\"\"
+                                """
                             }
                             Description {
-                                \"\"\"
+                                """
                                 ## Styling and Customization
 
                                 Combine with SwiftUI modifiers for additional customization:
-                                \"\"\"
+                                """
                             }
                             CodeBlock("Example 3") {
-                                \"\"\"
+                                """
                                 DSButton(title: "Custom", style: .primary) {
                                     performAction()
                                 }
                                 .opacity(0.5)
                                 .disabled(true)
-                                \"\"\"
+                                """
                             }
                             CodeBlock("Type Relationships") {
-                                \"\"\"
+                                """
                                 struct DSButton: View
-                                \"\"\"
+                                """
                             }
                         }
                     }
@@ -743,7 +743,7 @@ final class ShowcaseMacrosTests: XCTestCase {
                         "Components"
                     }
                 }
-                """,
+                """#,
                 macros: testMacros
             )
         #else

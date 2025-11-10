@@ -50,6 +50,7 @@ public struct ShowcaseExampleGroup: View {
                         ForEach(Array(examples.enumerated()), id: \.offset) { index, example in
                             TabButton(
                                 title: example.title ?? "Example \(index + 1)",
+                                index: index,
                                 isSelected: selectedIndex == index
                             ) {
                                 withAnimation(.snappy(duration: 0.2)) {
@@ -87,6 +88,7 @@ public struct ShowcaseExampleGroup: View {
 
 private struct TabButton: View {
     let title: String
+    let index: Int
     let isSelected: Bool
     let action: () -> Void
 
@@ -115,5 +117,9 @@ private struct TabButton: View {
                 )
         }
         .buttonStyle(.plain)
+        .accessibilityLabel(Text(title))
+        .accessibilityHint(Text(isSelected ? "Currently showing this example" : "Show example \(index + 1)"))
+        .accessibilityValue(Text(isSelected ? "Selected" : "Not selected"))
+        .accessibilityAddTraits(isSelected ? [.isSelected] : [])
     }
 }

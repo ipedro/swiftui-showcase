@@ -22,6 +22,8 @@
 
 /// Generates topic content from configuration and documentation.
 enum TopicContentGenerator {
+    private static let singleExampleCodeIndentCount = 20
+    private static let exampleGroupCodeIndentCount = 28
     static func generate(
         config: TopicConfiguration,
         docs: TopicDocumentation,
@@ -60,7 +62,7 @@ enum TopicContentGenerator {
     // MARK: - Description Generation
 
     private static func generateDescriptions(docs: TopicDocumentation) -> [String] {
-        var content: [String] = []
+    var content: [String] = []
 
         // Handle interleaved content parts (text and code blocks in original order)
         var codeBlockIndex = 1
@@ -205,73 +207,61 @@ enum TopicContentGenerator {
     }
 
     private static func generateExampleGroup(docs: TopicDocumentation, typeName: String) -> String {
-        var exampleBlocks: [String] = []
+        var lines: [String] = []
 
+        lines.append("        ExampleGroup(\"Examples\") {")
         for example in docs.examples {
-            // Build the example parameters
-            var params = "\"\(example.title)\""
-
-            if let description = example.description {
-                params += ", description: \"\(description)\""
-            }
-
-            // Build code block parameter if needed
-            if example.showCode, let sourceCode = example.sourceCode {
-                let indentedCode = CodeGenerator.indentMultiline(sourceCode, indent: "                            ")
-                params += """
-                , codeBlock: CodeBlock("Source") {
-                                            \"\"\"
-                                            \(indentedCode)
-                                            \"\"\"
-                                        }
-                """
-            }
-
-            exampleBlocks.append("""
-                    Example(\(params)) {
-                        \(typeName).\(example.name)
-                    }
-            """)
+            let exampleHeader = exampleHeaderLine(for: example)
+            lines.append("                    Example(\(exampleHeader)) {")
+            lines.append("                        \(typeName).\(example.name)")
+            let codeBlockLines = codeBlockLines(for: example, codeIndentCount: exampleGroupCodeIndentCount)
+            lines.append(contentsOf: codeBlockLines)
+            lines.append("                    }")
         }
+        lines.append("        }")
 
-        return """
-        ExampleGroup("Examples") {
-        \(exampleBlocks.joined(separator: "\n"))
-        }
-        """
+        return lines.joined(separator: "\n")
     }
 
     private static func generateSingleExample(example: ExampleInfo, typeName: String) -> String {
-        // Add example block
-        var content: String
+        let header = exampleHeaderLine(for: example)
+        var lines: [String] = []
+        lines.append("            Example(\(header)) {")
+        lines.append("                \(typeName).\(example.name)")
+        let codeBlockLines = codeBlockLines(for: example, codeIndentCount: singleExampleCodeIndentCount)
+        lines.append(contentsOf: codeBlockLines)
+        lines.append("            }")
+        return lines.joined(separator: "\n")
+    }
+
+    private static func exampleHeaderLine(for example: ExampleInfo) -> String {
+        var header = "\"\(example.title)\""
+
         if let description = example.description {
-            content = """
-            Example("\(example.title)") {
-                Description("\(description)")
-                \(typeName).\(example.name)
-            }
-            """
-        } else {
-            content = """
-            Example("\(example.title)") {
-                \(typeName).\(example.name)
-            }
-            """
+            header += ", description: \"\(description)\""
         }
 
-        // Add source code block if enabled
-        if example.showCode, let sourceCode = example.sourceCode {
-            let indentedCode = CodeGenerator.indentMultiline(sourceCode, indent: "                    ")
-            content += """
+        return header
+    }
 
-            CodeBlock("\(example.title) - Source Code") {
-                \"\"\"
-                \(indentedCode)
-                \"\"\"
-            }
-            """
+    private static func codeBlockLines(for example: ExampleInfo, codeIndentCount: Int) -> [String] {
+        guard example.showCode, let sourceCode = example.sourceCode else { return [] }
+
+        let codeTitle = "\(example.title) - Source Code"
+        let blockIndentCount = max(codeIndentCount - 4, 0)
+        let blockIndent = String(repeating: " ", count: blockIndentCount)
+        let innerIndent = blockIndent + "    "
+
+        var lines: [String] = []
+        lines.append("\(blockIndent)CodeBlock(\"\(codeTitle)\") {")
+        lines.append("\(innerIndent)\"\"\"")
+        let codeLines = sourceCode.components(separatedBy: "\n")
+        for line in codeLines {
+            lines.append("\(innerIndent)\(line)")
         }
+        lines.append("\(innerIndent)\"\"\"")
+        lines.append("\(blockIndent)}")
 
-        return content
+        return lines
     }
 }

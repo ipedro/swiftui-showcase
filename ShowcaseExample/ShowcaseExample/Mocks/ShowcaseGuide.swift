@@ -509,7 +509,7 @@ extension Topic {
             """
         }
         
-        CodeBlock("Adding an Example") {
+        CodeBlock("Basic Example") {
             """
             Topic("Button") {
                 Description("A tappable control")
@@ -519,6 +519,34 @@ extension Topic {
                         print("Tapped!")
                     }
                     .buttonStyle(.borderedProminent)
+                }
+            }
+            """
+        }
+        
+        Description {
+            """
+            **New in Showcase:** You can now include a `CodeBlock` directly inside an `Example` \
+            to show both the live preview and its source code together. This creates an integrated \
+            view with a collapsible code section.
+            """
+        }
+        
+        CodeBlock("Example with Inline Code") {
+            """
+            Example("Interactive Button") {
+                Button("Tap Me") {
+                    print("Tapped!")
+                }
+                .buttonStyle(.borderedProminent)
+                
+                CodeBlock("Source") {
+                    \"\"\"
+                    Button("Tap Me") {
+                        print("Tapped!")
+                    }
+                    .buttonStyle(.borderedProminent)
+                    \"\"\"
                 }
             }
             """

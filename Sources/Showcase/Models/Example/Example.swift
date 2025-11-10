@@ -28,7 +28,7 @@ public struct Example: Identifiable, Hashable, Equatable {
     public let id = UUID()
 
     /// Example view configuration for the topic.
-    public var content: () -> any View
+    public var content: () -> AnyView
 
     /// Optional title for the example.
     public var title: String?
@@ -62,7 +62,30 @@ public struct Example: Identifiable, Hashable, Equatable {
         self.title = title
         self.description = description
         self.codeBlock = codeBlock
-        content = { example() }
+        content = { AnyView(example()) }
+    }
+
+    /// Initializes an example with declarative content including previews and optional code blocks.
+    /// - Parameters:
+    ///   - title: Optional title for the example.
+    ///   - description: Optional description for the example.
+    ///   - content: Builder that returns the view and optional supporting content.
+    public init(
+        _ title: String? = nil,
+        description: String? = nil,
+        @ExampleContentBuilder content: () -> Content
+    ) {
+        let builtContent = content()
+        self.title = title
+        self.description = description
+        self.codeBlock = builtContent.codeBlock
+
+        if let viewProvider = builtContent.view {
+            self.content = viewProvider
+        } else {
+            assertionFailure("Example requires at least one View in its content builder.")
+            self.content = { AnyView(EmptyView()) }
+        }
     }
 
     /// Initializes an example with a title and autoclosure view.
@@ -80,6 +103,91 @@ public struct Example: Identifiable, Hashable, Equatable {
         self.title = title
         self.description = description
         self.codeBlock = codeBlock
-        content = example
+        content = { AnyView(example()) }
+    }
+}
+
+// MARK: - Content Builder
+
+extension Example {
+    /// Represents the components that can be assembled inside an `Example` builder.
+    public struct Content {
+        var view: (() -> AnyView)?
+        var codeBlock: CodeBlock?
+
+        init() {}
+
+        init(view: @escaping () -> AnyView) {
+            self.view = view
+        }
+
+        init(codeBlock: CodeBlock) {
+            self.codeBlock = codeBlock
+        }
+
+        mutating func merge(_ other: Content) {
+            if let view = other.view {
+                if self.view != nil {
+                    assertionFailure("Example builder received multiple view components; the last one will be used.")
+                }
+                self.view = view
+            }
+
+            if let codeBlock = other.codeBlock {
+                if self.codeBlock != nil {
+                    assertionFailure("Example builder received multiple code blocks; the last one will be used.")
+                }
+                self.codeBlock = codeBlock
+            }
+        }
+
+        func merging(_ other: Content) -> Content {
+            var combined = self
+            combined.merge(other)
+            return combined
+        }
+    }
+}
+
+@resultBuilder
+public enum ExampleContentBuilder {
+    public static func buildBlock(_ components: Example.Content...) -> Example.Content {
+        components.reduce(into: Example.Content()) { partialResult, component in
+            partialResult.merge(component)
+        }
+    }
+
+    public static func buildArray(_ components: [Example.Content]) -> Example.Content {
+        components.reduce(into: Example.Content()) { partialResult, component in
+            partialResult.merge(component)
+        }
+    }
+
+    public static func buildOptional(_ component: Example.Content?) -> Example.Content {
+        component ?? Example.Content()
+    }
+
+    public static func buildEither(first component: Example.Content) -> Example.Content {
+        component
+    }
+
+    public static func buildEither(second component: Example.Content) -> Example.Content {
+        component
+    }
+
+    public static func buildLimitedAvailability(_ component: Example.Content?) -> Example.Content {
+        component ?? Example.Content()
+    }
+
+    public static func buildExpression<Content: View>(_ content: Content) -> Example.Content {
+        Example.Content(view: { AnyView(content) })
+    }
+
+    public static func buildExpression(_ codeBlock: CodeBlock) -> Example.Content {
+        Example.Content(codeBlock: codeBlock)
+    }
+
+    public static func buildExpression(_ content: Example.Content) -> Example.Content {
+        content
     }
 }
