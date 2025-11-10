@@ -232,12 +232,16 @@ extension Description: TopicContentConvertible {
         var currentListId: Int?
         var listItemOrder: [Int] = [] // Track order of list items
         var currentText = ""
+        var previousBlockId: Int? // Track paragraph/header boundaries for newlines
         
         // Process each run to detect lists vs regular text
         for run in attributed.runs {
-            let content = String(attributed[run.range].characters)
+            let content = reconstructMarkdown(from: attributed, in: run.range)
             
             if let intent = run.presentationIntent {
+                // Get block-level identity (paragraph, header, list) for newline detection
+                let blockId = intent.components.first?.identity
+                
                 // Check if this run is part of a list
                 if let listInfo = extractListInfo(from: intent) {
                     // If we were building regular text, flush it
@@ -268,6 +272,8 @@ extension Description: TopicContentConvertible {
                     } else {
                         currentListItems[listInfo.listItemId]? += content
                     }
+                    
+                    previousBlockId = blockId
                 } else {
                     // Not a list item - flush any current list
                     if !currentListItems.isEmpty, let listType = currentListType {
@@ -279,8 +285,30 @@ extension Description: TopicContentConvertible {
                         currentListId = nil
                     }
                     
-                    // Accumulate regular text
-                    currentText += content
+                    // Check for heading
+                    var isHeading = false
+                    var headingLevel = 0
+                    for component in intent.components {
+                        if case let .header(level) = component.kind {
+                            isHeading = true
+                            headingLevel = level
+                            break
+                        }
+                    }
+                    
+                    // Add newlines between different blocks (paragraphs/headers)
+                    if let prevId = previousBlockId, prevId != blockId, !currentText.isEmpty {
+                        currentText += "\n\n"
+                    }
+                    
+                    // Reconstruct heading syntax
+                    if isHeading {
+                        currentText += String(repeating: "#", count: headingLevel) + " " + content
+                    } else {
+                        currentText += content
+                    }
+                    
+                    previousBlockId = blockId
                 }
             } else {
                 // No intent - treat as regular text
@@ -293,6 +321,7 @@ extension Description: TopicContentConvertible {
                     currentListId = nil
                 }
                 currentText += content
+                previousBlockId = nil
             }
         }
         
@@ -339,6 +368,36 @@ extension Description: TopicContentConvertible {
         }
         
         return nil
+    }
+    
+    /// Reconstructs markdown text from an AttributedString run, preserving formatting.
+    private func reconstructMarkdown(from attributed: AttributedString, in range: Range<AttributedString.Index>) -> String {
+        let substring = attributed[range]
+        let text = String(substring.characters)
+        
+        // Check for inline presentation intent (bold, italic, code)
+        guard let intent = substring.inlinePresentationIntent else {
+            return text
+        }
+        
+        // Code takes precedence
+        if intent.contains(.code) {
+            return "`\(text)`"
+        }
+        
+        var result = text
+        
+        // Apply bold
+        if intent.contains(.stronglyEmphasized) {
+            result = "**\(result)**"
+        }
+        
+        // Apply italic
+        if intent.contains(.emphasized) {
+            result = "*\(result)*"
+        }
+        
+        return result
     }
 }
 

@@ -372,4 +372,53 @@ struct ListExtractionTests {
             Issue.record("Should not have detected lists")
         }
     }
+    
+    @Test("Bold text with inline list")
+    func testBoldTextWithInlineList() {
+        let topic = Topic("Test") {
+            Description {
+                """
+                **Note**: Always pair with a secondary button
+                
+                **Use showCode: false when:**
+                - The example is self-explanatory visually
+                - Code adds no additional value
+                """
+            }
+        }
+        
+        print("=== DEBUG: Bold text with inline list ===")
+        print("Total items: \(topic.items.count)")
+        for (index, item) in topic.items.enumerated() {
+            switch item {
+            case let .description(desc):
+                print("[\(index)] Description (\(desc.value.count) chars): '\(desc.value.prefix(50))...'")
+            case let .list(list):
+                print("[\(index)] List (\(list.type)): \(list.items.count) items")
+                for (i, listItem) in list.items.enumerated() {
+                    print("  [\(i)]: '\(listItem)'")
+                }
+            default:
+                print("[\(index)] Other: \(item)")
+            }
+        }
+        
+        // Should have: description with both paragraphs (**Note** and **Use showCode**), then list
+        #expect(topic.items.count == 2, "Expected 2 items (description + list), got \(topic.items.count)")
+        
+        // First description should contain both Note and Use showCode with preserved markdown
+        if case let .description(desc) = topic.items[0] {
+            #expect(desc.value.contains("**Note**"))
+            #expect(desc.value.contains("**Use showCode: false when:**"))
+        } else {
+            Issue.record("Expected first item to be description with both paragraphs")
+        }
+        
+        // Second item should be the list
+        if case let .list(list) = topic.items[1] {
+            #expect(list.items.count == 2)
+        } else {
+            Issue.record("Expected second item to be list")
+        }
+    }
 }
