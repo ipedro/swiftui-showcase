@@ -33,7 +33,11 @@ enum DocumentationExtractor {
             case .docLineComment(let text):
                 let cleaned = text.trimmingCharacters(in: .whitespaces)
                 if cleaned.hasPrefix("///") {
-                    let line = String(cleaned.dropFirst(3)).trimmingCharacters(in: .whitespaces)
+                    var line = String(cleaned.dropFirst(3))
+                    // Only trim the standard doc comment margin (usually 1 space), preserve code indentation
+                    if line.hasPrefix(" ") {
+                        line = String(line.dropFirst())
+                    }
                     // Include empty lines to preserve document structure for code blocks
                     docLines.append(line)
                 }
@@ -55,12 +59,9 @@ enum DocumentationExtractor {
             }
         }
         
-        let rawComment = docLines.isEmpty ? nil : docLines.joined(separator: "\n")
-        
-        // Use DocCommentParser to parse the raw comment with code block support
+        let rawComment = docLines.joined(separator: "\n")
         let docComment = DocCommentParser.parse(rawComment)
         
-        // Map DocComment fields to Documentation fields
         return Documentation(
             summary: docComment.summary,
             details: docComment.discussion,

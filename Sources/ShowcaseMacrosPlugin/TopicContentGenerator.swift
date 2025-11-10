@@ -75,15 +75,24 @@ enum TopicContentGenerator {
                 guard !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { continue }
                 
                 //  Multi-line text needs indentation for proper formatting in multi-line string literals
+                // In Swift multi-line strings: """ first line has no indent requirement,
+                // but subsequent lines must have at least as much indent as the closing """
                 let lines = text.components(separatedBy: .newlines)
                 let formattedText: String
                 if lines.count == 1 {
                     // Single line - no extra indentation needed
                     formattedText = text
                 } else {
-                    // Multi-line - indent continuation lines
+                    // Multi-line - first line no indent, subsequent non-empty lines get 4 spaces
+                    // Empty lines stay empty (no trailing spaces)
                     formattedText = lines.enumerated().map { index, line in
-                        index == 0 ? line : "            \(line)"
+                        if index == 0 {
+                            return line
+                        } else if line.isEmpty {
+                            return ""  // Blank lines stay blank, no trailing spaces
+                        } else {
+                            return "    \(line)"  // Add 4 spaces to non-blank lines
+                        }
                     }.joined(separator: "\n")
                 }
                 
@@ -111,13 +120,17 @@ enum TopicContentGenerator {
     }
     
     private static func generateCodeBlock(title: String, code: String) -> String {
-        // Indent each line of the code to satisfy multi-line string literal indentation
+        // Swift multi-line string literals require all content lines to have at least
+        // as much indentation as the closing """. Since closing """ is at 4 spaces,
+        // we need to add 4 spaces to every line while preserving relative indentation.
         let indentedCode = code.components(separatedBy: .newlines)
-            .map { "            \($0)" } // 12 spaces to match the opening """
+            .map { "    \($0)" }  // Add 4 spaces to preserve relative indentation
             .joined(separator: "\n")
         
         return "CodeBlock(\"\(title)\") {\n    \"\"\"\n\(indentedCode)\n    \"\"\"\n}"
     }
+
+
     
     // MARK: - Type Relationships
     

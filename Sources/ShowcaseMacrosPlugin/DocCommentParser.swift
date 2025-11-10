@@ -28,20 +28,16 @@ enum DocCommentParser {
     private struct ParsingState {
         var summary: String?
         var discussionLines: [String] = []
-        var contentParts: [ContentPart] = []
-        var currentTextLines: [String] = []
+        var contentParts: [ContentPart] = [] // Pre-populated from AttributedString, not modified during parsing
         var parameters: [String: String] = [:]
         var returns: String?
         var throwsInfo: String?
         var notes: [String] = []
         var warnings: [String] = []
         var important: [String] = []
-        var codeBlocks: [String] = []
         var currentSection: Section = .summary
         var currentParam: String?
         var currentParamLines: [String] = []
-        var inCodeBlock: Bool = false
-        var currentCodeBlockLines: [String] = []
     }
     
     /// Parses a raw doc comment string into structured DocComment.
@@ -50,13 +46,20 @@ enum DocCommentParser {
             return emptyDocComment()
         }
         
+        // First, use AttributedString to extract interleaved content parts (text + code blocks)
+        // This gives us robust code block parsing via PresentationIntent
+        let contentParts = AttributedStringDocCommentParser.extractContentParts(from: raw)
+        
+        // Then parse the text parts for Swift doc comment sections
         let lines = raw.components(separatedBy: .newlines)
         var state = ParsingState()
         
+        // Pre-populate content parts from AttributedString parsing
+        state.contentParts = contentParts
+        
         for line in lines {
             let trimmed = line.trimmingCharacters(in: .whitespaces)
-            // Pass both original and trimmed - parser will use original for code blocks
-            parseLine(trimmed, originalLine: line, state: &state)
+            parseLine(trimmed, state: &state)
         }
         
         return buildDocComment(from: state)
@@ -64,40 +67,14 @@ enum DocCommentParser {
     
     // MARK: - Parsing Helpers
     
-    private static func parseLine(_ line: String, originalLine: String, state: inout ParsingState) {
-        // Check for code block markers (```swift or just ```)
+    private static func parseLine(_ line: String, state: inout ParsingState) {
+        // Skip code block markers since AttributedString handles code blocks
         if line.hasPrefix("```") {
-            if state.inCodeBlock {
-                // End of code block - save any pending text first
-                flushCurrentText(state: &state)
-                
-                // Then save the code block
-                let codeBlock = state.currentCodeBlockLines.joined(separator: "\n")
-                if !codeBlock.isEmpty {
-                    state.codeBlocks.append(codeBlock)
-                    state.contentParts.append(.codeBlock(codeBlock))
-                }
-                state.currentCodeBlockLines = []
-                state.inCodeBlock = false
-            } else {
-                // Start of code block - flush any accumulated text first
-                flushCurrentText(state: &state)
-                state.inCodeBlock = true
-            }
-            return
-        }
-        
-        // If inside code block, accumulate lines with preserved indentation
-        if state.inCodeBlock {
-            // Use original line to preserve indentation in code blocks
-            state.currentCodeBlockLines.append(originalLine)
             return
         }
         
         // Check for section markers first
         if let newSection = detectSectionMarker(line, state: &state) {
-            // Flush any accumulated text before changing sections
-            flushCurrentText(state: &state)
             state.currentSection = newSection
             return
         }
@@ -199,18 +176,7 @@ enum DocCommentParser {
     
     // MARK: - Content Appending
     
-    private static func flushCurrentText(state: inout ParsingState) {
-        // Only flush if we're in summary or discussion sections (not parameters, etc.)
-        guard state.currentSection == .summary || state.currentSection == .discussion else {
-            return
-        }
-        
-        if !state.currentTextLines.isEmpty {
-            let text = state.currentTextLines.joined(separator: "\n")
-            state.contentParts.append(.text(text))
-            state.currentTextLines = []
-        }
-    }
+    // NOTE: flushCurrentText is no longer needed - contentParts is pre-populated from AttributedString
     
     private static func handleEmptyLine(state: inout ParsingState) {
         if state.currentSection == .summary && state.summary != nil {
@@ -223,8 +189,8 @@ enum DocCommentParser {
         case .summary:
             appendToSummary(line, state: &state)
         case .discussion:
+            // Just extract discussion - don't add to currentTextLines (contentParts already complete)
             state.discussionLines.append(line)
-            state.currentTextLines.append(line)
         case .parameters:
             if state.currentParam != nil {
                 state.currentParamLines.append(line)
@@ -243,12 +209,11 @@ enum DocCommentParser {
     }
     
     private static func appendToSummary(_ line: String, state: inout ParsingState) {
+        // Just extract summary - don't add to currentTextLines (contentParts already complete)
         if state.summary == nil {
             state.summary = line
-            state.currentTextLines.append(line)
         } else {
             state.summary! += " " + line
-            state.currentTextLines.append(line)
         }
     }
     
@@ -299,15 +264,43 @@ enum DocCommentParser {
         var finalState = state
         saveCurrentParameter(state: &finalState)
         
-        // Flush any remaining text content
-        flushCurrentText(state: &finalState)
+        // Clean Swift doc comment sections from text parts in contentParts
+        // AttributedString doesn't understand Swift syntax (- Parameter, - Returns, etc.)
+        // so we need to strip those lines from the text parts
+        let cleanedContentParts = finalState.contentParts.compactMap { part -> ContentPart? in
+            guard case .text(let text) = part else {
+                return part // Keep code blocks as-is
+            }
+            
+            // Filter out Swift doc comment section markers
+            let lines = text.components(separatedBy: .newlines)
+            let filteredLines = lines.filter { line in
+                let trimmed = line.trimmingCharacters(in: .whitespaces)
+                // Remove lines that are Swift doc comment sections (with or without "- " prefix)
+                return !trimmed.hasPrefix("- Parameter") &&
+                       !trimmed.hasPrefix("- Returns") &&
+                       !trimmed.hasPrefix("- Throws") &&
+                       !trimmed.hasPrefix("- Note") &&
+                       !trimmed.hasPrefix("- Warning") &&
+                       !trimmed.hasPrefix("- Important") &&
+                       !trimmed.hasPrefix("Parameter") && // Sometimes "- " is stripped by parser
+                       !trimmed.hasPrefix("Returns:") &&
+                       !trimmed.hasPrefix("Throws:") &&
+                       !trimmed.hasPrefix("Note:") &&
+                       !trimmed.hasPrefix("Warning:") &&
+                       !trimmed.hasPrefix("Important:")
+            }
+            
+            let cleaned = filteredLines.joined(separator: "\n").trimmingCharacters(in: .whitespacesAndNewlines)
+            return cleaned.isEmpty ? nil : .text(cleaned)
+        }
         
         let discussion = finalState.discussionLines.isEmpty ? nil : finalState.discussionLines.joined(separator: " ")
         
         return DocComment(
             summary: finalState.summary,
             discussion: discussion,
-            contentParts: finalState.contentParts,
+            contentParts: cleanedContentParts,
             parameters: finalState.parameters,
             returns: finalState.returns,
             throws: finalState.throwsInfo,
