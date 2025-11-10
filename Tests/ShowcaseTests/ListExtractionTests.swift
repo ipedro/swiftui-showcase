@@ -394,8 +394,8 @@ struct ListExtractionTests {
                 print("[\(index)] Description (\(desc.value.count) chars): '\(desc.value.prefix(50))...'")
             case let .list(list):
                 print("[\(index)] List (\(list.type)): \(list.items.count) items")
-                for (i, listItem) in list.items.enumerated() {
-                    print("  [\(i)]: '\(listItem)'")
+                for (itemIndex, listItem) in list.items.enumerated() {
+                    print("  [\(itemIndex)]: '\(listItem)'")
                 }
             default:
                 print("[\(index)] Other: \(item)")
