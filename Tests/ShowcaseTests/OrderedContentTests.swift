@@ -89,7 +89,8 @@ struct OrderedContentTests {
         if case .embed = topic.items[0],
            case .link = topic.items[1],
            case .codeBlock = topic.items[2],
-           case .example = topic.items[3] {
+           case .example = topic.items[3]
+        {
             // Success - order matches
         } else {
             Issue.record("Items not in expected order")

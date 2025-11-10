@@ -52,7 +52,8 @@ struct NoteTests {
 
         if case .description = topic.items[0],
            case let .note(note) = topic.items[1],
-           case .description = topic.items[2] {
+           case .description = topic.items[2]
+        {
             #expect(note.type == .warning)
             #expect(note.content == "Be careful!")
         } else {
