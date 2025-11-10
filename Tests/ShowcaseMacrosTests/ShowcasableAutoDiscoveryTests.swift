@@ -400,4 +400,3 @@ final class ShowcasableAutoDiscoveryTests: ShowcaseMacrosTestsBase {
         #endif
     }
 }
-

@@ -1,6 +1,6 @@
 // CodeBlockWhitespaceTests.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 10.11.25.
+// Created by Pedro Almeida on 11/10/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -26,9 +26,8 @@ import XCTest
 /// Tests for code block whitespace generation issues
 /// These tests ensure that generated code blocks don't have extra blank lines or incorrect formatting
 final class CodeBlockWhitespaceTests: ShowcaseMacrosTestsBase {
-    
     // MARK: - Generic Types with Initializers
-    
+
     func testGenericTypeWithViewBuilderParameter() throws {
         #if canImport(ShowcaseMacrosPlugin)
             assertMacroExpansion(
@@ -125,9 +124,9 @@ final class CodeBlockWhitespaceTests: ShowcaseMacrosTestsBase {
             throw XCTSkip("Macros are only supported when running tests for the host platform")
         #endif
     }
-    
+
     // MARK: - Torture Tests
-    
+
     func testMultipleGenericConstraints() throws {
         #if canImport(ShowcaseMacrosPlugin)
             assertMacroExpansion(
@@ -190,7 +189,7 @@ final class CodeBlockWhitespaceTests: ShowcaseMacrosTestsBase {
             throw XCTSkip("Macros are only supported when running tests for the host platform")
         #endif
     }
-    
+
     func testMultilineInitializerWithAttributes() throws {
         #if canImport(ShowcaseMacrosPlugin)
             assertMacroExpansion(
@@ -257,7 +256,7 @@ final class CodeBlockWhitespaceTests: ShowcaseMacrosTestsBase {
             throw XCTSkip("Macros are only supported when running tests for the host platform")
         #endif
     }
-    
+
     func testGenericWithWhereClause() throws {
         #if canImport(ShowcaseMacrosPlugin)
             assertMacroExpansion(
@@ -312,7 +311,7 @@ final class CodeBlockWhitespaceTests: ShowcaseMacrosTestsBase {
             throw XCTSkip("Macros are only supported when running tests for the host platform")
         #endif
     }
-    
+
     func testMultipleInitializersWithDocComments() throws {
         #if canImport(ShowcaseMacrosPlugin)
             assertMacroExpansion(
@@ -385,7 +384,7 @@ final class CodeBlockWhitespaceTests: ShowcaseMacrosTestsBase {
             throw XCTSkip("Macros are only supported when running tests for the host platform")
         #endif
     }
-    
+
     func testComplexGenericWithMultipleProtocols() throws {
         #if canImport(ShowcaseMacrosPlugin)
             assertMacroExpansion(
@@ -447,7 +446,7 @@ final class CodeBlockWhitespaceTests: ShowcaseMacrosTestsBase {
             throw XCTSkip("Macros are only supported when running tests for the host platform")
         #endif
     }
-    
+
     func testNestedGenericsWithClosures() throws {
         #if canImport(ShowcaseMacrosPlugin)
             assertMacroExpansion(
@@ -501,7 +500,7 @@ final class CodeBlockWhitespaceTests: ShowcaseMacrosTestsBase {
             throw XCTSkip("Macros are only supported when running tests for the host platform")
         #endif
     }
-    
+
     func testTortureTestAllFeaturesCombined() throws {
         #if canImport(ShowcaseMacrosPlugin)
             assertMacroExpansion(
