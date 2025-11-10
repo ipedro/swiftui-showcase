@@ -63,7 +63,15 @@ public struct ShowcaseLayout: StyledView {
             if depth > 0, !configuration.isEmpty {
                 Divider().padding(.bottom)
             }
-            indexList
+            if let indexList {
+                VStack {
+                    indexList
+                }.padding(
+                    .bottom,
+                    mac: 30,
+                    default: 15
+                )
+            }
             ShowcaseContent(configuration).equatable()
             children
         }

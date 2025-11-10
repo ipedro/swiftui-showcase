@@ -294,6 +294,11 @@ final class ShowcasableAutoDiscoveryTests: ShowcaseMacrosTestsBase {
         extension DSButton: Showcasable {
             public static var showcaseTopic: Topic {
                 Topic("DSButton", icon: Image(systemName: "button.horizontal")) {
+                    CodeBlock("Type Relationships") {
+                        """
+                        struct DSButton: View
+                        """
+                    }
                     Description {
                         """
                         A customizable button component for the design system
@@ -351,11 +356,6 @@ final class ShowcasableAutoDiscoveryTests: ShowcaseMacrosTestsBase {
                         }
                         .opacity(0.5)
                         .disabled(true)
-                        """
-                    }
-                    CodeBlock("Type Relationships") {
-                        """
-                        struct DSButton: View
                         """
                     }
                 }

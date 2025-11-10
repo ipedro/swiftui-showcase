@@ -31,13 +31,13 @@ enum TopicContentGenerator {
     ) -> String {
         var topicContent: [String] = []
 
-        // Add descriptions
-        topicContent.append(contentsOf: generateDescriptions(docs: docs))
-
-        // Add type relationships if enabled
+        // Add type relationships first if enabled
         if let relationships = generateTypeRelationships(config: config) {
             topicContent.append(relationships)
         }
+
+        // Add descriptions
+        topicContent.append(contentsOf: generateDescriptions(docs: docs))
 
         // Add API reference if members exist
         if let apiReference = generateAPIReference(members: members) {
