@@ -10,11 +10,7 @@ import Showcase
 
 struct ContentView: View {
     var body: some View {
-        #if os(macOS) || os(visionOS)
         ShowcaseNavigationSplitView(.showcaseGuide)
-        #else
-        ShowcaseNavigationStack(.showcaseGuide)
-        #endif
     }
 }
 
