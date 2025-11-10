@@ -41,11 +41,11 @@ extension Chapter {
         }
         
         DSButton.self
-        DSCard<AnyView>.showcaseTopic
+        DSCard<AnyView>.self
         DSBadge.self
         DSAsyncImage.self
         DSContextMenu.self
         DSSkeletonLoader.self
-        DSDropdown<DropdownItem, Text>.showcaseTopic
+        DSDropdown<DropdownItem, Text>.self
     }
 }
