@@ -45,13 +45,13 @@ jobs:
       
       - name: Build DocC
         run: |
-          xcodebuild docbuild -scheme ShowcaseMacros \
+          xcodebuild docbuild -scheme Showcase \
             -derivedDataPath /tmp/docbuild \
             -destination 'platform=macOS' \
             -skipPackagePluginValidation \
             -skipMacroValidation;
           $(xcrun --find docc) process-archive \
-            transform-for-static-hosting /tmp/docbuild/Build/Products/Debug/ShowcaseMacros.doccarchive \
+            transform-for-static-hosting /tmp/docbuild/Build/Products/Debug/Showcase.doccarchive \
             --hosting-base-path swiftui-showcase \
             --output-path docs;
           echo "<script>window.location.href += \"/documentation/showcase\"</script>" > docs/index.html;
