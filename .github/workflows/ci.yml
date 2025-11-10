@@ -29,7 +29,7 @@ jobs:
       - name: Run SwiftLint with PR annotations
         uses: ipedro/action-swiftlint@v3.2.2
         with:
-          args: --strict
+          args: --strict --config .swiftlint-ci.yml
         env:
           # Only set DIFF_BASE for PRs (lints changed files only)
           # For pushes to main, omit DIFF_BASE to lint all files

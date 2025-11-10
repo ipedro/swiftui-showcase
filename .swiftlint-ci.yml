@@ -1,0 +1,50 @@
+# SwiftLint Configuration for CI
+# Only checks non-autocorrectable rules since we have an auto-format job after merge
+
+parent_config: .swiftlint.yml
+
+# Disable all autocorrectable rules in CI
+# These will be fixed automatically by the auto-format job after merge to main
+disabled_rules:
+  # Autocorrectable rules to skip in CI
+  - attributes
+  - closure_end_indentation
+  - closure_spacing
+  - colon
+  - comma
+  - control_statement
+  - duplicate_imports
+  - empty_count
+  - file_header
+  - for_where
+  - implicit_getter
+  - leading_whitespace
+  - legacy_cggeometry_functions
+  - legacy_constant
+  - legacy_constructor
+  - legacy_nsgeometry_functions
+  - mark
+  - multiline_arguments
+  - multiline_function_chains
+  - multiline_literal_brackets
+  - multiline_parameters
+  - number_separator
+  - opening_brace
+  - operator_usage_whitespace
+  - operator_whitespace
+  - prefer_self_type_over_type_of_self
+  - redundant_discardable_let
+  - redundant_nil_coalescing
+  - redundant_optional_initialization
+  - redundant_type_annotation
+  - redundant_void_return
+  - return_arrow_whitespace
+  - shorthand_operator
+  - statement_position
+  - superfluous_disable_command
+  - toggle_bool
+  - unneeded_break_in_switch
+  - unused_closure_parameter
+  - unused_import
+  - void_return
+  - yoda_condition
