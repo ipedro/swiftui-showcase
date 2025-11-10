@@ -167,6 +167,9 @@ extension Topic {
                         || link.name.description.localizedCaseInsensitiveContains(query)
                 case .list(let list):
                     return list.items.contains(where: { $0.localizedCaseInsensitiveContains(query) })
+                case .note(let note):
+                    return note.content.localizedCaseInsensitiveContains(query)
+                        || note.type.title.localizedCaseInsensitiveContains(query)
                 case .embed:
                     return false
                 }

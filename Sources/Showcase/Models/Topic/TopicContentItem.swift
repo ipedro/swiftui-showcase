@@ -60,25 +60,30 @@ public enum TopicContentItem: Identifiable, Equatable {
 
     /// A live example of a SwiftUI view.
     case example(Example)
+    
+    /// A special callout for notes, warnings, deprecations, etc.
+    case note(Note)
 
     /// The unique identifier for this content item.
     ///
     /// Returns the underlying content type's identifier, ensuring stable
     /// identity for SwiftUI's diffing algorithm.
-    public var id: UUID {
+    public var id: AnyHashable {
         switch self {
         case let .description(description):
-            description.id
+            AnyHashable(description.id)
         case let .link(link):
-            link.id
+            AnyHashable(link.id)
         case let .codeBlock(codeBlock):
-            codeBlock.id
+            AnyHashable(codeBlock.id)
         case let .list(list):
-            list.id
+            AnyHashable(list.id)
         case let .embed(embed):
-            embed.id
+            AnyHashable(embed.id)
         case let .example(example):
-            example.id
+            AnyHashable(example.id)
+        case let .note(note):
+            AnyHashable(note)
         }
     }
 

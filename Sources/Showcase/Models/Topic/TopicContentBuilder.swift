@@ -440,6 +440,12 @@ extension ListItem: TopicContentConvertible {
     }
 }
 
+extension Note: TopicContentConvertible {
+    public func merge(into content: inout Topic.Content) {
+        content.items.append(.note(self))
+    }
+}
+
 extension Topic: TopicContentConvertible {
     public func merge(into content: inout Topic.Content) {
         content.children.append(self)
