@@ -51,6 +51,9 @@ public enum TopicContentItem: Identifiable, Equatable {
 
     /// A syntax-highlighted code block.
     case codeBlock(CodeBlock)
+    
+    /// A list (ordered or unordered).
+    case list(ListItem)
 
     /// An embedded web view or external content.
     case embed(Embed)
@@ -70,6 +73,8 @@ public enum TopicContentItem: Identifiable, Equatable {
             link.id
         case let .codeBlock(codeBlock):
             codeBlock.id
+        case let .list(list):
+            list.id
         case let .embed(embed):
             embed.id
         case let .example(example):

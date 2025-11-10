@@ -155,47 +155,44 @@ public enum TopicContentBuilder {
 
 extension Description: TopicContentConvertible {
     public func merge(into content: inout Topic.Content) {
-        // Extract code blocks from markdown and split into alternating Description/CodeBlock items
-        let parts = extractCodeBlocks(from: value)
+        // Extract code blocks and lists from markdown and split into items
+        let parts = extractMarkdownBlocks(from: value)
         for part in parts {
             content.items.append(part)
         }
     }
     
-    /// Extracts markdown code blocks and returns alternating Description and CodeBlock items.
-    private func extractCodeBlocks(from text: String) -> [TopicContentItem] {
-        let pattern = "```[a-z]*\\n([\\s\\S]*?)```"
-        guard let regex = try? NSRegularExpression(pattern: pattern, options: []) else {
-            // If regex fails, return original description
-            return [.description(self)]
+    /// Extracts markdown code blocks and lists using AttributedString's built-in parsing.
+    private func extractMarkdownBlocks(from text: String) -> [TopicContentItem] {
+        // First extract code blocks with regex (they need raw text)
+        let codePattern = "```[a-z]*\\n([\\s\\S]*?)```"
+        guard let codeRegex = try? NSRegularExpression(pattern: codePattern, options: []) else {
+            return parseListsFromMarkdown(text)
         }
         
         let nsString = text as NSString
-        let matches = regex.matches(in: text, range: NSRange(location: 0, length: nsString.length))
+        let codeMatches = codeRegex.matches(in: text, range: NSRange(location: 0, length: nsString.length))
         
-        guard !matches.isEmpty else {
-            // No code blocks found - return original description
-            return [.description(self)]
+        if codeMatches.isEmpty {
+            // No code blocks, just parse lists
+            return parseListsFromMarkdown(text)
         }
         
+        // Process text with code blocks
         var items: [TopicContentItem] = []
         var currentIndex = 0
         
-        for match in matches {
+        for match in codeMatches {
             let matchRange = match.range
             
-            // Add text before this code block as Description
+            // Parse text before code block for lists
             if currentIndex < matchRange.location {
                 let textRange = NSRange(location: currentIndex, length: matchRange.location - currentIndex)
-                let textContent = nsString.substring(with: textRange)
-                    .trimmingCharacters(in: .whitespacesAndNewlines)
-                
-                if !textContent.isEmpty {
-                    items.append(.description(Description(textContent)))
-                }
+                let textBefore = nsString.substring(with: textRange)
+                items.append(contentsOf: parseListsFromMarkdown(textBefore))
             }
             
-            // Extract code block content (group 1 - content between ```)
+            // Add code block
             if match.numberOfRanges > 1 {
                 let codeRange = match.range(at: 1)
                 let code = nsString.substring(with: codeRange)
@@ -209,18 +206,139 @@ extension Description: TopicContentConvertible {
             currentIndex = matchRange.location + matchRange.length
         }
         
-        // Add remaining text after last code block
+        // Parse remaining text after last code block
         if currentIndex < nsString.length {
             let textRange = NSRange(location: currentIndex, length: nsString.length - currentIndex)
-            let textContent = nsString.substring(with: textRange)
-                .trimmingCharacters(in: .whitespacesAndNewlines)
-            
-            if !textContent.isEmpty {
-                items.append(.description(Description(textContent)))
-            }
+            let textAfter = nsString.substring(with: textRange)
+            items.append(contentsOf: parseListsFromMarkdown(textAfter))
         }
         
         return items.isEmpty ? [.description(self)] : items
+    }
+    
+    /// Parses lists from markdown text using AttributedString's PresentationIntent.
+    private func parseListsFromMarkdown(_ text: String) -> [TopicContentItem] {
+        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return [] }
+        
+        // Parse markdown into AttributedString to get PresentationIntent
+        guard let attributed = try? AttributedString(markdown: trimmed) else {
+            return [.description(Description(trimmed))]
+        }
+        
+        var items: [TopicContentItem] = []
+        var currentListItems: [Int: String] = [:] // Map listItemId -> accumulated text
+        var currentListType: ListItem.ListType?
+        var currentListId: Int?
+        var listItemOrder: [Int] = [] // Track order of list items
+        var currentText = ""
+        
+        // Process each run to detect lists vs regular text
+        for run in attributed.runs {
+            let content = String(attributed[run.range].characters)
+            
+            if let intent = run.presentationIntent {
+                // Check if this run is part of a list
+                if let listInfo = extractListInfo(from: intent) {
+                    // If we were building regular text, flush it
+                    if !currentText.isEmpty {
+                        items.append(.description(Description(currentText)))
+                        currentText = ""
+                    }
+                    
+                    // Check if this is the same list or a new list
+                    if currentListId != listInfo.listId || currentListType != listInfo.type {
+                        // Flush previous list if any
+                        if !currentListItems.isEmpty, let listType = currentListType {
+                            let orderedItems = listItemOrder.compactMap { currentListItems[$0] }
+                            items.append(.list(ListItem(type: listType, items: orderedItems)))
+                        }
+                        
+                        // Start new list
+                        currentListItems = [:]
+                        listItemOrder = []
+                        currentListType = listInfo.type
+                        currentListId = listInfo.listId
+                    }
+                    
+                    // Accumulate content for this list item (may span multiple runs for inline code)
+                    if currentListItems[listInfo.listItemId] == nil {
+                        listItemOrder.append(listInfo.listItemId)
+                        currentListItems[listInfo.listItemId] = content
+                    } else {
+                        currentListItems[listInfo.listItemId]? += content
+                    }
+                } else {
+                    // Not a list item - flush any current list
+                    if !currentListItems.isEmpty, let listType = currentListType {
+                        let orderedItems = listItemOrder.compactMap { currentListItems[$0] }
+                        items.append(.list(ListItem(type: listType, items: orderedItems)))
+                        currentListItems = [:]
+                        listItemOrder = []
+                        currentListType = nil
+                        currentListId = nil
+                    }
+                    
+                    // Accumulate regular text
+                    currentText += content
+                }
+            } else {
+                // No intent - treat as regular text
+                if !currentListItems.isEmpty, let listType = currentListType {
+                    let orderedItems = listItemOrder.compactMap { currentListItems[$0] }
+                    items.append(.list(ListItem(type: listType, items: orderedItems)))
+                    currentListItems = [:]
+                    listItemOrder = []
+                    currentListType = nil
+                    currentListId = nil
+                }
+                currentText += content
+            }
+        }
+        
+        // Flush any remaining content
+        if !currentListItems.isEmpty, let listType = currentListType {
+            let orderedItems = listItemOrder.compactMap { currentListItems[$0] }
+            items.append(.list(ListItem(type: listType, items: orderedItems)))
+        }
+        if !currentText.isEmpty {
+            let cleaned = currentText.trimmingCharacters(in: .whitespacesAndNewlines)
+            if !cleaned.isEmpty {
+                items.append(.description(Description(cleaned)))
+            }
+        }
+        
+        return items.isEmpty ? [.description(Description(trimmed))] : items
+    }
+    
+    /// Extracts list information from PresentationIntent.
+    private func extractListInfo(from intent: AttributeScopes.FoundationAttributes.PresentationIntentAttribute.Value) -> (type: ListItem.ListType, listId: Int, listItemId: Int)? {
+        var listItemId: Int?
+        var listType: ListItem.ListType?
+        var listId: Int?
+        
+        // PresentationIntent is a collection of intents, we need to find the list ones
+        for component in intent.components {
+            switch component.kind {
+            case .listItem:
+                listItemId = component.identity
+            case .orderedList:
+                listType = .ordered
+                listId = component.identity
+            case .unorderedList:
+                listType = .unordered
+                listId = component.identity
+            default:
+                continue
+            }
+        }
+        
+        // We need all three pieces of information
+        if let listType, let listId, let listItemId {
+            return (type: listType, listId: listId, listItemId: listItemId)
+        }
+        
+        return nil
     }
 }
 
@@ -254,6 +372,12 @@ extension Optional: TopicContentConvertible where Wrapped: TopicContentConvertib
 extension Embed: TopicContentConvertible {
     public func merge(into content: inout Topic.Content) {
         content.items.append(.embed(self))
+    }
+}
+
+extension ListItem: TopicContentConvertible {
+    public func merge(into content: inout Topic.Content) {
+        content.items.append(.list(self))
     }
 }
 

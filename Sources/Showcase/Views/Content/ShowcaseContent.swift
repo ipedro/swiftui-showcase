@@ -92,6 +92,8 @@ public struct ShowcaseContent: StyledView {
                     ShowcaseLink(data: link)
                 case let .codeBlock(codeBlock):
                     ShowcaseCodeBlock(data: codeBlock)
+                case let .list(list):
+                    ShowcaseListView(data: list)
                 case let .example(example):
                     ShowcaseExample(data: example)
                 case let .embed(embed):

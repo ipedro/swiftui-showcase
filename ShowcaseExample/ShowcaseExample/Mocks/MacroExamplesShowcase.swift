@@ -261,10 +261,10 @@ extension Chapter {
             alongside the live preview. This ensures documentation always matches the actual code.
             
             **Key Features:**
-            • Code blocks auto-generated from examples (no manual duplication)
-            • Always accurate and up-to-date with the actual code
-            • Compile-time checked (code must be valid to build)
-            • Optional: disable with `showCode: false` parameter
+            * Code blocks auto-generated from examples (no manual duplication)
+            * Always accurate and up-to-date with the actual code
+            * Compile-time checked (code must be valid to build)
+            * Optional: disable with `showCode: false` parameter
             """
         }
         

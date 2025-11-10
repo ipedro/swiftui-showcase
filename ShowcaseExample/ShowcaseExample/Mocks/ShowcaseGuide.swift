@@ -41,10 +41,10 @@ extension Topic {
             for your components, APIs, and design systems.
             
             Perfect for:
-            • Component libraries and design systems
-            • API documentation and examples
-            • Interactive tutorials and guides
-            • Technical documentation with live demos
+            - Component libraries and design systems
+            - API documentation and examples
+            - Interactive tutorials and guides
+            - Technical documentation with live demos
             """
         }
         
@@ -157,9 +157,9 @@ extension Topic {
         Description {
             """
             This creates a complete documentation structure with:
-            • A document as the top-level container
-            • A chapter to group related topics
-            • A topic with description, code, and live example
+            - A document as the top-level container
+            - A chapter to group related topics
+            - A topic with description, code, and live example
             """
         }
         
@@ -309,12 +309,12 @@ extension Topic {
         Description {
             """
             Topics are the individual pages of your documentation. Each topic can contain:
-            • Descriptions
-            • Code examples
-            • Live previews
-            • External links
-            • Embedded content
-            • Nested sub-topics
+            - Descriptions
+            - Code examples
+            - Live previews
+            - External links
+            - Embedded content
+            - Nested sub-topics
             """
         }
         
@@ -723,10 +723,10 @@ extension Topic {
         Description {
             """
             This flexibility allows you to:
-            • Show code before explanation (code-first approach)
-            • Alternate between examples and descriptions
-            • Group related content logically
-            • Create unique layouts for different topics
+            - Show code before explanation (code-first approach)
+            - Alternate between examples and descriptions
+            - Group related content logically
+            - Create unique layouts for different topics
             """
         }
         
@@ -881,14 +881,14 @@ extension Chapter {
             See how `@Showcasable` macro automatically generates comprehensive API documentation \
             from your SwiftUI components. These examples demonstrate what the macro produces:
             
-            • Auto-discovery of initializers, methods, and properties
-            • Doc comment parsing (parameters, returns, throws)
-            • Static vs instance member categorization
-            • Type relationships and protocol conformances
-            • Multiple examples per component
-            • Integration code blocks
-            • Design guideline links
-            • Nested Topics for each API member
+            - Auto-discovery of initializers, methods, and properties
+            - Doc comment parsing (parameters, returns, throws)
+            - Static vs instance member categorization
+            - Type relationships and protocol conformances
+            - Multiple examples per component
+            - Integration code blocks
+            - Design guideline links
+            - Nested Topics for each API member
             
             **Note**: These are manual examples showing what the macro generates, since the \
             example app runs separately from the macro plugin.
