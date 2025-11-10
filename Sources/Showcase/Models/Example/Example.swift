@@ -50,17 +50,15 @@ public struct Example: Identifiable, Hashable, Equatable {
     /// Initializes an example with a title and view builder.
     /// - Parameters:
     ///   - title: Optional title for the example.
-    ///   - description: Optional description for the example.
     ///   - codeBlock: Optional code block to show the implementation.
     ///   - example: A content view representing the example.
     public init(
         _ title: String? = nil,
-        description: String? = nil,
         codeBlock: CodeBlock? = nil,
         @ViewBuilder example: @escaping () -> some View
     ) {
         self.title = title
-        self.description = description
+        self.description = nil
         self.codeBlock = codeBlock
         content = { AnyView(example()) }
     }
@@ -68,23 +66,14 @@ public struct Example: Identifiable, Hashable, Equatable {
     /// Initializes an example with declarative content including previews and optional code blocks.
     /// - Parameters:
     ///   - title: Optional title for the example.
-    ///   - description: Optional description for the example.
     ///   - content: Builder that returns the view and optional supporting content.
     public init(
         _ title: String? = nil,
-        description: String? = nil,
         @ExampleContentBuilder content: () -> Content
     ) {
         let builtContent = content()
         self.title = title
-        
-        // Use description from builder if available, otherwise use parameter
-        if let builderDescription = builtContent.descriptionText {
-            self.description = builderDescription
-        } else {
-            self.description = description
-        }
-        
+        self.description = builtContent.descriptionText
         self.codeBlock = builtContent.codeBlock
 
         if let viewProvider = builtContent.view {
@@ -98,17 +87,15 @@ public struct Example: Identifiable, Hashable, Equatable {
     /// Initializes an example with a title and autoclosure view.
     /// - Parameters:
     ///   - title: Optional title for the example.
-    ///   - description: Optional description for the example.
     ///   - codeBlock: Optional code block to show the implementation.
     ///   - example: A content view representing the example.
     init(
         _ title: String? = nil,
-        description: String? = nil,
         codeBlock: CodeBlock? = nil,
         example: @escaping @autoclosure () -> any View
     ) {
         self.title = title
-        self.description = description
+        self.description = nil
         self.codeBlock = codeBlock
         content = { AnyView(example()) }
     }

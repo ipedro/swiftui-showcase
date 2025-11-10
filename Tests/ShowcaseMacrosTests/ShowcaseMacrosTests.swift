@@ -242,7 +242,12 @@ final class ShowcaseMacrosTests: XCTestCase {
                 extension ActionButton: Showcasable {
                     public static var showcaseTopic: Topic {
                         Topic("ActionButton") {
-                                Example("Primary Action", description: "A primary button with icon") {
+                                Example("Primary Action") {
+                                    Description {
+                                        """
+                                        A primary button with icon
+                                        """
+                                    }
                                     ActionButton.withIcon
                                     CodeBlock("Primary Action - Source Code") {
                                         """

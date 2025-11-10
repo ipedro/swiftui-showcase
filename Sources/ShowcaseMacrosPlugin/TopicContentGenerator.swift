@@ -211,8 +211,18 @@ enum TopicContentGenerator {
 
         lines.append("        ExampleGroup(\"Examples\") {")
         for example in docs.examples {
-            let exampleHeader = exampleHeaderLine(for: example)
-            lines.append("                    Example(\(exampleHeader)) {")
+            let exampleTitle = "\"\(example.title)\""
+            lines.append("                    Example(\(exampleTitle)) {")
+            
+            // Add description if present
+            if let description = example.description {
+                lines.append("                        Description {")
+                lines.append("                            \"\"\"")
+                lines.append("                            \(description)")
+                lines.append("                            \"\"\"")
+                lines.append("                        }")
+            }
+            
             lines.append("                        \(typeName).\(example.name)")
             let codeBlockLines = codeBlockLines(for: example, codeIndentCount: exampleGroupCodeIndentCount)
             lines.append(contentsOf: codeBlockLines)
@@ -224,24 +234,24 @@ enum TopicContentGenerator {
     }
 
     private static func generateSingleExample(example: ExampleInfo, typeName: String) -> String {
-        let header = exampleHeaderLine(for: example)
+        let exampleTitle = "\"\(example.title)\""
         var lines: [String] = []
-        lines.append("            Example(\(header)) {")
+        lines.append("            Example(\(exampleTitle)) {")
+        
+        // Add description if present
+        if let description = example.description {
+            lines.append("                Description {")
+            lines.append("                    \"\"\"")
+            lines.append("                    \(description)")
+            lines.append("                    \"\"\"")
+            lines.append("                }")
+        }
+        
         lines.append("                \(typeName).\(example.name)")
         let codeBlockLines = codeBlockLines(for: example, codeIndentCount: singleExampleCodeIndentCount)
         lines.append(contentsOf: codeBlockLines)
         lines.append("            }")
         return lines.joined(separator: "\n")
-    }
-
-    private static func exampleHeaderLine(for example: ExampleInfo) -> String {
-        var header = "\"\(example.title)\""
-
-        if let description = example.description {
-            header += ", description: \"\(description)\""
-        }
-
-        return header
     }
 
     private static func codeBlockLines(for example: ExampleInfo, codeIndentCount: Int) -> [String] {
