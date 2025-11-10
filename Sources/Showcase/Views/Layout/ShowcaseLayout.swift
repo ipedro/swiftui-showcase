@@ -74,5 +74,6 @@ public struct ShowcaseLayout: StyledView {
         }
         .padding(depth == .zero ? .horizontal : [])
         .padding(depth == .zero ? [] : .vertical)
+        .padding(mac: 20)
     }
 }
