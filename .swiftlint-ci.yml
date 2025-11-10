@@ -32,11 +32,11 @@ disabled_rules:
   - number_separator
   - opening_brace
   - operator_usage_whitespace
-  - operator_whitespace
+  - function_name_whitespace
   - prefer_self_type_over_type_of_self
   - redundant_discardable_let
   - redundant_nil_coalescing
-  - redundant_optional_initialization
+  - implicit_optional_initialization
   - redundant_type_annotation
   - redundant_void_return
   - return_arrow_whitespace
