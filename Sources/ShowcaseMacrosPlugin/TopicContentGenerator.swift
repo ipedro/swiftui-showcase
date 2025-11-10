@@ -1,6 +1,6 @@
 // TopicContentGenerator.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/10/25.
+// Created by Pedro Almeida on 09.11.25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -31,13 +31,16 @@ enum TopicContentGenerator {
     ) -> String {
         var topicContent: [String] = []
 
-        // Add descriptions
-        topicContent.append(contentsOf: generateDescriptions(docs: docs))
-
-        // Add type relationships if enabled
+        // Add type relationships first if enabled
         if let relationships = generateTypeRelationships(config: config) {
             topicContent.append(relationships)
         }
+
+        // Add descriptions
+        topicContent.append(contentsOf: generateDescriptions(docs: docs))
+
+        // Add notes
+        topicContent.append(contentsOf: generateNotes(docs: docs))
 
         // Add API reference if members exist
         if let apiReference = generateAPIReference(members: members) {
@@ -116,7 +119,13 @@ enum TopicContentGenerator {
 
         // Add any additional descriptions from @ShowcaseDescription attributes
         for description in docs.descriptions {
-            content.append("Description(\"\(description)\")")
+            content.append("""
+            Description {
+                \"\"\"
+                \(description)
+                \"\"\"
+            }
+            """)
         }
 
         return content
@@ -131,6 +140,20 @@ enum TopicContentGenerator {
             .joined(separator: "\n")
 
         return "CodeBlock(\"\(title)\") {\n    \"\"\"\n\(indentedCode)\n    \"\"\"\n}"
+    }
+
+    // MARK: - Notes
+
+    private static func generateNotes(docs: TopicDocumentation) -> [String] {
+        docs.documentation.notes.map { note in
+            """
+            Note {
+                \"\"\"
+                \(note)
+                \"\"\"
+            }
+            """
+        }
     }
 
     // MARK: - Type Relationships
@@ -172,11 +195,18 @@ enum TopicContentGenerator {
 
     private static func generateCodeBlocks(docs: TopicDocumentation) -> [String] {
         docs.codeBlocks.map { codeBlock in
-            let escapedCode = codeBlock.code
-                .replacingOccurrences(of: "\\", with: "\\\\")
-                .replacingOccurrences(of: "\"", with: "\\\"")
-                .replacingOccurrences(of: "\n", with: "\\n")
-            return "CodeBlock(\"\(codeBlock.title)\", code: \"\(escapedCode)\")"
+            // Use triple-quoted strings to avoid escape sequence issues
+            let indentedCode = codeBlock.code.components(separatedBy: .newlines)
+                .map { "    \($0)" }
+                .joined(separator: "\n")
+
+            return """
+            CodeBlock("\(codeBlock.title)") {
+                \"\"\"
+            \(indentedCode)
+                \"\"\"
+            }
+            """
         }
     }
 
@@ -193,8 +223,9 @@ enum TopicContentGenerator {
     private static func generateExamples(docs: TopicDocumentation, typeName: String) -> [String] {
         guard !docs.examples.isEmpty else { return [] }
 
-        // If we have 3+ examples, group them in a TabView for better UX
-        if docs.examples.count >= 3 {
+        // If we have 2+ examples, group them in an ExampleGroup for tabbed navigation
+        // Provides consistent UI and better discoverability even with just two examples
+        if docs.examples.count >= 2 {
             return [generateExampleGroup(docs: docs, typeName: typeName)]
         }
 
@@ -260,18 +291,22 @@ enum TopicContentGenerator {
         let codeTitle = "\(example.title) - Source Code"
         let blockIndentCount = max(codeIndentCount - 4, 0)
         let blockIndent = String(repeating: " ", count: blockIndentCount)
-        let innerIndent = blockIndent + "    "
+        let stringLiteralIndent = String(repeating: " ", count: blockIndentCount + 4) // Opening/closing quotes
+        let contentIndent = String(repeating: " ", count: blockIndentCount + 8) // Content needs more indent
 
-        var lines: [String] = []
-        lines.append("\(blockIndent)CodeBlock(\"\(codeTitle)\") {")
-        lines.append("\(innerIndent)\"\"\"")
-        let codeLines = sourceCode.components(separatedBy: "\n")
-        for line in codeLines {
-            lines.append("\(innerIndent)\(line)")
+        // Build the entire CodeBlock as a single multi-line string
+        var codeBlock = ""
+        codeBlock += "\(blockIndent)CodeBlock(\"\(codeTitle)\") {\n"
+        codeBlock += "\(stringLiteralIndent)#\"\"\"\n" // Use raw string literal (#"""...""#)
+
+        // Add each line of source code (raw strings handle backslashes literally)
+        for line in sourceCode.components(separatedBy: "\n") {
+            codeBlock += "\(contentIndent)\(line)\n"
         }
-        lines.append("\(innerIndent)\"\"\"")
-        lines.append("\(blockIndent)}")
 
-        return lines
+        codeBlock += "\(stringLiteralIndent)\"\"\"#\n"
+        codeBlock += "\(blockIndent)}"
+
+        return [codeBlock]
     }
 }

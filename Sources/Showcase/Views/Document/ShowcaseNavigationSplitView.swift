@@ -1,6 +1,6 @@
 // ShowcaseNavigationSplitView.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/10/25.
+// Created by Pedro Almeida on 23.04.24.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -59,38 +59,51 @@ public struct ShowcaseNavigationSplitView<Sidebar: View, ContentToolbar: View, D
     }
 
     public var body: some View {
-        NavigationSplitView(
-            columnVisibility: $columnVisibility,
-            sidebar: sidebar,
-            content: content,
-            detail: detail
-        )
+        Group {
+            if Sidebar.self != EmptyView.self {
+                // Three-column layout with custom sidebar
+                NavigationSplitView(
+                    columnVisibility: $columnVisibility,
+                    sidebar: { _sidebar },
+                    content: { list },
+                    detail: detail
+                )
+            } else {
+                // Two-column layout (sidebar + detail)
+                NavigationSplitView(
+                    columnVisibility: $columnVisibility,
+                    sidebar: { list },
+                    detail: detail
+                )
+            }
+        }
         .previewDisplayName(data.title)
     }
 
     @ViewBuilder
-    private func sidebar() -> some View {
-        if Sidebar.self != EmptyView.self {
-            _sidebar
-        } else {
-            list
-        }
-    }
-
-    @ViewBuilder
-    private func content() -> some View {
-        if Sidebar.self != EmptyView.self {
-            list
-        } else {
-            _sidebar
-        }
-    }
-
-    @ViewBuilder
     private func detail() -> some View {
-        ShowcaseNavigationTopic(selection).toolbar(content: {
-            detailToolbar
-        })
+        if let selection {
+            ShowcaseNavigationTopic(selection).toolbar(content: {
+                detailToolbar
+            })
+        } else {
+            VStack(spacing: 16) {
+                Image(systemName: "doc.text")
+                    .font(.system(size: 48))
+                    .foregroundStyle(.secondary)
+                Text("Select a Topic")
+                    .font(.title2)
+                    .fontWeight(.semibold)
+                Text("Choose a topic from the list to view its documentation")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+            }
+            .padding()
+            .toolbar(content: {
+                detailToolbar
+            })
+        }
     }
 
     private var list: some View {

@@ -1,6 +1,6 @@
 // Document.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/10/25.
+// Created by Pedro Almeida on 11.09.23.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -65,6 +65,12 @@ public struct Document: Identifiable {
 private extension [Chapter] {
     func sortedWithIcon(_ icon: Image?) -> [Chapter] {
         sorted().map { $0.withIcon(icon) }
+    }
+}
+
+extension Document: View {
+    public var body: some View {
+        ShowcaseNavigationSplitView(self)
     }
 }
 

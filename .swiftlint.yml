@@ -1,6 +1,9 @@
 # SwiftLint Configuration
 # Only lint Sources/ and Tests/ directories
 
+# Treat warnings as errors
+strict: true
+
 included:
   - Sources
   - Tests

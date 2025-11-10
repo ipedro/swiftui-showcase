@@ -1,6 +1,6 @@
 // ShowcaseCodeBlock.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/10/25.
+// Created by Pedro Almeida on 20.04.24.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -60,8 +60,7 @@ public struct ShowcaseCodeBlock: StyledView, Equatable {
         lhs.id == rhs.id
     }
 
-    // swiftlint:disable:next syntactic_sugar
-    let title: Optional<Text>
+    let title: Text?
     let sourceCode: String
     let id: UUID
 
@@ -96,8 +95,7 @@ public struct ShowcaseCodeBlock: StyledView, Equatable {
 
 public struct ShowcaseCodeBlockConfiguration {
     var id: UUID
-    // swiftlint:disable:next syntactic_sugar
-    public var title: Optional<Text>
+    public var title: Text?
     public var sourceCode: String
 }
 

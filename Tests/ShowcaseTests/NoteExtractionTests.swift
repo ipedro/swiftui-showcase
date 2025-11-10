@@ -1,6 +1,6 @@
 // NoteExtractionTests.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/10/25.
+// Created by Pedro Almeida on 10.11.25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -186,8 +186,7 @@ struct NoteExtractionTests {
 
         if case let .note(note1) = topic.items[0],
            case let .note(note2) = topic.items[1],
-           case let .note(note3) = topic.items[2]
-        {
+           case let .note(note3) = topic.items[2] {
             #expect(note1.type == .note)
             #expect(note2.type == .warning)
             #expect(note3.type == .tip)

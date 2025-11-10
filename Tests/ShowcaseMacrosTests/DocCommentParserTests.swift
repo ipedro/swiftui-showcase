@@ -1,6 +1,6 @@
 // DocCommentParserTests.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/10/25.
+// Created by Pedro Almeida on 10.11.25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -276,6 +276,35 @@ final class DocCommentParserTests: XCTestCase {
             XCTAssertNotNil(doc.discussion)
             XCTAssertTrue(doc.discussion?.contains("That can also be destructive:") ?? false)
             XCTAssertTrue(doc.discussion?.contains("And even more text after.") ?? false)
+        #else
+            throw XCTSkip("Macros are only supported when running tests for the host platform")
+        #endif
+    }
+
+    func testParseBlockquoteNotes() throws {
+        #if canImport(ShowcaseMacrosPlugin)
+            let rawComment = """
+            A customizable card component.
+
+            > The card takes a generic content.
+
+            Use this component for displaying grouped content.
+            """
+
+            let doc = DocCommentParser.parse(rawComment)
+
+            XCTAssertEqual(doc.summary, "A customizable card component.")
+            XCTAssertEqual(doc.notes.count, 1)
+            XCTAssertEqual(doc.notes[0], "The card takes a generic content.")
+            
+            // The blockquote should be filtered out from content parts
+            let hasBlockquote = doc.contentParts.contains { part in
+                if case let .text(text) = part {
+                    return text.contains(">")
+                }
+                return false
+            }
+            XCTAssertFalse(hasBlockquote, "Blockquote should be filtered from content parts")
         #else
             throw XCTSkip("Macros are only supported when running tests for the host platform")
         #endif

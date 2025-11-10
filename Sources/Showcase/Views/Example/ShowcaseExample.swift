@@ -1,6 +1,6 @@
 // ShowcaseExample.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/10/25.
+// Created by Pedro Almeida on 10.09.23.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -47,10 +47,8 @@ public struct ShowcaseExample: StyledView, Equatable {
     var id: UUID
     // AnyView is fine here because Equatable checks id, preventing unnecessary re-init
     var content: AnyView
-    // swiftlint:disable syntactic_sugar
-    var label: Optional<Text>
+    var label: Text?
     var codeBlock: CodeBlock?
-    // swiftlint:enable syntactic_sugar
 
     @State private var isCodeExpanded = false
 
@@ -73,9 +71,7 @@ public struct ShowcaseExample: StyledView, Equatable {
 // MARK: - Integrated Example View (with code)
 
 private struct IntegratedExampleView: View {
-    // swiftlint:disable syntactic_sugar
-    let label: Optional<Text>
-    // swiftlint:enable syntactic_sugar
+    let label: Text?
     let content: AnyView
     let codeBlock: CodeBlock
     @Binding var isCodeExpanded: Bool
@@ -155,9 +151,7 @@ private struct IntegratedExampleView: View {
 // MARK: - Simple Example View (without code)
 
 private struct SimpleExampleView: View {
-    // swiftlint:disable syntactic_sugar
-    let label: Optional<Text>
-    // swiftlint:enable syntactic_sugar
+    let label: Text?
     let content: AnyView
 
     var body: some View {

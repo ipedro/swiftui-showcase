@@ -1,6 +1,6 @@
 // DocCommentParser.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/10/25.
+// Created by Pedro Almeida on 09.11.25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -92,11 +92,22 @@ enum DocCommentParser {
             return
         }
 
+        // Blockquote notes are single-line only - return to discussion after
+        if state.currentSection == .note, !line.hasPrefix(">"), !line.hasPrefix("- Note") {
+            state.currentSection = .discussion
+        }
+
         // Add content to current section
         appendToCurrentSection(line, state: &state)
     }
 
     private static func detectSectionMarker(_ line: String, state: inout ParsingState) -> Section? {
+        // Check for blockquote-style notes (Markdown > syntax)
+        if line.hasPrefix(">") {
+            parseBlockquoteNote(line, state: &state)
+            return .note
+        }
+        
         if line.hasPrefix("- Parameter ") || line.hasPrefix("- parameter ") {
             saveCurrentParameter(state: &state)
             parseParameterMarker(line, state: &state)
@@ -158,6 +169,18 @@ enum DocCommentParser {
         let desc = line.dropFirst("- Note:".count).trimmingCharacters(in: .whitespaces)
         if !desc.isEmpty {
             state.notes.append(desc)
+        }
+    }
+
+    private static func parseBlockquoteNote(_ line: String, state: inout ParsingState) {
+        // Extract content after '>' and any optional space
+        var content = line.dropFirst(1) // Remove '>'
+        if content.hasPrefix(" ") {
+            content = content.dropFirst() // Remove optional space after '>'
+        }
+        let trimmed = content.trimmingCharacters(in: .whitespaces)
+        if !trimmed.isEmpty {
+            state.notes.append(String(trimmed))
         }
     }
 
@@ -278,7 +301,9 @@ enum DocCommentParser {
             let filteredLines = lines.filter { line in
                 let trimmed = line.trimmingCharacters(in: .whitespaces)
                 // Remove lines that are Swift doc comment sections (with or without "- " prefix)
-                return !trimmed.hasPrefix("- Parameter") &&
+                // Also remove blockquote lines (Markdown > syntax used for notes)
+                return !trimmed.hasPrefix(">") &&
+                    !trimmed.hasPrefix("- Parameter") &&
                     !trimmed.hasPrefix("- Returns") &&
                     !trimmed.hasPrefix("- Throws") &&
                     !trimmed.hasPrefix("- Note") &&

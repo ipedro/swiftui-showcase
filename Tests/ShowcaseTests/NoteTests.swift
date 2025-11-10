@@ -1,6 +1,6 @@
 // NoteTests.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/10/25.
+// Created by Pedro Almeida on 10.11.25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -52,8 +52,7 @@ struct NoteTests {
 
         if case .description = topic.items[0],
            case let .note(note) = topic.items[1],
-           case .description = topic.items[2]
-        {
+           case .description = topic.items[2] {
             #expect(note.type == .warning)
             #expect(note.content == "Be careful!")
         } else {

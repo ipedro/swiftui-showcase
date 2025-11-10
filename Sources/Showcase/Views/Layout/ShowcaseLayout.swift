@@ -1,6 +1,6 @@
 // ShowcaseLayout.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/10/25.
+// Created by Pedro Almeida on 09.09.23.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -45,14 +45,11 @@ public extension View {
 
 @StyledView
 public struct ShowcaseLayout: StyledView {
-    // swiftlint:disable syntactic_sugar
-
     /// The children views within the showcase.
-    public let children: Optional<ShowcaseTopics>
+    public let children: ShowcaseTopics?
 
     /// The index view for navigating within the showcase.
-    public let indexList: Optional<ShowcaseIndexList>
-    // swiftlint:enable syntactic_sugar
+    public let indexList: ShowcaseIndexList?
 
     /// The content view of the showcase.
     public let configuration: ShowcaseContentConfiguration
@@ -61,18 +58,27 @@ public struct ShowcaseLayout: StyledView {
     public var depth
 
     public var body: some View {
+        let showPadding = depth == .zero
         LazyVStack(alignment: .leading) {
             if depth > 0, !configuration.isEmpty {
                 Divider().padding(.bottom)
             }
-
-            indexList
-
+            if let indexList {
+                VStack {
+                    indexList
+                }.padding(
+                    .bottom,
+                    mac: 30,
+                    default: 15
+                )
+            }
             ShowcaseContent(configuration).equatable()
-
             children
         }
-        .padding(depth == .zero ? .horizontal : [])
-        .padding(depth == .zero ? [] : .vertical)
+        .padding(
+            showPadding ? .all : [],
+            mac: 30,
+            default: 15
+        )
     }
 }

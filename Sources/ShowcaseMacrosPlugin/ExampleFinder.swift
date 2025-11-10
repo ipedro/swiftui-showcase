@@ -1,6 +1,6 @@
 // ExampleFinder.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/10/25.
+// Created by Pedro Almeida on 09.11.25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,14 +24,92 @@ import SwiftSyntax
 
 /// Finds @ShowcaseExample marked members.
 enum ExampleFinder {
-    static func findExamples(in declaration: some DeclGroupSyntax) -> [ExampleInfo] {
+    /// Finds examples in the given declaration and optionally in specified example types.
+    ///
+    /// - Parameters:
+    ///   - declaration: The declaration to search for examples
+    ///   - exampleTypes: Array of type names for external example containers. Nested types
+    ///                   are automatically discovered without needing to be specified here.
+    ///
+    /// - Returns: Array of example information found
+    static func findExamples(
+        in declaration: some DeclGroupSyntax,
+        exampleTypes: [String] = []
+    ) -> [ExampleInfo] {
+        var examples: [ExampleInfo] = []
+
+        // Find examples in the main declaration
+        examples.append(contentsOf: findExamplesInDeclaration(declaration))
+
+        // Auto-discover examples in ALL nested types
+        examples.append(contentsOf: findExamplesInNestedTypes(declaration))
+
+        // If explicitly specified example types are provided, find them as nested types
+        // (Due to macro limitations, referenced types must be nested within the same declaration)
+        for typeName in exampleTypes where !typeName.isEmpty {
+            if let nestedType = findNestedType(named: typeName, in: declaration) {
+                examples.append(contentsOf: findExamplesInDeclaration(nestedType))
+            }
+        }
+
+        return examples
+    }
+
+    /// Finds examples in all nested types within a declaration.
+    private static func findExamplesInNestedTypes(_ declaration: some DeclGroupSyntax) -> [ExampleInfo] {
+        var examples: [ExampleInfo] = []
+
+        for member in declaration.memberBlock.members {
+            // Check for nested type declarations
+            if let structDecl = member.decl.as(StructDeclSyntax.self) {
+                examples.append(contentsOf: findExamplesInDeclaration(structDecl))
+            } else if let classDecl = member.decl.as(ClassDeclSyntax.self) {
+                examples.append(contentsOf: findExamplesInDeclaration(classDecl))
+            } else if let enumDecl = member.decl.as(EnumDeclSyntax.self) {
+                examples.append(contentsOf: findExamplesInDeclaration(enumDecl))
+            } else if let actorDecl = member.decl.as(ActorDeclSyntax.self) {
+                examples.append(contentsOf: findExamplesInDeclaration(actorDecl))
+            }
+        }
+
+        return examples
+    }
+
+    /// Finds a nested type by name within a declaration.
+    private static func findNestedType(
+        named name: String,
+        in declaration: some DeclGroupSyntax
+    ) -> (any DeclGroupSyntax)? {
+        for member in declaration.memberBlock.members {
+            // Check for struct, class, enum, or actor declarations
+            if let structDecl = member.decl.as(StructDeclSyntax.self),
+               structDecl.name.text == name {
+                return structDecl
+            }
+            if let classDecl = member.decl.as(ClassDeclSyntax.self),
+               classDecl.name.text == name {
+                return classDecl
+            }
+            if let enumDecl = member.decl.as(EnumDeclSyntax.self),
+               enumDecl.name.text == name {
+                return enumDecl
+            }
+            if let actorDecl = member.decl.as(ActorDeclSyntax.self),
+               actorDecl.name.text == name {
+                return actorDecl
+            }
+        }
+        return nil
+    }
+
+    /// Finds examples within a specific declaration.
+    private static func findExamplesInDeclaration(_ declaration: some DeclGroupSyntax) -> [ExampleInfo] {
         var examples: [ExampleInfo] = []
 
         for member in declaration.memberBlock.members {
             // Skip hidden members
             if let varDecl = member.decl.as(VariableDeclSyntax.self),
-               varDecl.hasAttribute(named: "ShowcaseHidden")
-            {
+               varDecl.hasAttribute(named: "ShowcaseHidden") {
                 continue
             }
 
@@ -39,8 +117,7 @@ enum ExampleFinder {
             if let varDecl = member.decl.as(VariableDeclSyntax.self),
                varDecl.hasAttribute(named: "ShowcaseExample"),
                let binding = varDecl.bindings.first,
-               let name = binding.pattern.as(IdentifierPatternSyntax.self)?.identifier.text
-            {
+               let name = binding.pattern.as(IdentifierPatternSyntax.self)?.identifier.text {
                 // Extract title, description, and showCode from attribute
                 let (title, description, showCode) = extractExampleMetadata(from: varDecl)
 
@@ -101,8 +178,7 @@ enum ExampleFinder {
             let label = argument.label?.text
 
             if let stringLiteral = argument.expression.as(StringLiteralExprSyntax.self),
-               let segment = stringLiteral.segments.first?.as(StringSegmentSyntax.self)
-            {
+               let segment = stringLiteral.segments.first?.as(StringSegmentSyntax.self) {
                 let value = segment.content.text
 
                 switch label {
@@ -116,8 +192,7 @@ enum ExampleFinder {
             }
 
             if label == "showCode",
-               let boolExpr = argument.expression.as(BooleanLiteralExprSyntax.self)
-            {
+               let boolExpr = argument.expression.as(BooleanLiteralExprSyntax.self) {
                 showCode = boolExpr.literal.text == "true"
             }
         }
@@ -130,8 +205,7 @@ enum ExampleFinder {
     private static func extractSourceCode(from binding: PatternBindingSyntax) -> String? {
         // Try to extract from accessor (computed property getter)
         if let accessorBlock = binding.accessorBlock,
-           case let .getter(codeBlockItems) = accessorBlock.accessors
-        {
+           case let .getter(codeBlockItems) = accessorBlock.accessors {
             return formatSourceCode(codeBlockItems.description)
         }
 

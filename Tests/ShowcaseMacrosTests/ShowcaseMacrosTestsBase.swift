@@ -1,4 +1,6 @@
-// Copyright (c) 2023 Pedro Almeida
+// ShowcaseMacrosTestsBase.swift
+// Copyright (c) 2025 Pedro Almeida
+// Created by Pedro Almeida on 10.11.25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,27 +20,23 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import SwiftUI
+import SwiftSyntax
+import SwiftSyntaxMacros
+import XCTest
 
-struct MockPreviews: View {
-    var colors: [SwiftUI.Color] = [
-        .accentColor,
-        .primary,
-        .teal,
-        .indigo,
-        .purple,
-        .green,
-        .mint
-    ]
+#if canImport(ShowcaseMacrosPlugin)
+    import ShowcaseMacrosPlugin
+#endif
 
-    var body: some View {
-        ForEach(colors, id: \.self) { color in
-            VStack {
-                Image(systemName: "swift")
-                Text("Placeholder")
-            }
-            .foregroundColor(color)
-            .redacted(reason: .placeholder)
-        }
-    }
+/// Shared test configuration for all macro tests
+class ShowcaseMacrosTestsBase: XCTestCase {
+    #if canImport(ShowcaseMacrosPlugin)
+        let testMacros: [String: Macro.Type] = [
+            "Showcasable": ShowcasableMacro.self,
+            "ShowcaseExample": ShowcaseExampleMacro.self,
+            "ShowcaseHidden": ShowcaseHiddenMacro.self,
+        ]
+    #else
+        let testMacros: [String: Macro.Type] = [:]
+    #endif
 }

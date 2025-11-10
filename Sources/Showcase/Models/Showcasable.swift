@@ -1,6 +1,6 @@
 // Showcasable.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/10/25.
+// Created by Pedro Almeida on 09.09.23.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 import Foundation
+import SwiftUI
 
 /// A type that can provide showcase documentation.
 ///
@@ -29,7 +30,14 @@ import Foundation
 public protocol Showcasable {
     /// The generated topic containing this type's documentation.
     static var showcaseTopic: Topic { get }
+}
 
-    /// The chapter this showcasable belongs to.
-    static var showcaseChapter: String { get }
+public extension ViewBuilder {
+    static func buildExpression<T: Showcasable>(_ expression: T.Type) -> some View {
+        NavigationStack {
+            ScrollView {
+                T.showcaseTopic
+            }
+        }
+    }
 }

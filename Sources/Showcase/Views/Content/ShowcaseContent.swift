@@ -1,6 +1,6 @@
 // ShowcaseContent.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/10/25.
+// Created by Pedro Almeida on 16.09.23.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -58,12 +58,10 @@ public struct OrderedItems {
 
 @StyledView
 public struct ShowcaseContent: StyledView {
-    // swiftlint:disable syntactic_sugar
     public let id: AnyHashable
     public let isEmpty: Bool
-    public let title: Optional<Text>
+    public let title: Text?
     public let orderedItems: OrderedItems
-    // swiftlint:enable syntactic_sugar
 
     @Environment(\.nodeDepth)
     private var depth

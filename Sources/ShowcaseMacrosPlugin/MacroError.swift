@@ -1,6 +1,6 @@
 // MacroError.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/10/25.
+// Created by Pedro Almeida on 26.08.24.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,16 +22,10 @@
 
 /// Errors that can occur during macro expansion.
 enum MacroError: Error, CustomStringConvertible {
-    case missingArguments
-    case missingChapterArgument
     case unsupportedDeclarationType
 
     var description: String {
         switch self {
-        case .missingArguments:
-            return "@Showcasable requires arguments"
-        case .missingChapterArgument:
-            return "@Showcasable requires a 'chapter' argument"
         case .unsupportedDeclarationType:
             return "@Showcasable can only be applied to struct, class, or enum"
         }

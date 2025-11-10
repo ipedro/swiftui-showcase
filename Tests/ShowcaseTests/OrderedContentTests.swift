@@ -1,6 +1,6 @@
 // OrderedContentTests.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/10/25.
+// Created by Pedro Almeida on 08.11.25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -89,8 +89,7 @@ struct OrderedContentTests {
         if case .embed = topic.items[0],
            case .link = topic.items[1],
            case .codeBlock = topic.items[2],
-           case .example = topic.items[3]
-        {
+           case .example = topic.items[3] {
             // Success - order matches
         } else {
             Issue.record("Items not in expected order")

@@ -1,6 +1,6 @@
 // SyntaxExtensions.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/10/25.
+// Created by Pedro Almeida on 09.11.25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -28,8 +28,7 @@ extension SyntaxProtocol {
     var stringLiteralValue: String? {
         if let stringLiteral = self.as(StringLiteralExprSyntax.self),
            stringLiteral.segments.count == 1,
-           case let .stringSegment(segment) = stringLiteral.segments.first
-        {
+           case let .stringSegment(segment) = stringLiteral.segments.first {
             return segment.content.text
         }
         return nil
@@ -37,8 +36,7 @@ extension SyntaxProtocol {
 
     var integerLiteralValue: Int? {
         if let intLiteral = self.as(IntegerLiteralExprSyntax.self),
-           let value = Int(intLiteral.literal.text)
-        {
+           let value = Int(intLiteral.literal.text) {
             return value
         }
         return nil
@@ -49,6 +47,26 @@ extension SyntaxProtocol {
             return boolLiteral.literal.tokenKind == .keyword(.true)
         }
         return nil
+    }
+
+    /// Extracts type names from an array literal like [Type1.self, Type2.self]
+    var arrayLiteralTypeNames: [String] {
+        guard let arrayExpr = self.as(ArrayExprSyntax.self) else {
+            return []
+        }
+
+        return arrayExpr.elements.compactMap { element in
+            // Each element should be a MemberAccessExprSyntax for Type.self
+            guard let memberAccess = element.expression.as(MemberAccessExprSyntax.self),
+                  memberAccess.declName.baseName.text == "self",
+                  let base = memberAccess.base
+            else {
+                return nil
+            }
+
+            // Extract the type name from the base
+            return base.trimmedDescription
+        }
     }
 }
 
