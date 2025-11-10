@@ -29,6 +29,18 @@ extension Topic {
 
             A stylized representation of two horizontally aligned buttons. The image is tinted red to subtly reflect the red in the original six-color Apple logo.
             Versatile and highly customizable, buttons give people simple, familiar ways to do tasks in your app.
+            
+            Key features of SwiftUI buttons:
+            - Built-in styles like bordered, borderless, and prominent
+            - Support for custom button styles
+            - Accessibility features automatically included
+            - Can contain any view as content
+            
+            Common use cases:
+            1. Primary actions in forms and dialogs
+            2. Navigation triggers
+            3. Tool bar items
+            4. Action sheets and alerts
             """
         }
 

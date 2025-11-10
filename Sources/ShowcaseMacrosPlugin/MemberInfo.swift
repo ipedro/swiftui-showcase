@@ -58,6 +58,12 @@ struct PropertyInfo {
     let docComment: DocComment
 }
 
+/// Represents a content part in documentation - either text or code
+enum ContentPart: Equatable {
+    case text(String)
+    case codeBlock(String)
+}
+
 /// Represents a parsed documentation comment with structured sections.
 struct DocComment {
     /// The summary (first paragraph)
@@ -65,6 +71,9 @@ struct DocComment {
 
     /// Extended discussion (middle paragraphs before special sections)
     let discussion: String?
+
+    /// Interleaved content parts (text and code blocks in original order)
+    let contentParts: [ContentPart]
 
     /// Parameter descriptions keyed by parameter name
     let parameters: [String: String]
@@ -83,4 +92,13 @@ struct DocComment {
 
     /// Important callouts
     let important: [String]
+    
+    /// Code blocks extracted from doc comments (e.g., ```swift ... ```)
+    /// @deprecated Use contentParts instead for proper interleaving
+    var codeBlocks: [String] {
+        contentParts.compactMap {
+            if case .codeBlock(let code) = $0 { return code }
+            return nil
+        }
+    }
 }

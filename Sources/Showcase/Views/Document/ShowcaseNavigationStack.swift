@@ -47,6 +47,7 @@ public struct ShowcaseNavigationStack: View {
                     data: data.chapters
                 )
             }
+            .multilineTextAlignment(.leading)
             .navigationDestination(
                 for: Topic.self,
                 destination: ShowcaseNavigationTopic.init

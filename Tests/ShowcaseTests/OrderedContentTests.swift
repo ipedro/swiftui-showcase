@@ -104,14 +104,18 @@ struct OrderedContentTests {
         #expect(topic.items.isEmpty)
     }
 
-    @Test("Topic with only description has empty items")
-    func topicWithOnlyDescriptionHasEmptyItems() {
+    @Test("Topic with only description has description in items")
+    func topicWithOnlyDescriptionHasItemsWithDescription() {
         let topic = Topic("Only Description") {
             Description("Just text, no content items")
         }
 
-        #expect(topic.items.isEmpty)
-        #expect(topic.description == "Just text, no content items")
+        #expect(topic.items.count == 1)
+        if case .description(let description) = topic.items.first {
+            #expect(description.value == "Just text, no content items")
+        } else {
+            Issue.record("Expected description item")
+        }
     }
 
     @Test("Backward compatibility - separate arrays still work")

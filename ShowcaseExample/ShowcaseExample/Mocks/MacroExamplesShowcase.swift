@@ -34,7 +34,52 @@ import ShowcaseMacros
 // MARK: - Button Component with Auto-Generated Code 
 
 /// A customizable button component for the design system
-@Showcasable(chapter: "Components", icon: "button.horizontal", autoDiscover: false)
+///
+/// `DSButton` provides a consistent button interface with three built-in styles:
+/// primary, secondary, and destructive. Each style automatically applies appropriate
+/// colors and styling to match your design system.
+///
+/// ## Basic Usage
+///
+/// ```swift
+/// DSButton(title: "Continue", style: .primary) {
+///     print("Action triggered")
+/// }
+/// ```
+///
+/// ## Button Styles
+///
+/// Choose from three predefined styles depending on the action's importance:
+///
+/// ```swift
+/// // Primary: For main actions
+/// DSButton(title: "Save", style: .primary) {
+///     saveDocument()
+/// }
+///
+/// // Secondary: For alternative actions
+/// DSButton(title: "Cancel", style: .secondary) {
+///     dismissView()
+/// }
+///
+/// // Destructive: For dangerous actions
+/// DSButton(title: "Delete", style: .destructive) {
+///     deleteItem()
+/// }
+/// ```
+///
+/// ## Styling and Customization
+///
+/// Combine with SwiftUI modifiers for additional customization:
+///
+/// ```swift
+/// DSButton(title: "Custom", style: .primary) {
+///     performAction()
+/// }
+/// .opacity(0.5)
+/// .disabled(true)
+/// ```
+@Showcasable(chapter: "Components", icon: "button.horizontal")
 struct DSButton: View {
     let title: String
     let style: Style
@@ -216,10 +261,10 @@ extension Chapter {
             alongside the live preview. This ensures documentation always matches the actual code.
             
             **Key Features:**
-            • Code blocks auto-generated from examples (no manual duplication)
-            • Always accurate and up-to-date with the actual code
-            • Compile-time checked (code must be valid to build)
-            • Optional: disable with `showCode: false` parameter
+            * Code blocks auto-generated from examples (no manual duplication)
+            * Always accurate and up-to-date with the actual code
+            * Compile-time checked (code must be valid to build)
+            * Optional: disable with `showCode: false` parameter
             """
         }
         

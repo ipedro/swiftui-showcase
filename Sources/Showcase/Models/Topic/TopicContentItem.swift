@@ -32,8 +32,10 @@ import Foundation
 ///
 /// ```swift
 /// Topic {
+///     Description { "Intro text" }
 ///     ExternalLink("Apple", url: URL(...)!)
 ///     CodeBlock { "print(\"Hello\")" }
+///     Description { "More explanation" }
 ///     Example { Text("Demo") }
 /// }
 /// ```
@@ -41,32 +43,47 @@ import Foundation
 /// The content items are stored as `[TopicContentItem]` in declaration order,
 /// enabling views to render them exactly as specified in the builder DSL.
 public enum TopicContentItem: Identifiable, Equatable {
+    /// A text description or explanation.
+    case description(Description)
+    
     /// An external link to web content.
     case link(ExternalLink)
 
     /// A syntax-highlighted code block.
     case codeBlock(CodeBlock)
+    
+    /// A list (ordered or unordered).
+    case list(ListItem)
 
     /// An embedded web view or external content.
     case embed(Embed)
 
     /// A live example of a SwiftUI view.
     case example(Example)
+    
+    /// A special callout for notes, warnings, deprecations, etc.
+    case note(Note)
 
     /// The unique identifier for this content item.
     ///
     /// Returns the underlying content type's identifier, ensuring stable
     /// identity for SwiftUI's diffing algorithm.
-    public var id: UUID {
+    public var id: AnyHashable {
         switch self {
+        case let .description(description):
+            AnyHashable(description.id)
         case let .link(link):
-            link.id
+            AnyHashable(link.id)
         case let .codeBlock(codeBlock):
-            codeBlock.id
+            AnyHashable(codeBlock.id)
+        case let .list(list):
+            AnyHashable(list.id)
         case let .embed(embed):
-            embed.id
+            AnyHashable(embed.id)
         case let .example(example):
-            example.id
+            AnyHashable(example.id)
+        case let .note(note):
+            AnyHashable(note)
         }
     }
 

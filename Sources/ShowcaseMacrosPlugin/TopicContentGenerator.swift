@@ -62,21 +62,73 @@ enum TopicContentGenerator {
     private static func generateDescriptions(docs: TopicDocumentation) -> [String] {
         var content: [String] = []
 
-        if let summary = docs.documentation.summary {
-            content.append("""
-            Description {
-                \"\"\"
-                \(summary)
-                \"\"\"
+        // Handle interleaved content parts (text and code blocks in original order)
+        var codeBlockIndex = 1
+        let totalCodeBlocks = docs.documentation.contentParts.filter {
+            if case .codeBlock = $0 { return true }
+            return false
+        }.count
+
+        for part in docs.documentation.contentParts {
+            switch part {
+            case .text(let text):
+                // Skip empty text
+                guard !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { continue }
+
+                // Multi-line text needs indentation for proper formatting in multi-line string literals
+                // In Swift multi-line strings: """ first line has no indent requirement,
+                // but subsequent lines must have at least as much indent as the closing """
+                let lines = text.components(separatedBy: .newlines)
+                let formattedText: String
+                if lines.count == 1 {
+                    // Single line - no extra indentation needed
+                    formattedText = text
+                } else {
+                    // Multi-line - first line no indent, subsequent non-empty lines get 4 spaces
+                    // Empty lines stay empty (no trailing spaces)
+                    formattedText = lines.enumerated().map { index, line in
+                        if index == 0 {
+                            return line
+                        } else if line.isEmpty {
+                            return ""  // Blank lines stay blank, no trailing spaces
+                        } else {
+                            return "    \(line)"  // Add 4 spaces to non-blank lines
+                        }
+                    }.joined(separator: "\n")
+                }
+
+                content.append("""
+                Description {
+                    \"\"\"
+                    \(formattedText)
+                    \"\"\"
+                }
+                """)
+
+            case .codeBlock(let code):
+                let title = totalCodeBlocks == 1 ? "Example" : "Example \(codeBlockIndex)"
+                content.append(generateCodeBlock(title: title, code: code))
+                codeBlockIndex += 1
             }
-            """)
         }
 
+        // Add any additional descriptions from @ShowcaseDescription attributes
         for description in docs.descriptions {
             content.append("Description(\"\(description)\")")
         }
 
         return content
+    }
+
+    private static func generateCodeBlock(title: String, code: String) -> String {
+        // Swift multi-line string literals require all content lines to have at least
+        // as much indentation as the closing """. Since closing """ is at 4 spaces,
+        // we need to add 4 spaces to every line while preserving relative indentation.
+        let indentedCode = code.components(separatedBy: .newlines)
+            .map { "    \($0)" }  // Add 4 spaces to preserve relative indentation
+            .joined(separator: "\n")
+
+        return "CodeBlock(\"\(title)\") {\n    \"\"\"\n\(indentedCode)\n    \"\"\"\n}"
     }
 
     // MARK: - Type Relationships

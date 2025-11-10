@@ -49,9 +49,8 @@ enum APIReferenceGenerator {
         var content: [String] = []
         let doc = initializer.docComment
 
-        if let summary = doc.summary {
-            content.append(generateDescriptionBlock(summary))
-        }
+        // Add interleaved content parts (text and code blocks in original order)
+        content.append(contentsOf: generateContentParts(doc.contentParts))
 
         let signatureDoc = buildInitializerSignature(initializer: initializer)
         content.append(generateDeclarationBlock(signatureDoc))
@@ -65,9 +64,8 @@ enum APIReferenceGenerator {
         var content: [String] = []
         let doc = method.docComment
 
-        if let summary = doc.summary {
-            content.append(generateDescriptionBlock(summary))
-        }
+        // Add interleaved content parts (text and code blocks in original order)
+        content.append(contentsOf: generateContentParts(doc.contentParts))
 
         let signatureDoc = buildMethodSignature(method: method)
         content.append(generateDeclarationBlock(signatureDoc))
@@ -80,9 +78,8 @@ enum APIReferenceGenerator {
         var content: [String] = []
         let doc = property.docComment
 
-        if let summary = doc.summary {
-            content.append(generateDescriptionBlock(summary))
-        }
+        // Add interleaved content parts (text and code blocks in original order)
+        content.append(contentsOf: generateContentParts(doc.contentParts))
 
         let signatureDoc = buildPropertySignature(property: property)
         content.append(generateDeclarationBlock(signatureDoc))
@@ -154,10 +151,61 @@ enum APIReferenceGenerator {
     // MARK: - Block Generators
 
     private static func generateDescriptionBlock(_ summary: String) -> String {
-        """
+        // Multi-line text needs indentation for proper formatting in multi-line string literals
+        let lines = summary.components(separatedBy: .newlines)
+        let formattedSummary: String
+        if lines.count == 1 {
+            // Single line - no extra indentation needed
+            formattedSummary = summary
+        } else {
+            // Multi-line - indent continuation lines
+            formattedSummary = lines.enumerated().map { index, line in
+                index == 0 ? line : "            \(line)"
+            }.joined(separator: "\n")
+        }
+        
+        return """
         Description {
             \"\"\"
-            \(summary)
+            \(formattedSummary)
+            \"\"\"
+        }
+        """
+    }
+    
+    // MARK: - Content Part Generators
+    
+    private static func generateContentParts(_ parts: [ContentPart]) -> [String] {
+        var result: [String] = []
+        var codeBlockIndex = 1
+        let totalCodeBlocks = parts.filter {
+            if case .codeBlock = $0 { return true }
+            return false
+        }.count
+        
+        for part in parts {
+            switch part {
+            case .text(let text):
+                // Skip empty text
+                guard !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { continue }
+                result.append(generateDescriptionBlock(text))
+                
+            case .codeBlock(let code):
+                let title = totalCodeBlocks == 1 ? "Example" : "Example \(codeBlockIndex)"
+                result.append(generateCodeBlock(title: title, code: code))
+                codeBlockIndex += 1
+            }
+        }
+        
+        return result
+    }
+    
+    private static func generateCodeBlock(title: String, code: String) -> String {
+        let indented = code.replacingOccurrences(of: "\n", with: "\n            ")
+        return """
+        CodeBlock("\(title)") {
+            \"\"\"
+            \(indented)
             \"\"\"
         }
         """

@@ -24,14 +24,14 @@
 //
 //  Demonstrates what the @Showcasable macro generates for SwiftUI components.
 //  These Topics show comprehensive API documentation with:
-//  • Hierarchical structure with nested initializer/method/property Topics
-//  • Doc comment parsing (summary, parameters, returns, throws)
-//  • Static vs instance member categorization  
-//  • Type relationships (protocols, generics)
-//  • Multiple examples with auto-generated code blocks (NEW in Phase 6!)
-//  • Code blocks for integration examples
-//  • Design guideline links
-//  • Control code block visibility with showCode parameter (showCode: true/false)
+//  * Hierarchical structure with nested initializer/method/property Topics
+//  * Doc comment parsing (summary, parameters, returns, throws)
+//  * Static vs instance member categorization  
+//  * Type relationships (protocols, generics)
+//  * Multiple examples with auto-generated code blocks (NEW in Phase 6!)
+//  * Code blocks for integration examples
+//  * Design guideline links
+//  * Control code block visibility with showCode parameter (showCode: true/false)
 //
 //  **Note**: This file manually creates the Topic structure to demonstrate the output.
 //  See MacroExamplesShowcase.swift for real @Showcasable usage with auto-generated code.
@@ -71,8 +71,8 @@ extension Topic {
             }
             ```
             This generates BOTH:
-            • Example preview (live interactive view)
-            • CodeBlock (syntax-highlighted source code)
+            * Example preview (live interactive view)
+            - CodeBlock (syntax-highlighted source code)
             
             **Without Code Block (opt-out):**
             ```swift
@@ -83,19 +83,19 @@ extension Topic {
             }
             ```
             This generates ONLY:
-            • Example preview (no code block shown)
+            * Example preview (no code block shown)
             
             **Use showCode: false when:**
-            • The example is self-explanatory visually
-            • Code adds no additional value
-            • Reducing documentation length
-            • Example has complex surrounding test code
+            * The example is self-explanatory visually
+            * Code adds no additional value
+            * Reducing documentation length
+            * Example has complex surrounding test code
             
             **Use showCode: true (default) when:**
-            • API usage patterns are not obvious
-            • Showing specific parameter combinations
-            • Demonstrating modifiers or chaining
-            • Teaching implementation details
+            * API usage patterns are not obvious
+            * Showing specific parameter combinations
+            * Demonstrating modifiers or chaining
+            * Teaching implementation details
             """
         }
         
@@ -152,8 +152,8 @@ extension Topic {
                 Creates a primary button with a title
                 
                 **Parameters:**
-                • `title`: The button's label text
-                • `action`: The action to perform when tapped
+                * `title`: The button's label text
+                * `action`: The action to perform when tapped
                 """
             }
             
@@ -244,7 +244,7 @@ extension Topic {
                 Creates a card with custom content
                 
                 **Parameters:**
-                • `content`: The view to display inside the card
+                * `content`: The view to display inside the card
                 """
             }
             
@@ -259,7 +259,7 @@ extension Topic {
                 Sets the card's elevation
                 
                 **Parameters:**
-                • `elevation`: Shadow intensity from 0 to 5
+                * `elevation`: Shadow intensity from 0 to 5
                 
                 **Returns:** Modified card view
                 """
@@ -374,7 +374,7 @@ extension Topic {
                 Creates a badge with text
                 
                 **Parameters:**
-                • `text`: The badge content
+                * `text`: The badge content
                 """
             }
             
@@ -389,7 +389,7 @@ extension Topic {
                 Sets the badge color
                 
                 **Parameters:**
-                • `color`: The background color
+                * `color`: The background color
                 
                 **Returns:** Modified badge
                 """
@@ -406,7 +406,7 @@ extension Topic {
                 Sets the badge size
                 
                 **Parameters:**
-                • `size`: The desired size
+                * `size`: The desired size
                 
                 **Returns:** Modified badge
                 """
@@ -438,11 +438,11 @@ extension Topic {
             
             This topic demonstrates how @ShowcaseExample's showCode parameter works:
             
-            • **"Initials" example** - Uses `showCode: true` (default) to show both \
+            * **"Initials" example** - Uses `showCode: true` (default) to show both \
             the live preview AND the source code. Useful when the implementation \
             pattern is important to understand.
             
-            • **"Different Sizes" example** - Uses `showCode: false` to show ONLY \
+            * **"Different Sizes" example** - Uses `showCode: false` to show ONLY \
             the visual preview. The code is complex iteration logic that doesn't \
             add value to the documentation - the visual result is self-explanatory.
             
@@ -529,8 +529,8 @@ extension Topic {
                 Creates an avatar
                 
                 **Parameters:**
-                • `initials`: Fallback initials
-                • `imageName`: Optional image name
+                * `initials`: Fallback initials
+                * `imageName`: Optional image name
                 """
             }
             
@@ -545,7 +545,7 @@ extension Topic {
                 Sets the avatar size
                 
                 **Parameters:**
-                • `size`: Diameter in points
+                * `size`: Diameter in points
                 
                 **Returns:** Modified avatar
                 """
@@ -644,8 +644,8 @@ extension Topic {
                 Creates a progress indicator
                 
                 **Parameters:**
-                • `progress`: Optional progress value (nil for indeterminate)
-                • `message`: Optional loading message
+                * `progress`: Optional progress value (nil for indeterminate)
+                * `message`: Optional loading message
                 """
             }
             
@@ -660,7 +660,7 @@ extension Topic {
                 Sets the loading message
                 
                 **Parameters:**
-                • `message`: Message to display
+                * `message`: Message to display
                 
                 **Returns:** Modified indicator
                 """
@@ -729,8 +729,8 @@ extension Topic {
                 Creates a text field
                 
                 **Parameters:**
-                • `label`: The field label
-                • `text`: Binding to the text value
+                * `label`: The field label
+                * `text`: Binding to the text value
                 """
             }
             
@@ -745,7 +745,7 @@ extension Topic {
                 Sets the placeholder text
                 
                 **Parameters:**
-                • `placeholder`: The placeholder string
+                * `placeholder`: The placeholder string
                 
                 **Returns:** Modified text field
                 """
@@ -762,8 +762,8 @@ extension Topic {
                 Sets error state
                 
                 **Parameters:**
-                • `isError`: Whether field has error
-                • `message`: Optional error message
+                * `isError`: Whether field has error
+                * `message`: Optional error message
                 
                 **Returns:** Modified text field
                 """

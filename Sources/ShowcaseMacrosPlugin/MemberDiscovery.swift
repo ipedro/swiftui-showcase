@@ -245,17 +245,20 @@ enum MemberDiscovery {
                 let cleaned = text.trimmingCharacters(in: .whitespaces)
                 if cleaned.hasPrefix("///") {
                     let line = String(cleaned.dropFirst(3)).trimmingCharacters(in: .whitespaces)
-                    if !line.isEmpty {
-                        docLines.append(line)
-                    }
+                    // Include empty lines to preserve document structure for code blocks
+                    docLines.append(line)
                 }
-            case let .docBlockComment(text):
+            case .docBlockComment(let text):
                 let cleaned = text
                     .replacingOccurrences(of: "/**", with: "")
                     .replacingOccurrences(of: "*/", with: "")
-                    .trimmingCharacters(in: .whitespacesAndNewlines)
-                if !cleaned.isEmpty {
-                    docLines.append(cleaned)
+                // Split by lines and process each, preserving structure
+                let blockLines = cleaned.components(separatedBy: .newlines)
+                for blockLine in blockLines {
+                    let trimmed = blockLine
+                        .trimmingCharacters(in: .whitespaces)
+                        .replacingOccurrences(of: "^\\*\\s*", with: "", options: .regularExpression)
+                    docLines.append(trimmed)
                 }
             default:
                 break

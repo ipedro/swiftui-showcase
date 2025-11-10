@@ -29,6 +29,7 @@ enum DocCommentParser {
     private struct ParsingState {
         var summary: String?
         var discussionLines: [String] = []
+        var contentParts: [ContentPart] = [] // Pre-populated from AttributedString, not modified during parsing
         var parameters: [String: String] = [:]
         var returns: String?
         var throwsInfo: String?
@@ -46,8 +47,16 @@ enum DocCommentParser {
             return emptyDocComment()
         }
 
+        // First, use AttributedString to extract interleaved content parts (text + code blocks)
+        // This gives us robust code block parsing via PresentationIntent
+        let contentParts = AttributedStringDocCommentParser.extractContentParts(from: raw)
+
+        // Then parse the text parts for Swift doc comment sections
         let lines = raw.components(separatedBy: .newlines)
         var state = ParsingState()
+
+        // Pre-populate content parts from AttributedString parsing
+        state.contentParts = contentParts
 
         for line in lines {
             let trimmed = line.trimmingCharacters(in: .whitespaces)
@@ -60,6 +69,11 @@ enum DocCommentParser {
     // MARK: - Parsing Helpers
 
     private static func parseLine(_ line: String, state: inout ParsingState) {
+        // Skip code block markers since AttributedString handles code blocks
+        if line.hasPrefix("```") {
+            return
+        }
+        
         // Check for section markers first
         if let newSection = detectSectionMarker(line, state: &state) {
             state.currentSection = newSection
@@ -163,6 +177,8 @@ enum DocCommentParser {
 
     // MARK: - Content Appending
 
+    // NOTE: flushCurrentText is no longer needed - contentParts is pre-populated from AttributedString
+
     private static func handleEmptyLine(state: inout ParsingState) {
         if state.currentSection == .summary, state.summary != nil {
             state.currentSection = .discussion
@@ -174,6 +190,7 @@ enum DocCommentParser {
         case .summary:
             appendToSummary(line, state: &state)
         case .discussion:
+            // Just extract discussion - don't add to currentTextLines (contentParts already complete)
             state.discussionLines.append(line)
         case .parameters:
             if state.currentParam != nil {
@@ -193,6 +210,7 @@ enum DocCommentParser {
     }
 
     private static func appendToSummary(_ line: String, state: inout ParsingState) {
+        // Just extract summary - don't add to currentTextLines (contentParts already complete)
         if state.summary == nil {
             state.summary = line
         } else {
@@ -247,11 +265,43 @@ enum DocCommentParser {
         var finalState = state
         saveCurrentParameter(state: &finalState)
 
+        // Clean Swift doc comment sections from text parts in contentParts
+        // AttributedString doesn't understand Swift syntax (- Parameter, - Returns, etc.)
+        // so we need to strip those lines from the text parts
+        let cleanedContentParts = finalState.contentParts.compactMap { part -> ContentPart? in
+            guard case .text(let text) = part else {
+                return part // Keep code blocks as-is
+            }
+
+            // Filter out Swift doc comment section markers
+            let lines = text.components(separatedBy: .newlines)
+            let filteredLines = lines.filter { line in
+                let trimmed = line.trimmingCharacters(in: .whitespaces)
+                // Remove lines that are Swift doc comment sections (with or without "- " prefix)
+                return !trimmed.hasPrefix("- Parameter") &&
+                       !trimmed.hasPrefix("- Returns") &&
+                       !trimmed.hasPrefix("- Throws") &&
+                       !trimmed.hasPrefix("- Note") &&
+                       !trimmed.hasPrefix("- Warning") &&
+                       !trimmed.hasPrefix("- Important") &&
+                       !trimmed.hasPrefix("Parameter") && // Sometimes "- " is stripped by parser
+                       !trimmed.hasPrefix("Returns:") &&
+                       !trimmed.hasPrefix("Throws:") &&
+                       !trimmed.hasPrefix("Note:") &&
+                       !trimmed.hasPrefix("Warning:") &&
+                       !trimmed.hasPrefix("Important:")
+            }
+
+            let cleaned = filteredLines.joined(separator: "\n").trimmingCharacters(in: .whitespacesAndNewlines)
+            return cleaned.isEmpty ? nil : .text(cleaned)
+        }
+
         let discussion = finalState.discussionLines.isEmpty ? nil : finalState.discussionLines.joined(separator: " ")
 
         return DocComment(
             summary: finalState.summary,
             discussion: discussion,
+            contentParts: cleanedContentParts,
             parameters: finalState.parameters,
             returns: finalState.returns,
             throws: finalState.throwsInfo,
@@ -265,6 +315,7 @@ enum DocCommentParser {
         DocComment(
             summary: nil,
             discussion: nil,
+            contentParts: [],
             parameters: [:],
             returns: nil,
             throws: nil,

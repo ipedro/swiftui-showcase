@@ -52,15 +52,10 @@ public struct ShowcaseTopic: View, Equatable {
     private func makeContentConfiguration() -> ShowcaseContentConfiguration {
         ShowcaseContentConfiguration(
             id: data.id,
-            isEmpty: data.description.isEmpty,
+            isEmpty: data.isEmpty,
             title: depth > 0 ? Text(data.title) : nil,
-            description: description(),
             orderedItems: OrderedItems(data.items)
         )
-    }
-
-    private func description() -> Text? {
-        data.description.isEmpty ? nil : Text(data.description)
     }
 
     private var showIndexList: Bool {

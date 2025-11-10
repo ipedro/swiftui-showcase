@@ -1,6 +1,6 @@
-// Documentation.swift
+// ListItem.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/9/25.
+// Created by Pedro Almeida on 11/10/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,22 +20,39 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-/// Extracted documentation from code comments.
-struct Documentation {
-    let summary: String?
-    let details: String?
-    let usageExamples: [String]
-    let notes: [String]
+import Foundation
+
+/// Represents a list (ordered or unordered) extracted from markdown.
+public struct ListItem: Identifiable, Hashable, Equatable {
+    /// The unique identifier for the list.
+    public let id = UUID()
     
-    /// Interleaved content parts (text and code blocks in original order)
-    let contentParts: [ContentPart]
+    /// The type of list.
+    public enum ListType: Equatable, Hashable {
+        case ordered
+        case unordered
+    }
     
-    /// Code blocks extracted from doc comments
-    /// @deprecated Use contentParts instead for proper interleaving
-    var codeBlocks: [String] {
-        contentParts.compactMap {
-            if case .codeBlock(let code) = $0 { return code }
-            return nil
-        }
+    /// The type of this list (ordered or unordered).
+    public let type: ListType
+    
+    /// The items in this list.
+    public let items: [String]
+    
+    public static func == (lhs: ListItem, rhs: ListItem) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    
+    /// Initializes a list item.
+    /// - Parameters:
+    ///   - type: The type of list (ordered or unordered).
+    ///   - items: The items in the list.
+    public init(type: ListType, items: [String]) {
+        self.type = type
+        self.items = items
     }
 }

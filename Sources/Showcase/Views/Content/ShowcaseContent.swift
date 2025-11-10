@@ -62,7 +62,6 @@ public struct ShowcaseContent: StyledView {
     public let id: AnyHashable
     public let isEmpty: Bool
     public let title: Optional<Text>
-    public let description: Optional<Text>
     public let orderedItems: OrderedItems
     // swiftlint:enable syntactic_sugar
 
@@ -84,15 +83,19 @@ public struct ShowcaseContent: StyledView {
                 }
             }
 
-            description
-
             // Render content items in declaration order
-            ForEach(orderedItems.items) { item in
+            ForEach(orderedItems.items, id: \.id) { item in
                 switch item {
+                case let .description(description):
+                    renderDescription(description.value)
                 case let .link(link):
                     ShowcaseLink(data: link)
                 case let .codeBlock(codeBlock):
                     ShowcaseCodeBlock(data: codeBlock)
+                case let .list(list):
+                    ShowcaseListView(data: list)
+                case let .note(note):
+                    ShowcaseNote(note: note)
                 case let .example(example):
                     ShowcaseExample(data: example)
                 case let .embed(embed):
@@ -104,6 +107,15 @@ public struct ShowcaseContent: StyledView {
             if let preferredBodyFont {
                 font = preferredBodyFont
             }
+        }
+    }
+
+    func renderDescription(_ description: String) -> Text {
+        do {
+            let attributedString = try AttributedString(styledMarkdown: description)
+            return Text(attributedString)
+        } catch {
+            return Text(description)
         }
     }
 
@@ -145,5 +157,81 @@ struct ShowcaseScrollTopButton: View {
                 .foregroundStyle(.secondary)
                 .accessibilityLabel("Scroll to top")
         }
+    }
+}
+
+// Source - https://stackoverflow.com/a/79068263
+// Posted by Joony
+// Retrieved 2025-11-10, License - CC BY-SA 4.0
+
+extension AttributedString {
+    init(styledMarkdown markdownString: String) throws {
+        // Ensure proper paragraph breaks before markdown headers
+        // Markdown parsers can collapse whitespace, so we normalize to ensure
+        // there are always TWO blank lines before headers for proper spacing
+        var normalizedMarkdown = markdownString
+        
+        // Replace any occurrence of newlines before headers with double newlines
+        // This handles: "\n## Header" -> "\n\n## Header"
+        // And: "\n\n## Header" -> "\n\n\n## Header"
+        for level in 1...6 {
+            let headerPrefix = String(repeating: "#", count: level)
+            normalizedMarkdown = normalizedMarkdown.replacingOccurrences(
+                of: "\n\(headerPrefix) ",
+                with: "\n\n\(headerPrefix) ",
+                options: .literal
+            )
+        }
+        
+        var output = try AttributedString(
+            markdown: normalizedMarkdown,
+            options: .init(
+                allowsExtendedAttributes: true,
+                interpretedSyntax: .full,
+                failurePolicy: .returnPartiallyParsedIfPossible
+            ),
+            baseURL: nil
+        )
+
+        // Style inline code (backticks)
+        for (inlineIntent, range) in output.runs[AttributeScopes.FoundationAttributes.InlinePresentationIntentAttribute.self] {
+            guard let inlineIntent = inlineIntent, inlineIntent.contains(.code) else { continue }
+            output[range].font = .system(.body, design: .monospaced)
+            output[range].backgroundColor = Color.secondary.opacity(0.15)
+            #if canImport(UIKit)
+            output[range].foregroundColor = .label
+            #elseif canImport(AppKit)
+            output[range].foregroundColor = .labelColor
+            #endif
+        }
+
+        // Style headers
+        for (intentBlock, intentRange) in output.runs[AttributeScopes.FoundationAttributes.PresentationIntentAttribute.self].reversed() {
+            guard let intentBlock = intentBlock else { continue }
+            for intent in intentBlock.components {
+                switch intent.kind {
+                case .header(level: let level):
+                    switch level {
+                    case 1:
+                        output[intentRange].font = .system(.title).bold()
+                    case 2:
+                        output[intentRange].font = .system(.title2).bold()
+                    case 3:
+                        output[intentRange].font = .system(.title3).bold()
+                    default:
+                        break
+                    }
+                default:
+                    break
+                }
+            }
+            
+            if intentRange.lowerBound != output.startIndex {
+                // Add TWO newlines (blank line) before headers for proper paragraph spacing
+                output.characters.insert(contentsOf: "\n\n", at: intentRange.lowerBound)
+            }
+        }
+
+        self = output
     }
 }
