@@ -50,10 +50,11 @@ enum APIReferenceGenerator {
         let doc = initializer.docComment
 
         // Add interleaved content parts (text and code blocks in original order)
+        // This includes the summary if present
         content.append(contentsOf: generateContentParts(doc.contentParts))
 
-        let signatureDoc = buildInitializerSignature(initializer: initializer)
-        content.append(generateDeclarationBlock(signatureDoc))
+        // Generate declaration block without doc comments
+        content.append(generateDeclarationBlock(initializer.signature))
 
         let topicContent = content.isEmpty ? "" : "\n\(content.joined(separator: "\n"))\n"
         let paramNames = extractParameterNames(from: initializer.signature)
@@ -65,10 +66,13 @@ enum APIReferenceGenerator {
         let doc = method.docComment
 
         // Add interleaved content parts (text and code blocks in original order)
+        // This includes the summary if present
         content.append(contentsOf: generateContentParts(doc.contentParts))
 
-        let signatureDoc = buildMethodSignature(method: method)
-        content.append(generateDeclarationBlock(signatureDoc))
+        // Generate declaration block without doc comments
+        let staticKeyword = method.isStatic ? "static " : ""
+        let signature = "\(staticKeyword)func \(method.signature)"
+        content.append(generateDeclarationBlock(signature))
 
         let topicContent = content.isEmpty ? "" : "\n\(content.joined(separator: "\n"))\n"
         return "Topic(\"\(method.name)\") {\(topicContent)}"
@@ -79,73 +83,16 @@ enum APIReferenceGenerator {
         let doc = property.docComment
 
         // Add interleaved content parts (text and code blocks in original order)
+        // This includes the summary if present
         content.append(contentsOf: generateContentParts(doc.contentParts))
 
-        let signatureDoc = buildPropertySignature(property: property)
-        content.append(generateDeclarationBlock(signatureDoc))
+        // Generate declaration block without doc comments
+        let staticKeyword = property.isStatic ? "static " : ""
+        let signature = "\(staticKeyword)var \(property.name): \(property.type)"
+        content.append(generateDeclarationBlock(signature))
 
         let topicContent = content.isEmpty ? "" : "\n\(content.joined(separator: "\n"))\n"
         return "Topic(\"\(property.name)\") {\(topicContent)}"
-    }
-
-    // MARK: - Signature Builders
-
-    private static func buildInitializerSignature(initializer: InitializerInfo) -> String {
-        var signature = ""
-        let doc = initializer.docComment
-
-        if let summary = doc.summary {
-            signature += "/// \(summary)\n"
-        }
-
-        for (name, desc) in doc.parameters.sorted(by: { $0.key < $1.key }) {
-            signature += "/// - Parameter \(name): \(desc)\n"
-        }
-
-        if let throwsInfo = doc.throws {
-            signature += "/// - Throws: \(throwsInfo)\n"
-        }
-
-        signature += initializer.signature
-        return signature
-    }
-
-    private static func buildMethodSignature(method: MethodInfo) -> String {
-        var signature = ""
-        let doc = method.docComment
-
-        if let summary = doc.summary {
-            signature += "/// \(summary)\n"
-        }
-
-        for (name, desc) in doc.parameters.sorted(by: { $0.key < $1.key }) {
-            signature += "/// - Parameter \(name): \(desc)\n"
-        }
-
-        if let returns = doc.returns {
-            signature += "/// - Returns: \(returns)\n"
-        }
-
-        if let throwsInfo = doc.throws {
-            signature += "/// - Throws: \(throwsInfo)\n"
-        }
-
-        let staticKeyword = method.isStatic ? "static " : ""
-        signature += "\(staticKeyword)func \(method.signature)"
-        return signature
-    }
-
-    private static func buildPropertySignature(property: PropertyInfo) -> String {
-        var signature = ""
-        let doc = property.docComment
-
-        if let summary = doc.summary {
-            signature += "/// \(summary)\n"
-        }
-
-        let staticKeyword = property.isStatic ? "static " : ""
-        signature += "\(staticKeyword)var \(property.name): \(property.type)"
-        return signature
     }
 
     // MARK: - Block Generators
@@ -212,11 +159,10 @@ enum APIReferenceGenerator {
     }
 
     private static func generateDeclarationBlock(_ signature: String) -> String {
-        let indented = signature.replacingOccurrences(of: "\n", with: "\n            ")
-        return """
+        """
         CodeBlock("Declaration") {
             \"\"\"
-            \(indented)
+            \(signature)
             \"\"\"
         }
         """

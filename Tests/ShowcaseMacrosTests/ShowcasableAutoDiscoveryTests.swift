@@ -99,8 +99,7 @@ final class ShowcasableAutoDiscoveryTests: ShowcaseMacrosTestsBase {
                                 }
                                 CodeBlock("Declaration") {
                                     """
-                                    /// Creates a new user with the given credentials
-                                            init(id: String, name: String)
+                                    init(id: String, name: String)
                                     """
                                 }
                             }
@@ -112,9 +111,7 @@ final class ShowcasableAutoDiscoveryTests: ShowcaseMacrosTestsBase {
                                 }
                                 CodeBlock("Declaration") {
                                     """
-                                    /// Validates the user's name
-                                            /// - Returns: true if the name is valid
-                                            func validateName() -> Bool
+                                    func validateName() -> Bool
                                     """
                                 }
                             }
@@ -126,8 +123,7 @@ final class ShowcasableAutoDiscoveryTests: ShowcaseMacrosTestsBase {
                                 }
                                 CodeBlock("Declaration") {
                                     """
-                                    /// Gets the user's display string
-                                            func displayString() -> String
+                                    func displayString() -> String
                                     """
                                 }
                             }
@@ -139,8 +135,7 @@ final class ShowcasableAutoDiscoveryTests: ShowcaseMacrosTestsBase {
                                 }
                                 CodeBlock("Declaration") {
                                     """
-                                    /// The user's unique identifier
-                                            var id: String
+                                    var id: String
                                     """
                                 }
                             }
@@ -152,8 +147,7 @@ final class ShowcasableAutoDiscoveryTests: ShowcaseMacrosTestsBase {
                                 }
                                 CodeBlock("Declaration") {
                                     """
-                                    /// The user's display name
-                                            var name: String
+                                    var name: String
                                     """
                                 }
                             }
@@ -363,4 +357,47 @@ final class ShowcasableAutoDiscoveryTests: ShowcaseMacrosTestsBase {
         }
         """#
     }
+
+    func testPropertyDocCommentIndentation() throws {
+        #if canImport(ShowcaseMacrosPlugin)
+            assertMacroExpansion(
+                """
+                @Showcasable
+                struct Component {
+                    /// A documented property
+                    var value: String
+                }
+                """,
+                expandedSource: #"""
+                struct Component {
+                    /// A documented property
+                    var value: String
+                }
+
+                extension Component: Showcasable {
+                    public static var showcaseTopic: Topic {
+                        Topic("Component") {
+                            Topic("value") {
+                                Description {
+                                    """
+                                    A documented property
+                                    """
+                                }
+                                CodeBlock("Declaration") {
+                                    """
+                                    var value: String
+                                    """
+                                }
+                            }
+                        }
+                    }
+                }
+                """#,
+                macros: testMacros
+            )
+        #else
+            throw XCTSkip("Macros are only supported when running tests for the host platform")
+        #endif
+    }
 }
+

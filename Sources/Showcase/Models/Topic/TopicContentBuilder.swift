@@ -135,7 +135,7 @@ public enum TopicContentBuilder {
         return content
     }
 
-    public static func buildExpression<V: View>(@ViewBuilder content: @escaping () -> V) -> Topic.Content {
+    public static func buildExpression<Content: View>(_ content: Content) -> Topic.Content {
         var result = Topic.Content()
         let example = Example(example: content)
         result.items.append(.example(example))

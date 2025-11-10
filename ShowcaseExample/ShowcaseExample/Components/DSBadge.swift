@@ -25,7 +25,9 @@ import ShowcaseMacros
 /// A badge for displaying status or counts
 @Showcasable(icon: "tag.fill")
 struct DSBadge: View {
+    /// badge text
     let text: String
+    /// badge color
     let color: Color
     
     @ShowcaseExample(title: "Success Badge")
@@ -40,6 +42,7 @@ struct DSBadge: View {
     
     @ShowcaseExample(title: "Error Badge")
     static var error: some View {
+        // error
         DSBadge(text: "Failed", color: .red)
     }
     
