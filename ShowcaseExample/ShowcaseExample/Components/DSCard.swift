@@ -23,6 +23,8 @@ import Showcase
 import ShowcaseMacros
 
 /// A card component with customizable content
+///
+/// > The card takes a generic content.
 @Showcasable(icon: "rectangle.stack", examples: [DSCardExamples.self])
 struct DSCard<Content: View>: View {
     let title: String?

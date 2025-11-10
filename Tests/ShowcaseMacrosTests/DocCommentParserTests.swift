@@ -280,4 +280,33 @@ final class DocCommentParserTests: XCTestCase {
             throw XCTSkip("Macros are only supported when running tests for the host platform")
         #endif
     }
+
+    func testParseBlockquoteNotes() throws {
+        #if canImport(ShowcaseMacrosPlugin)
+            let rawComment = """
+            A customizable card component.
+
+            > The card takes a generic content.
+
+            Use this component for displaying grouped content.
+            """
+
+            let doc = DocCommentParser.parse(rawComment)
+
+            XCTAssertEqual(doc.summary, "A customizable card component.")
+            XCTAssertEqual(doc.notes.count, 1)
+            XCTAssertEqual(doc.notes[0], "The card takes a generic content.")
+            
+            // The blockquote should be filtered out from content parts
+            let hasBlockquote = doc.contentParts.contains { part in
+                if case let .text(text) = part {
+                    return text.contains(">")
+                }
+                return false
+            }
+            XCTAssertFalse(hasBlockquote, "Blockquote should be filtered from content parts")
+        #else
+            throw XCTSkip("Macros are only supported when running tests for the host platform")
+        #endif
+    }
 }
