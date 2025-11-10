@@ -136,9 +136,9 @@ public struct ShowcaseContent: StyledView {
         case (.codeBlock, .codeBlock):
             return 20 // Medium: Multiple code blocks
         case (.example, .example),
-             (.exampleGroup, .exampleGroup),
              (.example, .exampleGroup),
-             (.exampleGroup, .example):
+             (.exampleGroup, .example),
+             (.exampleGroup, .exampleGroup):
             return 32 // Large: Maintain generous spacing for visual examples
         case (.example, .codeBlock):
             return 24 // Medium: Example followed by related code

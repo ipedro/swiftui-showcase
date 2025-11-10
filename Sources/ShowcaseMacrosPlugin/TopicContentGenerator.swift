@@ -62,7 +62,7 @@ enum TopicContentGenerator {
     // MARK: - Description Generation
 
     private static func generateDescriptions(docs: TopicDocumentation) -> [String] {
-    var content: [String] = []
+        var content: [String] = []
 
         // Handle interleaved content parts (text and code blocks in original order)
         var codeBlockIndex = 1
@@ -213,7 +213,7 @@ enum TopicContentGenerator {
         for example in docs.examples {
             let exampleTitle = "\"\(example.title)\""
             lines.append("                    Example(\(exampleTitle)) {")
-            
+
             // Add description if present
             if let description = example.description {
                 lines.append("                        Description {")
@@ -222,7 +222,7 @@ enum TopicContentGenerator {
                 lines.append("                            \"\"\"")
                 lines.append("                        }")
             }
-            
+
             lines.append("                        \(typeName).\(example.name)")
             let codeBlockLines = codeBlockLines(for: example, codeIndentCount: exampleGroupCodeIndentCount)
             lines.append(contentsOf: codeBlockLines)
@@ -237,7 +237,7 @@ enum TopicContentGenerator {
         let exampleTitle = "\"\(example.title)\""
         var lines: [String] = []
         lines.append("            Example(\(exampleTitle)) {")
-        
+
         // Add description if present
         if let description = example.description {
             lines.append("                Description {")
@@ -246,7 +246,7 @@ enum TopicContentGenerator {
             lines.append("                    \"\"\"")
             lines.append("                }")
         }
-        
+
         lines.append("                \(typeName).\(example.name)")
         let codeBlockLines = codeBlockLines(for: example, codeIndentCount: singleExampleCodeIndentCount)
         lines.append(contentsOf: codeBlockLines)

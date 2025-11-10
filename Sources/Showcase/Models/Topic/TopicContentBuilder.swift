@@ -386,7 +386,8 @@ extension Description: TopicContentConvertible {
         // Add newlines between different blocks
         if let prevId = textState.previousBlockId,
            prevId != blockId,
-           !textState.currentText.isEmpty {
+           !textState.currentText.isEmpty
+        {
             textState.currentText += "\n\n"
         }
 

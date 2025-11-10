@@ -58,7 +58,7 @@ public struct Example: Identifiable, Hashable, Equatable {
         @ViewBuilder example: @escaping () -> some View
     ) {
         self.title = title
-        self.description = nil
+        description = nil
         self.codeBlock = codeBlock
         content = { AnyView(example()) }
     }
@@ -73,8 +73,8 @@ public struct Example: Identifiable, Hashable, Equatable {
     ) {
         let builtContent = content()
         self.title = title
-        self.description = builtContent.descriptionText
-        self.codeBlock = builtContent.codeBlock
+        description = builtContent.descriptionText
+        codeBlock = builtContent.codeBlock
 
         if let viewProvider = builtContent.view {
             self.content = viewProvider
@@ -95,7 +95,7 @@ public struct Example: Identifiable, Hashable, Equatable {
         example: @escaping @autoclosure () -> any View
     ) {
         self.title = title
-        self.description = nil
+        description = nil
         self.codeBlock = codeBlock
         content = { AnyView(example()) }
     }
@@ -103,9 +103,9 @@ public struct Example: Identifiable, Hashable, Equatable {
 
 // MARK: - Content Builder
 
-extension Example {
+public extension Example {
     /// Represents the components that can be assembled inside an `Example` builder.
-    public struct Content {
+    struct Content {
         var view: (() -> AnyView)?
         var codeBlock: CodeBlock?
         var descriptions: [String] = []
@@ -121,7 +121,7 @@ extension Example {
         }
 
         init(description: String) {
-            self.descriptions = [description]
+            descriptions = [description]
         }
 
         mutating func merge(_ other: Content) {
@@ -140,7 +140,7 @@ extension Example {
             }
 
             if !other.descriptions.isEmpty {
-                self.descriptions.append(contentsOf: other.descriptions)
+                descriptions.append(contentsOf: other.descriptions)
             }
         }
 

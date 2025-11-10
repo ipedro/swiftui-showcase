@@ -28,7 +28,8 @@ extension SyntaxProtocol {
     var stringLiteralValue: String? {
         if let stringLiteral = self.as(StringLiteralExprSyntax.self),
            stringLiteral.segments.count == 1,
-           case let .stringSegment(segment) = stringLiteral.segments.first {
+           case let .stringSegment(segment) = stringLiteral.segments.first
+        {
             return segment.content.text
         }
         return nil
@@ -36,7 +37,8 @@ extension SyntaxProtocol {
 
     var integerLiteralValue: Int? {
         if let intLiteral = self.as(IntegerLiteralExprSyntax.self),
-           let value = Int(intLiteral.literal.text) {
+           let value = Int(intLiteral.literal.text)
+        {
             return value
         }
         return nil

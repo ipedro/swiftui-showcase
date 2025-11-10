@@ -186,7 +186,8 @@ struct NoteExtractionTests {
 
         if case let .note(note1) = topic.items[0],
            case let .note(note2) = topic.items[1],
-           case let .note(note3) = topic.items[2] {
+           case let .note(note3) = topic.items[2]
+        {
             #expect(note1.type == .note)
             #expect(note2.type == .warning)
             #expect(note3.type == .tip)
