@@ -19,6 +19,7 @@ disabled_rules:
   - for_where
   - implicit_getter
   - leading_whitespace
+  - trailing_newline
   - legacy_cggeometry_functions
   - legacy_constant
   - legacy_constructor
