@@ -51,7 +51,7 @@ jobs:
             -skipPackagePluginValidation \
             -skipMacroValidation;
           $(xcrun --find docc) process-archive \
-            transform-for-static-hosting /tmp/docbuild/Build/Products/Debug/Showcase.doccarchive \
+            transform-for-static-hosting /tmp/docbuild/Build/Products/Debug/ShowcaseMacros.doccarchive \
             --hosting-base-path swiftui-showcase \
             --output-path docs;
           echo "<script>window.location.href += \"/documentation/showcase\"</script>" > docs/index.html;
