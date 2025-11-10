@@ -60,8 +60,7 @@ public struct ShowcaseCodeBlock: StyledView, Equatable {
         lhs.id == rhs.id
     }
 
-    // swiftlint:disable:next syntactic_sugar
-    let title: Optional<Text>
+    let title: Text?
     let sourceCode: String
     let id: UUID
 
@@ -96,8 +95,7 @@ public struct ShowcaseCodeBlock: StyledView, Equatable {
 
 public struct ShowcaseCodeBlockConfiguration {
     var id: UUID
-    // swiftlint:disable:next syntactic_sugar
-    public var title: Optional<Text>
+    public var title: Text?
     public var sourceCode: String
 }
 

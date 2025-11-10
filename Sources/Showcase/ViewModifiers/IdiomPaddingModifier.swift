@@ -24,20 +24,21 @@ import SwiftUI
 extension View {
     @_disfavoredOverload
     func padding(
-        phone: EdgeInsets = .init(),
-        pad: EdgeInsets = .init(),
-        mac: EdgeInsets = .init(),
-        tv: EdgeInsets = .init(),
-        watch: EdgeInsets = .init(),
-        vision: EdgeInsets = .init()
+        phone: EdgeInsets? = nil,
+        pad: EdgeInsets? = nil,
+        mac: EdgeInsets? = nil,
+        tv: EdgeInsets? = nil,
+        watch: EdgeInsets? = nil,
+        vision: EdgeInsets? = nil,
+        default: EdgeInsets = .init()
     ) -> some View {
         modifier(IdiomEdgeInsetsModifier(
-            phoneInsets: phone,
-            padInsets: pad,
-            macInsets: mac,
-            tvInsets: tv,
-            watchInsets: watch,
-            visionInsets: vision
+            phoneInsets: phone ?? `default`,
+            padInsets: pad ?? `default`,
+            macInsets: mac ?? `default`,
+            tvInsets: tv ?? `default`,
+            watchInsets: watch ?? `default`,
+            visionInsets: vision ?? `default`
         ))
     }
 
@@ -49,17 +50,18 @@ extension View {
         mac: CGFloat? = nil,
         tv: CGFloat? = nil,
         watch: CGFloat? = nil,
-        vision: CGFloat? = nil
+        vision: CGFloat? = nil,
+        default: CGFloat? = nil
     ) -> some View {
         modifier(
             IdiomEdgesLengthModifier(
                 edges: edges,
-                phoneLength: phone,
-                padLength: pad,
-                macLength: mac,
-                tvLength: tv,
-                watchLength: watch,
-                visionLength: vision
+                phoneLength: phone ?? `default`,
+                padLength: pad ?? `default`,
+                macLength: mac ?? `default`,
+                tvLength: tv ?? `default`,
+                watchLength: watch ?? `default`,
+                visionLength: vision ?? `default`
             )
         )
     }

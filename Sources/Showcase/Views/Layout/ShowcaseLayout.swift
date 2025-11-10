@@ -45,14 +45,11 @@ public extension View {
 
 @StyledView
 public struct ShowcaseLayout: StyledView {
-    // swiftlint:disable syntactic_sugar
-
     /// The children views within the showcase.
-    public let children: Optional<ShowcaseTopics>
+    public let children: ShowcaseTopics?
 
     /// The index view for navigating within the showcase.
-    public let indexList: Optional<ShowcaseIndexList>
-    // swiftlint:enable syntactic_sugar
+    public let indexList: ShowcaseIndexList?
 
     /// The content view of the showcase.
     public let configuration: ShowcaseContentConfiguration
@@ -61,19 +58,19 @@ public struct ShowcaseLayout: StyledView {
     public var depth
 
     public var body: some View {
+        let showPadding = depth == .zero
         LazyVStack(alignment: .leading) {
             if depth > 0, !configuration.isEmpty {
                 Divider().padding(.bottom)
             }
-
             indexList
-
             ShowcaseContent(configuration).equatable()
-
             children
         }
-        .padding(depth == .zero ? .horizontal : [])
-        .padding(depth == .zero ? [] : .vertical)
-        .padding(mac: 20)
+        .padding(
+            showPadding ? .all : [],
+            mac: 30,
+            default: 15
+        )
     }
 }
