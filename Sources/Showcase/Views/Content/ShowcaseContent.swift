@@ -108,7 +108,15 @@ public struct ShowcaseContent: StyledView {
 
     func renderDescription(_ description: String) -> Text {
         do {
-            let attributedString = try AttributedString(styledMarkdown: description)
+            // Remove markdown code blocks (```lang\ncode\n```) before rendering
+            // Code should be in separate CodeBlock items for consistent syntax highlighting
+            let cleaned = description.replacingOccurrences(
+                of: "```[a-z]*\\n[\\s\\S]*?```",
+                with: "",
+                options: .regularExpression
+            )
+            
+            let attributedString = try AttributedString(styledMarkdown: cleaned)
             return Text(attributedString)
         }
         catch {

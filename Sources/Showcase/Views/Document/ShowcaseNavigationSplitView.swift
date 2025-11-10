@@ -101,6 +101,7 @@ public struct ShowcaseNavigationSplitView<Sidebar: View, ContentToolbar: View, D
                 data: data.chapters
             )
         }
+        .multilineTextAlignment(.leading)
         .searchable(text: $searchQuery)
         .navigationTitle(data.title)
         .toolbar(content: {

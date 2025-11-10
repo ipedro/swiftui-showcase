@@ -38,16 +38,12 @@ struct ShowcaseChapter: VersionedView {
             content: content,
             header: header
         )
-        .safeAreaInset(edge: .bottom) {
-            footer().foregroundStyle(.secondary).font(.footnote)
-        }
     }
 
     var v1Body: some View {
         Section(
             content: content,
-            header: header,
-            footer: footer
+            header: header
         )
     }
 
@@ -56,22 +52,22 @@ struct ShowcaseChapter: VersionedView {
             NavigationLink(value: topic) {
                 ShowcaseChapterRow(
                     title: topic.title,
-                    icon: topic.icon
+                    icon: topic.icon,
+                    subtitle: topic.firstDescription
                 )
                 .equatable()
-                .multilineTextAlignment(.leading)
             }
         }
     }
 
     private func header() -> some View {
-        Text(title).multilineTextAlignment(.leading)
+        Text(title)
     }
 
     @ViewBuilder
     private func footer() -> some View {
         if !description.isEmpty {
-            Text(description).multilineTextAlignment(.leading)
+            Text(description)
         }
     }
 }
@@ -79,12 +75,22 @@ struct ShowcaseChapter: VersionedView {
 struct ShowcaseChapterRow: View, Equatable {
     var title: String
     var icon: Image?
+    var subtitle: String
 
     var body: some View {
         Label {
-            Text(title).bold()
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title).bold()
+                if !subtitle.isEmpty {
+                    Text(subtitle)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(2)
+                }
+            }
         } icon: {
             icon
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 }

@@ -112,6 +112,16 @@ public struct Topic: Identifiable {
         items.isEmpty
             && (children?.isEmpty ?? true)
     }
+    
+    /// The first text description from the items array, or empty string if none exists.
+    var firstDescription: String {
+        for item in items {
+            if case .description(let description) = item {
+                return description.value
+            }
+        }
+        return ""
+    }
 }
 
 extension Topic: Hashable {

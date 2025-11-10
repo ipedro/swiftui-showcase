@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+import Foundation
 import SwiftUI
 
 /// Describes a piece of textual content that can be attached to topics or chapters.
@@ -154,7 +155,72 @@ public enum TopicContentBuilder {
 
 extension Description: TopicContentConvertible {
     public func merge(into content: inout Topic.Content) {
-        content.items.append(.description(self))
+        // Extract code blocks from markdown and split into alternating Description/CodeBlock items
+        let parts = extractCodeBlocks(from: value)
+        for part in parts {
+            content.items.append(part)
+        }
+    }
+    
+    /// Extracts markdown code blocks and returns alternating Description and CodeBlock items.
+    private func extractCodeBlocks(from text: String) -> [TopicContentItem] {
+        let pattern = "```[a-z]*\\n([\\s\\S]*?)```"
+        guard let regex = try? NSRegularExpression(pattern: pattern, options: []) else {
+            // If regex fails, return original description
+            return [.description(self)]
+        }
+        
+        let nsString = text as NSString
+        let matches = regex.matches(in: text, range: NSRange(location: 0, length: nsString.length))
+        
+        guard !matches.isEmpty else {
+            // No code blocks found - return original description
+            return [.description(self)]
+        }
+        
+        var items: [TopicContentItem] = []
+        var currentIndex = 0
+        
+        for match in matches {
+            let matchRange = match.range
+            
+            // Add text before this code block as Description
+            if currentIndex < matchRange.location {
+                let textRange = NSRange(location: currentIndex, length: matchRange.location - currentIndex)
+                let textContent = nsString.substring(with: textRange)
+                    .trimmingCharacters(in: .whitespacesAndNewlines)
+                
+                if !textContent.isEmpty {
+                    items.append(.description(Description(textContent)))
+                }
+            }
+            
+            // Extract code block content (group 1 - content between ```)
+            if match.numberOfRanges > 1 {
+                let codeRange = match.range(at: 1)
+                let code = nsString.substring(with: codeRange)
+                let trimmed = code.trimmingCharacters(in: .whitespacesAndNewlines)
+                
+                if !trimmed.isEmpty {
+                    items.append(.codeBlock(CodeBlock(text: { trimmed })))
+                }
+            }
+            
+            currentIndex = matchRange.location + matchRange.length
+        }
+        
+        // Add remaining text after last code block
+        if currentIndex < nsString.length {
+            let textRange = NSRange(location: currentIndex, length: nsString.length - currentIndex)
+            let textContent = nsString.substring(with: textRange)
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+            
+            if !textContent.isEmpty {
+                items.append(.description(Description(textContent)))
+            }
+        }
+        
+        return items.isEmpty ? [.description(self)] : items
     }
 }
 
