@@ -1,4 +1,4 @@
-// ShowcaseList.swift
+// ShowcaseListView.swift
 // Copyright (c) 2025 Pedro Almeida
 // Created by Pedro Almeida on 11/10/25.
 //

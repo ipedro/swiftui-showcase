@@ -114,8 +114,7 @@ public struct ShowcaseContent: StyledView {
         do {
             let attributedString = try AttributedString(styledMarkdown: description)
             return Text(attributedString)
-        }
-        catch {
+        } catch {
             return Text(description)
         }
     }
@@ -161,7 +160,7 @@ struct ShowcaseScrollTopButton: View {
     }
 }
 
-// Source - https://stackoverflow.com/a
+// Source - https://stackoverflow.com/a/79068263
 // Posted by Joony
 // Retrieved 2025-11-10, License - CC BY-SA 4.0
 

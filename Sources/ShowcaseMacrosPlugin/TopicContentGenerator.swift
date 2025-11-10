@@ -75,7 +75,7 @@ enum TopicContentGenerator {
                 // Skip empty text
                 guard !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { continue }
 
-                //  Multi-line text needs indentation for proper formatting in multi-line string literals
+                // Multi-line text needs indentation for proper formatting in multi-line string literals
                 // In Swift multi-line strings: """ first line has no indent requirement,
                 // but subsequent lines must have at least as much indent as the closing """
                 let lines = text.components(separatedBy: .newlines)

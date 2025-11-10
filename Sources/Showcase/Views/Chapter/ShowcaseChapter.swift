@@ -63,13 +63,6 @@ struct ShowcaseChapter: VersionedView {
     private func header() -> some View {
         Text(title)
     }
-
-    @ViewBuilder
-    private func footer() -> some View {
-        if !description.isEmpty {
-            Text(description)
-        }
-    }
 }
 
 struct ShowcaseChapterRow: View, Equatable {
