@@ -509,7 +509,7 @@ extension Topic {
             """
         }
         
-        CodeBlock("Adding an Example") {
+        CodeBlock("Basic Example") {
             """
             Topic("Button") {
                 Description("A tappable control")
@@ -524,7 +524,75 @@ extension Topic {
             """
         }
         
-        Example {
+        Description {
+            """
+            **New in Showcase:** You can now include a `CodeBlock` directly inside an `Example` \
+            to show both the live preview and its source code together. This creates an integrated \
+            view with a collapsible code section.
+            """
+        }
+        
+        CodeBlock("Example with Inline Code") {
+            """
+            Example("Interactive Button") {
+                Button("Tap Me") {
+                    print("Tapped!")
+                }
+                .buttonStyle(.borderedProminent)
+                
+                CodeBlock("Source") {
+                    \"\"\"
+                    Button("Tap Me") {
+                        print("Tapped!")
+                    }
+                    .buttonStyle(.borderedProminent)
+                    \"\"\"
+                }
+            }
+            """
+        }
+        
+        Description {
+            """
+            You can also add `Description` blocks inside examples to provide additional context:
+            """
+        }
+        
+        CodeBlock("Example with Description") {
+            """
+            Example("Primary Button") {
+                Description {
+                    \"\"\"
+                    This button style should be used for the main action on a screen.
+                    It features high contrast and prominence.
+                    \"\"\"
+                }
+                
+                Button("Continue") {
+                    print("Primary action")
+                }
+                .buttonStyle(.borderedProminent)
+                
+                CodeBlock("Source") {
+                    \"\"\"
+                    Button("Continue") {
+                        print("Primary action")
+                    }
+                    .buttonStyle(.borderedProminent)
+                    \"\"\"
+                }
+            }
+            """
+        }
+        
+        Example("Live Preview") {
+            Description {
+                """
+                This example demonstrates a button with a description. The description \
+                provides additional context about the component's intended use.
+                """
+            }
+            
             VStack(spacing: 20) {
                 Text("Live Example:")
                     .font(.headline)

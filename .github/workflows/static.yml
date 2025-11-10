@@ -45,7 +45,7 @@ jobs:
       
       - name: Build DocC
         run: |
-          xcodebuild docbuild -scheme Showcase \
+          xcodebuild docbuild -scheme ShowcaseMacros \
             -derivedDataPath /tmp/docbuild \
             -destination 'platform=macOS' \
             -skipPackagePluginValidation \

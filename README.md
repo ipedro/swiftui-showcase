@@ -103,6 +103,22 @@ struct ContentView: View {
                             Button("Tap me") {}
                         }
                     }
+                    
+                    // New: Examples can include inline code blocks
+                    Topic("Advanced Button") {
+                        Example("With Source Code") {
+                            Button("Submit") { }
+                                .buttonStyle(.borderedProminent)
+                            
+                            // Show the source code inline
+                            CodeBlock("Implementation") {
+                                """
+                                Button("Submit") { }
+                                    .buttonStyle(.borderedProminent)
+                                """
+                            }
+                        }
+                    }
                 }
             )
             .navigationTitle("Component Showcase")
