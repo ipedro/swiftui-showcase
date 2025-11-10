@@ -1,6 +1,6 @@
 // ShowcaseContent.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/9/25.
+// Created by Pedro Almeida on 11/10/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -170,11 +170,11 @@ extension AttributedString {
         // Markdown parsers can collapse whitespace, so we normalize to ensure
         // there are always TWO blank lines before headers for proper spacing
         var normalizedMarkdown = markdownString
-        
+
         // Replace any occurrence of newlines before headers with double newlines
         // This handles: "\n## Header" -> "\n\n## Header"
         // And: "\n\n## Header" -> "\n\n\n## Header"
-        for level in 1...6 {
+        for level in 1 ... 6 {
             let headerPrefix = String(repeating: "#", count: level)
             normalizedMarkdown = normalizedMarkdown.replacingOccurrences(
                 of: "\n\(headerPrefix) ",
@@ -182,7 +182,7 @@ extension AttributedString {
                 options: .literal
             )
         }
-        
+
         var output = try AttributedString(
             markdown: normalizedMarkdown,
             options: .init(
@@ -199,9 +199,9 @@ extension AttributedString {
             output[range].font = .system(.body, design: .monospaced)
             output[range].backgroundColor = Color.secondary.opacity(0.15)
             #if canImport(UIKit)
-            output[range].foregroundColor = .label
+                output[range].foregroundColor = .label
             #elseif canImport(AppKit)
-            output[range].foregroundColor = .labelColor
+                output[range].foregroundColor = .labelColor
             #endif
         }
 
@@ -210,7 +210,7 @@ extension AttributedString {
             guard let intentBlock = intentBlock else { continue }
             for intent in intentBlock.components {
                 switch intent.kind {
-                case .header(level: let level):
+                case let .header(level: level):
                     switch level {
                     case 1:
                         output[intentRange].font = .system(.title).bold()
@@ -225,7 +225,7 @@ extension AttributedString {
                     break
                 }
             }
-            
+
             if intentRange.lowerBound != output.startIndex {
                 // Add TWO newlines (blank line) before headers for proper paragraph spacing
                 output.characters.insert(contentsOf: "\n\n", at: intentRange.lowerBound)

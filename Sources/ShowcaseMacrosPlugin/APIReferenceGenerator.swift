@@ -1,6 +1,6 @@
 // APIReferenceGenerator.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/9/25.
+// Created by Pedro Almeida on 11/10/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -163,7 +163,7 @@ enum APIReferenceGenerator {
                 index == 0 ? line : "            \(line)"
             }.joined(separator: "\n")
         }
-        
+
         return """
         Description {
             \"\"\"
@@ -172,9 +172,9 @@ enum APIReferenceGenerator {
         }
         """
     }
-    
+
     // MARK: - Content Part Generators
-    
+
     private static func generateContentParts(_ parts: [ContentPart]) -> [String] {
         var result: [String] = []
         var codeBlockIndex = 1
@@ -182,24 +182,24 @@ enum APIReferenceGenerator {
             if case .codeBlock = $0 { return true }
             return false
         }.count
-        
+
         for part in parts {
             switch part {
-            case .text(let text):
+            case let .text(text):
                 // Skip empty text
                 guard !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { continue }
                 result.append(generateDescriptionBlock(text))
-                
-            case .codeBlock(let code):
+
+            case let .codeBlock(code):
                 let title = totalCodeBlocks == 1 ? "Example" : "Example \(codeBlockIndex)"
                 result.append(generateCodeBlock(title: title, code: code))
                 codeBlockIndex += 1
             }
         }
-        
+
         return result
     }
-    
+
     private static func generateCodeBlock(title: String, code: String) -> String {
         let indented = code.replacingOccurrences(of: "\n", with: "\n            ")
         return """

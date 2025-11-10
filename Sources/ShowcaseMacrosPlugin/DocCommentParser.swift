@@ -1,6 +1,6 @@
 // DocCommentParser.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/9/25.
+// Created by Pedro Almeida on 11/10/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -73,7 +73,7 @@ enum DocCommentParser {
         if line.hasPrefix("```") {
             return
         }
-        
+
         // Check for section markers first
         if let newSection = detectSectionMarker(line, state: &state) {
             state.currentSection = newSection
@@ -269,7 +269,7 @@ enum DocCommentParser {
         // AttributedString doesn't understand Swift syntax (- Parameter, - Returns, etc.)
         // so we need to strip those lines from the text parts
         let cleanedContentParts = finalState.contentParts.compactMap { part -> ContentPart? in
-            guard case .text(let text) = part else {
+            guard case let .text(text) = part else {
                 return part // Keep code blocks as-is
             }
 
@@ -279,17 +279,17 @@ enum DocCommentParser {
                 let trimmed = line.trimmingCharacters(in: .whitespaces)
                 // Remove lines that are Swift doc comment sections (with or without "- " prefix)
                 return !trimmed.hasPrefix("- Parameter") &&
-                       !trimmed.hasPrefix("- Returns") &&
-                       !trimmed.hasPrefix("- Throws") &&
-                       !trimmed.hasPrefix("- Note") &&
-                       !trimmed.hasPrefix("- Warning") &&
-                       !trimmed.hasPrefix("- Important") &&
-                       !trimmed.hasPrefix("Parameter") && // Sometimes "- " is stripped by parser
-                       !trimmed.hasPrefix("Returns:") &&
-                       !trimmed.hasPrefix("Throws:") &&
-                       !trimmed.hasPrefix("Note:") &&
-                       !trimmed.hasPrefix("Warning:") &&
-                       !trimmed.hasPrefix("Important:")
+                    !trimmed.hasPrefix("- Returns") &&
+                    !trimmed.hasPrefix("- Throws") &&
+                    !trimmed.hasPrefix("- Note") &&
+                    !trimmed.hasPrefix("- Warning") &&
+                    !trimmed.hasPrefix("- Important") &&
+                    !trimmed.hasPrefix("Parameter") && // Sometimes "- " is stripped by parser
+                    !trimmed.hasPrefix("Returns:") &&
+                    !trimmed.hasPrefix("Throws:") &&
+                    !trimmed.hasPrefix("Note:") &&
+                    !trimmed.hasPrefix("Warning:") &&
+                    !trimmed.hasPrefix("Important:")
             }
 
             let cleaned = filteredLines.joined(separator: "\n").trimmingCharacters(in: .whitespacesAndNewlines)

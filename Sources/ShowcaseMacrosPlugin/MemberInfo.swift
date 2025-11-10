@@ -1,6 +1,6 @@
 // MemberInfo.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/9/25.
+// Created by Pedro Almeida on 11/10/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -92,12 +92,12 @@ struct DocComment {
 
     /// Important callouts
     let important: [String]
-    
+
     /// Code blocks extracted from doc comments (e.g., ```swift ... ```)
     /// @deprecated Use contentParts instead for proper interleaving
     var codeBlocks: [String] {
         contentParts.compactMap {
-            if case .codeBlock(let code) = $0 { return code }
+            if case let .codeBlock(code) = $0 { return code }
             return nil
         }
     }

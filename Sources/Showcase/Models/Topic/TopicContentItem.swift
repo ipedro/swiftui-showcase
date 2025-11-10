@@ -1,6 +1,6 @@
 // TopicContentItem.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/9/25.
+// Created by Pedro Almeida on 11/10/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -45,13 +45,13 @@ import Foundation
 public enum TopicContentItem: Identifiable, Equatable {
     /// A text description or explanation.
     case description(Description)
-    
+
     /// An external link to web content.
     case link(ExternalLink)
 
     /// A syntax-highlighted code block.
     case codeBlock(CodeBlock)
-    
+
     /// A list (ordered or unordered).
     case list(ListItem)
 
@@ -60,7 +60,7 @@ public enum TopicContentItem: Identifiable, Equatable {
 
     /// A live example of a SwiftUI view.
     case example(Example)
-    
+
     /// A special callout for notes, warnings, deprecations, etc.
     case note(Note)
 

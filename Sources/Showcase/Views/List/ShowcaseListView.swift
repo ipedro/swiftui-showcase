@@ -25,11 +25,11 @@ import SwiftUI
 /// A view that displays a markdown list (ordered or unordered).
 public struct ShowcaseListView: View {
     let data: ListItem
-    
+
     public init(data: ListItem) {
         self.data = data
     }
-    
+
     public var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             ForEach(Array(data.items.enumerated()), id: \.offset) { index, item in
@@ -38,7 +38,7 @@ public struct ShowcaseListView: View {
                         .font(.body.monospacedDigit())
                         .foregroundStyle(.secondary)
                         .frame(minWidth: 24, alignment: .trailing)
-                    
+
                     renderItem(item)
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
@@ -46,7 +46,7 @@ public struct ShowcaseListView: View {
         }
         .padding(.leading, 8)
     }
-    
+
     private func renderItem(_ text: String) -> Text {
         do {
             let attributed = try AttributedString(styledMarkdown: text)
@@ -55,7 +55,7 @@ public struct ShowcaseListView: View {
             return Text(text)
         }
     }
-    
+
     private func marker(for index: Int) -> String {
         switch data.type {
         case .ordered:

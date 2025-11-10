@@ -26,27 +26,27 @@ import Foundation
 public struct ListItem: Identifiable, Hashable, Equatable {
     /// The unique identifier for the list.
     public let id = UUID()
-    
+
     /// The type of list.
     public enum ListType: Equatable, Hashable {
         case ordered
         case unordered
     }
-    
+
     /// The type of this list (ordered or unordered).
     public let type: ListType
-    
+
     /// The items in this list.
     public let items: [String]
-    
+
     public static func == (lhs: ListItem, rhs: ListItem) -> Bool {
         lhs.id == rhs.id
     }
-    
+
     public func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
-    
+
     /// Initializes a list item.
     /// - Parameters:
     ///   - type: The type of list (ordered or unordered).

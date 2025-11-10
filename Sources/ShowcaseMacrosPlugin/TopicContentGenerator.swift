@@ -1,6 +1,6 @@
 // TopicContentGenerator.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/9/25.
+// Created by Pedro Almeida on 11/10/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -71,7 +71,7 @@ enum TopicContentGenerator {
 
         for part in docs.documentation.contentParts {
             switch part {
-            case .text(let text):
+            case let .text(text):
                 // Skip empty text
                 guard !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { continue }
 
@@ -90,9 +90,9 @@ enum TopicContentGenerator {
                         if index == 0 {
                             return line
                         } else if line.isEmpty {
-                            return ""  // Blank lines stay blank, no trailing spaces
+                            return "" // Blank lines stay blank, no trailing spaces
                         } else {
-                            return "    \(line)"  // Add 4 spaces to non-blank lines
+                            return "    \(line)" // Add 4 spaces to non-blank lines
                         }
                     }.joined(separator: "\n")
                 }
@@ -105,7 +105,7 @@ enum TopicContentGenerator {
                 }
                 """)
 
-            case .codeBlock(let code):
+            case let .codeBlock(code):
                 let title = totalCodeBlocks == 1 ? "Example" : "Example \(codeBlockIndex)"
                 content.append(generateCodeBlock(title: title, code: code))
                 codeBlockIndex += 1
@@ -125,7 +125,7 @@ enum TopicContentGenerator {
         // as much indentation as the closing """. Since closing """ is at 4 spaces,
         // we need to add 4 spaces to every line while preserving relative indentation.
         let indentedCode = code.components(separatedBy: .newlines)
-            .map { "    \($0)" }  // Add 4 spaces to preserve relative indentation
+            .map { "    \($0)" } // Add 4 spaces to preserve relative indentation
             .joined(separator: "\n")
 
         return "CodeBlock(\"\(title)\") {\n    \"\"\"\n\(indentedCode)\n    \"\"\"\n}"

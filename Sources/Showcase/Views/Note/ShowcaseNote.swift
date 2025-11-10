@@ -25,7 +25,7 @@ import SwiftUI
 /// A view that displays a note callout with appropriate styling.
 struct ShowcaseNote: View {
     let note: Note
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             // Title with icon
@@ -33,12 +33,12 @@ struct ShowcaseNote: View {
                 Image(systemName: note.type.systemImage)
                     .font(.headline)
                     .foregroundStyle(note.type.color)
-                
+
                 Text(note.type.title)
                     .font(.headline)
                     .foregroundStyle(note.type.color)
             }
-            
+
             // Content with markdown support
             Text(renderContent())
                 .font(.body)
@@ -55,7 +55,7 @@ struct ShowcaseNote: View {
                 .stroke(note.type.borderColor, lineWidth: 1)
         )
     }
-    
+
     private func renderContent() -> AttributedString {
         do {
             return try AttributedString(styledMarkdown: note.content)
@@ -85,7 +85,7 @@ extension Note.NoteType {
             return "lightbulb.fill"
         }
     }
-    
+
     /// The foreground color for this note type
     var color: Color {
         switch self {
@@ -103,12 +103,12 @@ extension Note.NoteType {
             return .green
         }
     }
-    
+
     /// The background color for this note type
     var backgroundColor: Color {
         color.opacity(0.1)
     }
-    
+
     /// The border color for this note type
     var borderColor: Color {
         color.opacity(0.3)
@@ -138,13 +138,13 @@ extension Note.NoteType {
                 The `oldMethod()` API is deprecated. Use `newMethod()` instead.
                 """
             })
-            
+
             ShowcaseNote(note: Note(.warning) {
                 """
                 **Always** call `cleanup()` before deallocating resources.
                 """
             })
-            
+
             ShowcaseNote(note: Note(.tip) {
                 """
                 For better performance, consider using `LazyVStack` for long lists.

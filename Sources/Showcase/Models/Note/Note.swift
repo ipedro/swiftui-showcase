@@ -33,7 +33,7 @@ import Foundation
 ///     Note(.warning) {
 ///         "This API is deprecated. Use NewAPI instead."
 ///     }
-///     
+///
 ///     Note(.note) {
 ///         "Remember to call cleanup() when done."
 ///     }
@@ -42,10 +42,10 @@ import Foundation
 public struct Note: Equatable, Hashable, Sendable {
     /// The type of note, which affects its visual appearance.
     public let type: NoteType
-    
+
     /// The content of the note.
     public let content: String
-    
+
     /// Creates a note with the specified type and content.
     ///
     /// - Parameters:
@@ -58,27 +58,27 @@ public struct Note: Equatable, Hashable, Sendable {
         self.type = type
         self.content = content()
     }
-    
+
     /// The different types of notes with their semantic meanings.
     public enum NoteType: String, Equatable, Hashable, Sendable, CaseIterable {
         /// General informational note
         case note = "Note"
-        
+
         /// Important information that requires attention
         case important = "Important"
-        
+
         /// Warning about potential issues or risks
         case warning = "Warning"
-        
+
         /// Deprecated functionality
         case deprecated = "Deprecated"
-        
+
         /// Experimental or beta features
         case experimental = "Experimental"
-        
+
         /// Tips and best practices
         case tip = "Tip"
-        
+
         /// Returns the display title for the note type
         public var title: String {
             rawValue

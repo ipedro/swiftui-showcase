@@ -1,6 +1,6 @@
 // Topic.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/9/25.
+// Created by Pedro Almeida on 11/10/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -112,11 +112,11 @@ public struct Topic: Identifiable {
         items.isEmpty
             && (children?.isEmpty ?? true)
     }
-    
+
     /// The first text description from the items array, or empty string if none exists.
     var firstDescription: String {
         for item in items {
-            if case .description(let description) = item {
+            if case let .description(description) = item {
                 return description.value
             }
         }
@@ -155,7 +155,7 @@ extension Topic {
         let isMatch = title.localizedCaseInsensitiveContains(query)
             || items.contains(where: { item in
                 switch item {
-                case .description(let description):
+                case let .description(description):
                     return description.value.localizedCaseInsensitiveContains(query)
                 case let .example(example):
                     return example.title?.localizedCaseInsensitiveContains(query) == true
@@ -165,9 +165,9 @@ extension Topic {
                 case let .link(link):
                     return link.url.absoluteString.localizedCaseInsensitiveContains(query)
                         || link.name.description.localizedCaseInsensitiveContains(query)
-                case .list(let list):
+                case let .list(list):
                     return list.items.contains(where: { $0.localizedCaseInsensitiveContains(query) })
-                case .note(let note):
+                case let .note(note):
                     return note.content.localizedCaseInsensitiveContains(query)
                         || note.type.title.localizedCaseInsensitiveContains(query)
                 case .embed:

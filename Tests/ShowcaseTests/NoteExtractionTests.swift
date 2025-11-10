@@ -25,9 +25,8 @@ import Testing
 
 @Suite("Note Extraction from Markdown")
 struct NoteExtractionTests {
-    
     @Test("Extract note from blockquote with colon")
-    func testBlockquoteNoteWithColon() {
+    func blockquoteNoteWithColon() {
         let topic = Topic("Test") {
             Description {
                 """
@@ -35,9 +34,9 @@ struct NoteExtractionTests {
                 """
             }
         }
-        
+
         #expect(topic.items.count == 1)
-        
+
         if case let .note(note) = topic.items[0] {
             #expect(note.type == .note)
             #expect(note.content == "This is a note from blockquote")
@@ -45,9 +44,9 @@ struct NoteExtractionTests {
             Issue.record("Expected note to be extracted")
         }
     }
-    
+
     @Test("Extract note from blockquote without colon")
-    func testBlockquoteNoteWithoutColon() {
+    func blockquoteNoteWithoutColon() {
         let topic = Topic("Test") {
             Description {
                 """
@@ -55,9 +54,9 @@ struct NoteExtractionTests {
                 """
             }
         }
-        
+
         #expect(topic.items.count == 1)
-        
+
         if case let .note(note) = topic.items[0] {
             #expect(note.type == .warning)
             #expect(note.content == "Always check before proceeding")
@@ -65,9 +64,9 @@ struct NoteExtractionTests {
             Issue.record("Expected warning note")
         }
     }
-    
+
     @Test("Extract note from list item syntax")
-    func testListItemNote() {
+    func listItemNote() {
         let topic = Topic("Test") {
             Description {
                 """
@@ -75,9 +74,9 @@ struct NoteExtractionTests {
                 """
             }
         }
-        
+
         #expect(topic.items.count == 1)
-        
+
         if case let .note(note) = topic.items[0] {
             #expect(note.type == .important)
             #expect(note.content == "Critical information here")
@@ -85,31 +84,31 @@ struct NoteExtractionTests {
             Issue.record("Expected important note")
         }
     }
-    
+
     @Test("Extract all note types")
-    func testAllNoteTypes() {
+    func allNoteTypes() {
         let topic = Topic("Test") {
             Description {
                 """
                 > Note: Note content
-                
+
                 > Important: Important content
-                
+
                 > Warning: Warning content
-                
+
                 > Deprecated: Deprecated content
-                
+
                 > Experimental: Experimental content
-                
+
                 > Tip: Tip content
                 """
             }
         }
-        
+
         #expect(topic.items.count == 6)
-        
+
         let expectedTypes: [Note.NoteType] = [.note, .important, .warning, .deprecated, .experimental, .tip]
-        
+
         for (index, expectedType) in expectedTypes.enumerated() {
             if case let .note(note) = topic.items[index] {
                 #expect(note.type == expectedType)
@@ -118,21 +117,21 @@ struct NoteExtractionTests {
             }
         }
     }
-    
+
     @Test("Mixed content with notes and descriptions")
-    func testMixedContentWithNotes() {
+    func mixedContentWithNotes() {
         let topic = Topic("Test") {
             Description {
                 """
                 First paragraph of regular text.
-                
+
                 > Warning: Be careful here
-                
+
                 Second paragraph after the note.
                 """
             }
         }
-        
+
         print("=== Mixed content with notes ===")
         print("Items: \(topic.items.count)")
         for (i, item) in topic.items.enumerated() {
@@ -145,13 +144,13 @@ struct NoteExtractionTests {
                 print("[\(i)] Other")
             }
         }
-        
+
         // Should have: note, then description with both paragraphs
         #expect(topic.items.count >= 1) // At least the note
     }
-    
+
     @Test("Notes with markdown formatting in content")
-    func testNotesWithMarkdownContent() {
+    func notesWithMarkdownContent() {
         let topic = Topic("Test") {
             Description {
                 """
@@ -159,7 +158,7 @@ struct NoteExtractionTests {
                 """
             }
         }
-        
+
         if case let .note(note) = topic.items[0] {
             #expect(note.type == .tip)
             #expect(note.content.contains("`Button`"))
@@ -168,26 +167,27 @@ struct NoteExtractionTests {
             Issue.record("Expected tip note with markdown")
         }
     }
-    
+
     @Test("Multiple notes in sequence")
-    func testMultipleNotesInSequence() {
+    func multipleNotesInSequence() {
         let topic = Topic("Test") {
             Description {
                 """
                 > Note: First note
-                
+
                 > Warning: Second note
-                
+
                 > Tip: Third note
                 """
             }
         }
-        
+
         #expect(topic.items.count == 3)
-        
+
         if case let .note(note1) = topic.items[0],
            case let .note(note2) = topic.items[1],
-           case let .note(note3) = topic.items[2] {
+           case let .note(note3) = topic.items[2]
+        {
             #expect(note1.type == .note)
             #expect(note2.type == .warning)
             #expect(note3.type == .tip)
@@ -195,9 +195,9 @@ struct NoteExtractionTests {
             Issue.record("Expected three notes in sequence")
         }
     }
-    
+
     @Test("Note with multi-line content")
-    func testMultiLineNote() {
+    func multiLineNote() {
         let topic = Topic("Test") {
             Description {
                 """
@@ -206,7 +206,7 @@ struct NoteExtractionTests {
                 """
             }
         }
-        
+
         if case let .note(note) = topic.items[0] {
             #expect(note.type == .important)
             // Content should include multi-line text
@@ -215,23 +215,23 @@ struct NoteExtractionTests {
             Issue.record("Expected multi-line note")
         }
     }
-    
+
     @Test("Note extraction preserves order with code blocks")
-    func testNoteWithCodeBlock() {
+    func noteWithCodeBlock() {
         let topic = Topic("Test") {
             Description {
                 """
                 > Warning: Be careful
-                
+
                 ```swift
                 func example() {}
                 ```
-                
+
                 > Tip: Best practice here
                 """
             }
         }
-        
+
         print("=== Note with code block ===")
         print("Items: \(topic.items.count)")
         for (i, item) in topic.items.enumerated() {
@@ -246,24 +246,24 @@ struct NoteExtractionTests {
                 print("[\(i)] Other")
             }
         }
-        
+
         // Should have notes and code block extracted
         #expect(topic.items.count >= 2)
     }
-    
+
     @Test("Note extraction preserves order with lists")
-    func testNoteWithList() {
+    func noteWithList() {
         let topic = Topic("Test") {
             Description {
                 """
                 > Note: Important points below
-                
+
                 - Point 1
                 - Point 2
                 """
             }
         }
-        
+
         print("=== Note with list ===")
         print("Items: \(topic.items.count)")
         for (i, item) in topic.items.enumerated() {
@@ -278,13 +278,13 @@ struct NoteExtractionTests {
                 print("[\(i)] Other")
             }
         }
-        
+
         // Should have note and list extracted
         #expect(topic.items.count >= 2)
     }
-    
+
     @Test("Regular list items not confused with notes")
-    func testRegularListNotExtractedAsNote() {
+    func regularListNotExtractedAsNote() {
         let topic = Topic("Test") {
             Description {
                 """
@@ -294,34 +294,34 @@ struct NoteExtractionTests {
                 """
             }
         }
-        
+
         // Should have description and list, no notes
         let hasNote = topic.items.contains { item in
             if case .note = item { return true }
             return false
         }
-        
+
         #expect(!hasNote, "Regular list items should not be extracted as notes")
     }
-    
+
     @Test("Bold text in description not extracted as note")
-    func testBoldTextNotExtractedAsNote() {
+    func boldTextNotExtractedAsNote() {
         let topic = Topic("Test") {
             Description {
                 """
                 This has **bold text** but should not be a note.
-                
+
                 Also Important word in sentence.
                 """
             }
         }
-        
+
         // Should only have description, no notes
         let hasNote = topic.items.contains { item in
             if case .note = item { return true }
             return false
         }
-        
+
         #expect(!hasNote, "Bold text without blockquote should not become a note")
     }
 }
