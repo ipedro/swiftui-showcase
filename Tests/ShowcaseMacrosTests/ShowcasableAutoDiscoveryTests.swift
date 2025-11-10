@@ -363,4 +363,53 @@ final class ShowcasableAutoDiscoveryTests: ShowcaseMacrosTestsBase {
         }
         """#
     }
+
+    func testPropertyDocCommentIndentation() throws {
+        #if canImport(ShowcaseMacrosPlugin)
+            assertMacroExpansion(
+                """
+                @Showcasable
+                struct Component {
+                    /// A documented property
+                    var value: String
+                }
+                """,
+                expandedSource: #"""
+                struct Component {
+                    /// A documented property
+                    var value: String
+                }
+
+                extension Component: Showcasable {
+                    public static var showcaseTopic: Topic {
+                        Topic("Component") {
+                            CodeBlock("Type Relationships") {
+                                """
+                                struct Component
+                                """
+                            }
+                            Topic("value") {
+                                Description {
+                                    """
+                                    A documented property
+                                    """
+                                }
+                                CodeBlock("Declaration") {
+                                    """
+                                    /// A documented property
+                                    var value: String
+                                    """
+                                }
+                            }
+                        }
+                    }
+                }
+                """#,
+                macros: testMacros
+            )
+        #else
+            throw XCTSkip("Macros are only supported when running tests for the host platform")
+        #endif
+    }
 }
+
