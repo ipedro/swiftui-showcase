@@ -459,6 +459,12 @@ extension Example: TopicContentConvertible {
     }
 }
 
+extension ExampleGroup: TopicContentConvertible {
+    public func merge(into content: inout Topic.Content) {
+        content.items.append(.exampleGroup(self))
+    }
+}
+
 extension CodeBlock: TopicContentConvertible {
     public func merge(into content: inout Topic.Content) {
         content.items.append(.codeBlock(self))

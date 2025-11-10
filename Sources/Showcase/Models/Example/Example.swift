@@ -33,6 +33,9 @@ public struct Example: Identifiable, Hashable, Equatable {
     /// Optional title for the example.
     public var title: String?
 
+    /// Optional description for the example.
+    public var description: String?
+
     /// Optional code block to display alongside the example.
     public var codeBlock: CodeBlock?
 
@@ -47,14 +50,17 @@ public struct Example: Identifiable, Hashable, Equatable {
     /// Initializes an example with a title and view builder.
     /// - Parameters:
     ///   - title: Optional title for the example.
+    ///   - description: Optional description for the example.
     ///   - codeBlock: Optional code block to show the implementation.
     ///   - example: A content view representing the example.
     public init(
         _ title: String? = nil,
+        description: String? = nil,
         codeBlock: CodeBlock? = nil,
         @ViewBuilder example: @escaping () -> some View
     ) {
         self.title = title
+        self.description = description
         self.codeBlock = codeBlock
         content = { example() }
     }
@@ -62,14 +68,17 @@ public struct Example: Identifiable, Hashable, Equatable {
     /// Initializes an example with a title and autoclosure view.
     /// - Parameters:
     ///   - title: Optional title for the example.
+    ///   - description: Optional description for the example.
     ///   - codeBlock: Optional code block to show the implementation.
     ///   - example: A content view representing the example.
     init(
         _ title: String? = nil,
+        description: String? = nil,
         codeBlock: CodeBlock? = nil,
         example: @escaping @autoclosure () -> any View
     ) {
         self.title = title
+        self.description = description
         self.codeBlock = codeBlock
         content = example
     }

@@ -75,38 +75,86 @@ public struct ShowcaseContent: StyledView {
     private var preferredBodyFont
 
     public var body: some View {
-        VStack(alignment: .leading, spacing: 30) {
+        VStack(alignment: .leading, spacing: 0) {
             HStack(alignment: .firstTextBaseline) {
                 title.font(preferredTitleFont ?? titleStyle(depth: depth))
                 if depth > 0 {
                     ShowcaseScrollTopButton()
                 }
             }
+            .padding(.bottom, title != nil ? 30 : 0)
 
-            // Render content items in declaration order
-            ForEach(orderedItems.items, id: \.id) { item in
-                switch item {
-                case let .description(description):
-                    renderDescription(description.value)
-                case let .link(link):
-                    ShowcaseLink(data: link)
-                case let .codeBlock(codeBlock):
-                    ShowcaseCodeBlock(data: codeBlock)
-                case let .list(list):
-                    ShowcaseListView(data: list)
-                case let .note(note):
-                    ShowcaseNote(note: note)
-                case let .example(example):
-                    ShowcaseExample(data: example)
-                case let .embed(embed):
-                    ShowcaseEmbed(data: embed)
+            // Render content items with adaptive spacing
+            ForEach(Array(orderedItems.items.enumerated()), id: \.element.id) { index, item in
+                let previousItem = index > 0 ? orderedItems.items[index - 1] : nil
+                let spacing = adaptiveSpacing(for: item, after: previousItem)
+                
+                Group {
+                    switch item {
+                    case let .description(description):
+                        renderDescription(description.value)
+                    case let .link(link):
+                        ShowcaseLink(data: link)
+                    case let .codeBlock(codeBlock):
+                        ShowcaseCodeBlock(data: codeBlock)
+                    case let .list(list):
+                        ShowcaseListView(data: list)
+                    case let .note(note):
+                        ShowcaseNote(note: note)
+                    case let .example(example):
+                        ShowcaseExample(data: example)
+                    case let .exampleGroup(group):
+                        ShowcaseExampleGroup(examples: group.examples, title: group.title)
+                    case let .embed(embed):
+                        ShowcaseEmbed(data: embed)
+                    }
                 }
+                .padding(.top, spacing)
             }
         }
         .transformEnvironment(\.font) { font in
             if let preferredBodyFont {
                 font = preferredBodyFont
             }
+        }
+    }
+    
+    /// Calculates adaptive spacing between content items based on their types
+    private func adaptiveSpacing(for item: TopicContentItem, after previous: TopicContentItem?) -> CGFloat {
+        guard let previous else { return 0 }
+        
+        // Define spacing rules based on content relationships
+        switch (previous, item) {
+        case (.description, .codeBlock):
+            return 16 // Tight: Description followed by related code
+        case (.description, .list):
+            return 12 // Tight: Description followed by list
+        case (.description, .note):
+            return 20 // Medium: Note needs some breathing room
+        case (.codeBlock, .description):
+            return 24 // Medium: Code block followed by explanation
+        case (.codeBlock, .codeBlock):
+            return 20 // Medium: Multiple code blocks
+        case (.example, .example):
+            return 32 // Large: Separate visual examples clearly
+        case (.exampleGroup, .exampleGroup):
+            return 32 // Large: Separate example groups clearly
+        case (.example, .codeBlock):
+            return 24 // Medium: Example followed by related code
+        case (_, .example):
+            return 32 // Large: Examples need space before them
+        case (_, .exampleGroup):
+            return 32 // Large: Example groups need space before them
+        case (.note, _):
+            return 24 // Medium: Space after notes
+        case (_, .note):
+            return 24 // Medium: Space before notes
+        case (.list, .list):
+            return 20 // Medium: Multiple lists
+        case (.description, .description):
+            return 20 // Medium: Paragraph spacing
+        default:
+            return 24 // Default spacing
         }
     }
 
