@@ -134,14 +134,14 @@ struct NoteExtractionTests {
 
         print("=== Mixed content with notes ===")
         print("Items: \(topic.items.count)")
-        for (i, item) in topic.items.enumerated() {
+        for (index, item) in topic.items.enumerated() {
             switch item {
             case let .description(desc):
-                print("[\(i)] Description: '\(desc.value)'")
+                print("[\(index)] Description: '\(desc.value)'")
             case let .note(note):
-                print("[\(i)] Note (\(note.type)): '\(note.content)'")
+                print("[\(index)] Note (\(note.type)): '\(note.content)'")
             default:
-                print("[\(i)] Other")
+                print("[\(index)] Other")
             }
         }
 
@@ -186,8 +186,7 @@ struct NoteExtractionTests {
 
         if case let .note(note1) = topic.items[0],
            case let .note(note2) = topic.items[1],
-           case let .note(note3) = topic.items[2]
-        {
+           case let .note(note3) = topic.items[2] {
             #expect(note1.type == .note)
             #expect(note2.type == .warning)
             #expect(note3.type == .tip)
@@ -234,16 +233,16 @@ struct NoteExtractionTests {
 
         print("=== Note with code block ===")
         print("Items: \(topic.items.count)")
-        for (i, item) in topic.items.enumerated() {
+        for (index, item) in topic.items.enumerated() {
             switch item {
             case let .note(note):
-                print("[\(i)] Note (\(note.type))")
+                print("[\(index)] Note (\(note.type))")
             case .codeBlock:
-                print("[\(i)] CodeBlock")
+                print("[\(index)] CodeBlock")
             case let .description(desc):
-                print("[\(i)] Description: '\(desc.value.prefix(30))...'")
+                print("[\(index)] Description: '\(desc.value.prefix(30))...'")
             default:
-                print("[\(i)] Other")
+                print("[\(index)] Other")
             }
         }
 
@@ -266,16 +265,16 @@ struct NoteExtractionTests {
 
         print("=== Note with list ===")
         print("Items: \(topic.items.count)")
-        for (i, item) in topic.items.enumerated() {
+        for (index, item) in topic.items.enumerated() {
             switch item {
             case let .note(note):
-                print("[\(i)] Note (\(note.type))")
+                print("[\(index)] Note (\(note.type))")
             case let .list(list):
-                print("[\(i)] List: \(list.items.count) items")
+                print("[\(index)] List: \(list.items.count) items")
             case let .description(desc):
-                print("[\(i)] Description: '\(desc.value.prefix(30))...'")
+                print("[\(index)] Description: '\(desc.value.prefix(30))...'")
             default:
-                print("[\(i)] Other")
+                print("[\(index)] Other")
             }
         }
 

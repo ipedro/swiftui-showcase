@@ -79,14 +79,14 @@ struct MarkdownFormattingTests {
 
         print("=== Bold before list ===")
         print("Items: \(topic.items.count)")
-        for (i, item) in topic.items.enumerated() {
+        for (index, item) in topic.items.enumerated() {
             switch item {
             case let .description(desc):
-                print("[\(i)] Description: '\(desc.value)'")
+                print("[\(index)] Description: '\(desc.value)'")
             case let .list(list):
-                print("[\(i)] List: \(list.items.count) items")
+                print("[\(index)] List: \(list.items.count) items")
             default:
-                print("[\(i)] Other")
+                print("[\(index)] Other")
             }
         }
 
@@ -140,14 +140,14 @@ struct MarkdownFormattingTests {
 
         print("=== Inline code before list ===")
         print("Items: \(topic.items.count)")
-        for (i, item) in topic.items.enumerated() {
+        for (index, item) in topic.items.enumerated() {
             switch item {
             case let .description(desc):
-                print("[\(i)] Description: '\(desc.value)'")
+                print("[\(index)] Description: '\(desc.value)'")
             case let .list(list):
-                print("[\(i)] List: \(list.items.count) items")
+                print("[\(index)] List: \(list.items.count) items")
             default:
-                print("[\(i)] Other")
+                print("[\(index)] Other")
             }
         }
 
@@ -181,17 +181,17 @@ struct MarkdownFormattingTests {
 
         print("=== Complex markdown ===")
         print("Items: \(topic.items.count)")
-        for (i, item) in topic.items.enumerated() {
+        for (index, item) in topic.items.enumerated() {
             switch item {
             case let .description(desc):
-                print("[\(i)] Description (\(desc.value.count) chars)")
+                print("[\(index)] Description (\(desc.value.count) chars)")
                 print("     Preview: '\(desc.value.prefix(50))...'")
             case let .list(list):
-                print("[\(i)] List: \(list.items.count) items")
+                print("[\(index)] List: \(list.items.count) items")
             case let .codeBlock(code):
-                print("[\(i)] CodeBlock: '\(code.rawValue.prefix(20))...'")
+                print("[\(index)] CodeBlock: '\(code.rawValue.prefix(20))...'")
             default:
-                print("[\(i)] Other")
+                print("[\(index)] Other")
             }
         }
 
@@ -307,14 +307,14 @@ struct MarkdownFormattingTests {
 
         print("=== Heading followed by list ===")
         print("Items: \(topic.items.count)")
-        for (i, item) in topic.items.enumerated() {
+        for (index, item) in topic.items.enumerated() {
             switch item {
             case let .description(desc):
-                print("[\(i)] Description: '\(desc.value)'")
+                print("[\(index)] Description: '\(desc.value)'")
             case let .list(list):
-                print("[\(i)] List: \(list.items.count) items")
+                print("[\(index)] List: \(list.items.count) items")
             default:
-                print("[\(i)] Other")
+                print("[\(index)] Other")
             }
         }
 
@@ -351,21 +351,21 @@ struct MarkdownFormattingTests {
 
         print("=== DSPrimaryButton structure ===")
         print("Items: \(topic.items.count)")
-        for (i, item) in topic.items.enumerated() {
+        for (index, item) in topic.items.enumerated() {
             switch item {
             case let .description(desc):
-                print("[\(i)] Description (\(desc.value.count) chars)")
+                print("[\(index)] Description (\(desc.value.count) chars)")
                 let preview = desc.value.replacingOccurrences(of: "\n", with: "\\n")
                 print("     '\(preview.prefix(80))...'")
             case let .list(list):
-                print("[\(i)] List (\(list.type)): \(list.items.count) items")
-                for (j, item) in list.items.enumerated() {
-                    print("     [\(j)]: '\(item.prefix(40))...'")
+                print("[\(index)] List (\(list.type)): \(list.items.count) items")
+                for (itemIndex, listItem) in list.items.enumerated() {
+                    print("     [\(itemIndex)]: '\(listItem.prefix(40))...'")
                 }
             case let .codeBlock(code):
-                print("[\(i)] CodeBlock")
+                print("[\(index)] CodeBlock")
             default:
-                print("[\(i)] Other")
+                print("[\(index)] Other")
             }
         }
 

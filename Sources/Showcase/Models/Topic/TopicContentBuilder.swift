@@ -279,121 +279,152 @@ extension Description: TopicContentConvertible {
         }
 
         var items: [TopicContentItem] = []
-        var currentListItems: [Int: String] = [:] // Map listItemId -> accumulated text
-        var currentListType: ListItem.ListType?
-        var currentListId: Int?
-        var listItemOrder: [Int] = [] // Track order of list items
-        var currentText = ""
-        var previousBlockId: Int? // Track paragraph/header boundaries for newlines
+        var listState = ListParsingState()
+        var textState = TextParsingState()
 
         // Process each run to detect lists vs regular text
         for run in attributed.runs {
             let content = reconstructMarkdown(from: attributed, in: run.range)
 
-            if let intent = run.presentationIntent {
-                // Get block-level identity (paragraph, header, list) for newline detection
-                let blockId = intent.components.first?.identity
+            guard let intent = run.presentationIntent else {
+                flushList(from: &listState, to: &items)
+                textState.currentText += content
+                textState.previousBlockId = nil
+                continue
+            }
 
-                // Check if this run is part of a list
-                if let listInfo = extractListInfo(from: intent) {
-                    // If we were building regular text, flush it
-                    if !currentText.isEmpty {
-                        items.append(.description(Description(currentText)))
-                        currentText = ""
-                    }
+            let blockId = intent.components.first?.identity
 
-                    // Check if this is the same list or a new list
-                    if currentListId != listInfo.listId || currentListType != listInfo.type {
-                        // Flush previous list if any
-                        if !currentListItems.isEmpty, let listType = currentListType {
-                            let orderedItems = listItemOrder.compactMap { currentListItems[$0] }
-                            items.append(.list(ListItem(type: listType, items: orderedItems)))
-                        }
-
-                        // Start new list
-                        currentListItems = [:]
-                        listItemOrder = []
-                        currentListType = listInfo.type
-                        currentListId = listInfo.listId
-                    }
-
-                    // Accumulate content for this list item (may span multiple runs for inline code)
-                    if currentListItems[listInfo.listItemId] == nil {
-                        listItemOrder.append(listInfo.listItemId)
-                        currentListItems[listInfo.listItemId] = content
-                    } else {
-                        currentListItems[listInfo.listItemId]? += content
-                    }
-
-                    previousBlockId = blockId
-                } else {
-                    // Not a list item - flush any current list
-                    if !currentListItems.isEmpty, let listType = currentListType {
-                        let orderedItems = listItemOrder.compactMap { currentListItems[$0] }
-                        items.append(.list(ListItem(type: listType, items: orderedItems)))
-                        currentListItems = [:]
-                        listItemOrder = []
-                        currentListType = nil
-                        currentListId = nil
-                    }
-
-                    // Check for heading
-                    var isHeading = false
-                    var headingLevel = 0
-                    for component in intent.components {
-                        if case let .header(level) = component.kind {
-                            isHeading = true
-                            headingLevel = level
-                            break
-                        }
-                    }
-
-                    // Add newlines between different blocks (paragraphs/headers)
-                    if let prevId = previousBlockId, prevId != blockId, !currentText.isEmpty {
-                        currentText += "\n\n"
-                    }
-
-                    // Reconstruct heading syntax
-                    if isHeading {
-                        currentText += String(repeating: "#", count: headingLevel) + " " + content
-                    } else {
-                        currentText += content
-                    }
-
-                    previousBlockId = blockId
-                }
+            if let listInfo = extractListInfo(from: intent) {
+                processListRun(
+                    listInfo: listInfo,
+                    content: content,
+                    blockId: blockId,
+                    listState: &listState,
+                    textState: &textState,
+                    items: &items
+                )
             } else {
-                // No intent - treat as regular text
-                if !currentListItems.isEmpty, let listType = currentListType {
-                    let orderedItems = listItemOrder.compactMap { currentListItems[$0] }
-                    items.append(.list(ListItem(type: listType, items: orderedItems)))
-                    currentListItems = [:]
-                    listItemOrder = []
-                    currentListType = nil
-                    currentListId = nil
-                }
-                currentText += content
-                previousBlockId = nil
+                processNonListRun(
+                    intent: intent,
+                    content: content,
+                    blockId: blockId,
+                    listState: &listState,
+                    textState: &textState,
+                    items: &items
+                )
             }
         }
 
         // Flush any remaining content
-        if !currentListItems.isEmpty, let listType = currentListType {
-            let orderedItems = listItemOrder.compactMap { currentListItems[$0] }
-            items.append(.list(ListItem(type: listType, items: orderedItems)))
-        }
-        if !currentText.isEmpty {
-            let cleaned = currentText.trimmingCharacters(in: .whitespacesAndNewlines)
-            if !cleaned.isEmpty {
-                items.append(.description(Description(cleaned)))
-            }
+        flushList(from: &listState, to: &items)
+        if !textState.currentText.isEmpty {
+            items.append(.description(Description(textState.currentText)))
         }
 
-        return items.isEmpty ? [.description(Description(trimmed))] : items
+        return items
+    }
+
+    private struct ListParsingState {
+        var currentListItems: [Int: String] = [:]
+        var currentListType: ListItem.ListType?
+        var currentListId: Int?
+        var listItemOrder: [Int] = []
+    }
+
+    private struct TextParsingState {
+        var currentText = ""
+        var previousBlockId: Int?
+    }
+
+    private func processListRun(
+        listInfo: (listId: Int, listItemId: Int, type: ListItem.ListType),
+        content: String,
+        blockId: Int?,
+        listState: inout ListParsingState,
+        textState: inout TextParsingState,
+        items: inout [TopicContentItem]
+    ) {
+        // Flush any text being built
+        if !textState.currentText.isEmpty {
+            items.append(.description(Description(textState.currentText)))
+            textState.currentText = ""
+        }
+
+        // Check if this is the same list or a new list
+        if listState.currentListId != listInfo.listId || listState.currentListType != listInfo.type {
+            flushList(from: &listState, to: &items)
+            listState.currentListType = listInfo.type
+            listState.currentListId = listInfo.listId
+        }
+
+        // Accumulate content for this list item
+        if listState.currentListItems[listInfo.listItemId] == nil {
+            listState.listItemOrder.append(listInfo.listItemId)
+            listState.currentListItems[listInfo.listItemId] = content
+        } else {
+            listState.currentListItems[listInfo.listItemId]? += content
+        }
+
+        textState.previousBlockId = blockId
+    }
+
+    private func processNonListRun(
+        intent: AttributeScopes.FoundationAttributes.PresentationIntentAttribute.Value,
+        content: String,
+        blockId: Int?,
+        listState: inout ListParsingState,
+        textState: inout TextParsingState,
+        items: inout [TopicContentItem]
+    ) {
+        // Flush any current list
+        flushList(from: &listState, to: &items)
+
+        // Check for heading
+        let (isHeading, headingLevel) = extractHeadingInfo(from: intent)
+
+        // Add newlines between different blocks
+        if let prevId = textState.previousBlockId,
+           prevId != blockId,
+           !textState.currentText.isEmpty {
+            textState.currentText += "\n\n"
+        }
+
+        // Add content with heading syntax if needed
+        if isHeading {
+            textState.currentText += String(repeating: "#", count: headingLevel) + " " + content
+        } else {
+            textState.currentText += content
+        }
+
+        textState.previousBlockId = blockId
+    }
+
+    private func flushList(from state: inout ListParsingState, to items: inout [TopicContentItem]) {
+        guard !state.currentListItems.isEmpty, let listType = state.currentListType else { return }
+
+        let orderedItems = state.listItemOrder.compactMap { state.currentListItems[$0] }
+        items.append(.list(ListItem(type: listType, items: orderedItems)))
+
+        state.currentListItems = [:]
+        state.listItemOrder = []
+        state.currentListType = nil
+        state.currentListId = nil
+    }
+
+    private func extractHeadingInfo(
+        from intent: AttributeScopes.FoundationAttributes.PresentationIntentAttribute.Value
+    ) -> (isHeading: Bool, level: Int) {
+        for component in intent.components {
+            if case let .header(level) = component.kind {
+                return (true, level)
+            }
+        }
+        return (false, 0)
     }
 
     /// Extracts list information from PresentationIntent.
-    private func extractListInfo(from intent: AttributeScopes.FoundationAttributes.PresentationIntentAttribute.Value) -> (type: ListItem.ListType, listId: Int, listItemId: Int)? {
+    private func extractListInfo(from intent: AttributeScopes.FoundationAttributes.PresentationIntentAttribute.Value) -> (listId: Int, listItemId: Int, type: ListItem.ListType)? {
         var listItemId: Int?
         var listType: ListItem.ListType?
         var listId: Int?
@@ -416,7 +447,7 @@ extension Description: TopicContentConvertible {
 
         // We need all three pieces of information
         if let listType, let listId, let listItemId {
-            return (type: listType, listId: listId, listItemId: listItemId)
+            return (listId: listId, listItemId: listItemId, type: listType)
         }
 
         return nil
