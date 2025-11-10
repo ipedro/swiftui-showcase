@@ -1,4 +1,4 @@
-// Copyright (c) 2023 Pedro Almeida
+// Copyright (c) 2025 Pedro Almeida
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -19,26 +19,42 @@
 // SOFTWARE.
 
 import SwiftUI
+import Showcase
+import ShowcaseMacros
 
-struct MockPreviews: View {
-    var colors: [SwiftUI.Color] = [
-        .accentColor,
-        .primary,
-        .teal,
-        .indigo,
-        .purple,
-        .green,
-        .mint
-    ]
-
+/// A badge for displaying status or counts
+@Showcasable(icon: "tag.fill")
+struct DSBadge: View {
+    let text: String
+    let color: Color
+    
+    @ShowcaseExample(title: "Success Badge")
+    static var success: some View {
+        DSBadge(text: "Active", color: .green)
+    }
+    
+    @ShowcaseExample(title: "Warning Badge")
+    static var warning: some View {
+        DSBadge(text: "Pending", color: .orange)
+    }
+    
+    @ShowcaseExample(title: "Error Badge")
+    static var error: some View {
+        DSBadge(text: "Failed", color: .red)
+    }
+    
+    @ShowcaseExample(title: "Count Badge")
+    static var count: some View {
+        DSBadge(text: "99+", color: .blue)
+    }
+    
     var body: some View {
-        ForEach(colors, id: \.self) { color in
-            VStack {
-                Image(systemName: "swift")
-                Text("Placeholder")
-            }
-            .foregroundColor(color)
-            .redacted(reason: .placeholder)
-        }
+        Text(text)
+            .font(.caption.bold())
+            .foregroundColor(.white)
+            .padding(.horizontal, 8)
+            .padding(.vertical, 4)
+            .background(color)
+            .cornerRadius(4)
     }
 }

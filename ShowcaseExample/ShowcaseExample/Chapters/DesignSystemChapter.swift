@@ -1,6 +1,4 @@
-// MacroError.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/10/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,14 +18,34 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-/// Errors that can occur during macro expansion.
-enum MacroError: Error, CustomStringConvertible {
-    case unsupportedDeclarationType
+import SwiftUI
+import Showcase
 
-    var description: String {
-        switch self {
-        case .unsupportedDeclarationType:
-            return "@Showcasable can only be applied to struct, class, or enum"
+extension Chapter {
+    /// Design system components with @Showcasable macro
+    static let designSystemComponents = Chapter("Components") {
+        Description {
+            """
+            Core UI components for building consistent interfaces.
+            
+            All components use the @Showcasable macro with auto-generated code blocks \
+            from @ShowcaseExample annotations. This ensures documentation always matches \
+            the actual implementation.
+            
+            **Features:**
+            * Automatic code block generation
+            * Live interactive examples
+            * Type-safe documentation
+            * Compile-time verification
+            """
         }
+        
+        DSButton.self
+        DSCard<AnyView>.showcaseTopic
+        DSBadge.self
+        DSAsyncImage.self
+        DSContextMenu.self
+        DSSkeletonLoader.self
+        DSDropdown<DropdownItem, Text>.showcaseTopic
     }
 }

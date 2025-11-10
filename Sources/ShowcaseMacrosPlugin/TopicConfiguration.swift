@@ -23,7 +23,6 @@
 /// Configuration for topic generation.
 struct TopicConfiguration {
     let typeInfo: TypeInfo
-    let chapter: String
     let icon: String?
     let autoDiscover: Bool
 }

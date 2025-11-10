@@ -29,7 +29,4 @@ import Foundation
 public protocol Showcasable {
     /// The generated topic containing this type's documentation.
     static var showcaseTopic: Topic { get }
-
-    /// The chapter this showcasable belongs to.
-    static var showcaseChapter: String { get }
 }

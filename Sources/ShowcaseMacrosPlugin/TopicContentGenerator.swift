@@ -116,7 +116,13 @@ enum TopicContentGenerator {
 
         // Add any additional descriptions from @ShowcaseDescription attributes
         for description in docs.descriptions {
-            content.append("Description(\"\(description)\")")
+            content.append("""
+            Description {
+                \"\"\"
+                \(description)
+                \"\"\"
+            }
+            """)
         }
 
         return content
@@ -172,11 +178,18 @@ enum TopicContentGenerator {
 
     private static func generateCodeBlocks(docs: TopicDocumentation) -> [String] {
         docs.codeBlocks.map { codeBlock in
-            let escapedCode = codeBlock.code
-                .replacingOccurrences(of: "\\", with: "\\\\")
-                .replacingOccurrences(of: "\"", with: "\\\"")
-                .replacingOccurrences(of: "\n", with: "\\n")
-            return "CodeBlock(\"\(codeBlock.title)\", code: \"\(escapedCode)\")"
+            // Use triple-quoted strings to avoid escape sequence issues
+            let indentedCode = codeBlock.code.components(separatedBy: .newlines)
+                .map { "    \($0)" }
+                .joined(separator: "\n")
+            
+            return """
+            CodeBlock("\(codeBlock.title)") {
+                \"\"\"
+            \(indentedCode)
+                \"\"\"
+            }
+            """
         }
     }
 
@@ -193,8 +206,8 @@ enum TopicContentGenerator {
     private static func generateExamples(docs: TopicDocumentation, typeName: String) -> [String] {
         guard !docs.examples.isEmpty else { return [] }
 
-        // If we have 3+ examples, group them in a TabView for better UX
-        if docs.examples.count >= 3 {
+        // If we have 2+ examples, group them in an ExampleGroup for better organization
+        if docs.examples.count >= 2 {
             return [generateExampleGroup(docs: docs, typeName: typeName)]
         }
 
@@ -260,18 +273,25 @@ enum TopicContentGenerator {
         let codeTitle = "\(example.title) - Source Code"
         let blockIndentCount = max(codeIndentCount - 4, 0)
         let blockIndent = String(repeating: " ", count: blockIndentCount)
-        let innerIndent = blockIndent + "    "
-
-        var lines: [String] = []
-        lines.append("\(blockIndent)CodeBlock(\"\(codeTitle)\") {")
-        lines.append("\(innerIndent)\"\"\"")
-        let codeLines = sourceCode.components(separatedBy: "\n")
-        for line in codeLines {
-            lines.append("\(innerIndent)\(line)")
+        let stringLiteralIndent = String(repeating: " ", count: blockIndentCount + 4)  // Opening/closing quotes
+        let contentIndent = String(repeating: " ", count: blockIndentCount + 8)  // Content needs more indent
+        
+        // Escape any backslashes in the source code to prevent escape sequence issues
+        let escapedCode = sourceCode.replacingOccurrences(of: "\\", with: "\\\\")
+        
+        // Build the entire CodeBlock as a single multi-line string
+        var codeBlock = ""
+        codeBlock += "\(blockIndent)CodeBlock(\"\(codeTitle)\") {\n"
+        codeBlock += "\(stringLiteralIndent)#\"\"\"\n"  // Use raw string literal (#"""...""#)
+        
+        // Add each line of source code
+        for line in escapedCode.components(separatedBy: "\n") {
+            codeBlock += "\(contentIndent)\(line)\n"
         }
-        lines.append("\(innerIndent)\"\"\"")
-        lines.append("\(blockIndent)}")
-
-        return lines
+        
+        codeBlock += "\(stringLiteralIndent)\"\"\"#\n"
+        codeBlock += "\(blockIndent)}"
+        
+        return [codeBlock]
     }
 }

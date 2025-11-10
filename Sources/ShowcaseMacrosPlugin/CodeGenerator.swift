@@ -28,7 +28,7 @@ enum CodeGenerator {
         config: TopicConfiguration,
         docs: TopicDocumentation,
         members: TopicMembers
-    ) -> (showcaseTopic: DeclSyntax, chapter: DeclSyntax) {
+    ) -> DeclSyntax {
         let content = TopicContentGenerator.generate(
             config: config,
             docs: docs,
@@ -41,17 +41,16 @@ enum CodeGenerator {
             "Topic(\"\(config.typeInfo.name)\")"
         }
 
-        let showcaseTopicDecl = DeclSyntax(stringLiteral: """
+        // Build the complete source code string
+        let sourceCode = """
         public static var showcaseTopic: Topic {
             \(topicInit) {\(content)}
         }
-        """)
-
-        let chapterDecl = DeclSyntax(stringLiteral: """
-        public static var showcaseChapter: String { "\(config.chapter)" }
-        """)
-
-        return (showcaseTopicDecl, chapterDecl)
+        """
+        
+        // Parse it into a DeclSyntax
+        // Using Parser instead of stringLiteral initializer for better error handling
+        return DeclSyntax(stringLiteral: sourceCode)
     }
 
     /// Indents multi-line strings for proper embedding in generated code.

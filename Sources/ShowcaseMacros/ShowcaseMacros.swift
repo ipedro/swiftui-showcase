@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import Showcase
+@_exported import Showcase
 
 /// Marks a type as showcasable, generating documentation automatically.
 ///
@@ -29,7 +29,7 @@ import Showcase
 ///
 /// ## Basic Usage
 /// ```swift
-/// @Showcasable(chapter: "Buttons", icon: "button.horizontal")
+/// @Showcasable(icon: "button.horizontal")
 /// struct PrimaryButton: View {
 ///     var body: some View {
 ///         Button("Primary") {}
@@ -50,18 +50,46 @@ import Showcase
 /// - `@ShowcaseExample` functions as interactive examples
 /// - `@available` attributes as platform requirements
 /// - Usage sections from doc comments as code blocks
+/// - Examples in nested types (automatically discovered)
+///
+/// ## External Examples
+/// The `examples` parameter is for external example types that cannot be auto-discovered.
+/// Due to Swift macro limitations, these must still be declared in the same file:
+/// ```swift
+/// @Showcasable(examples: [CardExamples.self])
+/// struct Card<Content: View>: View {
+///     var body: some View { content }
+/// }
+///
+/// // External example container (same file, different scope)
+/// struct CardExamples {
+///     @ShowcaseExample(title: "Basic")
+///     static var basic: some View { Card { Text("Content") } }
+/// }
+/// ```
+///
+/// For nested types, examples are automatically discovered:
+/// ```swift
+/// @Showcasable
+/// struct Button: View {
+///     struct Examples {  // Auto-discovered, no need to specify
+///         @ShowcaseExample(title: "Primary")
+///         static var primary: some View { Button("Primary") }
+///     }
+/// }
+/// ```
 ///
 /// - Parameters:
-///   - chapter: The chapter name this topic belongs to
 ///   - icon: Optional SF Symbol name for the topic icon
-///   - order: Optional ordering hint within the chapter
+///   - order: Optional ordering hint within chapters
 ///   - autoDiscover: Whether to automatically discover examples and documentation
-@attached(extension, conformances: Showcasable, names: named(showcaseTopic), named(showcaseChapter))
+///   - examples: External types containing @ShowcaseExample properties (same file only)
+@attached(extension, conformances: Showcasable, names: named(showcaseTopic))
 public macro Showcasable(
-    chapter: String,
     icon: String? = nil,
     order: Int? = nil,
-    autoDiscover: Bool = true
+    autoDiscover: Bool = true,
+    examples: [Any.Type] = []
 ) = #externalMacro(module: "ShowcaseMacrosPlugin", type: "ShowcasableMacro")
 
 /// Marks a static property or function as a showcase example.

@@ -43,7 +43,7 @@ public struct ShowcasableMacro: ExtensionMacro {
         let documentation = DocumentationExtractor.extract(from: declaration)
 
         // Find manually marked content
-        let examples = ExampleFinder.findExamples(in: declaration)
+        let examples = ExampleFinder.findExamples(in: declaration, exampleTypes: arguments.exampleTypes)
         let codeBlocks = ExampleFinder.findCodeBlocks(in: declaration)
         let links = ExampleFinder.findLinks(in: declaration)
         let descriptions = ExampleFinder.findDescriptions(in: declaration)
@@ -56,7 +56,6 @@ public struct ShowcasableMacro: ExtensionMacro {
         // Prepare configuration structures
         let config = TopicConfiguration(
             typeInfo: typeInfo,
-            chapter: arguments.chapter,
             icon: arguments.icon,
             autoDiscover: arguments.autoDiscover
         )
@@ -76,7 +75,7 @@ public struct ShowcasableMacro: ExtensionMacro {
         )
 
         // Generate the extension code
-        let (showcaseTopicDecl, chapterDecl) = CodeGenerator.generateMembers(
+        let showcaseTopicDecl = CodeGenerator.generateMembers(
             config: config,
             docs: docs,
             members: members
@@ -90,8 +89,7 @@ public struct ShowcasableMacro: ExtensionMacro {
                 InheritedTypeSyntax(type: showcasableType)
             },
             memberBlock: MemberBlockSyntax(members: [
-                MemberBlockItemSyntax(decl: showcaseTopicDecl),
-                MemberBlockItemSyntax(decl: chapterDecl),
+                MemberBlockItemSyntax(decl: showcaseTopicDecl)
             ])
         )]
     }

@@ -62,9 +62,6 @@ final class ShowcaseMacrosTests: XCTestCase {
                             }
                         }
                     }
-                    public static var showcaseChapter: String {
-                        "Buttons"
-                    }
                 }
                 """#,
                 diagnostics: [],
@@ -97,9 +94,6 @@ final class ShowcaseMacrosTests: XCTestCase {
                     public static var showcaseTopic: Topic {
                         Topic("PrimaryButton", icon: Image(systemName: "button.horizontal")) {
                         }
-                    }
-                    public static var showcaseChapter: String {
-                        "Buttons"
                     }
                 }
                 """#,
@@ -140,9 +134,6 @@ final class ShowcaseMacrosTests: XCTestCase {
                             }
                         }
                     }
-                    public static var showcaseChapter: String {
-                        "Buttons"
-                    }
                 }
                 """#,
                 macros: testMacros
@@ -176,7 +167,7 @@ final class ShowcaseMacrosTests: XCTestCase {
                     }
                 }
                 """,
-                expandedSource: #"""
+                expandedSource: ##"""
                 struct PrimaryButton: View {
                     static var basic: some View {
                         PrimaryButton()
@@ -193,18 +184,15 @@ final class ShowcaseMacrosTests: XCTestCase {
                                 Example("Basic") {
                                     PrimaryButton.basic
                                     CodeBlock("Basic - Source Code") {
-                                        """
-                                        PrimaryButton()
-                                        """
+                                        #"""
+                                            PrimaryButton()
+                                        """#
                                     }
                                 }
                         }
                     }
-                    public static var showcaseChapter: String {
-                        "Buttons"
-                    }
                 }
-                """#,
+                """##,
                 macros: testMacros
             )
         #else
@@ -228,7 +216,7 @@ final class ShowcaseMacrosTests: XCTestCase {
                     }
                 }
                 """,
-                expandedSource: #"""
+                expandedSource: ##"""
                 struct ActionButton: View {
                     static var withIcon: some View {
                         ActionButton(title: "Submit", icon: "checkmark")
@@ -250,18 +238,15 @@ final class ShowcaseMacrosTests: XCTestCase {
                                     }
                                     ActionButton.withIcon
                                     CodeBlock("Primary Action - Source Code") {
-                                        """
-                                        ActionButton(title: "Submit", icon: "checkmark")
-                                        """
+                                        #"""
+                                            ActionButton(title: "Submit", icon: "checkmark")
+                                        """#
                                     }
                                 }
                         }
                     }
-                    public static var showcaseChapter: String {
-                        "Buttons"
-                    }
                 }
-                """#,
+                """##,
                 macros: testMacros
             )
         #else
@@ -289,7 +274,7 @@ final class ShowcaseMacrosTests: XCTestCase {
                     }
                 }
                 """,
-                expandedSource: #"""
+                expandedSource: ##"""
                 /// A versatile button for actions
                 struct ActionButton: View {
                     static var basic: some View {
@@ -314,18 +299,15 @@ final class ShowcaseMacrosTests: XCTestCase {
                                         Example("Basic Usage") {
                                             ActionButton.basic
                                             CodeBlock("Basic Usage - Source Code") {
-                                                """
-                                                ActionButton(title: "Submit")
-                                                """
+                                                #"""
+                                                    ActionButton(title: "Submit")
+                                                """#
                                             }
                                         }
                         }
                     }
-                    public static var showcaseChapter: String {
-                        "Buttons"
-                    }
                 }
-                """#,
+                """##,
                 macros: testMacros
             )
         #else
@@ -346,16 +328,25 @@ final class ShowcaseMacrosTests: XCTestCase {
                     }
                 }
                 """,
-                expandedSource: """
+                expandedSource: #"""
                 struct PrimaryButton: View {
                     var body: some View {
                         Button("Primary") {}
                     }
                 }
-                """,
-                diagnostics: [
-                    DiagnosticSpec(message: "@Showcasable requires arguments", line: 1, column: 1),
-                ],
+
+                extension PrimaryButton: Showcasable {
+                    public static var showcaseTopic: Topic {
+                        Topic("PrimaryButton") {
+                            CodeBlock("Type Relationships") {
+                                """
+                                struct PrimaryButton: View
+                                """
+                            }
+                        }
+                    }
+                }
+                """#,
                 macros: testMacros
             )
         #else
@@ -405,9 +396,6 @@ final class ShowcaseMacrosTests: XCTestCase {
                                 }
                             }
                         }
-                    }
-                    public static var showcaseChapter: String {
-                        "Models"
                     }
                 }
                 """#,
@@ -553,9 +541,6 @@ final class ShowcaseMacrosTests: XCTestCase {
                                 }
                             }
                         }
-                    }
-                    public static var showcaseChapter: String {
-                        "Models"
                     }
                 }
                 """#,
@@ -757,9 +742,6 @@ final class ShowcaseMacrosTests: XCTestCase {
                         """
                     }
                 }
-            }
-            public static var showcaseChapter: String {
-                "Components"
             }
         }
         """#

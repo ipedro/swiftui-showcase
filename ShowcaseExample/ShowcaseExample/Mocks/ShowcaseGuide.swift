@@ -16,7 +16,7 @@ extension Document {
         Chapter.coreConceptsChapter
         Chapter.contentTypes
         Chapter.advancedFeatures
-        Chapter.macroExamples
+        Chapter.designSystemComponents
         Chapter.designSystem
     }
 }
@@ -1044,33 +1044,38 @@ extension Topic {
 // MARK: - Chapter 5: Design System Components
 
 extension Chapter {
-    static let designSystem = Chapter("Design System with Macros") {
+    static let designSystem = Chapter("Manual Topic Syntax") {
         Description {
             """
-            See how `@Showcasable` macro automatically generates comprehensive API documentation \
-            from your SwiftUI components. These examples demonstrate what the macro produces:
+            Examples of manually creating Topics using the declarative API (without macros).
             
-            - Auto-discovery of initializers, methods, and properties
-            - Doc comment parsing (parameters, returns, throws)
-            - Static vs instance member categorization
-            - Type relationships and protocol conformances
-            - Multiple examples per component
-            - Integration code blocks
-            - Design guideline links
-            - Nested Topics for each API member
+            This demonstrates the underlying Topic syntax that the @Showcasable macro generates \
+            automatically. You can use this manual approach when you need fine-grained control or \
+            when working with types that can't use macros.
             
-            **Note**: These are manual examples showing what the macro generates, since the \
-            example app runs separately from the macro plugin.
+            **Manual vs Macro Approach:**
+            
+            Manual Topic creation gives you complete control over structure and content, but requires \
+            maintaining the code examples and documentation separately. The @Showcasable macro \
+            automates this process by extracting documentation from doc comments and generating \
+            code blocks from @ShowcaseExample properties.
+            
+            **When to use manual Topics:**
+            - Complex custom documentation structures
+            - Non-code documentation (guides, tutorials)
+            - Mixing content from multiple sources
+            - Special formatting requirements
+            
+            **When to use @Showcasable macro:**
+            - Documenting SwiftUI components
+            - Auto-generating code examples
+            - Keeping docs in sync with code
+            - Standard API documentation
+            
+            See the "Components" chapter for real @Showcasable macro examples.
             """
         }
-        
-        // All 6 design system components demonstrating macro output
-        Topic.dsPrimaryButton
-        Topic.dsCard
-        Topic.dsBadge
-        Topic.dsAvatar
-        Topic.dsProgressIndicator
-        Topic.dsTextField
     }
 }
+
 
