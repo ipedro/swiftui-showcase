@@ -88,9 +88,28 @@ public struct ShowcaseNavigationSplitView<Sidebar: View, ContentToolbar: View, D
 
     @ViewBuilder
     private func detail() -> some View {
-        ShowcaseNavigationTopic(selection).toolbar(content: {
-            detailToolbar
-        })
+        if let selection {
+            ShowcaseNavigationTopic(selection).toolbar(content: {
+                detailToolbar
+            })
+        } else {
+            VStack(spacing: 16) {
+                Image(systemName: "doc.text")
+                    .font(.system(size: 48))
+                    .foregroundStyle(.secondary)
+                Text("Select a Topic")
+                    .font(.title2)
+                    .fontWeight(.semibold)
+                Text("Choose a topic from the list to view its documentation")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+            }
+            .padding()
+            .toolbar(content: {
+                detailToolbar
+            })
+        }
     }
 
     private var list: some View {
