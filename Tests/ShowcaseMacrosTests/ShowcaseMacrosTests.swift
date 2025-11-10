@@ -353,6 +353,231 @@ final class ShowcaseMacrosTests: XCTestCase {
         #endif
     }
 
+    // MARK: - Examples Parameter Tests
+
+    func testShowcasableWithExternalExamples() throws {
+        #if canImport(ShowcaseMacrosPlugin)
+            assertMacroExpansion(
+                """
+                @Showcasable(examples: [CardExamples.self])
+                struct Card<Content: View>: View {
+                    let content: Content
+                    var body: some View { content }
+                    
+                    struct CardExamples {
+                        @ShowcaseExample(title: "Basic Card")
+                        static var basic: Card<Text> {
+                            Card(content: Text("Hello"))
+                        }
+                    }
+                }
+                """,
+                expandedSource: ##"""
+                struct Card<Content: View>: View {
+                    let content: Content
+                    var body: some View { content }
+                    
+                    struct CardExamples {
+                        static var basic: Card<Text> {
+                            Card(content: Text("Hello"))
+                        }
+                    }
+                }
+
+                extension Card: Showcasable {
+                    public static var showcaseTopic: Topic {
+                        Topic("Card") {
+                            CodeBlock("Type Relationships") {
+                                """
+                                struct Card<Content: View>: View
+                                """
+                            }
+                            Topic("content") {
+                                CodeBlock("Declaration") {
+                                    """
+                                    var content: Content
+                                    """
+                                }
+                            }
+                                    ExampleGroup("Examples") {
+                                                Example("Basic Card") {
+                                                    Card.basic
+                                                    CodeBlock("Basic Card - Source Code") {
+                                                        #"""
+                                                            Card(content: Text("Hello"))
+                                                        """#
+                                                    }
+                                                }
+                                                Example("Basic Card") {
+                                                    Card.basic
+                                                    CodeBlock("Basic Card - Source Code") {
+                                                        #"""
+                                                            Card(content: Text("Hello"))
+                                                        """#
+                                                    }
+                                                }
+                                    }
+                        }
+                    }
+                }
+                """##,
+                macros: testMacros
+            )
+        #else
+            throw XCTSkip("Macros are only supported when running tests for the host platform")
+        #endif
+    }
+
+    func testShowcasableWithAutoDiscoveredNestedExamples() throws {
+        #if canImport(ShowcaseMacrosPlugin)
+            assertMacroExpansion(
+                """
+                @Showcasable
+                struct Button: View {
+                    var body: some View { Text("Button") }
+                    
+                    struct Examples {
+                        @ShowcaseExample(title: "Primary")
+                        static var primary: Button { Button() }
+                        
+                        @ShowcaseExample(title: "Secondary")
+                        static var secondary: Button { Button() }
+                    }
+                }
+                """,
+                expandedSource: ##"""
+                struct Button: View {
+                    var body: some View { Text("Button") }
+                    
+                    struct Examples {
+                        static var primary: Button { Button() }
+
+                        static var secondary: Button { Button() }
+                    }
+                }
+
+                extension Button: Showcasable {
+                    public static var showcaseTopic: Topic {
+                        Topic("Button") {
+                            CodeBlock("Type Relationships") {
+                                """
+                                struct Button: View
+                                """
+                            }
+                                    ExampleGroup("Examples") {
+                                                Example("Primary") {
+                                                    Button.primary
+                                                    CodeBlock("Primary - Source Code") {
+                                                        #"""
+                                                            Button()
+                                                        """#
+                                                    }
+                                                }
+                                                Example("Secondary") {
+                                                    Button.secondary
+                                                    CodeBlock("Secondary - Source Code") {
+                                                        #"""
+                                                            Button()
+                                                        """#
+                                                    }
+                                                }
+                                    }
+                        }
+                    }
+                }
+                """##,
+                macros: testMacros
+            )
+        #else
+            throw XCTSkip("Macros are only supported when running tests for the host platform")
+        #endif
+    }
+
+    func testShowcasableWithMultipleExternalExampleTypes() throws {
+        #if canImport(ShowcaseMacrosPlugin)
+            assertMacroExpansion(
+                """
+                @Showcasable(examples: [BasicExamples.self, AdvancedExamples.self])
+                struct Component: View {
+                    var body: some View { Text("Component") }
+                    
+                    struct BasicExamples {
+                        @ShowcaseExample(title: "Simple")
+                        static var simple: Component { Component() }
+                    }
+                    
+                    struct AdvancedExamples {
+                        @ShowcaseExample(title: "Complex")
+                        static var complex: Component { Component() }
+                    }
+                }
+                """,
+                expandedSource: ##"""
+                struct Component: View {
+                    var body: some View { Text("Component") }
+                    
+                    struct BasicExamples {
+                        static var simple: Component { Component() }
+                    }
+                    
+                    struct AdvancedExamples {
+                        static var complex: Component { Component() }
+                    }
+                }
+
+                extension Component: Showcasable {
+                    public static var showcaseTopic: Topic {
+                        Topic("Component") {
+                            CodeBlock("Type Relationships") {
+                                """
+                                struct Component: View
+                                """
+                            }
+                                    ExampleGroup("Examples") {
+                                                Example("Simple") {
+                                                    Component.simple
+                                                    CodeBlock("Simple - Source Code") {
+                                                        #"""
+                                                            Component()
+                                                        """#
+                                                    }
+                                                }
+                                                Example("Complex") {
+                                                    Component.complex
+                                                    CodeBlock("Complex - Source Code") {
+                                                        #"""
+                                                            Component()
+                                                        """#
+                                                    }
+                                                }
+                                                Example("Simple") {
+                                                    Component.simple
+                                                    CodeBlock("Simple - Source Code") {
+                                                        #"""
+                                                            Component()
+                                                        """#
+                                                    }
+                                                }
+                                                Example("Complex") {
+                                                    Component.complex
+                                                    CodeBlock("Complex - Source Code") {
+                                                        #"""
+                                                            Component()
+                                                        """#
+                                                    }
+                                                }
+                                    }
+                        }
+                    }
+                }
+                """##,
+                macros: testMacros
+            )
+        #else
+            throw XCTSkip("Macros are only supported when running tests for the host platform")
+        #endif
+    }
+
     // MARK: - Test Configuration
 
     #if canImport(ShowcaseMacrosPlugin)
