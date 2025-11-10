@@ -630,11 +630,11 @@ final class ShowcaseMacrosTests: XCTestCase {
                         Description {
                             \"\"\"
                             A customizable button component for the design system
-                            
+
                             `DSButton` provides a consistent button interface with three built-in styles:
                             primary, secondary, and destructive. Each style automatically applies appropriate
                             colors and styling to match your design system.
-                            
+
                             ## Basic Usage
                             \"\"\"
                         }
@@ -648,7 +648,7 @@ final class ShowcaseMacrosTests: XCTestCase {
                         Description {
                             \"\"\"
                             ## Button Styles
-                            
+
                             Choose from three predefined styles depending on the action's importance:
                             \"\"\"
                         }
@@ -658,12 +658,12 @@ final class ShowcaseMacrosTests: XCTestCase {
                             DSButton(title: "Save", style: .primary) {
                                 saveDocument()
                             }
-                            
+
                             // Secondary: For alternative actions
                             DSButton(title: "Cancel", style: .secondary) {
                                 dismissView()
                             }
-                            
+
                             // Destructive: For dangerous actions
                             DSButton(title: "Delete", style: .destructive) {
                                 deleteItem()
@@ -673,7 +673,7 @@ final class ShowcaseMacrosTests: XCTestCase {
                         Description {
                             \"\"\"
                             ## Styling and Customization
-                            
+
                             Combine with SwiftUI modifiers for additional customization:
                             \"\"\"
                         }

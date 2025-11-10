@@ -164,22 +164,29 @@ extension Description: TopicContentConvertible {
     
     /// Extracts markdown code blocks and lists using AttributedString's built-in parsing.
     private func extractMarkdownBlocks(from text: String) -> [TopicContentItem] {
-        // First extract code blocks with regex (they need raw text)
+        // First extract notes from blockquotes and special patterns
+        let (textWithoutNotes, extractedNotes) = extractNotes(from: text)
+        
+        // Then extract code blocks with regex (they need raw text)
         let codePattern = "```[a-z]*\\n([\\s\\S]*?)```"
         guard let codeRegex = try? NSRegularExpression(pattern: codePattern, options: []) else {
-            return parseListsFromMarkdown(text)
+            var allItems = extractedNotes
+            allItems.append(contentsOf: parseListsFromMarkdown(textWithoutNotes))
+            return allItems.isEmpty ? [.description(self)] : allItems
         }
         
-        let nsString = text as NSString
-        let codeMatches = codeRegex.matches(in: text, range: NSRange(location: 0, length: nsString.length))
+        let nsString = textWithoutNotes as NSString
+        let codeMatches = codeRegex.matches(in: textWithoutNotes, range: NSRange(location: 0, length: nsString.length))
         
         if codeMatches.isEmpty {
-            // No code blocks, just parse lists
-            return parseListsFromMarkdown(text)
+            // No code blocks, combine notes and lists
+            var allItems = extractedNotes
+            allItems.append(contentsOf: parseListsFromMarkdown(textWithoutNotes))
+            return allItems.isEmpty ? [.description(self)] : allItems
         }
         
         // Process text with code blocks
-        var items: [TopicContentItem] = []
+        var items = extractedNotes
         var currentIndex = 0
         
         for match in codeMatches {
@@ -214,6 +221,51 @@ extension Description: TopicContentConvertible {
         }
         
         return items.isEmpty ? [.description(self)] : items
+    }
+    
+    /// Extracts notes from markdown text using blockquote or list patterns.
+    /// Supports: `> Note: text`, `> Warning: text`, `- Important: text`
+    private func extractNotes(from text: String) -> (String, [TopicContentItem]) {
+        var extractedNotes: [TopicContentItem] = []
+        var processedLines: [String] = []
+        
+        let lines = text.components(separatedBy: .newlines)
+        
+        // Pattern matches lines that start with > or - followed by Type: (without asterisks)
+        let notePattern = "^[\\s]*[>-][\\s]*(Note|Important|Warning|Deprecated|Experimental|Tip):?[\\s]*(.+)$"
+        
+        guard let regex = try? NSRegularExpression(pattern: notePattern, options: []) else {
+            return (text, [])
+        }
+        
+        for line in lines {
+            let nsLine = line as NSString
+            let matches = regex.matches(in: line, range: NSRange(location: 0, length: nsLine.length))
+            
+            if let match = matches.first, match.numberOfRanges == 3 {
+                // This is a note line
+                let typeRange = match.range(at: 1)
+                let contentRange = match.range(at: 2)
+                
+                let typeString = nsLine.substring(with: typeRange)
+                let contentString = nsLine.substring(with: contentRange)
+                    .trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+                
+                // Map string to NoteType
+                if let noteType = Note.NoteType(rawValue: typeString) {
+                    let note = Note(noteType) { contentString }
+                    extractedNotes.append(.note(note))
+                    // Don't add this line to processed lines
+                    continue
+                }
+            }
+            
+            // Not a note line, keep it
+            processedLines.append(line)
+        }
+        
+        let remainingText = processedLines.joined(separator: "\n")
+        return (remainingText.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines), extractedNotes)
     }
     
     /// Parses lists from markdown text using AttributedString's PresentationIntent.

@@ -72,7 +72,7 @@ extension Topic {
             ```
             This generates BOTH:
             * Example preview (live interactive view)
-            * CodeBlock (syntax-highlighted source code)
+            - CodeBlock (syntax-highlighted source code)
             
             **Without Code Block (opt-out):**
             ```swift
