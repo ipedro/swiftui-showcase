@@ -190,9 +190,6 @@ struct Card<Content: View>: View {
     let content: Content
     
     /// Creates a card with optional title
-    /// - Parameters:
-    ///   - title: Optional title to display
-    ///   - content: The card's content view
     init(title: String? = nil, @ViewBuilder content: () -> Content) {
         self.title = title
         self.content = content()
@@ -210,12 +207,80 @@ struct Card<Content: View>: View {
         .cornerRadius(12)
     }
 }
+```
 
-// Usage: Card.showcaseTopic automatically includes:
-// - Type description and notes from doc comments
-// - Declaration with generic constraints
-// - All public initializers with their documentation
-// - All public properties with their documentation
+**The macro automatically generates:**
+
+```swift
+extension Card: Showcasable {
+    public static var showcaseTopic: Topic {
+        Topic("Card") {
+            // Type relationships
+            CodeBlock("Type Relationships") {
+                """
+                struct Card<Content: View>: View
+                """
+            }
+            
+            // Main description
+            Description {
+                """
+                A card component for displaying content
+
+                Cards are versatile containers that can hold any SwiftUI content.
+                """
+            }
+            
+            // Note extracted from doc comment
+            Note {
+                """
+                Always provide meaningful content to your cards
+                """
+            }
+            
+            // Auto-discovered initializer
+            Topic("init(title:content:)") {
+                Description {
+                    """
+                    Creates a card with optional title
+                    """
+                }
+                CodeBlock("Declaration") {
+                    """
+                    init(title: String?, content: () -> Content)
+                    """
+                }
+            }
+            
+            // Auto-discovered properties
+            Topic("title") {
+                Description {
+                    """
+                    The card's optional title
+                    """
+                }
+                CodeBlock("Declaration") {
+                    """
+                    var title: String?
+                    """
+                }
+            }
+            
+            Topic("content") {
+                Description {
+                    """
+                    The card's content
+                    """
+                }
+                CodeBlock("Declaration") {
+                    """
+                    var content: Content
+                    """
+                }
+            }
+        }
+    }
+}
 ```
 
 #### @ShowcaseExample
@@ -246,10 +311,56 @@ struct CardExamples {
     }
 }
 
-// Reference in @Showcasable
+// Reference examples in @Showcasable
 @Showcasable(icon: "rectangle.fill", examples: [CardExamples.self])
 struct Card<Content: View>: View {
     // ... implementation
+}
+```
+
+**The macro automatically adds examples to the generated topic:**
+
+```swift
+extension Card: Showcasable {
+    public static var showcaseTopic: Topic {
+        Topic("Card") {
+            // ... type info and members ...
+            
+            // Examples are automatically added
+            ExampleGroup("Examples") {
+                Example("Simple Card") {
+                    CardExamples.simple
+                    CodeBlock("Source Code") {
+                        """
+                        Card(title: "Welcome") {
+                            Text("This is a simple card")
+                        }
+                        """
+                    }
+                }
+                
+                Example("Card with Image") {
+                    Description {
+                        """
+                        Cards can contain any SwiftUI content
+                        """
+                    }
+                    CardExamples.withImage
+                    CodeBlock("Source Code") {
+                        """
+                        Card(title: "Photo") {
+                            VStack {
+                                Image(systemName: "photo")
+                                    .font(.largeTitle)
+                                Text("Add your photo here")
+                            }
+                        }
+                        """
+                    }
+                }
+            }
+        }
+    }
 }
 ```
 
