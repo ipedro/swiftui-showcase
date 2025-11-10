@@ -25,4 +25,16 @@ struct Documentation {
     let details: String?
     let usageExamples: [String]
     let notes: [String]
+    
+    /// Interleaved content parts (text and code blocks in original order)
+    let contentParts: [ContentPart]
+    
+    /// Code blocks extracted from doc comments
+    /// @deprecated Use contentParts instead for proper interleaving
+    var codeBlocks: [String] {
+        contentParts.compactMap {
+            if case .codeBlock(let code) = $0 { return code }
+            return nil
+        }
+    }
 }

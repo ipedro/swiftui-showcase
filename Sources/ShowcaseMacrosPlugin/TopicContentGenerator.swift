@@ -61,21 +61,62 @@ enum TopicContentGenerator {
     private static func generateDescriptions(docs: TopicDocumentation) -> [String] {
         var content: [String] = []
         
-        if let summary = docs.documentation.summary {
-            content.append("""
-            Description {
-                \"\"\"
-                \(summary)
-                \"\"\"
+        // Handle interleaved content parts (text and code blocks in original order)
+        var codeBlockIndex = 1
+        let totalCodeBlocks = docs.documentation.contentParts.filter {
+            if case .codeBlock = $0 { return true }
+            return false
+        }.count
+        
+        for part in docs.documentation.contentParts {
+            switch part {
+            case .text(let text):
+                // Skip empty text
+                guard !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { continue }
+                
+                //  Multi-line text needs indentation for proper formatting in multi-line string literals
+                let lines = text.components(separatedBy: .newlines)
+                let formattedText: String
+                if lines.count == 1 {
+                    // Single line - no extra indentation needed
+                    formattedText = text
+                } else {
+                    // Multi-line - indent continuation lines
+                    formattedText = lines.enumerated().map { index, line in
+                        index == 0 ? line : "            \(line)"
+                    }.joined(separator: "\n")
+                }
+                
+                content.append("""
+                Description {
+                    \"\"\"
+                    \(formattedText)
+                    \"\"\"
+                }
+                """)
+                
+            case .codeBlock(let code):
+                let title = totalCodeBlocks == 1 ? "Example" : "Example \(codeBlockIndex)"
+                content.append(generateCodeBlock(title: title, code: code))
+                codeBlockIndex += 1
             }
-            """)
         }
         
+        // Add any additional descriptions from @ShowcaseDescription attributes
         for description in docs.descriptions {
             content.append("Description(\"\(description)\")")
         }
         
         return content
+    }
+    
+    private static func generateCodeBlock(title: String, code: String) -> String {
+        // Indent each line of the code to satisfy multi-line string literal indentation
+        let indentedCode = code.components(separatedBy: .newlines)
+            .map { "            \($0)" } // 12 spaces to match the opening """
+            .joined(separator: "\n")
+        
+        return "CodeBlock(\"\(title)\") {\n    \"\"\"\n\(indentedCode)\n    \"\"\"\n}"
     }
     
     // MARK: - Type Relationships

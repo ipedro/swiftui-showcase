@@ -24,70 +24,49 @@ import SwiftSyntax
 /// Extracts documentation from trivia (comments).
 enum DocumentationExtractor {
     static func extract(from declaration: some DeclGroupSyntax) -> Documentation {
-        // Extract leading trivia (comments before the declaration)
+        // Extract raw doc comment from leading trivia
         let leadingTrivia = declaration.leadingTrivia
-        
-        var summary: String?
-        var details: String?
-        var usageExamples: [String] = []
-        var notes: [String] = []
-        
-        var currentSection: String?
         var docLines: [String] = []
         
         for piece in leadingTrivia {
-            if case let .docLineComment(comment) = piece {
-                let line = comment.trimmingPrefix("///").trimmingCharacters(in: .whitespaces)
-                
-                // Check for section markers
-                if line.hasPrefix("##") {
-                    // Save previous section
-                    if let section = currentSection {
-                        saveSection(section, lines: docLines, to: &summary, &details, &usageExamples, &notes)
-                    }
-                    currentSection = line.trimmingPrefix("##").trimmingCharacters(in: .whitespaces)
-                    docLines = []
-                } else if !line.isEmpty {
+            switch piece {
+            case .docLineComment(let text):
+                let cleaned = text.trimmingCharacters(in: .whitespaces)
+                if cleaned.hasPrefix("///") {
+                    let line = String(cleaned.dropFirst(3)).trimmingCharacters(in: .whitespaces)
+                    // Include empty lines to preserve document structure for code blocks
                     docLines.append(line)
                 }
+            case .docBlockComment(let text):
+                // Preserve newlines for code block detection
+                let cleaned = text
+                    .replacingOccurrences(of: "/**", with: "")
+                    .replacingOccurrences(of: "*/", with: "")
+                // Split by lines and process each, preserving structure
+                let blockLines = cleaned.components(separatedBy: .newlines)
+                for blockLine in blockLines {
+                    let trimmed = blockLine
+                        .trimmingCharacters(in: .whitespaces)
+                        .replacingOccurrences(of: "^\\*\\s*", with: "", options: .regularExpression)
+                    docLines.append(trimmed)
+                }
+            default:
+                break
             }
         }
         
-        // Save last section
-        if let section = currentSection {
-            saveSection(section, lines: docLines, to: &summary, &details, &usageExamples, &notes)
-        } else if !docLines.isEmpty {
-            // No sections, treat as summary
-            summary = docLines.joined(separator: " ")
-        }
+        let rawComment = docLines.isEmpty ? nil : docLines.joined(separator: "\n")
         
+        // Use DocCommentParser to parse the raw comment with code block support
+        let docComment = DocCommentParser.parse(rawComment)
+        
+        // Map DocComment fields to Documentation fields
         return Documentation(
-            summary: summary,
-            details: details,
-            usageExamples: usageExamples,
-            notes: notes
+            summary: docComment.summary,
+            details: docComment.discussion,
+            usageExamples: [], // Could be extracted from ## Usage sections if needed
+            notes: docComment.notes + docComment.warnings + docComment.important,
+            contentParts: docComment.contentParts // Preserves interleaved text and code blocks
         )
-    }
-    
-    private static func saveSection(
-        _ section: String,
-        lines: [String],
-        to summary: inout String?,
-        _ details: inout String?,
-        _ usageExamples: inout [String],
-        _ notes: inout [String]
-    ) {
-        let content = lines.joined(separator: "\n")
-        
-        switch section.lowercased() {
-        case "usage", "example", "examples":
-            usageExamples.append(content)
-        case "note", "notes", "important", "warning":
-            notes.append(content)
-        case "details", "description":
-            details = content
-        default:
-            break
-        }
     }
 }

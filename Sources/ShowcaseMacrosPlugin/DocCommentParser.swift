@@ -28,6 +28,8 @@ enum DocCommentParser {
     private struct ParsingState {
         var summary: String?
         var discussionLines: [String] = []
+        var contentParts: [ContentPart] = []
+        var currentTextLines: [String] = []
         var parameters: [String: String] = [:]
         var returns: String?
         var throwsInfo: String?
@@ -53,7 +55,8 @@ enum DocCommentParser {
         
         for line in lines {
             let trimmed = line.trimmingCharacters(in: .whitespaces)
-            parseLine(trimmed, state: &state)
+            // Pass both original and trimmed - parser will use original for code blocks
+            parseLine(trimmed, originalLine: line, state: &state)
         }
         
         return buildDocComment(from: state)
@@ -61,32 +64,40 @@ enum DocCommentParser {
     
     // MARK: - Parsing Helpers
     
-    private static func parseLine(_ line: String, state: inout ParsingState) {
+    private static func parseLine(_ line: String, originalLine: String, state: inout ParsingState) {
         // Check for code block markers (```swift or just ```)
         if line.hasPrefix("```") {
             if state.inCodeBlock {
-                // End of code block
+                // End of code block - save any pending text first
+                flushCurrentText(state: &state)
+                
+                // Then save the code block
                 let codeBlock = state.currentCodeBlockLines.joined(separator: "\n")
                 if !codeBlock.isEmpty {
                     state.codeBlocks.append(codeBlock)
+                    state.contentParts.append(.codeBlock(codeBlock))
                 }
                 state.currentCodeBlockLines = []
                 state.inCodeBlock = false
             } else {
-                // Start of code block
+                // Start of code block - flush any accumulated text first
+                flushCurrentText(state: &state)
                 state.inCodeBlock = true
             }
             return
         }
         
-        // If inside code block, accumulate lines
+        // If inside code block, accumulate lines with preserved indentation
         if state.inCodeBlock {
-            state.currentCodeBlockLines.append(line)
+            // Use original line to preserve indentation in code blocks
+            state.currentCodeBlockLines.append(originalLine)
             return
         }
         
         // Check for section markers first
         if let newSection = detectSectionMarker(line, state: &state) {
+            // Flush any accumulated text before changing sections
+            flushCurrentText(state: &state)
             state.currentSection = newSection
             return
         }
@@ -188,6 +199,19 @@ enum DocCommentParser {
     
     // MARK: - Content Appending
     
+    private static func flushCurrentText(state: inout ParsingState) {
+        // Only flush if we're in summary or discussion sections (not parameters, etc.)
+        guard state.currentSection == .summary || state.currentSection == .discussion else {
+            return
+        }
+        
+        if !state.currentTextLines.isEmpty {
+            let text = state.currentTextLines.joined(separator: "\n")
+            state.contentParts.append(.text(text))
+            state.currentTextLines = []
+        }
+    }
+    
     private static func handleEmptyLine(state: inout ParsingState) {
         if state.currentSection == .summary && state.summary != nil {
             state.currentSection = .discussion
@@ -200,6 +224,7 @@ enum DocCommentParser {
             appendToSummary(line, state: &state)
         case .discussion:
             state.discussionLines.append(line)
+            state.currentTextLines.append(line)
         case .parameters:
             if state.currentParam != nil {
                 state.currentParamLines.append(line)
@@ -220,8 +245,10 @@ enum DocCommentParser {
     private static func appendToSummary(_ line: String, state: inout ParsingState) {
         if state.summary == nil {
             state.summary = line
+            state.currentTextLines.append(line)
         } else {
             state.summary! += " " + line
+            state.currentTextLines.append(line)
         }
     }
     
@@ -272,18 +299,21 @@ enum DocCommentParser {
         var finalState = state
         saveCurrentParameter(state: &finalState)
         
+        // Flush any remaining text content
+        flushCurrentText(state: &finalState)
+        
         let discussion = finalState.discussionLines.isEmpty ? nil : finalState.discussionLines.joined(separator: " ")
         
         return DocComment(
             summary: finalState.summary,
             discussion: discussion,
+            contentParts: finalState.contentParts,
             parameters: finalState.parameters,
             returns: finalState.returns,
             throws: finalState.throwsInfo,
             notes: finalState.notes,
             warnings: finalState.warnings,
-            important: finalState.important,
-            codeBlocks: finalState.codeBlocks
+            important: finalState.important
         )
     }
     
@@ -291,13 +321,13 @@ enum DocCommentParser {
         DocComment(
             summary: nil,
             discussion: nil,
+            contentParts: [],
             parameters: [:],
             returns: nil,
             throws: nil,
             notes: [],
             warnings: [],
-            important: [],
-            codeBlocks: []
+            important: []
         )
     }
 }
