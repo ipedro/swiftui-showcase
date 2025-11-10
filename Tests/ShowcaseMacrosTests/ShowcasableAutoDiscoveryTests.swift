@@ -99,8 +99,7 @@ final class ShowcasableAutoDiscoveryTests: ShowcaseMacrosTestsBase {
                                 }
                                 CodeBlock("Declaration") {
                                     """
-                                    /// Creates a new user with the given credentials
-                                            init(id: String, name: String)
+                                    init(id: String, name: String)
                                     """
                                 }
                             }
@@ -112,9 +111,7 @@ final class ShowcasableAutoDiscoveryTests: ShowcaseMacrosTestsBase {
                                 }
                                 CodeBlock("Declaration") {
                                     """
-                                    /// Validates the user's name
-                                            /// - Returns: true if the name is valid
-                                            func validateName() -> Bool
+                                    func validateName() -> Bool
                                     """
                                 }
                             }
@@ -126,8 +123,7 @@ final class ShowcasableAutoDiscoveryTests: ShowcaseMacrosTestsBase {
                                 }
                                 CodeBlock("Declaration") {
                                     """
-                                    /// Gets the user's display string
-                                            func displayString() -> String
+                                    func displayString() -> String
                                     """
                                 }
                             }
@@ -139,8 +135,7 @@ final class ShowcasableAutoDiscoveryTests: ShowcaseMacrosTestsBase {
                                 }
                                 CodeBlock("Declaration") {
                                     """
-                                    /// The user's unique identifier
-                                            var id: String
+                                    var id: String
                                     """
                                 }
                             }
@@ -152,8 +147,7 @@ final class ShowcasableAutoDiscoveryTests: ShowcaseMacrosTestsBase {
                                 }
                                 CodeBlock("Declaration") {
                                     """
-                                    /// The user's display name
-                                            var name: String
+                                    var name: String
                                     """
                                 }
                             }
@@ -383,11 +377,6 @@ final class ShowcasableAutoDiscoveryTests: ShowcaseMacrosTestsBase {
                 extension Component: Showcasable {
                     public static var showcaseTopic: Topic {
                         Topic("Component") {
-                            CodeBlock("Type Relationships") {
-                                """
-                                struct Component
-                                """
-                            }
                             Topic("value") {
                                 Description {
                                     """
@@ -396,7 +385,6 @@ final class ShowcasableAutoDiscoveryTests: ShowcaseMacrosTestsBase {
                                 }
                                 CodeBlock("Declaration") {
                                     """
-                                    /// A documented property
                                     var value: String
                                     """
                                 }
