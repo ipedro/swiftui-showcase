@@ -150,3 +150,7 @@ struct DSSkeletonLoader: View {
         )
     }
 }
+
+#Preview {
+    DSSkeletonLoader.self
+}

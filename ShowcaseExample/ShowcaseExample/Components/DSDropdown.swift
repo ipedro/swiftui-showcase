@@ -245,6 +245,22 @@ struct DSDropdown<Item: Hashable & Identifiable, Content: View>: View {
             }
         }
     }
+
+    @ShowcaseExample(
+        title: "Single Selection",
+        description: "Choose one item from the list"
+    )
+    static var singleSelection: some View {
+        DropdownExample()
+    }
+
+    @ShowcaseExample(
+        title: "Multi-Selection",
+        description: "Select multiple items with checkmarks"
+    )
+    static var multiSelection: some View {
+        MultiDropdownExample()
+    }
 }
 
 // MARK: - Example Item Type
@@ -260,19 +276,6 @@ struct DropdownItem: Identifiable, Hashable {
     }
 }
 
-// MARK: - Examples
-
-extension DSDropdown where Item == DropdownItem, Content == Text {
-    @ShowcaseExample(title: "Single Selection", description: "Choose one item from the list")
-    static var singleSelection: some View {
-        DropdownExample()
-    }
-    
-    @ShowcaseExample(title: "Multi-Selection", description: "Select multiple items with checkmarks")
-    static var multiSelection: some View {
-        MultiDropdownExample()
-    }
-}
 
 private struct DropdownExample: View {
     @State private var selection: DropdownItem?
@@ -352,4 +355,8 @@ private struct MultiDropdownExample: View {
         }
         .padding()
     }
+}
+
+#Preview {
+    DSDropdown<DropdownItem, AnyView>.self
 }

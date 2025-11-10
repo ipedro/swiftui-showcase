@@ -129,3 +129,7 @@ struct DSButton: View {
         }
     }
 }
+
+#Preview {
+    DSButton.self
+}

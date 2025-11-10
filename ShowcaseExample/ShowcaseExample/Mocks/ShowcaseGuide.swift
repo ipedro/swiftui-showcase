@@ -1040,3 +1040,6 @@ extension Topic {
     }
 }
 
+#Preview {
+    Document.showcaseGuide
+}

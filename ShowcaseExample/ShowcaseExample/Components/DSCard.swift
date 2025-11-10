@@ -28,6 +28,7 @@ import ShowcaseMacros
 @Showcasable(icon: "rectangle.stack", examples: [DSCardExamples.self])
 struct DSCard<Content: View>: View {
     let title: String?
+    /// A view content to display.
     let content: Content
     
     init(title: String? = nil, @ViewBuilder content: () -> Content) {
@@ -84,4 +85,8 @@ struct DSCardExamples {
             }
         }
     }
+}
+
+#Preview {
+    DSCard<AnyView>.self
 }

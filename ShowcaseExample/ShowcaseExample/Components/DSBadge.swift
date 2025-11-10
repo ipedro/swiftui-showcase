@@ -58,3 +58,7 @@ struct DSBadge: View {
             .cornerRadius(4)
     }
 }
+
+#Preview {
+    DSBadge.self
+}

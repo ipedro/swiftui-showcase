@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 import Foundation
+import SwiftUI
 
 /// A type that can provide showcase documentation.
 ///
@@ -29,4 +30,14 @@ import Foundation
 public protocol Showcasable {
     /// The generated topic containing this type's documentation.
     static var showcaseTopic: Topic { get }
+}
+
+public extension ViewBuilder {
+    static func buildExpression<T: Showcasable>(_ expression: T.Type) -> some View {
+        NavigationStack {
+            ScrollView {
+                T.showcaseTopic
+            }
+        }
+    }
 }

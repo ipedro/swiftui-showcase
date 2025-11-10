@@ -167,3 +167,7 @@ struct DSContextMenu: View {
         }
     }
 }
+
+#Preview {
+    DSContextMenu.self
+}

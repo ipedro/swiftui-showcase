@@ -111,3 +111,7 @@ struct DSAsyncImage: View {
         }
     }
 }
+
+#Preview {
+    DSAsyncImage.self
+}

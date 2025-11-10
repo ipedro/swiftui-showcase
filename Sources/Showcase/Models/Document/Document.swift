@@ -68,6 +68,12 @@ private extension [Chapter] {
     }
 }
 
+extension Document: View {
+    public var body: some View {
+        ShowcaseNavigationSplitView(self)
+    }
+}
+
 extension Document: Hashable {
     public func hash(into hasher: inout Hasher) {
         hasher.combine(id)

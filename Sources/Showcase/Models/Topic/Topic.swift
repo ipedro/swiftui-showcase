@@ -124,6 +124,12 @@ public struct Topic: Identifiable {
     }
 }
 
+extension Topic: View {
+    public var body: some View {
+        ShowcaseNavigationTopic(self)
+    }
+}
+
 extension Topic: Hashable {
     public func hash(into hasher: inout Hasher) {
         hasher.combine(id)
