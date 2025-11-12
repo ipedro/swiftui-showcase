@@ -60,13 +60,12 @@ struct ShowcaseNavigationTopic: View {
 private struct NavigationBarTitleDisplayModifier: UserInterfaceIdiomModifier {
     let hasAppeared: Bool
 
-#if os(iOS)
-    func phoneBody(content: Content) -> some View {
-        content.navigationBarTitleDisplayMode(hasAppeared ? .large : .inline)
-    }
-#endif
+    #if os(iOS)
+        func phoneBody(content: Content) -> some View {
+            content.navigationBarTitleDisplayMode(hasAppeared ? .large : .inline)
+        }
+    #endif
 }
-
 
 // Wrapper to handle optional menu
 private struct ShowcaseIndexMenuWrapper: View {
@@ -82,4 +81,3 @@ private struct ShowcaseIndexMenuWrapper: View {
         }
     }
 }
-
