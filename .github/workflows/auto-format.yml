@@ -14,7 +14,7 @@ permissions:
 jobs:
   format:
     name: Format and Lint
-    runs-on: macos-latest
+    runs-on: macos-latest # comes with brew pre-installed
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -24,42 +24,174 @@ jobs:
       - name: Apply SwiftLint
         run: |
           brew install swiftlint
+          # Capture violations before fixing
+          swiftlint lint Sources/ Tests/ --reporter json > swiftlint-before.json || true
           swiftlint --fix Sources/ Tests/
-          echo "SwiftLint applied successfully"
+          echo "✅ SwiftLint applied successfully"
           
       - name: Apply SwiftFormat
         run: |
           brew install swiftformat
           swiftformat Sources/ Tests/
-          echo "SwiftFormat applied successfully"
+          echo "✅ SwiftFormat applied successfully"
       
-      - name: Check for changes
-        id: changes
+      - name: Analyze changes
+        id: analysis
         run: |
           if git diff --quiet; then
             echo "has_changes=false" >> $GITHUB_OUTPUT
-            echo "No formatting changes needed"
+            echo "✅ No formatting changes needed"
           else
             echo "has_changes=true" >> $GITHUB_OUTPUT
-            echo "Formatting changes detected:"
-            git diff --stat
+            
+            # Get list of changed files
+            git diff --name-only > changed-files.txt
+            FILE_COUNT=$(wc -l < changed-files.txt | xargs)
+            echo "file_count=$FILE_COUNT" >> $GITHUB_OUTPUT
+            
+            # Get diff stats
+            INSERTIONS=$(git diff --shortstat | grep -o '[0-9]* insertion' | awk '{print $1}' || echo "0")
+            DELETIONS=$(git diff --shortstat | grep -o '[0-9]* deletion' | awk '{print $1}' || echo "0")
+            echo "insertions=$INSERTIONS" >> $GITHUB_OUTPUT
+            echo "deletions=$DELETIONS" >> $GITHUB_OUTPUT
+            
+            # Parse SwiftLint violations
+            if [ -f swiftlint-before.json ]; then
+              cat > parse_swiftlint.py << 'PYTHON_SCRIPT'
+          import json
+          import sys
+          
+          try:
+              with open('swiftlint-before.json', 'r') as f:
+                  violations = json.load(f)
+              
+              if not violations:
+                  print("No SwiftLint violations detected")
+                  sys.exit(0)
+              
+              # Group by rule
+              by_rule = {}
+              violation_details = []
+              
+              for v in violations:
+                  rule = v.get('rule_id', 'unknown')
+                  by_rule[rule] = by_rule.get(rule, 0) + 1
+                  
+                  file_path = v.get('file', '').replace('/Users/runner/work/swiftui-showcase/swiftui-showcase/', '')
+                  line = v.get('line', '?')
+                  severity = v.get('severity', 'warning')
+                  reason = v.get('reason', 'No description')
+                  
+                  violation_details.append({
+                      'file': file_path,
+                      'line': line,
+                      'rule': rule,
+                      'severity': severity,
+                      'reason': reason
+                  })
+              
+              print(f"### 🔧 SwiftLint Fixes ({len(violations)} violations)\n")
+              
+              # Show top 10 violations with details
+              print("| File:Line | Rule | Severity | Description |")
+              print("|-----------|------|----------|-------------|")
+              
+              for v in violation_details[:10]:
+                  severity_emoji = "⚠️" if v['severity'] == 'warning' else "🚫"
+                  rule_link = f"[`{v['rule']}`](https://realm.github.io/SwiftLint/rule-directory.html#{v['rule']})"
+                  print(f"| `{v['file']}:{v['line']}` | {rule_link} | {severity_emoji} {v['severity']} | {v['reason'][:80]} |")
+              
+              if len(violation_details) > 10:
+                  print(f"\n<details>")
+                  print(f"<summary>📋 View all {len(violation_details)} SwiftLint fixes</summary>\n")
+                  print("| File:Line | Rule | Severity | Description |")
+                  print("|-----------|------|----------|-------------|")
+                  for v in violation_details:
+                      severity_emoji = "⚠️" if v['severity'] == 'warning' else "🚫"
+                      rule_link = f"[`{v['rule']}`](https://realm.github.io/SwiftLint/rule-directory.html#{v['rule']})"
+                      print(f"| `{v['file']}:{v['line']}` | {rule_link} | {severity_emoji} {v['severity']} | {v['reason'][:80]} |")
+                  print("\n</details>")
+              
+              # Rules summary
+              print("\n### 📊 Rules Summary\n")
+              sorted_rules = sorted(by_rule.items(), key=lambda x: x[1], reverse=True)
+              for rule, count in sorted_rules:
+                  rule_link = f"[`{rule}`](https://realm.github.io/SwiftLint/rule-directory.html#{rule})"
+                  print(f"- {rule_link}: **{count}** fix{'es' if count > 1 else ''}")
+          
+          except Exception as e:
+              print(f"Error parsing SwiftLint output: {e}")
+              print("No SwiftLint violations detected")
+          PYTHON_SCRIPT
+              
+              python3 parse_swiftlint.py > swiftlint-summary.md
+            fi
+            
+            echo "✅ Changes analyzed"
           fi
       
       - name: Commit and push changes
-        if: steps.changes.outputs.has_changes == 'true'
+        if: steps.analysis.outputs.has_changes == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add -A
-          git commit -m "chore: apply SwiftFormat [skip ci]"
+          git commit -m "chore: apply SwiftLint & SwiftFormat [skip ci]"
           git push
       
-      - name: Summary
+      - name: Generate Summary
+        if: always()
         run: |
-          echo "## 🎨 SwiftFormat Auto-Applied" >> $GITHUB_STEP_SUMMARY
+          echo "## 🎨 Auto-Format Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          if [ "${{ steps.changes.outputs.has_changes }}" == "true" ]; then
-            echo "✅ Formatting changes committed and pushed" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "${{ steps.analysis.outputs.has_changes }}" == "true" ]; then
+            echo "### 📊 Statistics" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "- 📝 **Files Modified**: ${{ steps.analysis.outputs.file_count }}" >> $GITHUB_STEP_SUMMARY
+            echo "- ➕ **Lines Added**: ${{ steps.analysis.outputs.insertions }}" >> $GITHUB_STEP_SUMMARY
+            echo "- ➖ **Lines Removed**: ${{ steps.analysis.outputs.deletions }}" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "---" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            
+            # Add SwiftLint summary if available
+            if [ -f swiftlint-summary.md ]; then
+              cat swiftlint-summary.md >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "---" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+            fi
+            
+            # List changed files
+            echo "### 📁 Files Modified" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "| File | Changes |" >> $GITHUB_STEP_SUMMARY
+            echo "|------|---------|" >> $GITHUB_STEP_SUMMARY
+            git diff --numstat | while read additions deletions file; do
+              echo "| \`$file\` | +$additions / -$deletions |" >> $GITHUB_STEP_SUMMARY
+            done
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "---" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            
+            # Add link to commit
+            echo "### 🔗 Resources" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "- 📦 [View Commit](https://github.com/${{ github.repository }}/commit/\$(git rev-parse HEAD))" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            
+            # Add collapsible diff
+            echo "<details>" >> $GITHUB_STEP_SUMMARY
+            echo "<summary>📄 Full Diff (click to expand)</summary>" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`diff" >> $GITHUB_STEP_SUMMARY
+            git diff --no-color | head -n 500 >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "</details>" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "✅ **Formatting changes committed and pushed**" >> $GITHUB_STEP_SUMMARY
           else
-            echo "✅ No formatting changes needed" >> $GITHUB_STEP_SUMMARY
+            echo "✅ **No formatting changes needed** - code is already perfectly formatted!" >> $GITHUB_STEP_SUMMARY
           fi
