@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+import Engine
 import SwiftUI
 
 struct ShowcaseNavigationTopic: View {
@@ -27,7 +28,7 @@ struct ShowcaseNavigationTopic: View {
     private var isInSplitView
 
     @State
-    private var titleDisplayMode = NavigationBarItem.TitleDisplayMode.inline
+    private var hasAppeared = false
 
     var data: Topic
 
@@ -47,12 +48,25 @@ struct ShowcaseNavigationTopic: View {
             }
             .modifier(ShowcaseScrollViewReader())
             .navigationTitle(data.title)
-            .navigationBarTitleDisplayMode(titleDisplayMode)
+            .modifier(
+                NavigationBarTitleDisplayModifier(hasAppeared: hasAppeared)
+            )
             .onAppear {
-                titleDisplayMode = .automatic
+                hasAppeared = true
             }
     }
 }
+
+private struct NavigationBarTitleDisplayModifier: UserInterfaceIdiomModifier {
+    let hasAppeared: Bool
+
+#if os(iOS)
+    func phoneBody(content: Content) -> some View {
+        content.navigationBarTitleDisplayMode(hasAppeared ? .large : .inline)
+    }
+#endif
+}
+
 
 // Wrapper to handle optional menu
 private struct ShowcaseIndexMenuWrapper: View {
@@ -68,3 +82,4 @@ private struct ShowcaseIndexMenuWrapper: View {
         }
     }
 }
+

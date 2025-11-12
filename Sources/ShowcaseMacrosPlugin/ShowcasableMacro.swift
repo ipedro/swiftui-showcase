@@ -83,7 +83,7 @@ public struct ShowcasableMacro: ExtensionMacro {
 
         let showcasableType = TypeSyntax(stringLiteral: "Showcasable")
 
-        return try [ExtensionDeclSyntax(
+        return [ExtensionDeclSyntax(
             extendedType: type,
             inheritanceClause: InheritanceClauseSyntax {
                 InheritedTypeSyntax(type: showcasableType)
