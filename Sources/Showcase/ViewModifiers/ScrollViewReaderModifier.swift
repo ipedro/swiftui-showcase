@@ -24,27 +24,40 @@ import Foundation
 import SwiftUI
 
 struct ShowcaseScrollViewReader: ViewModifier {
+    @Environment(\.isInSplitView)
+    private var isInSplitView
+    
     @State
     private var selection: Topic.ID?
 
     func body(content: Content) -> some View {
-        ScrollViewReader { scrollView in
+        if isInSplitView {
+            // TEST: Add back ScrollView - bare minimum
             ScrollView {
-                ZStack(alignment: .top) {
-                    ShowcaseScrollViewTopAnchor()
-                    content.padding(.bottom, 30)
-                }
+                content
+                    .padding(.bottom, 30)
             }
-            .environment(\.scrollViewSelection, $selection)
-            .onChange(of: selection) { value in
-                if let value {
-                    withAnimation(.snappy) {
-                        scrollView.scrollTo(value, anchor: .top)
+        } else {
+            // In NavigationStack, use full ScrollViewReader functionality
+            ScrollViewReader { scrollView in
+                ScrollView {
+                    ZStack(alignment: .top) {
+                        ShowcaseScrollViewTopAnchor()
+                        content
+                            .padding(.bottom, 30)
                     }
-                    self.selection = nil
                 }
+                .environment(\.scrollViewSelection, $selection)
+                .onChange(of: selection) { value in
+                    if let value {
+                        withAnimation(.snappy) {
+                            scrollView.scrollTo(value, anchor: .top)
+                        }
+                        self.selection = nil
+                    }
+                }
+                .scrollDismissesKeyboard(.interactively)
             }
-            .scrollDismissesKeyboard(.interactively)
         }
     }
 }

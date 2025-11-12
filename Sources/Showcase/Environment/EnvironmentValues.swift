@@ -60,4 +60,9 @@ extension EnvironmentValues {
         get { self[ScrollViewSelectionKey.self] }
         set { self[ScrollViewSelectionKey.self] = newValue }
     }
+
+    var isInSplitView: Bool {
+        get { self[IsInSplitViewKey.self] }
+        set { self[IsInSplitViewKey.self] = newValue }
+    }
 }

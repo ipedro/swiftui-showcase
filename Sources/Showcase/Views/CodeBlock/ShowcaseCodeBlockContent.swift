@@ -23,6 +23,12 @@
 import Splash
 import SwiftUI
 
+#if os(macOS)
+import AppKit
+#else
+import UIKit
+#endif
+
 /// A view representing the content of the code block with syntax highlighting.
 struct ShowcaseCodeBlockContent: View {
     var sourceCode: String
@@ -64,6 +70,7 @@ struct ShowcaseCodeBlockContent: View {
                 .padding(
                     title == nil ? .vertical : .bottom
                 )
+                .padding(.top, 6)
         }
         .fixedSize(horizontal: false, vertical: true)
         .scrollBounceBehavior(.basedOnSize, axes: [.horizontal, .vertical])
@@ -74,18 +81,18 @@ struct ShowcaseCodeBlockContent: View {
     }
 
     var body: some View {
-        ZStack(alignment: .topTrailing) {
-            GroupBox {
+        GroupBox {
+            ZStack(alignment: .topTrailing) {
                 content
-            } label: {
-                if let title {
-                    title.foregroundStyle(Color(theme.plainTextColor))
-                }
+                copyButton
             }
-            .backgroundStyle(Color(theme.backgroundColor))
-
-            copyButton.padding(5)
+            .padding(3)
+        } label: {
+            if let title {
+                title.foregroundStyle(Color(theme.plainTextColor))
+            }
         }
+        .backgroundStyle(Color(theme.backgroundColor))
         .task(id: "\(sourceCode)-\(colorScheme)-\(typeSize)") {
             attributedCode = makeAttributed(sourceCode)
         }
@@ -108,20 +115,32 @@ struct ShowcaseCodeBlockContent: View {
     }
 
     private var font: Splash.Font {
-        switch typeSize {
-        case .xSmall: Font(size: 9)
-        case .small: Font(size: 11)
-        case .medium: Font(size: 13)
-        case .large: Font(size: 15)
-        case .xLarge: Font(size: 17)
-        case .xxLarge: Font(size: 19)
-        case .xxxLarge: Font(size: 21)
-        case .accessibility1: Font(size: 25)
-        case .accessibility2: Font(size: 29)
-        case .accessibility3: Font(size: 33)
-        case .accessibility4: Font(size: 37)
-        case .accessibility5: Font(size: 41)
-        @unknown default: Font(size: 17)
+        // Font sizes adjusted to be ~85% of body text size for better harmony
+        let size: CGFloat = switch typeSize {
+        case .xSmall: 11
+        case .small: 12
+        case .medium: 13
+        case .large: 14
+        case .xLarge: 15
+        case .xxLarge: 17
+        case .xxxLarge: 19
+        case .accessibility1: 22
+        case .accessibility2: 25
+        case .accessibility3: 28
+        case .accessibility4: 31
+        case .accessibility5: 35
+        @unknown default: 14
         }
+        
+        // Create font with preloaded monospaced font
+        #if os(macOS)
+        let nativeFont = NSFont.monospacedSystemFont(ofSize: size, weight: .regular)
+        #else
+        let nativeFont = UIFont.monospacedSystemFont(ofSize: size, weight: .regular)
+        #endif
+        
+        var font = Splash.Font(size: Double(size))
+        font.resource = .preloaded(nativeFont)
+        return font
     }
 }

@@ -23,6 +23,12 @@
 import SwiftUI
 
 struct ShowcaseNavigationTopic: View {
+    @Environment(\.isInSplitView)
+    private var isInSplitView
+
+    @State
+    private var titleDisplayMode = NavigationBarItem.TitleDisplayMode.inline
+
     var data: Topic
 
     init?(_ data: Topic?) {
@@ -33,15 +39,18 @@ struct ShowcaseNavigationTopic: View {
     var body: some View {
         ShowcaseTopic(data)
             .equatable()
-            .navigationTitle(data.title)
             .accessibilityElement(children: .contain)
             .toolbar {
                 ToolbarItem {
                     ShowcaseIndexMenuWrapper(data)
                 }
             }
-            // must come after toolbar
             .modifier(ShowcaseScrollViewReader())
+            .navigationTitle(data.title)
+            .navigationBarTitleDisplayMode(titleDisplayMode)
+            .onAppear {
+                titleDisplayMode = .automatic
+            }
     }
 }
 

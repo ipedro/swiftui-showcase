@@ -22,28 +22,23 @@
 
 import SwiftUI
 
-/// A view that displays a list of showcases organized into chapters.
+/// A view that displays a list of showcases organized into chapters in a split view layout.
 @available(iOS 16.0, macOS 13.0, tvOS 16.0, watchOS 9.0, *)
 public struct ShowcaseNavigationSplitView<Sidebar: View, ContentToolbar: View, DetailToolbar: View>: View {
-    /// The data representing showcase chapters.
+    // MARK: - Properties
+    
     private let data: Document
-
     private let _sidebar: Sidebar
-
     private let contentToolbar: ContentToolbar
-
     private let detailToolbar: DetailToolbar
-
-    @State
-    private var searchQuery = String()
-
-    @Binding
-    var columnVisibility: NavigationSplitViewVisibility
-
-    @State
-    private var selection: Topic?
-
-    /// Creates a two or three-column layout
+    
+    @Binding var columnVisibility: NavigationSplitViewVisibility
+    @State private var searchQuery = String()
+    @State private var selection: Topic?
+    
+    // MARK: - Initialization
+    
+    /// Creates a two or three-column split view layout for showcase documentation.
     public init(
         _ data: Document,
         columnVisibility: Binding<NavigationSplitViewVisibility> = .constant(.automatic),
@@ -52,12 +47,14 @@ public struct ShowcaseNavigationSplitView<Sidebar: View, ContentToolbar: View, D
         @ViewBuilder detailToolbar: () -> DetailToolbar = EmptyView.init
     ) {
         self.data = data
-        _columnVisibility = columnVisibility
-        _sidebar = sidebar()
+        self._columnVisibility = columnVisibility
+        self._sidebar = sidebar()
         self.contentToolbar = contentToolbar()
         self.detailToolbar = detailToolbar()
     }
-
+    
+    // MARK: - Body
+    
     public var body: some View {
         Group {
             if Sidebar.self != EmptyView.self {
@@ -65,48 +62,24 @@ public struct ShowcaseNavigationSplitView<Sidebar: View, ContentToolbar: View, D
                 NavigationSplitView(
                     columnVisibility: $columnVisibility,
                     sidebar: { _sidebar },
-                    content: { list },
-                    detail: detail
+                    content: { contentColumn },
+                    detail: detailColumn
                 )
             } else {
-                // Two-column layout (sidebar + detail)
+                // Two-column layout
                 NavigationSplitView(
                     columnVisibility: $columnVisibility,
-                    sidebar: { list },
-                    detail: detail
+                    sidebar: { contentColumn },
+                    detail: detailColumn
                 )
             }
         }
         .previewDisplayName(data.title)
     }
-
-    @ViewBuilder
-    private func detail() -> some View {
-        if let selection {
-            ShowcaseNavigationTopic(selection).toolbar(content: {
-                detailToolbar
-            })
-        } else {
-            VStack(spacing: 16) {
-                Image(systemName: "doc.text")
-                    .font(.system(size: 48))
-                    .foregroundStyle(.secondary)
-                Text("Select a Topic")
-                    .font(.title2)
-                    .fontWeight(.semibold)
-                Text("Choose a topic from the list to view its documentation")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center)
-            }
-            .padding()
-            .toolbar(content: {
-                detailToolbar
-            })
-        }
-    }
-
-    private var list: some View {
+    
+    // MARK: - Content Column (List)
+    
+    private var contentColumn: some View {
         List(selection: $selection) {
             DescriptionView(data.description)
             ShowcaseChapters(
@@ -117,8 +90,46 @@ public struct ShowcaseNavigationSplitView<Sidebar: View, ContentToolbar: View, D
         .multilineTextAlignment(.leading)
         .searchable(text: $searchQuery)
         .navigationTitle(data.title)
-        .toolbar(content: {
+        .toolbar {
             contentToolbar
-        })
+        }
+    }
+    
+    // MARK: - Detail Column
+    
+    @ViewBuilder
+    private func detailColumn() -> some View {
+        if let selection {
+            // Use ShowcaseNavigationTopic which handles its own toolbar
+            ShowcaseNavigationTopic(selection)
+                .environment(\.isInSplitView, true)
+                .toolbar {
+                    detailToolbar
+                }
+        } else {
+            // Empty state
+            emptyDetailState
+        }
+    }
+    
+    private var emptyDetailState: some View {
+        VStack(spacing: 16) {
+            Image(systemName: "doc.text")
+                .font(.system(size: 48))
+                .foregroundStyle(.secondary)
+            
+            Text("Select a Topic")
+                .font(.title2)
+                .fontWeight(.semibold)
+            
+            Text("Choose a topic from the list to view its documentation")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+        }
+        .padding()
+        .toolbar {
+            detailToolbar
+        }
     }
 }

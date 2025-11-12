@@ -68,8 +68,8 @@ struct DSAsyncImage: View {
     
     @ShowcaseExample(title: "Wide Banner", description: "Ideal for hero sections")
     static var banner: some View {
-        DSAsyncImage(url: URL(string: "https://picsum.photos/400/200"))
-            .frame(height: 200)
+        DSAsyncImage(url: URL(string: "https://picsum.photos/200/100"))
+            .frame(width: 200)
             .clipShape(RoundedRectangle(cornerRadius: 16))
     }
     

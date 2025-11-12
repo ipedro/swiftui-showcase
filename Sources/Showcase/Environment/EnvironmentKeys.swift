@@ -54,3 +54,8 @@ struct ContentBodyFontKey: EnvironmentKey {
 struct ScrollViewSelectionKey: EnvironmentKey {
     static var defaultValue: Binding<Topic.ID?>?
 }
+
+struct IsInSplitViewKey: EnvironmentKey {
+    static var defaultValue: Bool = false
+}
+
