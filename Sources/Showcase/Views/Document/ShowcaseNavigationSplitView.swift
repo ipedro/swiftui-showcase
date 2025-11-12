@@ -1,6 +1,6 @@
 // ShowcaseNavigationSplitView.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/10/25.
+// Created by Pedro Almeida on 11/12/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -26,18 +26,18 @@ import SwiftUI
 @available(iOS 16.0, macOS 13.0, tvOS 16.0, watchOS 9.0, *)
 public struct ShowcaseNavigationSplitView<Sidebar: View, ContentToolbar: View, DetailToolbar: View>: View {
     // MARK: - Properties
-    
+
     private let data: Document
     private let _sidebar: Sidebar
     private let contentToolbar: ContentToolbar
     private let detailToolbar: DetailToolbar
-    
+
     @Binding var columnVisibility: NavigationSplitViewVisibility
     @State private var searchQuery = String()
     @State private var selection: Topic?
-    
+
     // MARK: - Initialization
-    
+
     /// Creates a two or three-column split view layout for showcase documentation.
     public init(
         _ data: Document,
@@ -47,14 +47,14 @@ public struct ShowcaseNavigationSplitView<Sidebar: View, ContentToolbar: View, D
         @ViewBuilder detailToolbar: () -> DetailToolbar = EmptyView.init
     ) {
         self.data = data
-        self._columnVisibility = columnVisibility
-        self._sidebar = sidebar()
+        _columnVisibility = columnVisibility
+        _sidebar = sidebar()
         self.contentToolbar = contentToolbar()
         self.detailToolbar = detailToolbar()
     }
-    
+
     // MARK: - Body
-    
+
     public var body: some View {
         Group {
             if Sidebar.self != EmptyView.self {
@@ -76,9 +76,9 @@ public struct ShowcaseNavigationSplitView<Sidebar: View, ContentToolbar: View, D
         }
         .previewDisplayName(data.title)
     }
-    
+
     // MARK: - Content Column (List)
-    
+
     private var contentColumn: some View {
         List(selection: $selection) {
             DescriptionView(data.description)
@@ -94,9 +94,9 @@ public struct ShowcaseNavigationSplitView<Sidebar: View, ContentToolbar: View, D
             contentToolbar
         }
     }
-    
+
     // MARK: - Detail Column
-    
+
     @ViewBuilder
     private func detailColumn() -> some View {
         if let selection {
@@ -111,17 +111,17 @@ public struct ShowcaseNavigationSplitView<Sidebar: View, ContentToolbar: View, D
             emptyDetailState
         }
     }
-    
+
     private var emptyDetailState: some View {
         VStack(spacing: 16) {
             Image(systemName: "doc.text")
                 .font(.system(size: 48))
                 .foregroundStyle(.secondary)
-            
+
             Text("Select a Topic")
                 .font(.title2)
                 .fontWeight(.semibold)
-            
+
             Text("Choose a topic from the list to view its documentation")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)

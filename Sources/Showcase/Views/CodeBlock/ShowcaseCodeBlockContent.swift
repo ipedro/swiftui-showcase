@@ -1,6 +1,6 @@
 // ShowcaseCodeBlockContent.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/10/25.
+// Created by Pedro Almeida on 11/12/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,9 +24,9 @@ import Splash
 import SwiftUI
 
 #if os(macOS)
-import AppKit
+    import AppKit
 #else
-import UIKit
+    import UIKit
 #endif
 
 /// A view representing the content of the code block with syntax highlighting.
@@ -131,14 +131,14 @@ struct ShowcaseCodeBlockContent: View {
         case .accessibility5: 35
         @unknown default: 14
         }
-        
+
         // Create font with preloaded monospaced font
         #if os(macOS)
-        let nativeFont = NSFont.monospacedSystemFont(ofSize: size, weight: .regular)
+            let nativeFont = NSFont.monospacedSystemFont(ofSize: size, weight: .regular)
         #else
-        let nativeFont = UIFont.monospacedSystemFont(ofSize: size, weight: .regular)
+            let nativeFont = UIFont.monospacedSystemFont(ofSize: size, weight: .regular)
         #endif
-        
+
         var font = Splash.Font(size: Double(size))
         font.resource = .preloaded(nativeFont)
         return font
