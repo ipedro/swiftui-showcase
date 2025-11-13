@@ -1,6 +1,6 @@
 // MemberDiscovery.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/13/25.
+// Created by Pedro Almeida on 11/09/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -226,7 +226,7 @@ enum MemberDiscovery {
         let secondName = param.secondName?.text
         let type = param.type.description.trimmingCharacters(in: .whitespaces)
 
-        if let secondName = secondName {
+        if let secondName {
             return "\(firstName) \(secondName): \(type)"
         } else {
             return "\(firstName): \(type)"

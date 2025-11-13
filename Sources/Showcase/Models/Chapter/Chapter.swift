@@ -1,6 +1,6 @@
 // Chapter.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/13/25.
+// Created by Pedro Almeida on 04/21/24.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -79,7 +79,7 @@ extension Chapter: Comparable {
     }
 }
 
-extension Collection where Element == Chapter {
+extension Collection<Chapter> {
     func search(_ query: String) -> [Chapter] {
         compactMap {
             $0.search(query: query)
@@ -90,7 +90,7 @@ extension Collection where Element == Chapter {
 extension Chapter {
     func withIcon(_ proposal: Image?) -> Chapter {
         // Early exit if no icon proposal or already has icon
-        guard let proposal = proposal, icon == nil else { return self }
+        guard let proposal, icon == nil else { return self }
 
         var copy = self
         copy._icon = Lazy(wrappedValue: proposal)

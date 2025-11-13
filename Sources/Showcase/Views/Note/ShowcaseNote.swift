@@ -1,6 +1,6 @@
 // ShowcaseNote.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/13/25.
+// Created by Pedro Almeida on 11/10/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -72,17 +72,17 @@ extension Note.NoteType {
     var systemImage: String {
         switch self {
         case .note:
-            return "info.circle.fill"
+            "info.circle.fill"
         case .important:
-            return "exclamationmark.circle.fill"
+            "exclamationmark.circle.fill"
         case .warning:
-            return "exclamationmark.triangle.fill"
+            "exclamationmark.triangle.fill"
         case .deprecated:
-            return "xmark.octagon.fill"
+            "xmark.octagon.fill"
         case .experimental:
-            return "flask.fill"
+            "flask.fill"
         case .tip:
-            return "lightbulb.fill"
+            "lightbulb.fill"
         }
     }
 
@@ -90,17 +90,17 @@ extension Note.NoteType {
     var color: Color {
         switch self {
         case .note:
-            return .blue
+            .blue
         case .important:
-            return .purple
+            .purple
         case .warning:
-            return .orange
+            .orange
         case .deprecated:
-            return .red
+            .red
         case .experimental:
-            return .yellow
+            .yellow
         case .tip:
-            return .green
+            .green
         }
     }
 

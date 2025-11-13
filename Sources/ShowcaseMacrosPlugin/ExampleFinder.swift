@@ -1,6 +1,6 @@
 // ExampleFinder.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/13/25.
+// Created by Pedro Almeida on 11/09/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -140,19 +140,19 @@ enum ExampleFinder {
     static func findCodeBlocks(in declaration: some DeclGroupSyntax) -> [CodeBlockInfo] {
         // Code blocks are no longer supported via @ShowcaseCodeBlock macro
         // Use doc comments with code blocks instead
-        return []
+        []
     }
 
     static func findLinks(in declaration: some DeclGroupSyntax) -> [LinkInfo] {
         // Links are no longer supported via @ShowcaseLink macro
         // Document links in doc comments instead
-        return []
+        []
     }
 
     static func findDescriptions(in declaration: some DeclGroupSyntax) -> [String] {
         // Descriptions are no longer supported via @ShowcaseDescription macro
         // Use doc comments on the type instead
-        return []
+        []
     }
 
     // MARK: - Metadata Extraction

@@ -1,6 +1,6 @@
 // TopicBuilder.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/13/25.
+// Created by Pedro Almeida on 09/01/24.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,7 @@ import Foundation
 /// A result builder for creating code blocks.
 @resultBuilder public struct TopicBuilder {
     public static func buildBlock(_ components: [Topic]...) -> [Topic] {
-        components.flatMap { $0 }
+        components.flatMap(\.self)
     }
 
     public static func buildOptional(_ component: [Topic]?) -> [Topic] {
@@ -41,7 +41,7 @@ import Foundation
     }
 
     public static func buildArray(_ components: [[Topic]]) -> [Topic] {
-        components.flatMap { $0 }
+        components.flatMap(\.self)
     }
 
     public static func buildLimitedAvailability(_ component: [Topic]) -> [Topic] {

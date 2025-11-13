@@ -1,4 +1,6 @@
+// DSBadge.swift
 // Copyright (c) 2025 Pedro Almeida
+// Created by Pedro Almeida on 11/10/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,9 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import SwiftUI
 import Showcase
 import ShowcaseMacros
+import SwiftUI
 
 /// A badge for displaying status or counts
 @Showcasable(icon: "tag.fill")
@@ -29,28 +31,28 @@ struct DSBadge: View {
     let text: String
     /// badge color
     let color: Color
-    
+
     @ShowcaseExample(title: "Success Badge")
     static var success: some View {
         DSBadge(text: "Active", color: .green)
     }
-    
+
     @ShowcaseExample(title: "Warning Badge")
     static var warning: some View {
         DSBadge(text: "Pending", color: .orange)
     }
-    
+
     @ShowcaseExample(title: "Error Badge")
     static var error: some View {
         // error
         DSBadge(text: "Failed", color: .red)
     }
-    
+
     @ShowcaseExample(title: "Count Badge")
     static var count: some View {
         DSBadge(text: "99+", color: .blue)
     }
-    
+
     var body: some View {
         Text(text)
             .font(.caption.bold())

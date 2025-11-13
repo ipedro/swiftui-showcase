@@ -1,12 +1,27 @@
+// ShowcaseGuide.swift
+// Copyright (c) 2025 Pedro Almeida
+// Created by Pedro Almeida on 11/09/25.
 //
-//  ShowcaseGuide.swift
-//  ShowcaseExample
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
 //
-//  Created by Pedro Almeida on 09.11.24.
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
 //
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 
-import SwiftUI
 import Showcase
+import SwiftUI
 
 // MARK: - Main Document
 
@@ -25,7 +40,7 @@ extension Document {
 extension Chapter {
     static let gettingStarted = Chapter("Getting Started") {
         Description("Learn the basics of Showcase and create your first documentation")
-        
+
         Topic.whatIsShowcase
         Topic.installation
         Topic.quickStart
@@ -38,7 +53,7 @@ extension Topic {
             """
             Showcase is a SwiftUI framework designed for creating beautiful, interactive documentation \
             for your components, APIs, and design systems.
-            
+
             Perfect for:
             - Component libraries and design systems
             - API documentation and examples
@@ -46,7 +61,7 @@ extension Topic {
             - Technical documentation with live demos
             """
         }
-        
+
         VStack(alignment: .leading, spacing: 16) {
             Label("Declarative DSL", systemImage: "curlybraces")
                 .font(.headline)
@@ -77,10 +92,10 @@ extension Topic {
 
         ExternalLink("GitHub Repository", URL(string: "https://github.com/ipedro/swiftui-showcase")!)
     }
-    
+
     static let installation = Topic("Installation") {
         Description("Add Showcase to your project using Swift Package Manager")
-        
+
         CodeBlock("Package.swift") {
             """
             dependencies: [
@@ -91,7 +106,7 @@ extension Topic {
             ]
             """
         }
-        
+
         CodeBlock("Xcode") {
             """
             1. File → Add Package Dependencies...
@@ -99,7 +114,7 @@ extension Topic {
             3. Select version and add to your target
             """
         }
-        
+
         VStack(spacing: 12) {
             Image(systemName: "shippingbox.fill")
                 .font(.system(size: 48))
@@ -114,16 +129,16 @@ extension Topic {
         }
         .padding()
     }
-    
+
     static let quickStart = Topic("Quick Start") {
         Description("Create your first Showcase document in minutes")
-        
+
         // CODE FIRST - demonstrating ordered content!
         CodeBlock("Basic Example") {
             """
             import SwiftUI
             import Showcase
-            
+
             struct ContentView: View {
                 var body: some View {
                     ShowcaseNavigationStack(
@@ -148,7 +163,7 @@ extension Topic {
             }
             """
         }
-        
+
         Description {
             """
             This creates a complete documentation structure with:
@@ -157,7 +172,7 @@ extension Topic {
             - A topic with description, code, and live example
             """
         }
-        
+
         VStack(alignment: .leading, spacing: 8) {
             HStack {
                 Image(systemName: "doc.fill")
@@ -192,7 +207,7 @@ extension Topic {
 extension Chapter {
     static let coreConceptsChapter = Chapter("Core Concepts") {
         Description("Understand the fundamental building blocks of Showcase")
-        
+
         Topic.documents
         Topic.chapters
         Topic.topics
@@ -206,11 +221,11 @@ extension Topic {
             """
             A Document is the top-level container for your documentation. It typically represents \
             a complete library, framework, or design system.
-            
+
             Documents can contain multiple chapters and provide an overall description of your content.
             """
         }
-        
+
         CodeBlock {
             """
             Document("My Design System") {
@@ -222,7 +237,7 @@ extension Topic {
             }
             """
         }
-        
+
         VStack(spacing: 16) {
             Image(systemName: "book.fill")
                 .font(.system(size: 48))
@@ -237,17 +252,17 @@ extension Topic {
         }
         .padding()
     }
-    
+
     static let chapters = Topic("Chapters") {
         Description {
             """
             Chapters group related topics together. Use them to organize your documentation \
             into logical sections.
-            
+
             Each chapter can have its own description and icon, making navigation intuitive.
             """
         }
-        
+
         CodeBlock {
             """
             Chapter("Getting Started") {
@@ -259,7 +274,7 @@ extension Topic {
             }
             """
         }
-        
+
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Image(systemName: "folder.fill")
@@ -293,7 +308,7 @@ extension Topic {
         .background(Color.secondary.opacity(0.1))
         .cornerRadius(8)
     }
-    
+
     static let topics = Topic("Topics") {
         Description {
             """
@@ -306,7 +321,7 @@ extension Topic {
             - Nested sub-topics
             """
         }
-        
+
         CodeBlock {
             """
             Topic("Button Component") {
@@ -324,7 +339,7 @@ extension Topic {
             }
             """
         }
-        
+
         VStack(alignment: .leading, spacing: 12) {
             Text("Topic: Button Component")
                 .font(.title2)
@@ -343,7 +358,7 @@ extension Topic {
         .background(Color.secondary.opacity(0.1))
         .cornerRadius(8)
     }
-    
+
     static let contentHierarchy = Topic("Content Hierarchy") {
         Description {
             """
@@ -351,7 +366,7 @@ extension Topic {
             This is perfect for complex documentation with multiple levels of detail.
             """
         }
-        
+
         CodeBlock {
             """
             Topic("Components") {
@@ -367,7 +382,7 @@ extension Topic {
             }
             """
         }
-        
+
         VStack(alignment: .leading, spacing: 8) {
             Text("📁 Components")
                 .font(.headline)
@@ -403,7 +418,7 @@ extension Topic {
 extension Chapter {
     static let contentTypes = Chapter("Content Types") {
         Description("Explore the different types of content you can include in your topics")
-        
+
         Topic.codeBlocks
         Topic.examples
         Topic.externalLinks
@@ -420,7 +435,7 @@ extension Topic {
             Code blocks support multiple languages and are styled for readability.
             """
         }
-        
+
         CodeBlock("Swift") {
             """
             struct ContentView: View {
@@ -431,7 +446,7 @@ extension Topic {
             }
             """
         }
-        
+
         CodeBlock("JSON") {
             """
             {
@@ -441,26 +456,26 @@ extension Topic {
             }
             """
         }
-        
+
         CodeBlock("Markdown") {
             """
             # Showcase Framework
-            
+
             A **declarative** DSL for creating *beautiful* documentation.
-            
+
             - Feature 1
             - Feature 2
             - Feature 3
             """
         }
-        
+
         Description {
             """
             Code blocks automatically detect the language and apply appropriate syntax highlighting. \
             You can also specify a title for better context.
             """
         }
-        
+
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Image(systemName: "curlybraces")
@@ -481,17 +496,17 @@ extension Topic {
         .background(Color.secondary.opacity(0.1))
         .cornerRadius(8)
     }
-    
+
     static let examples = Topic("Examples") {
         Description {
             """
             Examples embed live SwiftUI views directly in your documentation. \
             This allows users to see and interact with your components in real-time.
-            
+
             Perfect for demonstrating UI components, animations, and interactive behaviors.
             """
         }
-        
+
         CodeBlock("Basic Example") {
             """
             Topic("Button") {
@@ -504,7 +519,7 @@ extension Topic {
             }
             """
         }
-        
+
         Description {
             """
             **New in Showcase:** You can now include a `CodeBlock` directly inside an `Example` \
@@ -512,7 +527,7 @@ extension Topic {
             view with a collapsible code section.
             """
         }
-        
+
         CodeBlock("Example with Inline Code") {
             """
             Example("Interactive Button") {
@@ -532,13 +547,13 @@ extension Topic {
             }
             """
         }
-        
+
         Description {
             """
             You can also add `Description` blocks inside examples to provide additional context:
             """
         }
-        
+
         CodeBlock("Example with Description") {
             """
             Example("Primary Button") {
@@ -565,7 +580,7 @@ extension Topic {
             }
             """
         }
-        
+
         Example("Live Preview") {
             Description {
                 """
@@ -573,16 +588,16 @@ extension Topic {
                 provides additional context about the component's intended use.
                 """
             }
-            
+
             VStack(spacing: 20) {
                 Text("Live Example:")
                     .font(.headline)
-                
+
                 Button("Interactive Button") {
                     // Action
                 }
                 .buttonStyle(.borderedProminent)
-                
+
                 Text("This is a real, interactive SwiftUI view!")
                     .font(.caption)
                     .foregroundStyle(.secondary)
@@ -591,7 +606,7 @@ extension Topic {
             .background(Color.secondary.opacity(0.1))
             .cornerRadius(12)
         }
-        
+
         VStack(spacing: 16) {
             HStack(spacing: 16) {
                 ForEach(["red", "blue", "green"], id: \.self) { color in
@@ -607,7 +622,7 @@ extension Topic {
         }
         .padding()
     }
-    
+
     static let externalLinks = Topic("External Links") {
         Description {
             """
@@ -615,7 +630,7 @@ extension Topic {
             Links are styled consistently and open in Safari or embedded web views.
             """
         }
-        
+
         CodeBlock {
             """
             Topic("Button") {
@@ -631,10 +646,10 @@ extension Topic {
             }
             """
         }
-        
+
         ExternalLink("Apple HIG", URL(string: "https://developer.apple.com/design/human-interface-guidelines/")!)
         ExternalLink("SwiftUI Documentation", URL(string: "https://developer.apple.com/documentation/swiftui/")!)
-        
+
         VStack(alignment: .leading, spacing: 12) {
             Label("External Resources", systemImage: "link.circle.fill")
                 .font(.headline)
@@ -647,17 +662,17 @@ extension Topic {
         .background(Color.secondary.opacity(0.1))
         .cornerRadius(8)
     }
-    
+
     static let embeds = Topic("Embeds") {
         Description {
             """
             Embed external web content directly in your documentation. \
             Perfect for design specs, live demos, interactive playgrounds, or reference materials.
-            
+
             Embeds render web content inline using WKWebView.
             """
         }
-        
+
         CodeBlock {
             """
             Topic("Design Spec") {
@@ -670,9 +685,9 @@ extension Topic {
             }
             """
         }
-        
+
         ExternalLink("Showcase Repository", URL(string: "https://github.com/ipedro/swiftui-showcase")!)
-        
+
         VStack(spacing: 16) {
             Image(systemName: "globe")
                 .font(.system(size: 48))
@@ -690,13 +705,13 @@ extension Topic {
         .background(Color.secondary.opacity(0.1))
         .cornerRadius(12)
     }
-    
+
     static let notes = Topic("Notes & Callouts") {
         Description {
             """
             Highlight important information with styled callout blocks. \
             Notes draw attention to warnings, deprecations, tips, and other critical details.
-            
+
             Available note types:
             - **Note**: General informational callouts
             - **Important**: Critical information requiring attention
@@ -706,49 +721,49 @@ extension Topic {
             - **Tip**: Best practices and recommendations
             """
         }
-        
+
         Note(.note) {
             """
             This is a standard note callout. Use it for general information \
             that readers should be aware of.
             """
         }
-        
+
         Note(.important) {
             """
             This is an important callout. Use it for critical information \
             that requires special attention.
             """
         }
-        
+
         Note(.warning) {
             """
             This is a warning callout. Use it to alert users about potential \
             issues, breaking changes, or dangerous operations.
             """
         }
-        
+
         Note(.deprecated) {
             """
             The `oldAPI()` method is deprecated. Use `newAPI()` instead for \
             better performance and additional features.
             """
         }
-        
+
         Note(.experimental) {
             """
             This feature is experimental and may change in future releases. \
             Use with caution in production code.
             """
         }
-        
+
         Note(.tip) {
             """
             **Pro tip**: You can use **markdown** formatting including `inline code`, \
             **bold**, and *italic* text within note content!
             """
         }
-        
+
         CodeBlock("Usage Example") {
             """
             Topic("API Documentation") {
@@ -766,7 +781,7 @@ extension Topic {
             }
             """
         }
-        
+
         VStack(alignment: .leading, spacing: 12) {
             ForEach([
                 ("info.circle.fill", "Note", Color.blue),
@@ -774,7 +789,7 @@ extension Topic {
                 ("exclamationmark.triangle.fill", "Warning", Color.orange),
                 ("xmark.octagon.fill", "Deprecated", Color.red),
                 ("flask.fill", "Experimental", Color.yellow),
-                ("lightbulb.fill", "Tip", Color.green)
+                ("lightbulb.fill", "Tip", Color.green),
             ], id: \.1) { icon, label, color in
                 HStack(spacing: 8) {
                     Image(systemName: icon)
@@ -809,11 +824,11 @@ extension Topic {
             """
             Content items render in the exact order you declare them! No more fixed patterns - \
             you have complete control over your documentation layout.
-            
+
             This is a game-changer for flexible documentation structure.
             """
         }
-        
+
         // Demonstrate by using ordered content!
         CodeBlock("Before: Fixed Order") {
             """
@@ -828,7 +843,7 @@ extension Topic {
             // Rendered: Description → Links → Examples → Code
             """
         }
-        
+
         CodeBlock("After: Your Order") {
             """
             // New behavior (with ordered content):
@@ -842,7 +857,7 @@ extension Topic {
             // Renders in DECLARATION ORDER! 🎉
             """
         }
-        
+
         VStack(alignment: .leading, spacing: 16) {
             Label("1. Code Block", systemImage: "curlybraces")
             Label("2. Description", systemImage: "text.alignleft")
@@ -870,20 +885,20 @@ extension Topic {
             - Create unique layouts for different topics
             """
         }
-        
+
         ExternalLink("Implementation Details", URL(string: "https://github.com/ipedro/swiftui-showcase")!)
     }
-    
+
     static let nestedTopics = Topic("Nested Topics") {
         Description {
             """
             Create deep hierarchies by nesting topics within topics. \
             Perfect for organizing complex documentation with multiple levels of detail.
-            
+
             Navigation automatically handles deep nesting with proper breadcrumbs and back navigation.
             """
         }
-        
+
         CodeBlock {
             """
             Topic("UI Components") {
@@ -908,7 +923,7 @@ extension Topic {
             }
             """
         }
-        
+
         VStack(alignment: .leading, spacing: 8) {
             Group {
                 Text("Level 1: UI Components")
@@ -935,7 +950,7 @@ extension Topic {
         .background(Color.secondary.opacity(0.1))
         .cornerRadius(8)
     }
-    
+
     static let customStyles = Topic("Custom Styles") {
         Description {
             """
@@ -943,7 +958,7 @@ extension Topic {
             and view modifiers. Create branded documentation that matches your design system.
             """
         }
-        
+
         CodeBlock("Custom Link Style") {
             """
             struct BrandedLinkStyle: ButtonStyle {
@@ -964,7 +979,7 @@ extension Topic {
             }
             """
         }
-        
+
         CodeBlock("Applying Styles") {
             """
             ShowcaseNavigationStack(myDocument)
@@ -979,7 +994,7 @@ extension Topic {
                     .font(.caption)
                     .foregroundStyle(.secondary)
 
-                Button("Learn More") { }
+                Button("Learn More") {}
                     .buttonStyle(.bordered)
             }
 
@@ -988,7 +1003,7 @@ extension Topic {
                     .font(.caption)
                     .foregroundStyle(.secondary)
 
-                Button("Learn More") { }
+                Button("Learn More") {}
                     .font(.headline)
                     .foregroundColor(.white)
                     .padding(.horizontal, 20)

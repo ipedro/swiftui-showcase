@@ -1,6 +1,6 @@
 // ShowcaseLayout.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/13/25.
+// Created by Pedro Almeida on 09/16/23.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -38,7 +38,7 @@ public extension View {
     ///
     /// - Parameter style: Any showcase layout style.
     /// - Returns: A view that has the showcase layout style set in its environment.
-    func layoutStyle<S: ShowcaseLayoutStyle>(_ style: S) -> some View {
+    func layoutStyle(_ style: some ShowcaseLayoutStyle) -> some View {
         modifier(ShowcaseLayoutStyleModifier(style))
     }
 }

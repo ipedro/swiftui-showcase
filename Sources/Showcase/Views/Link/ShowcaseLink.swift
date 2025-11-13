@@ -1,6 +1,6 @@
 // ShowcaseLink.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/13/25.
+// Created by Pedro Almeida on 04/21/24.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -37,7 +37,7 @@ public extension View {
     ///
     /// - Parameter style: The link style
     /// - Returns: A copy of the view with the link style applied.
-    func showcaseLinkStyle<S: ButtonStyle>(_ style: S) -> some View {
+    func showcaseLinkStyle(_ style: some ButtonStyle) -> some View {
         environment(\.linkStyle, .init(style))
     }
 }

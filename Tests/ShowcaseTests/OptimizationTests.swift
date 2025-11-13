@@ -1,6 +1,6 @@
 // OptimizationTests.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/13/25.
+// Created by Pedro Almeida on 11/04/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -338,7 +338,7 @@ struct OptimizationTests {
 
             #expect(result != nil)
             // Should only return topics with "atch" in title (Match1 and Match2)
-            #expect(result?.topics.count == 2, "Expected 2 topics with 'atch', got \(result?.topics.map { $0.title } ?? [])")
+            #expect(result?.topics.count == 2, "Expected 2 topics with 'atch', got \(result?.topics.map(\.title) ?? [])")
         }
     }
 

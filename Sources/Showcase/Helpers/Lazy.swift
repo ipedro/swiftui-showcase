@@ -1,6 +1,6 @@
 // Lazy.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/13/25.
+// Created by Pedro Almeida on 09/01/24.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -50,7 +50,7 @@ public final class Lazy<Value> {
         lock.lock()
         defer { lock.unlock() }
 
-        if let cachedValue = cachedValue {
+        if let cachedValue {
             return cachedValue
         } else {
             let value = closure()

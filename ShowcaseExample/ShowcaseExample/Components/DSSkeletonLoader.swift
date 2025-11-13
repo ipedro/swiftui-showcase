@@ -1,4 +1,6 @@
+// DSSkeletonLoader.swift
 // Copyright (c) 2025 Pedro Almeida
+// Created by Pedro Almeida on 11/10/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,9 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import SwiftUI
 import Showcase
 import ShowcaseMacros
+import SwiftUI
 
 /// A skeleton loading placeholder with animated shimmer effect
 ///
@@ -42,14 +44,14 @@ import ShowcaseMacros
 struct DSSkeletonLoader: View {
     let shape: Shape
     @State private var isAnimating = false
-    
+
     enum Shape {
         case circle(size: CGFloat = 60)
         case rectangle(width: CGFloat = 200, height: CGFloat = 100)
         case text(lines: Int = 1, width: CGFloat = 200)
         case roundedRectangle(width: CGFloat = 200, height: CGFloat = 100, cornerRadius: CGFloat = 12)
     }
-    
+
     @ShowcaseExample(title: "Avatar Skeleton")
     static var avatar: some View {
         VStack(spacing: 16) {
@@ -63,7 +65,7 @@ struct DSSkeletonLoader: View {
         }
         .padding()
     }
-    
+
     @ShowcaseExample(title: "Card Skeleton", description: "Loading placeholder for content cards")
     static var card: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -73,11 +75,11 @@ struct DSSkeletonLoader: View {
         }
         .padding()
     }
-    
+
     @ShowcaseExample(title: "List Item Skeleton", description: "For list views")
     static var listItem: some View {
         VStack(spacing: 12) {
-            ForEach(0..<3, id: \.self) { _ in
+            ForEach(0 ..< 3, id: \.self) { _ in
                 HStack(spacing: 12) {
                     DSSkeletonLoader(shape: .circle(size: 40))
                     VStack(alignment: .leading, spacing: 6) {
@@ -89,7 +91,7 @@ struct DSSkeletonLoader: View {
         }
         .padding()
     }
-    
+
     @ShowcaseExample(title: "Custom Shapes", description: "Mix and match different skeleton shapes")
     static var custom: some View {
         HStack(spacing: 20) {
@@ -99,28 +101,28 @@ struct DSSkeletonLoader: View {
         }
         .padding()
     }
-    
+
     var body: some View {
         Group {
             switch shape {
-            case .circle(let size):
+            case let .circle(size):
                 Circle()
                     .fill(skeletonGradient)
                     .frame(width: size, height: size)
-                    
-            case .rectangle(let width, let height):
+
+            case let .rectangle(width, height):
                 Rectangle()
                     .fill(skeletonGradient)
                     .frame(width: width, height: height)
-                    
-            case .roundedRectangle(let width, let height, let cornerRadius):
+
+            case let .roundedRectangle(width, height, cornerRadius):
                 RoundedRectangle(cornerRadius: cornerRadius)
                     .fill(skeletonGradient)
                     .frame(width: width, height: height)
-                    
-            case .text(let lines, let width):
+
+            case let .text(lines, width):
                 VStack(alignment: .leading, spacing: 8) {
-                    ForEach(0..<lines, id: \.self) { index in
+                    ForEach(0 ..< lines, id: \.self) { index in
                         RoundedRectangle(cornerRadius: 4)
                             .fill(skeletonGradient)
                             .frame(
@@ -137,13 +139,13 @@ struct DSSkeletonLoader: View {
             }
         }
     }
-    
+
     private var skeletonGradient: LinearGradient {
         LinearGradient(
             colors: [
                 Color.gray.opacity(0.2),
                 Color.gray.opacity(0.3),
-                Color.gray.opacity(0.2)
+                Color.gray.opacity(0.2),
             ],
             startPoint: isAnimating ? .leading : .trailing,
             endPoint: isAnimating ? .trailing : .leading

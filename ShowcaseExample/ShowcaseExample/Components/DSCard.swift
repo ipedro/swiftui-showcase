@@ -1,4 +1,6 @@
+// DSCard.swift
 // Copyright (c) 2025 Pedro Almeida
+// Created by Pedro Almeida on 11/10/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,9 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import SwiftUI
 import Showcase
 import ShowcaseMacros
+import SwiftUI
 
 /// A card component with customizable content
 ///
@@ -30,12 +32,12 @@ struct DSCard<Content: View>: View {
     let title: String?
     /// A view content to display.
     let content: Content
-    
+
     init(title: String? = nil, @ViewBuilder content: () -> Content) {
         self.title = title
         self.content = content()
     }
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             if let title {
@@ -52,7 +54,7 @@ struct DSCard<Content: View>: View {
 
 // MARK: - Examples
 
-struct DSCardExamples {
+enum DSCardExamples {
     @ShowcaseExample(title: "Simple Card")
     static var simple: some View {
         DSCard(title: "Welcome") {
@@ -60,7 +62,7 @@ struct DSCardExamples {
                 .foregroundColor(.secondary)
         }
     }
-    
+
     @ShowcaseExample(title: "Card with Image", description: "A card containing an image and text")
     static var withImage: some View {
         DSCard(title: "Photo Card") {
@@ -74,7 +76,7 @@ struct DSCardExamples {
             }
         }
     }
-    
+
     @ShowcaseExample(title: "Card without Title", description: "Cards can omit the title for a cleaner look")
     static var noTitle: some View {
         DSCard {

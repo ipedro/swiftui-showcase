@@ -1,6 +1,6 @@
 // ShowcaseTopics.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/13/25.
+// Created by Pedro Almeida on 04/21/24.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -31,7 +31,7 @@ public struct ShowcaseTopics: View {
     let data: [Topic]
 
     init?(data: [Topic]?) {
-        guard let data = data, !data.isEmpty else { return nil }
+        guard let data, !data.isEmpty else { return nil }
         self.data = data
     }
 

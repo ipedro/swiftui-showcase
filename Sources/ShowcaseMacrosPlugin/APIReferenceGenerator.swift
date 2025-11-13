@@ -1,6 +1,6 @@
 // APIReferenceGenerator.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/13/25.
+// Created by Pedro Almeida on 11/09/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -28,9 +28,9 @@ enum APIReferenceGenerator {
         var topics: [String] = []
 
         // Categorize members
-        let staticMethods = members.methods.filter { $0.isStatic }
+        let staticMethods = members.methods.filter(\.isStatic)
         let instanceMethods = members.methods.filter { !$0.isStatic }
-        let staticProperties = members.properties.filter { $0.isStatic }
+        let staticProperties = members.properties.filter(\.isStatic)
         let instanceProperties = members.properties.filter { !$0.isStatic }
 
         // Generate topics for each member type
@@ -100,13 +100,12 @@ enum APIReferenceGenerator {
     private static func generateDescriptionBlock(_ summary: String) -> String {
         // Multi-line text needs indentation for proper formatting in multi-line string literals
         let lines = summary.components(separatedBy: .newlines)
-        let formattedSummary: String
-        if lines.count == 1 {
+        let formattedSummary: String = if lines.count == 1 {
             // Single line - no extra indentation needed
-            formattedSummary = summary
+            summary
         } else {
             // Multi-line - indent continuation lines
-            formattedSummary = lines.enumerated().map { index, line in
+            lines.enumerated().map { index, line in
                 index == 0 ? line : "            \(line)"
             }.joined(separator: "\n")
         }
@@ -125,10 +124,10 @@ enum APIReferenceGenerator {
     private static func generateContentParts(_ parts: [ContentPart]) -> [String] {
         var result: [String] = []
         var codeBlockIndex = 1
-        let totalCodeBlocks = parts.filter {
+        let totalCodeBlocks = parts.count(where: {
             if case .codeBlock = $0 { return true }
             return false
-        }.count
+        })
 
         for part in parts {
             switch part {

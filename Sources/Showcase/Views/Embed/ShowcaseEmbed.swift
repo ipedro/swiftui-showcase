@@ -1,6 +1,6 @@
 // ShowcaseEmbed.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/13/25.
+// Created by Pedro Almeida on 04/21/24.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -91,13 +91,13 @@ struct ShowcaseEmbed: View, Equatable {
             /// Add any WKNavigationDelegate methods if needed
             func webView(_ webView: WKWebView, didFinish _: WKNavigation!) {
                 webView.evaluateJavaScript("document.documentElement.scrollHeight") { [weak self] height, _ in
-                    guard let self = self, let height = height as? CGFloat else { return }
+                    guard let self, let height = height as? CGFloat else { return }
 
                     Task { @MainActor [weak self] in
-                        guard let self = self else { return }
+                        guard let self else { return }
                         webView.scrollView.contentSize = CGSize(width: webView.bounds.width, height: height)
                         webView.setNeedsLayout()
-                        self.parent.height = height
+                        parent.height = height
                     }
                 }
             }

@@ -1,6 +1,6 @@
 // ShowcaseContent.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/13/25.
+// Created by Pedro Almeida on 09/10/23.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -34,7 +34,7 @@ public extension View {
     ///     ShowcaseNavigationStack()
     ///         .showcaseContentStyle(MyCustomStyle())
     ///
-    func showcaseContentStyle<S: ShowcaseContentStyle>(_ style: S) -> some View {
+    func showcaseContentStyle(_ style: some ShowcaseContentStyle) -> some View {
         modifier(ShowcaseContentStyleModifier(style))
     }
 
@@ -168,11 +168,11 @@ public struct ShowcaseContent: StyledView {
 
     private func titleStyle(depth: Int) -> Font {
         switch depth {
-        case 0: return .largeTitle
-        case 1: return .title
-        case 2: return .title2
-        case 3: return .title3
-        default: return .headline
+        case 0: .largeTitle
+        case 1: .title
+        case 2: .title2
+        case 3: .title3
+        default: .headline
         }
     }
 }
@@ -242,7 +242,7 @@ extension AttributedString {
 
         // Style inline code (backticks)
         for (inlineIntent, range) in output.runs[AttributeScopes.FoundationAttributes.InlinePresentationIntentAttribute.self] {
-            guard let inlineIntent = inlineIntent, inlineIntent.contains(.code) else { continue }
+            guard let inlineIntent, inlineIntent.contains(.code) else { continue }
             output[range].font = .system(.body, design: .monospaced)
             output[range].backgroundColor = Color.secondary.opacity(0.15)
             #if canImport(UIKit)
@@ -254,7 +254,7 @@ extension AttributedString {
 
         // Style headers
         for (intentBlock, intentRange) in output.runs[AttributeScopes.FoundationAttributes.PresentationIntentAttribute.self].reversed() {
-            guard let intentBlock = intentBlock else { continue }
+            guard let intentBlock else { continue }
             for intent in intentBlock.components {
                 switch intent.kind {
                 case let .header(level: level):

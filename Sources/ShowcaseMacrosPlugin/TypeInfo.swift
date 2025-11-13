@@ -1,6 +1,6 @@
 // TypeInfo.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/13/25.
+// Created by Pedro Almeida on 11/09/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -64,7 +64,7 @@ struct TypeInfo {
     }
 
     private static func extractInheritedTypes(from clause: InheritanceClauseSyntax?) -> [String] {
-        guard let clause = clause else { return [] }
+        guard let clause else { return [] }
 
         return clause.inheritedTypes.map { inheritedType in
             inheritedType.type.description.trimmingCharacters(in: .whitespaces)
@@ -72,7 +72,7 @@ struct TypeInfo {
     }
 
     private static func extractGenericConstraints(from clause: GenericWhereClauseSyntax?) -> [String] {
-        guard let clause = clause else { return [] }
+        guard let clause else { return [] }
 
         return clause.requirements.map { requirement in
             requirement.description.trimmingCharacters(in: .whitespaces)

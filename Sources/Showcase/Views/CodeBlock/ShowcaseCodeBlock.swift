@@ -1,6 +1,6 @@
 // ShowcaseCodeBlock.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/13/25.
+// Created by Pedro Almeida on 09/11/23.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -36,7 +36,7 @@ public extension View {
     ///     ShowcaseNavigationStack()
     ///         .showcaseCodeBlockStyle(MyCustomStyle())
     ///
-    func showcaseCodeBlockStyle<S: ShowcaseCodeBlockStyle>(_ style: S) -> some View {
+    func showcaseCodeBlockStyle(_ style: some ShowcaseCodeBlockStyle) -> some View {
         modifier(ShowcaseCodeBlockStyleModifier(style))
     }
 

@@ -1,6 +1,6 @@
 // Text+Optional.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/13/25.
+// Created by Pedro Almeida on 09/18/23.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@
 import SwiftUI
 
 extension Text {
-    init?<S: StringProtocol>(optional content: S?) {
+    init?(optional content: (some StringProtocol)?) {
         guard let content, !content.isEmpty else { return nil }
         self.init(content)
     }

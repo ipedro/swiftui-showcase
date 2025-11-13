@@ -1,4 +1,6 @@
+// DesignSystemChapter.swift
 // Copyright (c) 2025 Pedro Almeida
+// Created by Pedro Almeida on 11/10/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,8 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import SwiftUI
 import Showcase
+import SwiftUI
 
 extension Chapter {
     /// Design system components with @Showcasable macro
@@ -27,11 +29,11 @@ extension Chapter {
         Description {
             """
             A complete design system with reusable UI components.
-            
+
             All components use the @Showcasable macro with auto-generated code blocks \
             from @ShowcaseExample annotations. This ensures documentation always matches \
             the actual implementation.
-            
+
             **Features:**
             * Automatic code block generation from @ShowcaseExample
             * Live interactive previews
@@ -40,7 +42,7 @@ extension Chapter {
             * Consistent design patterns
             """
         }
-        
+
         DSButton.self
         DSCard<AnyView>.self
         DSBadge.self

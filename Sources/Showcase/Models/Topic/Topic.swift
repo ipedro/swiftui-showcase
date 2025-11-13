@@ -1,6 +1,6 @@
 // Topic.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/13/25.
+// Created by Pedro Almeida on 04/21/24.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -45,7 +45,7 @@ public struct Topic: Identifiable {
     public var children: [Topic]?
 
     var allChildren: [Topic] {
-        guard let children = children else { return [] }
+        guard let children else { return [] }
         var result: [Topic] = []
         result.reserveCapacity(children.count * 2) // Optimize allocation
         for child in children {
@@ -94,7 +94,7 @@ public struct Topic: Identifiable {
 
     func withIcon(_ proposal: Image?) -> Topic {
         // Early exit if no icon proposal or already has icon
-        guard let proposal = proposal, icon == nil else { return self }
+        guard let proposal, icon == nil else { return self }
 
         var copy = self
         copy._icon = Lazy(wrappedValue: proposal)
@@ -146,7 +146,7 @@ extension Topic: Comparable {
     }
 }
 
-extension Array: @retroactive Identifiable where Element == Topic {
+extension [Topic]: @retroactive Identifiable {
     public var id: [Element.ID] {
         map(\.id)
     }
@@ -162,25 +162,25 @@ extension Topic {
             || items.contains(where: { item in
                 switch item {
                 case let .description(description):
-                    return description.value.localizedCaseInsensitiveContains(query)
+                    description.value.localizedCaseInsensitiveContains(query)
                 case let .example(example):
-                    return example.title?.localizedCaseInsensitiveContains(query) == true
+                    example.title?.localizedCaseInsensitiveContains(query) == true
                 case let .exampleGroup(group):
-                    return group.title?.localizedCaseInsensitiveContains(query) == true
+                    group.title?.localizedCaseInsensitiveContains(query) == true
                         || group.examples.contains(where: { $0.title?.localizedCaseInsensitiveContains(query) == true })
                 case let .codeBlock(codeBlock):
-                    return codeBlock.rawValue.localizedCaseInsensitiveContains(query)
+                    codeBlock.rawValue.localizedCaseInsensitiveContains(query)
                         || codeBlock.title?.localizedCaseInsensitiveContains(query) == true
                 case let .link(link):
-                    return link.url.absoluteString.localizedCaseInsensitiveContains(query)
+                    link.url.absoluteString.localizedCaseInsensitiveContains(query)
                         || link.name.description.localizedCaseInsensitiveContains(query)
                 case let .list(list):
-                    return list.items.contains(where: { $0.localizedCaseInsensitiveContains(query) })
+                    list.items.contains(where: { $0.localizedCaseInsensitiveContains(query) })
                 case let .note(note):
-                    return note.content.localizedCaseInsensitiveContains(query)
+                    note.content.localizedCaseInsensitiveContains(query)
                         || note.type.title.localizedCaseInsensitiveContains(query)
                 case .embed:
-                    return false
+                    false
                 }
             })
 

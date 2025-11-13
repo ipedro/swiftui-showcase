@@ -1,6 +1,6 @@
 // ShowcaseExample.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/13/25.
+// Created by Pedro Almeida on 11/08/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -53,7 +53,7 @@ public struct ShowcaseExample: StyledView, Equatable {
     @State private var isCodeExpanded = false
 
     public var body: some View {
-        if let codeBlock = codeBlock {
+        if let codeBlock {
             // Integrated view: Preview + Code together
             IntegratedExampleView(
                 label: label,
@@ -79,7 +79,7 @@ private struct IntegratedExampleView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             // Title if present
-            if let label = label {
+            if let label {
                 label
                     .font(.headline)
                     .padding(.bottom, 12)
@@ -179,7 +179,7 @@ public extension View {
     ///
     /// Use this modifier to set a specific style for `ShowcaseDocument` instances
     /// within a view:
-    func showcasePreviewStyle<S: ShowcaseExampleStyle>(_ style: S) -> some View {
+    func showcasePreviewStyle(_ style: some ShowcaseExampleStyle) -> some View {
         modifier(ShowcaseExampleStyleModifier(style))
     }
 }

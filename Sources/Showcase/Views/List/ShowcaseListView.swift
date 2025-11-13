@@ -1,6 +1,6 @@
 // ShowcaseListView.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/13/25.
+// Created by Pedro Almeida on 11/10/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -59,9 +59,9 @@ public struct ShowcaseListView: View {
     private func marker(for index: Int) -> String {
         switch data.type {
         case .ordered:
-            return "\(index + 1)."
+            "\(index + 1)."
         case .unordered:
-            return "•"
+            "•"
         }
     }
 }

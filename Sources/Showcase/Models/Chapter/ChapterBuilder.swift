@@ -1,6 +1,6 @@
 // ChapterBuilder.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/13/25.
+// Created by Pedro Almeida on 11/06/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,7 @@ import Foundation
 /// A result builder that produces an array of ``Chapter`` values.
 @resultBuilder public struct ChapterBuilder {
     public static func buildBlock(_ components: [Chapter]...) -> [Chapter] {
-        components.flatMap { $0 }
+        components.flatMap(\.self)
     }
 
     public static func buildOptional(_ component: [Chapter]?) -> [Chapter] {
@@ -41,7 +41,7 @@ import Foundation
     }
 
     public static func buildArray(_ components: [[Chapter]]) -> [Chapter] {
-        components.flatMap { $0 }
+        components.flatMap(\.self)
     }
 
     public static func buildLimitedAvailability(_ component: [Chapter]) -> [Chapter] {

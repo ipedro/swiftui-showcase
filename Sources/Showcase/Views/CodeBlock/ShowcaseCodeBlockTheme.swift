@@ -1,6 +1,6 @@
 // ShowcaseCodeBlockTheme.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/13/25.
+// Created by Pedro Almeida on 04/21/24.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -51,12 +51,12 @@ public struct ShowcaseCodeBlockTheme {
 public extension Splash.Color {
     #if os(iOS)
         static var _defaultBackground: Splash.Color {
-            return .systemGroupedBackground
+            .systemGroupedBackground
         }
 
     #elseif os(macOS)
         static var _defaultBackground: Splash.Color {
-            return .windowBackgroundColor
+            .windowBackgroundColor
         }
     #endif
 }

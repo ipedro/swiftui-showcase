@@ -1,4 +1,6 @@
+// DSDropdown.swift
 // Copyright (c) 2025 Pedro Almeida
+// Created by Pedro Almeida on 11/10/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,9 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import SwiftUI
 import Showcase
 import ShowcaseMacros
+import SwiftUI
 
 /// A dropdown selector with search and multi-selection support
 ///
@@ -70,20 +72,20 @@ struct DSDropdown<Item: Hashable & Identifiable, Content: View>: View {
     let items: [Item]
     let placeholder: String
     let content: (Item) -> Content
-    
+
     @Binding var selection: Item?
     @Binding var multiSelection: Set<Item>
-    
+
     @State private var isExpanded = false
     @State private var searchText = ""
-    
+
     let mode: SelectionMode
-    
+
     enum SelectionMode {
         case single
         case multiple
     }
-    
+
     init(
         items: [Item],
         selection: Binding<Item?>,
@@ -91,13 +93,13 @@ struct DSDropdown<Item: Hashable & Identifiable, Content: View>: View {
         @ViewBuilder content: @escaping (Item) -> Content
     ) {
         self.items = items
-        self._selection = selection
-        self._multiSelection = .constant([])
+        _selection = selection
+        _multiSelection = .constant([])
         self.placeholder = placeholder
         self.content = content
-        self.mode = .single
+        mode = .single
     }
-    
+
     init(
         items: [Item],
         multiSelection: Binding<Set<Item>>,
@@ -105,13 +107,13 @@ struct DSDropdown<Item: Hashable & Identifiable, Content: View>: View {
         @ViewBuilder content: @escaping (Item) -> Content
     ) {
         self.items = items
-        self._selection = .constant(nil)
-        self._multiSelection = multiSelection
+        _selection = .constant(nil)
+        _multiSelection = multiSelection
         self.placeholder = placeholder
         self.content = content
-        self.mode = .multiple
+        mode = .multiple
     }
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             // Dropdown button
@@ -138,7 +140,7 @@ struct DSDropdown<Item: Hashable & Identifiable, Content: View>: View {
                 )
             }
             .buttonStyle(.plain)
-            
+
             // Dropdown menu
             if isExpanded {
                 VStack(alignment: .leading, spacing: 0) {
@@ -147,9 +149,9 @@ struct DSDropdown<Item: Hashable & Identifiable, Content: View>: View {
                         .textFieldStyle(.plain)
                         .padding(8)
                         .background(Color.gray.opacity(0.05))
-                    
+
                     Divider()
-                    
+
                     // Items list
                     ScrollView {
                         LazyVStack(alignment: .leading, spacing: 0) {
@@ -171,7 +173,7 @@ struct DSDropdown<Item: Hashable & Identifiable, Content: View>: View {
             }
         }
     }
-    
+
     private var displayText: String {
         switch mode {
         case .single:
@@ -179,7 +181,7 @@ struct DSDropdown<Item: Hashable & Identifiable, Content: View>: View {
                 return "\(selection)"
             }
             return placeholder
-            
+
         case .multiple:
             if multiSelection.isEmpty {
                 return placeholder
@@ -188,7 +190,7 @@ struct DSDropdown<Item: Hashable & Identifiable, Content: View>: View {
             return count == 1 ? "1 item selected" : "\(count) items selected"
         }
     }
-    
+
     private var filteredItems: [Item] {
         if searchText.isEmpty {
             return items
@@ -197,7 +199,7 @@ struct DSDropdown<Item: Hashable & Identifiable, Content: View>: View {
             "\(item)".localizedCaseInsensitiveContains(searchText)
         }
     }
-    
+
     private func itemRow(_ item: Item) -> some View {
         Button {
             handleSelection(item)
@@ -219,16 +221,16 @@ struct DSDropdown<Item: Hashable & Identifiable, Content: View>: View {
         }
         .buttonStyle(.plain)
     }
-    
+
     private func isSelected(_ item: Item) -> Bool {
         switch mode {
         case .single:
-            return selection == item
+            selection == item
         case .multiple:
-            return multiSelection.contains(item)
+            multiSelection.contains(item)
         }
     }
-    
+
     private func handleSelection(_ item: Item) {
         switch mode {
         case .single:
@@ -236,7 +238,7 @@ struct DSDropdown<Item: Hashable & Identifiable, Content: View>: View {
             withAnimation(.spring(response: 0.3)) {
                 isExpanded = false
             }
-            
+
         case .multiple:
             if multiSelection.contains(item) {
                 multiSelection.remove(item)
@@ -269,25 +271,24 @@ struct DropdownItem: Identifiable, Hashable {
     let id = UUID()
     let title: String
     let icon: String?
-    
+
     init(_ title: String, icon: String? = nil) {
         self.title = title
         self.icon = icon
     }
 }
 
-
 private struct DropdownExample: View {
     @State private var selection: DropdownItem?
-    
+
     let fruits = [
         DropdownItem("Apple", icon: "🍎"),
         DropdownItem("Banana", icon: "🍌"),
         DropdownItem("Orange", icon: "🍊"),
         DropdownItem("Grape", icon: "🍇"),
-        DropdownItem("Strawberry", icon: "🍓")
+        DropdownItem("Strawberry", icon: "🍓"),
     ]
-    
+
     var body: some View {
         VStack(spacing: 20) {
             DSDropdown(
@@ -303,7 +304,7 @@ private struct DropdownExample: View {
                 }
             }
             .frame(width: 250)
-            
+
             if let selection {
                 Text("Selected: \(selection.title)")
                     .font(.caption)
@@ -316,15 +317,15 @@ private struct DropdownExample: View {
 
 private struct MultiDropdownExample: View {
     @State private var selection: Set<DropdownItem> = []
-    
+
     let colors = [
         DropdownItem("Red", icon: "🔴"),
         DropdownItem("Green", icon: "🟢"),
         DropdownItem("Blue", icon: "🔵"),
         DropdownItem("Yellow", icon: "🟡"),
-        DropdownItem("Purple", icon: "🟣")
+        DropdownItem("Purple", icon: "🟣"),
     ]
-    
+
     var body: some View {
         VStack(spacing: 20) {
             DSDropdown(
@@ -340,7 +341,7 @@ private struct MultiDropdownExample: View {
                 }
             }
             .frame(width: 250)
-            
+
             if !selection.isEmpty {
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Selected colors:")

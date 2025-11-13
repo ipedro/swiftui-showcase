@@ -1,4 +1,6 @@
+// DSContextMenu.swift
 // Copyright (c) 2025 Pedro Almeida
+// Created by Pedro Almeida on 11/10/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,9 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import SwiftUI
 import Showcase
 import ShowcaseMacros
+import SwiftUI
 
 /// A contextual menu with icons and keyboard shortcuts
 ///
@@ -54,7 +56,7 @@ import ShowcaseMacros
 @Showcasable(icon: "ellipsis.circle")
 struct DSContextMenu: View {
     let items: [Item]
-    
+
     struct Item: Identifiable {
         let id = UUID()
         let title: String
@@ -62,7 +64,7 @@ struct DSContextMenu: View {
         let shortcut: String?
         let isDestructive: Bool
         let action: () -> Void
-        
+
         init(
             title: String,
             icon: String? = nil,
@@ -77,7 +79,7 @@ struct DSContextMenu: View {
             self.action = action
         }
     }
-    
+
     @ShowcaseExample(title: "Edit Actions")
     static var editActions: some View {
         Text("Right-click for menu")
@@ -96,7 +98,7 @@ struct DSContextMenu: View {
                 }
             }
     }
-    
+
     @ShowcaseExample(title: "File Operations", description: "Common file management actions")
     static var fileOperations: some View {
         Text("File.pdf")
@@ -120,7 +122,7 @@ struct DSContextMenu: View {
                 }
             }
     }
-    
+
     @ShowcaseExample(title: "Text Formatting", description: "Rich text editing options")
     static var formatting: some View {
         Text("Selected Text")
@@ -146,7 +148,7 @@ struct DSContextMenu: View {
                 }
             }
     }
-    
+
     var body: some View {
         ForEach(items) { item in
             Button(action: item.action) {

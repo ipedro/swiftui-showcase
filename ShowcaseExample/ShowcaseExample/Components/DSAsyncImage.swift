@@ -1,4 +1,6 @@
+// DSAsyncImage.swift
 // Copyright (c) 2025 Pedro Almeida
+// Created by Pedro Almeida on 11/10/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,9 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import SwiftUI
 import Showcase
 import ShowcaseMacros
+import SwiftUI
 
 /// An async image loader with placeholder and error states
 ///
@@ -50,14 +52,14 @@ import ShowcaseMacros
 @Showcasable(icon: "photo.on.rectangle.angled")
 struct DSAsyncImage: View {
     let url: URL?
-    
+
     @ShowcaseExample(title: "Basic Image")
     static var basic: some View {
         DSAsyncImage(url: URL(string: "https://picsum.photos/200"))
             .frame(width: 200, height: 200)
             .clipShape(RoundedRectangle(cornerRadius: 12))
     }
-    
+
     @ShowcaseExample(title: "Avatar Style", description: "Perfect for user profile images")
     static var avatar: some View {
         DSAsyncImage(url: URL(string: "https://picsum.photos/100"))
@@ -65,21 +67,21 @@ struct DSAsyncImage: View {
             .clipShape(Circle())
             .overlay(Circle().stroke(Color.gray.opacity(0.3), lineWidth: 1))
     }
-    
+
     @ShowcaseExample(title: "Wide Banner", description: "Ideal for hero sections")
     static var banner: some View {
         DSAsyncImage(url: URL(string: "https://picsum.photos/200/100"))
             .frame(width: 200)
             .clipShape(RoundedRectangle(cornerRadius: 16))
     }
-    
+
     @ShowcaseExample(title: "Error State", description: "Handling broken URLs gracefully")
     static var errorState: some View {
         DSAsyncImage(url: URL(string: "https://invalid.url/image.jpg"))
             .frame(width: 200, height: 200)
             .clipShape(RoundedRectangle(cornerRadius: 12))
     }
-    
+
     var body: some View {
         AsyncImage(url: url) { phase in
             switch phase {
@@ -87,12 +89,12 @@ struct DSAsyncImage: View {
                 ProgressView()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .background(Color.gray.opacity(0.1))
-                    
-            case .success(let image):
+
+            case let .success(image):
                 image
                     .resizable()
                     .scaledToFill()
-                    
+
             case .failure:
                 VStack(spacing: 8) {
                     Image(systemName: "exclamationmark.triangle")
@@ -104,7 +106,7 @@ struct DSAsyncImage: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(Color.gray.opacity(0.1))
-                
+
             @unknown default:
                 EmptyView()
             }

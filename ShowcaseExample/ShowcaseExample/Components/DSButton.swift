@@ -1,4 +1,6 @@
+// DSButton.swift
 // Copyright (c) 2025 Pedro Almeida
+// Created by Pedro Almeida on 11/10/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,9 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import SwiftUI
 import Showcase
 import ShowcaseMacros
+import SwiftUI
 
 /// A customizable button component for the design system
 ///
@@ -73,26 +75,26 @@ struct DSButton: View {
     let title: String
     let style: Style
     let action: () -> Void
-    
+
     enum Style {
         case primary, secondary, destructive
-        
+
         var color: Color {
             switch self {
-            case .primary: return .blue
-            case .secondary: return .gray
-            case .destructive: return .red
+            case .primary: .blue
+            case .secondary: .gray
+            case .destructive: .red
             }
         }
     }
-    
+
     @ShowcaseExample(title: "Primary Button")
     static var primary: some View {
         DSButton(title: "Continue", style: .primary) {
             print("Primary action")
         }
     }
-    
+
     @ShowcaseExample(
         title: "Secondary Button",
         description: "Use for less prominent actions"
@@ -102,21 +104,21 @@ struct DSButton: View {
             print("Secondary action")
         }
     }
-    
+
     @ShowcaseExample(title: "Destructive Action")
     static var destructive: some View {
         DSButton(title: "Delete", style: .destructive) {
             print("Destructive action")
         }
     }
-    
+
     @ShowcaseExample(title: "Disabled State")
     static var disabled: some View {
         DSButton(title: "Unavailable", style: .primary) {}
             .opacity(0.5)
             .disabled(true)
     }
-    
+
     var body: some View {
         Button(action: action) {
             Text(title)

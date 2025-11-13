@@ -1,6 +1,6 @@
 // MacroError.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/13/25.
+// Created by Pedro Almeida on 11/09/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -27,7 +27,7 @@ enum MacroError: Error, CustomStringConvertible {
     var description: String {
         switch self {
         case .unsupportedDeclarationType:
-            return "@Showcasable can only be applied to struct, class, or enum"
+            "@Showcasable can only be applied to struct, class, or enum"
         }
     }
 }

@@ -1,6 +1,6 @@
 // ChapterContentBuilder.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/13/25.
+// Created by Pedro Almeida on 11/06/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -156,7 +156,7 @@ extension Topic: ChapterContentConvertible {
     }
 }
 
-extension Array: ChapterContentConvertible where Element == Topic {
+extension [Topic]: ChapterContentConvertible {
     public func merge(into content: inout Chapter.Content) {
         content.topics.append(contentsOf: self)
     }

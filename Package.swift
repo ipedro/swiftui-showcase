@@ -7,7 +7,7 @@ let package = Package(
     name: "swiftui-showcase",
     platforms: [
         .iOS(.v16),
-        .macOS(.v13)
+        .macOS(.v13),
     ],
     products: [
         .library(
@@ -17,12 +17,12 @@ let package = Package(
         .library(
             name: "ShowcaseMacros",
             targets: ["ShowcaseMacros"]
-        )
+        ),
     ],
     dependencies: [
         .package(url: "https://github.com/JohnSundell/Splash", from: "0.16.0"),
         .package(url: "https://github.com/nathantannar4/Engine", from: "2.3.0"),
-        .package(url: "https://github.com/swiftlang/swift-syntax", from: "602.0.0")
+        .package(url: "https://github.com/swiftlang/swift-syntax", from: "602.0.0"),
     ],
     targets: [
         .target(
@@ -30,40 +30,40 @@ let package = Package(
             dependencies: [
                 "Splash",
                 "Engine",
-                .product(name: "EngineMacros", package: "Engine")
+                .product(name: "EngineMacros", package: "Engine"),
             ],
             swiftSettings: [
-                .enableExperimentalFeature("AccessLevelOnImport")
+                .enableExperimentalFeature("AccessLevelOnImport"),
             ]
         ),
-        
+
         // MARK: - Macros
-        
+
         .macro(
             name: "ShowcaseMacrosPlugin",
             dependencies: [
                 .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
-                .product(name: "SwiftCompilerPlugin", package: "swift-syntax")
+                .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
             ]
         ),
-        
+
         .target(
             name: "ShowcaseMacros",
             dependencies: [
                 "Showcase",
-                "ShowcaseMacrosPlugin"
+                "ShowcaseMacrosPlugin",
             ]
         ),
-        
+
         // MARK: - Tests
-        
+
         .testTarget(
             name: "ShowcaseTests",
             dependencies: [
-                "Showcase"
+                "Showcase",
             ],
             swiftSettings: [
-                .swiftLanguageMode(.v5)
+                .swiftLanguageMode(.v5),
             ]
         ),
         .testTarget(
@@ -71,9 +71,9 @@ let package = Package(
             dependencies: [
                 "ShowcaseMacros",
                 "ShowcaseMacrosPlugin",
-                .product(name: "SwiftSyntaxMacrosTestSupport", package: "swift-syntax")
+                .product(name: "SwiftSyntaxMacrosTestSupport", package: "swift-syntax"),
             ]
-        )
+        ),
     ],
     swiftLanguageModes: [.v5]
 )

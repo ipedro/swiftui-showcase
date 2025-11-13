@@ -1,6 +1,6 @@
 // TopicContentGenerator.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/13/25.
+// Created by Pedro Almeida on 11/09/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -69,10 +69,10 @@ enum TopicContentGenerator {
 
         // Handle interleaved content parts (text and code blocks in original order)
         var codeBlockIndex = 1
-        let totalCodeBlocks = docs.documentation.contentParts.filter {
+        let totalCodeBlocks = docs.documentation.contentParts.count(where: {
             if case .codeBlock = $0 { return true }
             return false
-        }.count
+        })
 
         for part in docs.documentation.contentParts {
             switch part {
@@ -84,20 +84,19 @@ enum TopicContentGenerator {
                 // In Swift multi-line strings: """ first line has no indent requirement,
                 // but subsequent lines must have at least as much indent as the closing """
                 let lines = text.components(separatedBy: .newlines)
-                let formattedText: String
-                if lines.count == 1 {
+                let formattedText: String = if lines.count == 1 {
                     // Single line - no extra indentation needed
-                    formattedText = text
+                    text
                 } else {
                     // Multi-line - first line no indent, subsequent non-empty lines get 4 spaces
                     // Empty lines stay empty (no trailing spaces)
-                    formattedText = lines.enumerated().map { index, line in
+                    lines.enumerated().map { index, line in
                         if index == 0 {
-                            return line
+                            line
                         } else if line.isEmpty {
-                            return "" // Blank lines stay blank, no trailing spaces
+                            "" // Blank lines stay blank, no trailing spaces
                         } else {
-                            return "    \(line)" // Add 4 spaces to non-blank lines
+                            "    \(line)" // Add 4 spaces to non-blank lines
                         }
                     }.joined(separator: "\n")
                 }
