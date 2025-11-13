@@ -61,9 +61,6 @@ let package = Package(
             name: "ShowcaseTests",
             dependencies: [
                 "Showcase",
-            ],
-            swiftSettings: [
-                .swiftLanguageMode(.v5),
             ]
         ),
         .testTarget(
