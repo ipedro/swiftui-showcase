@@ -71,3 +71,31 @@ extension ShowcaseListView: Equatable {
         lhs.data.id == rhs.data.id
     }
 }
+
+#Preview("Unordered List") {
+    ShowcaseListView(
+        data: ListItem(
+            type: .unordered,
+            items: [
+                "SwiftUI provides declarative syntax",
+                "Built-in support for **Dark Mode**",
+                "Works across all Apple platforms"
+            ]
+        )
+    )
+    .padding()
+}
+
+#Preview("Ordered List") {
+    ShowcaseListView(
+        data: ListItem(
+            type: .ordered,
+            items: [
+                "Create a new SwiftUI project",
+                "Add your `View` components",
+                "Run in the _Xcode_ preview or simulator"
+            ]
+        )
+    )
+    .padding()
+}

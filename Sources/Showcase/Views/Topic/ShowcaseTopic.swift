@@ -71,3 +71,17 @@ public struct ShowcaseTopic: View, Equatable {
         }
     }
 }
+
+#Preview("Simple Topic") {
+    ShowcaseTopic(
+        Topic("Getting Started") {
+            Description("Learn the basics of SwiftUI")
+            CodeBlock {
+                """
+                Text("Hello, World!")
+                    .font(.title)
+                """
+            }
+        }
+    )
+}

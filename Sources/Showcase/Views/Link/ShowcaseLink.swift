@@ -142,3 +142,18 @@ public struct ShowcaseLinkStyleDefault: ButtonStyle {
         }
     }
 #endif
+
+#Preview("Link Styles") {
+    VStack(spacing: 20) {
+        if let link1 = ExternalLink("Apple Developer", "https://developer.apple.com") {
+            ShowcaseLink(data: link1)
+                .showcaseLinkStyle(.standard)
+        }
+        
+        if let link2 = ExternalLink("Swift.org", "https://swift.org") {
+            ShowcaseLink(data: link2)
+                .showcaseLinkStyle(.standard)
+        }
+    }
+    .padding()
+}

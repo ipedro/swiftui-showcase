@@ -105,3 +105,21 @@ struct ShowcaseIndexItem: View, Equatable {
         }
     }
 }
+
+#Preview("Index List") {
+    VStack(spacing: 12) {
+        ShowcaseIndexItem(data: Topic("Introduction") {
+            Description("Getting started with SwiftUI")
+        })
+        ShowcaseIndexItem(data: Topic("Views & Controls") {
+            Description("Basic UI components")
+        })
+        ShowcaseIndexItem(data: Topic("Layout") {
+            Description("Organizing views in your app")
+        })
+        ShowcaseIndexItem(data: Topic("State Management") {
+            Description("Handling data flow")
+        })
+    }
+    .padding()
+}

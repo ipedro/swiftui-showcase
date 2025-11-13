@@ -1,0 +1,147 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Test: Swift Package",
+      "type": "shell",
+      "command": "swift test",
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Build: Swift Package",
+      "type": "shell",
+      "command": "swift build",
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Build: ShowcaseExample (macOS)",
+      "type": "shell",
+      "command": "xcodebuild build -project ShowcaseExample/ShowcaseExample.xcodeproj -scheme ShowcaseExample -destination 'platform=macOS' -skipPackagePluginValidation -skipMacroValidation",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Build: ShowcaseExample (iOS)",
+      "type": "shell",
+      "command": "xcodebuild build -project ShowcaseExample/ShowcaseExample.xcodeproj -scheme ShowcaseExample -destination 'platform=iOS Simulator,name=iPhone 17 Pro' -skipPackagePluginValidation -skipMacroValidation CODE_SIGN_IDENTITY=\"\" CODE_SIGNING_REQUIRED=NO",
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Format: SwiftFormat",
+      "type": "shell",
+      "command": "swiftformat .",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Lint: SwiftLint (Strict)",
+      "type": "shell",
+      "command": "swiftlint --strict",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Fix: SwiftLint Auto-fix",
+      "type": "shell",
+      "command": "swiftlint --fix --strict",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Format & Fix All",
+      "type": "shell",
+      "command": "swiftformat . && swiftlint --fix --strict",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Clean: Swift Package",
+      "type": "shell",
+      "command": "swift package clean",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Git: Status",
+      "type": "shell",
+      "command": "git status",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Git: Stage All",
+      "type": "shell",
+      "command": "git add -A && git status",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Git: Commit",
+      "type": "shell",
+      "command": "git commit",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "focus": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Git: Push",
+      "type": "shell",
+      "command": "git push",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "focus": true
+      },
+      "problemMatcher": []
+    }
+  ]
+}

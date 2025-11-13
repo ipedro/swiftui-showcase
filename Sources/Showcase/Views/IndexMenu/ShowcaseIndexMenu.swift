@@ -99,3 +99,28 @@ public struct ShowcaseIndexMenuIcon: View {
             }
     }
 }
+
+#Preview("Index Menu") {
+    ShowcaseIndexMenu(
+        Topic("SwiftUI Basics") {
+            Topic("Text") {
+                Description("Display and style text")
+            }
+            Topic("Image") {
+                Description("Show images and icons")
+            }
+            Topic("Button") {
+                Description("Handle user interactions")
+            }
+        }
+    )
+}
+
+#Preview("Menu Icon") {
+    HStack(spacing: 20) {
+        ShowcaseIndexMenuIcon()
+        ShowcaseIndexMenuIcon(systemName: "book")
+        ShowcaseIndexMenuIcon(systemName: "star")
+    }
+    .padding()
+}

@@ -87,3 +87,23 @@ struct ShowcaseChapterRow: View, Equatable {
         .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
+
+#Preview("Chapter Row") {
+    List {
+        ShowcaseChapterRow(
+            title: "Text & Typography",
+            icon: Image(systemName: "textformat"),
+            subtitle: "Explore various text styles and formatting options"
+        )
+        ShowcaseChapterRow(
+            title: "Buttons",
+            icon: Image(systemName: "button.horizontal"),
+            subtitle: ""
+        )
+        ShowcaseChapterRow(
+            title: "Colors & Gradients",
+            icon: Image(systemName: "paintpalette"),
+            subtitle: "Learn how to use colors, gradients, and materials effectively"
+        )
+    }
+}

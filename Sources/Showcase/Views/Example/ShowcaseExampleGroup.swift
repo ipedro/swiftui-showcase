@@ -123,3 +123,26 @@ private struct TabButton: View {
         .accessibilityAddTraits(isSelected ? [.isSelected] : [])
     }
 }
+
+#Preview("Example Group") {
+    ShowcaseExampleGroup(
+        examples: [
+            Example("Basic") {
+                Text("Hello, World!")
+                    .font(.title)
+            },
+            Example("Styled") {
+                Text("Hello, SwiftUI!")
+                    .font(.title)
+                    .foregroundStyle(.blue)
+                    .bold()
+            },
+            Example("With Icon") {
+                Label("Welcome", systemImage: "hand.wave")
+                    .font(.title2)
+            }
+        ],
+        title: "Text Examples"
+    )
+    .padding()
+}
