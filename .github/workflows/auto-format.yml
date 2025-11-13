@@ -62,7 +62,7 @@ jobs:
             
             # Parse SwiftLint violations
             if [ -f swiftlint-before.json ]; then
-              cat > parse_swiftlint.py << 'PYTHON_SCRIPT'
+              cat > .github/scripts/parse_swiftlint.py << 'PYTHON_SCRIPT'
           import json
           import sys
           
@@ -129,7 +129,7 @@ jobs:
               print("No SwiftLint violations detected")
           PYTHON_SCRIPT
               
-              python3 parse_swiftlint.py > swiftlint-summary.md
+              python3 .github/scripts/parse_swiftlint.py > swiftlint-summary.md
             fi
             
             echo "✅ Changes analyzed"
