@@ -35,6 +35,11 @@ jobs:
           swiftformat Sources/ Tests/
           echo "✅ SwiftFormat applied successfully"
       
+      - name: Fix header dates
+        run: |
+          chmod +x .github/scripts/fix-header-dates.sh
+          .github/scripts/fix-header-dates.sh
+      
       - name: Analyze changes
         id: analysis
         run: |

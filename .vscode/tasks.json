@@ -84,7 +84,7 @@
     {
       "label": "Format & Fix All",
       "type": "shell",
-      "command": "swiftformat . && swiftlint --fix --strict",
+      "command": "swiftformat . && .github/scripts/fix-header-dates.sh && swiftlint --fix --strict",
       "presentation": {
         "reveal": "always",
         "panel": "shared"
