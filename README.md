@@ -23,7 +23,6 @@ Showcase is a Swift package designed to simplify the process of documenting and 
 - Display code samples with syntax highlighting.
 - Various styles for code blocks, previews, and external links.
 
-
 ## Requirements
 
 - iOS 16+
@@ -63,7 +62,7 @@ Also: Don't forget to add `"Showcase"` as a dependency of your package's target.
 
 2. Create and structure your showcase topics using `Topic` instances.
 
-### Showcase
+### Showcase View
 
 The `Showcase` view is used to display your showcase topics. Here's an example:
 
