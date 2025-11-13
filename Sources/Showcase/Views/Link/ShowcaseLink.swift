@@ -1,6 +1,6 @@
 // ShowcaseLink.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/12/25.
+// Created by Pedro Almeida on 11/13/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -149,7 +149,7 @@ public struct ShowcaseLinkStyleDefault: ButtonStyle {
             ShowcaseLink(data: link1)
                 .showcaseLinkStyle(.standard)
         }
-        
+
         if let link2 = ExternalLink("Swift.org", "https://swift.org") {
             ShowcaseLink(data: link2)
                 .showcaseLinkStyle(.standard)

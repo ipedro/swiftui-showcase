@@ -1,0 +1,1 @@
+No SwiftLint violations detected

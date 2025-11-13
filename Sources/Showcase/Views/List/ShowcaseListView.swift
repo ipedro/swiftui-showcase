@@ -1,6 +1,6 @@
 // ShowcaseListView.swift
 // Copyright (c) 2025 Pedro Almeida
-// Created by Pedro Almeida on 11/12/25.
+// Created by Pedro Almeida on 11/13/25.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -79,7 +79,7 @@ extension ShowcaseListView: Equatable {
             items: [
                 "SwiftUI provides declarative syntax",
                 "Built-in support for **Dark Mode**",
-                "Works across all Apple platforms"
+                "Works across all Apple platforms",
             ]
         )
     )
@@ -93,7 +93,7 @@ extension ShowcaseListView: Equatable {
             items: [
                 "Create a new SwiftUI project",
                 "Add your `View` components",
-                "Run in the _Xcode_ preview or simulator"
+                "Run in the _Xcode_ preview or simulator",
             ]
         )
     )
