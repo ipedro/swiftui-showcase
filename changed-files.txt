@@ -89,3 +89,4 @@ Tests/ShowcaseTests/OptimizationTests.swift
 Tests/ShowcaseTests/OrderedContentTests.swift
 Tests/ShowcaseTests/PerformanceTests.swift
 Tests/ShowcaseTests/ShowcaseTests.swift
+changed-files.txt
