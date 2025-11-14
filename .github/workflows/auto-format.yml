@@ -141,7 +141,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add -A
+          git add Sources/ Tests/ Package.swift
           git commit -m "chore: apply SwiftLint & SwiftFormat [skip ci]"
           git push
       
