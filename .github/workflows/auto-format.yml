@@ -17,7 +17,7 @@ jobs:
     runs-on: macos-latest # comes with brew pre-installed
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0  # Fetch full history for accurate git log dates
