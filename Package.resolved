@@ -1,13 +1,13 @@
 {
-  "originHash" : "3ecefad5fa4c918e831cc08aaa46ae9df2887b3030b202e8c0eab50b787fcf9e",
+  "originHash" : "fd68166466cdf6abec485f0b5d89fff4631ea4d873e9e4ffdb7aa229671660c9",
   "pins" : [
     {
       "identity" : "engine",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/nathantannar4/Engine",
       "state" : {
-        "revision" : "e6118c35b1a5d78a14b2ac311385c695875e044c",
-        "version" : "2.3.0"
+        "revision" : "d4feaf0d8bf9c49cecc0617d8ed0706417792f86",
+        "version" : "2.4.0"
       }
     },
     {
